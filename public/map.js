@@ -308,7 +308,7 @@ export class CityMap {
     this.northW = [uy, vy];   // which way true north points in map units
     this.eastW = [ux, vx];
     this.proj = proj;
-    this.buildCity(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
+    this.buildCity(); this.pinToBuildings(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
   }
 
   // METRO publishes the exact location of every bus stop, named by corner ("Fannin St @ Texas Ave").
@@ -707,13 +707,83 @@ export class CityMap {
     // keep the animated trains unless METRO's feed actually carries rail trips right now
     this.liveRailSeen = (L.trips || []).some((t) => { const r = R[t.route]; return r && (r[1] === 0 || r[1] === 1 || r[1] === 2); });
   }
+  // Each street pin goes inside an actual building footprint: the one at its address if the geocode
+  // lands inside one, otherwise the nearest building on the same block (never a parking garage if avoidable).
+  pinToBuildings() {
+    if (!this.osm) return;
+    const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; };
+    const near = (x, y, P) => { let best = null, bd = 1e9; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy || 1, t = Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / L)), px = a[0] + t * dx, py = a[1] + t * dy, d = Math.hypot(x - px, y - py); if (d < bd) { bd = d; best = [px, py]; } } return [best, bd]; };
+    const sameBlock = (a, b) => { const p = this.cellIdx(a[0], a[1]), q = this.cellIdx(b[0], b[1]); return p[0] === q[0] && p[1] === q[1]; };
+    const used = [];
+    for (const s of this.spots) {
+      if (s.tunnel) continue;
+      const refs = [[s.ox ?? s.x, s.oy ?? s.y], [s.x, s.y]];
+      let best = null;
+      for (const o of this.osm) {
+        if (o.h < 0.6) continue;
+        for (const [rx, ry] of refs) {
+          if (rx < o.bb.x0 - 6 || rx > o.bb.x1 + 6 || ry < o.bb.y0 - 6 || ry > o.bb.y1 + 6) continue;
+          const inside = inPoly(rx, ry, o.pts), [pt, d] = inside ? [[rx, ry], 0] : near(rx, ry, o.pts);
+          const score = d + (o.type === 'parking' ? 4 : 0) + (sameBlock([o.cx, o.cy], [s.x, s.y]) ? 0 : 1.5);
+          if (score < 7 && (!best || score < best.score)) best = { o, pt, inside, score };
+        }
+      }
+      if (!best) {
+        const inLM = this.landmarks.some((l) => s.x > l.x - 0.5 && s.x < l.x + l.w + 0.5 && s.y > l.y - 0.5 && s.y < l.y + l.d + 0.5) || this.areas.some((a) => ['grb', 'arena', 'ballpark'].includes(a.kind) && s.x > a.r.x0 && s.x < a.r.x1 && s.y > a.r.y0 && s.y < a.r.y1);
+        if (inLM) continue;
+        // OpenStreetMap has no footprint here (new or unmapped building): put up a simple mid-rise for the pin to sit in
+        const [i, j] = this.cellIdx(s.x, s.y), A = this.avenues, C = this.cross, sw = this.streetW + 0.32;
+        const R = { x0: i > 0 ? A[i - 1].x + sw : s.x - 2, x1: i < A.length ? A[i].x - sw : s.x + 2, y0: j > 0 ? C[j - 1].y + sw : s.y - 2, y1: j < C.length ? C[j].y - sw : s.y + 2 };
+        const x0 = Math.max(R.x0, s.x - 1.4), x1 = Math.min(R.x1, s.x + 1.4), y0 = Math.max(R.y0, s.y - 1.4), y1 = Math.min(R.y1, s.y + 1.4);
+        if (x1 - x0 < 0.8 || y1 - y0 < 0.8) continue;
+        const k = hash(s.places[0].name), pts = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+        const ob = { pts, bb: { x0, x1, y0, y1 }, h: 2 + k * 2.5, z0: 0, c: LOW[Math.floor(k * LOW.length)], glass: false, name: null, type: 'standin', cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
+        this.osm.push(ob); s.x = ob.cx; s.y = ob.cy; s.cell = this.cellOf(s.x, s.y); s.bldg = ob; used.push([s.x, s.y]); continue;
+      }
+      let [x, y] = best.pt; const o = best.o;
+      if (!best.inside || !inPoly(x, y, o.pts)) {   // step in from the wall toward the middle of the building
+        let ok = false; for (const f of [0.25, 0.4, 0.6, 0.8]) { const nx = x + (o.cx - x) * f, ny = y + (o.cy - y) * f; if (inPoly(nx, ny, o.pts) && near(nx, ny, o.pts)[1] > 0.25) { x = nx; y = ny; ok = true; break; } }
+        if (!ok) { x = o.cx; y = o.cy; }
+      }
+      // two pins in one building: fan them out a little, staying inside
+      for (let k = 0; k < 6 && used.some(([ux, uy]) => Math.hypot(ux - x, uy - y) < 0.7); k++) { const a = k * 2.1, nx = x + Math.cos(a) * 0.8, ny = y + Math.sin(a) * 0.8; if (inPoly(nx, ny, o.pts)) { x = nx; y = ny; } }
+      used.push([x, y]); s.x = x; s.y = y; s.cell = this.cellOf(x, y); s.bldg = o;
+    }
+  }
   // ---------- you are here + walking navigation ----------
   setUser(u) {
     if (!u) { this.user = null; return; }
     const [x, y] = this.proj(u.lat, u.lng), B = this.bounds;
     this.user = { ...u, x, y, inside: x > B.x0 - 5 && x < B.x1 + 5 && y > B.y0 - 5 && y < B.y1 + 5 };
-    if (this.follow && this.user.inside && !this.pointers?.size) this.zoomTo(x, y, Math.max(this.v.s, this.nav ? 1.1 : 0.9), 0, true);
+    const prev = this.userPrev; if (!prev || Math.hypot(x - prev[0], y - prev[1]) > 0.4) { if (prev) this.moveDir = [x - prev[0], y - prev[1]]; this.userPrev = [x, y]; }
+    if (this.walkView && this.user.inside) this.headingUp();
+    if (this.follow && this.user.inside && !this.pointers?.size) this.zoomTo(x, y, this.walkView ? 1.9 : Math.max(this.v.s, this.nav ? 1.1 : 0.9), 0, true);
     if (this.nav) this.updateNav();
+  }
+  // Walk view: zoomed in at street level, map turns so the way you're facing (or walking) is straight up
+  setWalkView(on) {
+    this.walkView = on;
+    if (on && this.user?.inside) { this.follow = true; this.headingUp(true); this.zoomTo(this.user.x, this.user.y, 1.9, 0, true); }
+    if (!on) { this.zoomTo(this.v.cx, this.v.cy, Math.min(this.v.s, 0.9)); }
+    return !!this.user?.inside;
+  }
+  headingUp(snap) {
+    const u = this.user; let dir = null;
+    if (u.heading != null && !Number.isNaN(u.heading)) { const h = (u.heading * Math.PI) / 180, N = this.northW, E = this.eastW; dir = [N[0] * Math.cos(h) + E[0] * Math.sin(h), N[1] * Math.cos(h) + E[1] * Math.sin(h)]; }
+    else if (this.nav?.pts && this.nav.cum) {   // look ~25 m down the route
+      const n = this.nav, want = Math.min(n.total, (n.along || 0) + 2.5); let q = n.pts[n.pts.length - 1];
+      for (let i = 1; i < n.pts.length; i++) if (n.cum[i] >= want) { const a = n.pts[i - 1], b = n.pts[i], L = n.cum[i] - n.cum[i - 1] || 1, t = (want - n.cum[i - 1]) / L; q = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; break; }
+      dir = [q[0] - u.x, q[1] - u.y];
+    }
+    else if (this.moveDir) dir = this.moveDir;
+    if (!dir || Math.hypot(dir[0], dir[1]) < 1e-6) return;
+    const v = this.v, ang = (r) => { v.setRot(r); const a = v.p(0, 0), b = v.p(dir[0], dir[1]); return Math.atan2(b[0] - a[0], -(b[1] - a[1])); };
+    const r0 = v.r; let best = r0, bd = 9;
+    for (let k = 0; k < 120; k++) { const r = (k / 120) * Math.PI * 2, d = Math.abs(ang(r)); if (d < bd) { bd = d; best = r; } }
+    for (let s = 0.03; s > 0.002; s /= 2) for (const r of [best - s, best + s]) { const d = Math.abs(ang(r)); if (d < bd) { bd = d; best = r; } }
+    let diff = ((best - r0 + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+    if (!snap && Math.abs(diff) < 0.06) diff = 0;   // ignore compass jitter
+    v.setRot(r0 + diff * (snap ? 1 : 0.35)); this.opts.onRotate?.(this.compass());
   }
   locateMe() { if (!this.user?.inside) return false; this.follow = true; this.zoomTo(this.user.x, this.user.y, Math.max(this.v.s, 1.0)); return true; }
   // street-grid walking route on the sidewalks, with turn-by-turn steps
@@ -777,7 +847,7 @@ export class CityMap {
     }
     const now = performance.now();
     if (best.d > 3 && now - n.builtAt > 4000) { n.rerouted++; this.buildRoute(); return this.updateNav(); }   // off the route by 30 m+: find a new way
-    n.along = best.along; const remaining = Math.max(0, n.total - best.along);
+    n.along = best.along; n.seg = best.i - 1; const remaining = Math.max(0, n.total - best.along);
     const stepIdx = Math.max(0, n.steps.findIndex((s, k) => k === n.steps.length - 1 || n.steps[k + 1].at > best.along + 0.05));
     const next = n.steps[Math.min(stepIdx + 1, n.steps.length - 1)], cur = n.steps[stepIdx];
     const arrived = remaining < 2;
@@ -809,7 +879,7 @@ export class CityMap {
     const [x, y] = v.p(u.x, u.y, 0.05), pulse = (now / 1600) % 1;
     ctx.strokeStyle = `rgba(28,126,214,${0.6 * (1 - pulse)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y, 8 + pulse * 22, (8 + pulse * 22) / 2, 0, 0, 7); ctx.stroke();
     circle(ctx, x, y, 9, '#fff'); circle(ctx, x, y, 6.5, '#1c7ed6');
-    if (v.s > 0.35 && !this.nav) pill(ctx, x, y - 22, 'You are here', 11, 'rgba(28,126,214,.95)', '#fff');
+    if (v.s > 0.35 && !this.nav && !this.walkView) pill(ctx, x, y - 22, u.demo ? 'You are here (demo)' : 'You are here', 11, 'rgba(28,126,214,.95)', '#fff');
   }
   spotForPlace(id) { return this.spots.find((s) => s.places.some((p) => p.id === id)); }
 

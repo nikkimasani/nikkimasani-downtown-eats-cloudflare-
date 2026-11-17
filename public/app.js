@@ -386,6 +386,13 @@ function renderFind() {
 $('#findIn').oninput = renderFind;
 $('#findForm').onsubmit = (e) => { e.preventDefault(); const l = findSuggestions($('#findIn').value).filter((x) => x.st || x.r); if (l.length) runFind(l[0]); else toast('No street corner or spot matches that'); };
 $('#mapBack').onclick = () => { closeSheet(); city?.back(); };
+// keep the Back pill and the directions panel just under the map controls, however many rows they wrap to
+function placeUnderHud() {
+  const hud = document.querySelector('#v-map .hud'); if (!hud) return; const b = hud.getBoundingClientRect(), top = b.bottom - hud.parentElement.getBoundingClientRect().top + 8;
+  const np = $('#navPanel'), nh = np.classList.contains('on') ? np.offsetHeight + 8 : 0;
+  np.style.top = top + 'px'; $('#mapBack').style.top = top + nh + 'px';
+}
+window.addEventListener('resize', placeUnderHud); { const ro = new ResizeObserver(placeUnderHud); ro.observe(document.querySelector('#v-map .hud')); ro.observe($('#navPanel')); }
 $('#zcomp').onclick = () => city?.spin(0);
 $('#zrot').onclick = () => city?.spin(city.v.r + Math.PI / 2);
 $('#zin').onclick = () => city.zoom(1.4); $('#zout').onclick = () => city.zoom(1 / 1.4); $('#zfit').onclick = () => { city.anim = null; city.fitAll = !city.fitAll; city.fit(); };
@@ -453,17 +460,37 @@ document.addEventListener('click', (e) => { const w = e.target.closest('[data-wa
 
 // ---------- you are here + walking navigation ----------
 let watchId = null, compass = null;
+const DEMO = { lat: 29.75935, lng: -95.36345, acc: 8, heading: null, demo: true };   // Main Street Square
+function useDemo(cb) {
+  if (watchId != null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  USER = { ...DEMO }; city?.setUser(USER); $('#zloc').classList.add('on'); $('#findMe').classList.add('on');
+  $('#navPanel').classList.remove('on'); toast('Demo: you\'re standing at Main Street Square'); cb ? cb() : city?.locateMe();
+}
+function locHelp(kind, cb) {
+  const p = $('#navPanel'), ios = /iPhone|iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+  const how = ios
+    ? 'On iPhone/iPad: open <b>Settings → Privacy &amp; Security → Location Services</b>, make sure it\'s on, then tap <b>Safari Websites → While Using the App</b>. Back in Safari, tap <b>aA → Website Settings → Location → Allow</b>, then reload.'
+    : 'Click the 🔒 / site-settings icon next to the address bar, set <b>Location → Allow</b>, then reload.';
+  p.innerHTML = kind === 'far'
+    ? `<div class="nv-main"><div class="nv-ico">📍</div><div><b>You're about ${milesFromDowntown()} mi from downtown</b><div class="meta">The map only covers downtown. Once you're there, tap 📍 Find me again — or try everything now from a demo spot.</div></div></div><div class="nv-row"><button class="btn sm" id="nvDemo">Try it from Main St Square</button><button class="btn sm ghost" id="nvEnd">Close</button></div>`
+    : `<div class="nv-main"><div class="nv-ico">🔒</div><div><b>${kind === 'denied' ? 'Location is turned off for this site' : 'Couldn\'t get your location'}</b><div class="meta">${kind === 'denied' ? how : 'Make sure Location Services are on and you have a signal, then try again.'}</div></div></div><div class="nv-row"><button class="btn sm" id="nvRetry">Try again</button><button class="btn sm ghost" id="nvDemo">Use demo spot</button><button class="btn sm ghost" id="nvEnd">Close</button></div>`;
+  p.classList.add('on');
+  $('#nvEnd').onclick = () => p.classList.remove('on');
+  $('#nvDemo').onclick = () => useDemo(cb);
+  if ($('#nvRetry')) $('#nvRetry').onclick = () => { p.classList.remove('on'); startLocate(cb); };
+}
 function startLocate(cb) {
-  if (!('geolocation' in navigator)) { toast('Location isn\'t available in this browser'); return false; }
+  if (!('geolocation' in navigator) || !window.isSecureContext) { locHelp('error', cb); return false; }
   if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') DeviceOrientationEvent.requestPermission().then((s) => s === 'granted' && listenCompass()).catch(() => {}); else listenCompass();
   if (watchId != null) { cb?.(); return true; }
   let first = true;
   watchId = navigator.geolocation.watchPosition((pos) => {
+    if (USER?.demo) return;
     USER = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy, heading: compass ?? (pos.coords.heading ?? null) };
-    city?.setUser(USER); $('#zloc').classList.add('on');
-    if (first) { first = false; cb?.(); if (city && !city.user?.inside) toast(`You're about ${milesFromDowntown()} mi from downtown — the map shows downtown only`); }
+    city?.setUser(USER); $('#zloc').classList.add('on'); $('#findMe').classList.add('on');
+    if (first) { first = false; cb?.(); }
     if ($('#v-night').classList.contains('on')) renderNight();
-  }, (err) => { toast(err.code === 1 ? 'Location permission is off — turn it on for this site in your browser settings' : 'Couldn\'t get your location right now'); watchId = null; $('#zloc').classList.remove('on'); }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 20000 });
+  }, (err) => { watchId = null; $('#zloc').classList.remove('on'); $('#findMe').classList.remove('on'); locHelp(err.code === 1 ? 'denied' : 'error', cb); }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 20000 });
   return true;
 }
 function listenCompass() {
@@ -471,6 +498,15 @@ function listenCompass() {
   const h = (e) => { const v = e.webkitCompassHeading ?? (e.absolute && e.alpha != null ? 360 - e.alpha : null); if (v != null) { compass = v; if (USER) { USER.heading = v; city?.setUser(USER); } } };
   window.addEventListener('deviceorientationabsolute', h); window.addEventListener('deviceorientation', h);
 }
+const findMe = () => { if (USER && city?.user) { if (!city.locateMe()) locHelp('far'); } else { toast('Finding you…'); startLocate(() => { if (!city?.locateMe()) locHelp('far'); }); } };
+let walkOn = false;
+function toggleWalk(force) {
+  walkOn = force ?? !walkOn; $('#walkView').classList.toggle('on', walkOn);
+  if (!walkOn) { city?.setWalkView(false); return; }
+  const go = () => { if (!city.setWalkView(true)) { walkOn = false; $('#walkView').classList.remove('on'); locHelp('far', () => toggleWalk(true)); } else { $('#legend').classList.add('min'); toast('🚶 Walk view: the map turns with you'); } };
+  if (USER && city?.user) go(); else { toast('Finding you…'); startLocate(go); }
+}
+$('#findMe').onclick = findMe; $('#walkView').onclick = () => toggleWalk();
 const milesFromDowntown = () => { if (!USER) return '?'; const dy = (USER.lat - 29.7575) * 110850, dx = (USER.lng + 95.364) * 96680; return (Math.hypot(dx, dy) / 1609).toFixed(1); };
 function walkTo(r) {
   show('map'); closeSheet(); if (city && !city.sceneOk(r)) setScene(r.night && !r.day ? 'night' : 'day', true);
@@ -478,15 +514,15 @@ function walkTo(r) {
     if (!city) return;
     const sp = city.spotForPlace(r.id);
     if (!sp) { toast('No map location for ' + r.name); return; }
-    if (!city.user?.inside) { showNavFar(r); return; }
+    if (!city.user?.inside) { if (USER?.demo) return; showNavFar(r); return; }
     city.setPick(r.id); city.startNav({ x: sp.x, y: sp.y, label: r.name, tunnel: !!r.tunnel, id: r.id, lat: r.lat, lng: r.lng });
   };
   if (USER && city?.user) go(); else { toast('Finding you…'); startLocate(go); }
 }
 function showNavFar(r) {
   const L = navLinks(r), p = $('#navPanel');
-  p.innerHTML = `<div class="nv-main"><div class="nv-ico">📍</div><div><b>You're ${milesFromDowntown()} mi from downtown</b><div class="meta">Use your maps app to get to ${esc(r.name)} — once you're downtown, tap 🧭 again for walking directions here.</div></div></div><div class="nv-row"><a class="btn sm" href="${L.apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn sm ghost" href="${L.google}" target="_blank" rel="noopener">Google Maps</a><button class="btn sm ghost" id="nvEnd">Close</button></div>`;
-  p.classList.add('on'); $('#nvEnd').onclick = () => p.classList.remove('on');
+  p.innerHTML = `<div class="nv-main"><div class="nv-ico">📍</div><div><b>You're ${milesFromDowntown()} mi from downtown</b><div class="meta">Use your maps app to get to ${esc(r.name)} — once you're downtown, tap 🧭 again for walking directions here.</div></div></div><div class="nv-row"><a class="btn sm" href="${L.apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn sm ghost" href="${L.google}" target="_blank" rel="noopener">Google Maps</a><button class="btn sm ghost" id="nvDemo">Demo from Main St Sq</button><button class="btn sm ghost" id="nvEnd">Close</button></div>`;
+  p.classList.add('on'); $('#nvEnd').onclick = () => p.classList.remove('on'); $('#nvDemo').onclick = () => useDemo(() => walkTo(r));
 }
 function renderNav(st) {
   const p = $('#navPanel');
@@ -507,7 +543,7 @@ function renderNav(st) {
   if (navStepsOpen) $('#nvList').hidden = false;
 }
 let navStepsOpen = false;
-$('#zloc').onclick = () => { if (USER && city?.user) { if (!city.locateMe()) toast(`You're about ${milesFromDowntown()} mi from downtown`); } else { toast('Finding you…'); startLocate(() => city?.locateMe()); } };
+$('#zloc').onclick = findMe;
 
 // ---------- tabs ----------
 document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => show(b.dataset.v)));
@@ -580,7 +616,7 @@ async function aboutPlace(r) {
       r.night = r.bar && (barish || barName || !food);            // night map: bars, lounges, clubs
       r.day = !(r.night && !food);                     // day map: anywhere that serves meals
     });
-    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; }
+    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;

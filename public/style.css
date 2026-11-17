@@ -204,3 +204,8 @@ header{position:relative}
 .seg.scene button.on[data-s=day]{background:#fff3bf;color:#5c3d00}
 .seg.scene button.on[data-s=night]{background:#2b2d5c;color:#fff}
 #v-map.nightscene .hud .pill,#v-map.nightscene .hud .seg{box-shadow:0 0 0 1px rgba(132,94,247,.35),0 4px 14px rgba(0,0,0,.25)}
+
+.pill.locpill{color:#1c7ed6;font-weight:700}
+.pill.locpill.on,#walkView.on{background:#1c7ed6;color:#fff}
+
+#v-map .navpanel ~ .backpill, .navpanel.on ~ .backpill{z-index:6}
