@@ -263,6 +263,7 @@ export class CityMap {
     } else {
       this.avenues = AVENUES.map((n, k) => ({ n, x: -70 + k * 10 })); this.cross = CROSS.map((n, k) => ({ n, y: -90 + k * 10 })); this.blockW = this.blockD = 10;
     }
+    this.alignToStops(proj);
     this.avenues.sort((a, b) => a.x - b.x); this.cross.sort((a, b) => a.y - b.y);
     this.avX = Object.fromEntries(this.avenues.map((a) => [a.n, a.x])); this.csY = Object.fromEntries(this.cross.map((c) => [c.n, c.y]));
     this.streetW = Math.min(this.blockW, this.blockD) * 0.13;
@@ -292,6 +293,34 @@ export class CityMap {
     this.buildCity(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
   }
 
+  // METRO publishes the exact location of every bus stop, named by corner ("Fannin St @ Texas Ave").
+  // Each corner tells us where two streets cross, so use them to put every street exactly where it is.
+  alignToStops(proj) {
+    const stops = this.opts.stops; if (!stops) return;
+    const key = (t) => norm(t.replace(/^(n|s|e|w)\.?\s+/i, '').replace(/\s+(st|street|ave|avenue|blvd|pkwy)\.?$/i, ''));
+    const AV = new Map(AVENUES.map((n) => [norm(n), n])), CS = new Map(CROSS.map((n) => [norm(n), n]));
+    const xs = {}, ys = {};
+    for (const [lat, lng, name] of Object.values(stops)) {
+      const m = /^(.+?)\s*@\s*(.+)$/.exec(name || ''); if (!m) continue;
+      const a = key(m[1]), b = key(m[2]), av = AV.get(a) || AV.get(b), cs = CS.get(a) || CS.get(b);
+      if (!av || !cs) continue;
+      const [x, y] = proj(lat, lng); (xs[av] = xs[av] || []).push(x); (ys[cs] = ys[cs] || []).push(y);
+    }
+    const fill = (list, obs, prop) => {
+      const known = list.map((s, k) => [k, obs[s.n] && obs[s.n].length >= 2 ? median(obs[s.n]) : null]).filter(([, v]) => v != null);
+      if (known.length < 3) return false;
+      const f = lsq(known);   // index → position, for streets with no stops nearby
+      list.forEach((s, k) => { const o = known.find(([kk]) => kk === k); s[prop] = o ? o[1] : f.a + f.b * k; });
+      return true;
+    };
+    const okA = fill(this.avenues, xs, 'x'), okC = fill(this.cross, ys, 'y');
+    if (!okA || !okC) return;
+    const gaps = (l, p) => l.slice(1).map((s, k) => Math.abs(s[p] - l[k][p]));
+    this.blockW = median(gaps(this.avenues, 'x')); this.blockD = median(gaps(this.cross, 'y'));
+    this.avX = Object.fromEntries(this.avenues.map((a) => [a.n, a.x])); this.csY = Object.fromEntries(this.cross.map((c) => [c.n, c.y]));
+    if (this.avenues[0].num != null) { this.fitX = lsq(this.avenues.map((a) => [a.num, a.x])); this.fitY = lsq(this.cross.map((c) => [c.num, c.y])); }
+    this.alignedToStops = true;
+  }
   // Keep every pin inside a building: move it into the block it belongs to (never on the asphalt),
   // and lay out several pins in one block on a tidy sub-grid so they don't pile up.
   snapSpots() {
@@ -601,9 +630,14 @@ export class CityMap {
     for (const t of L.trips || []) {
       if (seen.has(t.id)) continue;
       const st = t.s.filter(([sid]) => S[sid]).sort((a, b) => a[1] - b[1]); let pos = null;
-      for (let i = 0; i < st.length - 1; i++) if (st[i][1] <= now && now < st[i + 1][1]) { const a = S[st[i][0]], b = S[st[i + 1][0]], f = (now - st[i][1]) / Math.max(1, st[i + 1][1] - st[i][1]); pos = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]; break; }
+      let seg = null;
+      for (let i = 0; i < st.length - 1; i++) if (st[i][1] <= now && now < st[i + 1][1]) {
+        const a = S[st[i][0]], b = S[st[i + 1][0]], f = (now - st[i][1]) / Math.max(1, st[i + 1][1] - st[i][1]);
+        pos = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+        const pa = this.proj(a[0], a[1]), pb = this.proj(b[0], b[1]); seg = [pb[0] - pa[0], pb[1] - pa[1]]; break;
+      }
       if (!pos) continue;
-      const [x, y] = this.proj(pos[0], pos[1]); raw.push({ id: 't' + t.id, trip: t.id, route: t.route, x, y, vid: t.vid, est: true });
+      const [x, y] = this.proj(pos[0], pos[1]); raw.push({ id: 't' + t.id, trip: t.id, route: t.route, x, y, vid: t.vid, est: true, seg });
     }
     const prev = this.livePrev || new Map(), next = new Map(), B = this.bounds, out = [];
     const A = this.avenues, C = this.cross, R2 = this.rail;
@@ -613,7 +647,7 @@ export class CityMap {
       const p = prev.get(o.id);
       const sx = p ? p.sx + (o.x - p.sx) * 0.06 : o.x, sy = p ? p.sy + (o.y - p.sy) * 0.06 : o.y;   // glide toward each new fix
       let hx = p ? p.hx : 0, hy = p ? p.hy : 1; const mx = o.x - (p ? p.sx : o.x), my = o.y - (p ? p.sy : o.y);
-      if (Math.hypot(mx, my) > 0.3) { hx = mx; hy = my; }
+      if (o.seg && Math.hypot(...o.seg) > 0.5) { hx = o.seg[0]; hy = o.seg[1]; } else if (Math.hypot(mx, my) > 0.3) { hx = mx; hy = my; }
       next.set(o.id, { sx, sy, hx, hy });
       // keep vehicles on the roads/tracks
       let x = sx, y = sy, dx = 0, dy = 0;
@@ -623,12 +657,15 @@ export class CityMap {
       else {
         const na = A.reduce((b, a) => (Math.abs(a.x - x) < Math.abs(b.x - x) ? a : b)), nc = C.reduce((b, c) => (Math.abs(c.y - y) < Math.abs(b.y - y) ? c : b));
         const lane = this.streetW * 0.5;
-        if (Math.abs(na.x - x) < Math.abs(nc.y - y)) { dy = hy >= 0 ? 1 : -1; x = na.x - dy * lane; } else { dx = hx >= 0 ? 1 : -1; y = nc.y + dx * lane; }
+        const alongAvenue = Math.abs(hx) > 0.01 || Math.abs(hy) > 0.01 ? Math.abs(hy) >= Math.abs(hx) : Math.abs(na.x - x) < Math.abs(nc.y - y);
+        if (alongAvenue) { dy = hy >= 0 ? 1 : -1; x = na.x - dy * lane; } else { dx = hx >= 0 ? 1 : -1; y = nc.y + dx * lane; }
       }
       const tname = (ri[3] || '').replace(/^metro\s*rail\s*/i, '').toLowerCase().replace(/\b\w/g, (m) => m.toUpperCase());
       out.push({ kind, live: true, est: o.est, P: { x, y, dx, dy }, route: kind === 'train' && tname ? tname : ri[0] || o.route, color: ri[2] ? '#' + ri[2] : kind === 'train' ? '#e03131' : null, rname: ri[3], vid: o.vid });
     }
     this.livePrev = next; this.liveCars = out;
+    // keep the animated trains unless METRO's feed actually carries rail trips right now
+    this.liveRailSeen = (L.trips || []).some((t) => { const r = R[t.route]; return r && (r[1] === 0 || r[1] === 1 || r[1] === 2); });
   }
   drawBusStops(N) {
     if (this.v.s < 0.6 || !this.busStops) return; const ctx = this.ctx, v = this.v, sw = this.streetW;
@@ -894,7 +931,7 @@ export class CityMap {
       if (Math.abs(sx - x) < 7 * u + 4 && sy < y + 3 && sy > y - 30 * u) return { npc: n };
     }
     const liveOn = !!this.liveData;
-    if (this.mode !== 'tunnel' && this.v.s > 0.35) for (const c of [...(this.liveCars || []), ...(this.cars || []).filter((c) => !liveOn || c.kind !== 'bus'), ...(liveOn ? [] : (this.trains || []).map((t) => ({ ...this.trainBox(t), kind: 'train', line: t.line, sim: true })))]) {
+    if (this.mode !== 'tunnel' && this.v.s > 0.35) for (const c of [...(this.liveCars || []), ...(this.cars || []).filter((c) => !liveOn || c.kind !== 'bus'), ...(liveOn && this.liveRailSeen ? [] : (this.trains || []).map((t) => ({ ...this.trainBox(t), kind: 'train', line: t.line, sim: true })))]) {
       const b = c.sim ? c : this.carBox(c), [x, y] = this.v.p(b.x + b.w / 2, b.y + b.d / 2, 0.8);
       if (Math.hypot(sx - x, sy - y) < Math.max(10, 16 * this.v.s)) return { vehicle: c };
     }
@@ -973,8 +1010,8 @@ export class CityMap {
     for (const l of this.landmarks) items.push({ k: v.boxDepth(l.x, l.y, l.w, l.d), l });
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
     for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
-    const live = !!this.liveData;
-    if (!live) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
+    const live = !!this.liveData, liveRail = live && (this.liveCars || []).some((c) => c.kind === 'train') || this.liveRailSeen;
+    if (!liveRail) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
     for (const c of [...(this.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(this.liveCars || [])]) { const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
     items.sort((p, q) => p.k - q.k);
     const ghost = mode === 'both' ? 0.4 : 1;

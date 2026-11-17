@@ -289,6 +289,7 @@ let city = null, mapMatch = false, mapOpen = false;
 function initMap() {
   if (city) return;
   city = new CityMap($('#city'), DATA, {
+    stops: metroStatic && metroStatic.stops,   // METRO's surveyed stop corners line the street grid up with reality
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (places, spot) => places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label),
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
@@ -324,7 +325,7 @@ async function pollMetro() {
     setTimeout(() => {
       const n = city.liveCars || [], tr = n.filter((c) => c.kind === 'train').length, bu = n.length - tr, chip = $('#liveChip');
       chip.hidden = false; chip.classList.toggle('warn', !ok);
-      chip.textContent = ok ? `● LIVE · ${tr} 🚊 · ${bu} 🚌` : `⚠️ METRO live: ${j.stats.tripUpdates || 'no connection'}`;
+      chip.textContent = ok ? `● LIVE · ${bu} 🚌${city.liveRailSeen ? ` · ${tr} 🚊` : ''}` : `⚠️ METRO live: ${j.stats.tripUpdates || 'no connection'}`;
     }, 300);
   } catch (e) {}
 }
@@ -332,7 +333,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) poll
 $('#liveChip').onclick = () => {
   const j = metroLast; if (!j) return;
   const ok = j.stats.positions === 200 || j.stats.tripUpdates === 200;
-  toast(ok ? `Live from METRO's real-time feed · updated ${new Date((j.feedTime || j.at) * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}. Waymos are still animated.`
+  toast(ok ? `Live from METRO's real-time feed · updated ${new Date((j.feedTime || j.at) * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}. ${city.liveRailSeen ? '' : 'METRO isn\'t sending train predictions right now, so trains are animated. '}Waymos are animated.`
     : `METRO's feed answered ${j.stats.tripUpdates || 'nothing'} — check the METRO_API_KEY. Showing animated traffic for now.`);
 };
 
@@ -428,7 +429,8 @@ async function aboutPlace(r) {
 // ---------- boot ----------
 (async () => {
   try {
-    const [pj, hj, oj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} }))]);
+    const [pj, hj, oj, ms] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
+    metroStatic = ms;
     META = { refreshed: pj.refreshed }; HH = hj;
     DATA = pj.places.map((p, i) => {
       const o = { ...(p.official || {}) };
