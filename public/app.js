@@ -306,7 +306,10 @@ function initMap() {
   pollMetro(); setInterval(pollMetro, 20000);
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
-  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><br><span style="color:#868e96">Drag to move · pinch or double-tap to zoom · twist to rotate · tap a street for its corner</span>`;
+  $('#legend').innerHTML = `<button class="lgd-toggle" id="lgdToggle" aria-expanded="true">Key <b>▾</b></button><div class="lgd-body"><span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><p class="lgd-hint">Drag to move · pinch or double-tap to zoom · twist two fingers to rotate · tap a street to name the corner</p></div>`;
+  const lg = $('#legend'), setLg = (open) => { lg.classList.toggle('min', !open); $('#lgdToggle').setAttribute('aria-expanded', open); try { localStorage.setItem('lgdOpen', open ? '1' : '0'); } catch (e) {} };
+  let lgOpen = true; try { lgOpen = localStorage.getItem('lgdOpen') !== '0'; } catch (e) {}
+  setLg(lgOpen); $('#lgdToggle').onclick = () => setLg(lg.classList.contains('min'));
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));

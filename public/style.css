@@ -155,3 +155,15 @@ textarea{width:100%;min-height:84px;border-radius:14px;border:1px solid var(--li
 .livechip{background:#e03131 !important;color:#fff !important;font-weight:700}
 .livechip.warn{background:#fff3bf !important;color:#5c3c00 !important}
 .livechip[hidden]{display:none}
+
+/* map key: wraps inside the screen, stays clear of the zoom buttons, and folds down to a small "Key" button */
+.legend{max-width:calc(100% - 92px) !important;box-sizing:border-box;padding:6px 10px 8px !important}
+.legend .lgd-body{display:flex;flex-wrap:wrap;gap:3px 0}
+.legend .lgd-hint{flex-basis:100%;margin:4px 0 0;color:#868e96;font-size:11px;line-height:1.35;white-space:normal}
+.lgd-toggle{display:flex;align-items:center;gap:4px;border:0;background:none;padding:2px 0 4px;font:700 12px system-ui,sans-serif;color:#495057;cursor:pointer}
+.lgd-toggle b{transition:transform .2s;font-size:11px}
+.legend.min{padding:6px 12px !important}
+.legend.min .lgd-body{display:none}
+.legend.min .lgd-toggle{padding:2px 0}
+.legend.min .lgd-toggle b{transform:rotate(-90deg)}
+@media(min-width:700px){.legend{max-width:440px !important}}

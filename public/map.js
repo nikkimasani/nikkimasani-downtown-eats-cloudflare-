@@ -35,7 +35,8 @@ const LANDMARKS = [
   { n: 'Central Library', b: ['Brazos', 'Smith', 'McKinney', 'Lamar'], h: 3.6, kind: 'box', c: '#e5dbc4' },
   { n: 'Christ Church Cathedral', b: ['Fannin', 'San Jacinto', 'Prairie', 'Texas'], h: 2.6, kind: 'church', c: '#c8b9a0', half: true },
   { n: 'Hobby Center', b: ['W', 'Bagby', 'Rusk', 'Walker'], h: 4.4, kind: 'theater', c: '#c4a27c' },
-  { n: 'Downtown Aquarium', b: ['W', 'Bagby', 'Congress', 'Prairie'], h: 2.4, kind: 'aquarium', c: '#7fb4c9' },
+  { n: 'Downtown Aquarium', b: ['W', 'Bagby', 'Congress', 'Prairie'], h: 2.6, kind: 'aquarium', c: '#4fa3c1' },
+  { n: 'POST Houston', b: ['Bagby', 'Smith', 'Commerce', 'Franklin'], h: 3.4, kind: 'post', c: '#cdc6b8' },
 ];
 const AREAS = [
   { n: 'Discovery Green', b: ['La Branch', 'Crawford', 'McKinney', 'Lamar'], kind: 'park', grow: [0, 1.2, 0, 0] },
@@ -300,6 +301,7 @@ export class CityMap {
     this.bayouY = C[0].y - this.blockD * 1.4;
     this.v.cx = (this.avX.Main ?? 0); this.v.cy = (this.csY.Walker ?? 0);
     this.northW = [uy, vy];   // which way true north points in map units
+    this.eastW = [ux, vx];
     this.proj = proj;
     this.buildCity(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
   }
@@ -379,7 +381,7 @@ export class CityMap {
     if ('Main' in this.avX && 'Fannin' in this.avX) this.areas.push({ n: "Allen's Landing", kind: 'park', r: { x0: this.avX.Main + this.streetW + 0.4, x1: this.avX.Fannin - this.streetW, y0: this.cross[0].y - 5.6, y1: this.cross[0].y - this.streetW - 0.5 } });
     for (const l of LANDMARKS) {
       let r = this.rectFor(l.b, 1.2); if (!r) continue; if (l.half) r = half(r, 'west');
-      const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2, w = (r.x1 - r.x0) * (l.kind === 'twin' ? 0.9 : 0.72), d = (r.y1 - r.y0) * 0.72;
+      const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2, w = (r.x1 - r.x0) * (l.kind === 'twin' ? 0.9 : l.kind === 'post' || l.kind === 'aquarium' ? 0.97 : 0.72), d = (r.y1 - r.y0) * (l.kind === 'post' || l.kind === 'aquarium' ? 0.95 : 0.72);
       this.landmarks.push({ ...l, x: cx - w / 2, y: cy - d / 2, w, d }); taken.push(r);
     }
     const core = { x: ((this.avX.Louisiana ?? 0) + (this.avX.Main ?? 0)) / 2, y: ((this.csY.Capitol ?? 0) + (this.csY.McKinney ?? 0)) / 2 };
@@ -561,7 +563,7 @@ export class CityMap {
         let [i, j] = corners[k]; const [i2, j2] = corners[(k + 1) % corners.length];
         while (i !== i2 || j !== j2) { path.push([i, j]); if (i !== i2) i += Math.sign(i2 - i); else j += Math.sign(j2 - j); }
       }
-      path.forEach((n, k) => { if (k % 3 === 1) this.busStops.push({ n, route: li }); });
+      path.forEach((n, k) => { if (k % 3 === 1) this.busStops.push({ a: n, b: path[(k + 1) % path.length], route: li }); });   // stops sit mid-block, at the curb
       for (let b = 0; b < 2; b++) this.cars.push({ kind: 'bus', route: li, path, k: Math.floor(b * path.length / 2), t: 0, wait: b * 2, speed: 2.3 });
     });
     const okEdge = (i, j, i2, j2) => i2 >= 0 && j2 >= 0 && i2 < A.length && j2 < C.length && !(i === i2 && A[i].n === 'Main');   // Main is the rail mall
@@ -594,18 +596,40 @@ export class CityMap {
     const key = (c) => { const [a, b] = this.carEnds(c); return a + '>' + b; }, lanes = new Map();
     for (const c of cars) { const k = key(c); (lanes.get(k) || lanes.set(k, []).get(k)).push(c); }
     for (const c of cars) {
-      if (c.wait > 0) { c.wait -= dt; continue; }
+      const t0 = c.t, k0 = c.k, at0 = c.at; this.stepCar(c, dt, key, lanes);
+      c.moving = c.t !== t0 || c.k !== k0 || c.at !== at0;
+    }
+  }
+  stepCar(c, dt, key, lanes) {
+    {
+      if (c.wait > 0) { c.wait -= dt; return; }
       const P = this.carPos(c), gap = (c.kind === 'bus' ? 5.4 : 3) / P.len;
-      if (lanes.get(key(c)).some((o) => o !== c && o.t > c.t && o.t - c.t < gap)) continue;   // don't rear-end the car ahead
-      if (c.kind === 'bus' && c.t < 1 && this.trainNear(P)) continue;
-      c.t += (c.speed * dt) / P.len;
-      if (c.t < 1) continue;
+      if (lanes.get(key(c)).some((o) => o !== c && o.t > c.t && o.t - c.t < gap)) return;   // don't rear-end the car ahead
+      if (c.kind === 'bus' && c.t < 1 && this.trainNear(P)) return;
+      if (this.personAhead(c, P)) return;   // stop for pedestrians
+      const nt = c.t + (c.speed * dt) / P.len, stopT = 1 - (this.streetW + 0.85 + (c.kind === 'bus' ? 2.15 : 0.95)) / P.len, end = this.carEnds(c)[1];
+      if (c.t <= stopT && nt > stopT && this.signal(end[0], end[1], P.dx ? 'c' : 'a') !== 'g') { c.t = stopT; return; }   // wait at red / yellow
+      if (c.kind === 'bus' && c.k % 3 === 1 && !c.served && c.t < 0.5 && nt >= 0.5) { c.t = 0.5; c.served = true; c.wait = 2.6; return; }   // pull in at the stop
+      c.t = nt;
+      if (c.t < 1) return;
       c.t = 0;
-      if (c.kind === 'bus') { c.k = (c.k + 1) % c.path.length; if (c.k % 3 === 1) c.wait = 2.6; }
+      if (c.kind === 'bus') { c.k = (c.k + 1) % c.path.length; c.served = false; }
       else { c.from = c.at; c.at = c.to; this.pickNext(c); if (Math.random() < 0.45) c.wait = 0.4 + Math.random() * 0.6; }
     }
   }
   trainNear() { return false; }
+  personAhead(c, P) {   // anyone in the roadway in front of this vehicle (or just stepping off the curb)?
+    const half = c.kind === 'bus' ? 2.15 : 0.95, reach = half + 1.8, lane = this.streetW * 0.5, sw = this.streetW;
+    const cx = P.x + P.dy * lane, cy = P.y - P.dx * lane;   // centre line of the street this vehicle is on
+    for (const n of this.npcs) {
+      if (n.under || n.inside > 0) continue;
+      const rx = n.x - P.x, ry = n.y - P.y, along = rx * P.dx + ry * P.dy;
+      if (along < -half || along > reach) continue;
+      const fromCentre = Math.abs((n.x - cx) * -P.dy + (n.y - cy) * P.dx);
+      if (fromCentre < sw - 0.02) return true;   // actually in the road (people waiting at the curb do not block)
+    }
+    return false;
+  }
   drawCar(c, N, alpha, now) {
     const ctx = this.ctx, v = this.v, b = this.carBox(c);
     if (c.kind === 'train') {
@@ -678,10 +702,84 @@ export class CityMap {
     // keep the animated trains unless METRO's feed actually carries rail trips right now
     this.liveRailSeen = (L.trips || []).some((t) => { const r = R[t.route]; return r && (r[1] === 0 || r[1] === 1 || r[1] === 2); });
   }
+  // ---------- ambience: sun shadows, clouds, signals, streetlights, beacons, birds ----------
+  sun() {   // shadow direction for the real time of day in Houston: long in the morning/evening, short at noon
+    const d = new Date(), key = d.getHours() * 60 + d.getMinutes(); if (this._sunK === key) return this._sun;
+    const h = key / 60; let out = null;
+    if (h > 6.9 && h < 17.6) {
+      const t = (h - 6.9) / (17.6 - 6.9), elev = Math.max(0.16, Math.sin(Math.PI * t) * 0.82), a = Math.PI * t, E = this.eastW, Nn = this.northW;
+      const sx = E[0] * Math.cos(a) - Nn[0] * Math.sin(a), sy = E[1] * Math.cos(a) - Nn[1] * Math.sin(a), L = Math.min(2.4, 1 / Math.tan(elev)) * 0.6;
+      out = [-sx * L, -sy * L];
+    }
+    this._sunK = key; this._sun = out; return out;
+  }
+  drawShadows() {
+    const sv = this.sun(); if (!sv || this.mode === 'tunnel') return;
+    const ctx = this.ctx, v = this.v, W = this.W, H = this.H;
+    const hull = (P) => { P.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); const lo = [], up = []; for (const p of P) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); } for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); } return lo.slice(0, -1).concat(up.slice(0, -1)); };
+    ctx.beginPath();
+    const add = (x, y, w, d, h) => {
+      if (h < 0.4) return; const [cx, cy] = v.p(x + w / 2 + sv[0] * h / 2, y + d / 2 + sv[1] * h / 2), r = (w + d + h * 3) * TW * 0.5 * v.s; if (cx < -r || cx > W + r || cy < -r || cy > H + r) return;
+      const dx = sv[0] * h, dy = sv[1] * h, pts = hull([[x, y], [x + w, y], [x + w, y + d], [x, y + d], [x + dx, y + dy], [x + w + dx, y + dy], [x + w + dx, y + d + dy], [x + dx, y + d + dy]].map((q) => v.p(q[0], q[1])));
+      pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath();
+    };
+    for (const f of this.fill) if (!f.lot) add(f.x, f.y, f.w, f.d, f.h);
+    for (const l of this.landmarks) add(l.x, l.y, l.w, l.d, l.h);
+    for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) add(a.r.x0 + 0.6, a.r.y0 + 0.6, a.r.x1 - a.r.x0 - 1.2, a.r.y1 - a.r.y0 - 1.2, 3.8);
+    ctx.fillStyle = 'rgba(38,48,74,.17)'; ctx.fill('nonzero');
+  }
+  drawClouds(now, N) {   // big soft cloud shadows drifting over the city
+    if (N || this.mode === 'tunnel') return; const ctx = this.ctx, v = this.v, B = this.bounds;
+    if (!this._cloud) { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 4, 64, 64, 64); gr.addColorStop(0, 'rgba(40,52,80,.55)'); gr.addColorStop(0.6, 'rgba(40,52,80,.25)'); gr.addColorStop(1, 'rgba(40,52,80,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); this._cloud = c; }
+    const Lx = B.x1 - B.x0 + 80; ctx.globalAlpha = 0.22;
+    for (let i = 0; i < 5; i++) {
+      const wx = B.x0 - 40 + ((now / 1000) * 0.7 + i * (Lx / 5) + hash('cx' + i) * 30) % Lx, wy = B.y0 + (B.y1 - B.y0) * (0.1 + 0.8 * hash('cy' + i)), [x, y] = v.p(wx, wy), r = (30 + hash('cr' + i) * 25) * TW * 0.5 * v.s;
+      if (x < -r || x > this.W + r || y < -r || y > this.H + r) continue;
+      ctx.drawImage(this._cloud, x - r, y - r * 0.5, r * 2, r);
+    }
+    ctx.globalAlpha = 1;
+  }
+  signal(i, j, axis, now = performance.now()) {   // 18-second cycle, staggered along the avenues like a green wave
+    const ph = ((now / 1000 + i * 1.4 + j * 0.6) % 18) / 18;
+    return axis === 'a' ? (ph < 0.44 ? 'g' : ph < 0.5 ? 'y' : 'r') : ph < 0.5 ? 'r' : ph < 0.94 ? 'g' : 'y';
+  }
+  drawSignals(now) {
+    const v = this.v; if (v.s < 0.75 || this.mode === 'tunnel') return; const ctx = this.ctx, sw = this.streetW, COL = { g: '#40c057', y: '#fab005', r: '#fa5252' };
+    this.avenues.forEach((a, i) => this.cross.forEach((c, j) => {
+      const [sx, sy] = v.p(a.x, c.y); if (sx < -40 || sx > this.W + 40 || sy < -60 || sy > this.H + 40) return;
+      for (const [ox, oy, ax] of [[sw + 0.3, -sw - 0.3, 'a'], [-sw - 0.3, sw + 0.3, 'c']]) {
+        const [x, y] = v.p(a.x + ox, c.y + oy), [, yt] = v.p(a.x + ox, c.y + oy, 1.5), st = this.signal(i, j, ax, now);
+        ctx.strokeStyle = '#495057'; ctx.lineWidth = Math.max(1, v.s * 1.2); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, yt); ctx.stroke();
+        const r = Math.max(1.6, v.s * 2.2); ctx.fillStyle = '#212529'; ctx.fillRect(x - r * 1.2, yt - r * 1.2, r * 2.4, r * 2.4); circle(ctx, x, yt, r, COL[st]);
+      }
+    }));
+  }
+  drawStreetlights(N) {
+    if (!N || this.mode === 'tunnel') return; const ctx = this.ctx, v = this.v, sw = this.streetW;
+    if (!this._glow) { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 1, 32, 32, 32); gr.addColorStop(0, 'rgba(255,214,140,.7)'); gr.addColorStop(1, 'rgba(255,214,140,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); this._glow = c; }
+    ctx.globalCompositeOperation = 'lighter'; const r = Math.max(6, 22 * v.s);
+    for (const a of this.avenues) for (const c of this.cross) for (const [ox, oy] of [[sw + 0.4, sw + 0.4], [-sw - 0.4, -sw - 0.4]]) {
+      const [x, y] = v.p(a.x + ox, c.y + oy); if (x < -r || x > this.W + r || y < -r || y > this.H + r) continue; ctx.drawImage(this._glow, x - r, y - r / 2, r * 2, r);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  drawBeacons(now, N) {   // red aviation lights blink on the tallest towers
+    const ctx = this.ctx, v = this.v, on = (now % 1600) < 260; if (!on || this.mode === 'tunnel') return;
+    for (const l of this.landmarks) if (l.h > 19) { const [x, y] = v.p(l.x + l.w / 2, l.y + l.d / 2, l.h + (l.kind === 'mayan' ? 1.6 : 0.2)); circle(ctx, x, y, N ? 4 : 2.6, 'rgba(255,40,40,.35)'); circle(ctx, x, y, N ? 2 : 1.4, '#ff3b3b'); }
+  }
+  drawBirds(now, N) {   // now and then a small flock crosses the sky
+    if (N || this.mode === 'tunnel') return; const t = (now / 1000) % 40; if (t > 14) return;
+    const ctx = this.ctx, k = t / 14, bx = -60 + k * (this.W + 120), by = this.H * 0.22 + Math.sin(k * 3) * 20;
+    ctx.strokeStyle = 'rgba(52,58,64,.75)'; ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+    for (let i = 0; i < 6; i++) { const x = bx - (i % 3) * 14 - Math.floor(i / 3) * 8, y = by + (i % 3) * 9 * (i < 3 ? 1 : -1) * 0.7 + (i >= 3 ? 14 : 0), f = Math.sin(now / 110 + i) * 3.5; ctx.beginPath(); ctx.moveTo(x - 5, y - f); ctx.lineTo(x, y); ctx.lineTo(x + 5, y - f); ctx.stroke(); }
+    ctx.lineCap = 'butt';
+  }
   drawBusStops(N) {
     if (this.v.s < 0.6 || !this.busStops) return; const ctx = this.ctx, v = this.v, sw = this.streetW;
     for (const st of this.busStops) {
-      const [x0, y0] = this.node(st.n), [x, y] = v.p(x0 + sw + 0.5, y0 + sw + 0.5), [, yt] = v.p(x0 + sw + 0.5, y0 + sw + 0.5, 2.1);
+      const A = this.node(st.a), Bn = this.node(st.b), dx = Math.sign(Bn[0] - A[0]), dy = Math.sign(Bn[1] - A[1]);
+      const px = (A[0] + Bn[0]) / 2 - dy * (sw + 0.25), py = (A[1] + Bn[1]) / 2 + dx * (sw + 0.25);   // right-hand curb, mid-block
+      const [x, y] = v.p(px, py), [, yt] = v.p(px, py, 2.1);
       if (x < -20 || x > this.W + 20 || y < -40 || y > this.H + 20) continue;
       ctx.strokeStyle = '#495057'; ctx.lineWidth = Math.max(1, v.s * 1.3); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, yt); ctx.stroke();
       const r = Math.max(3, v.s * 4.5); ctx.fillStyle = '#1c5fa8'; ctx.fillRect(x - r, yt - r * 1.4, r * 2, r * 1.4); ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.round(r * 1.1)}px system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('M', x, yt - r * 0.7);
@@ -697,8 +795,8 @@ export class CityMap {
       const [sx, sy] = v.p(a.x, c.y); if (sx < -80 || sx > this.W + 80 || sy < -80 || sy > this.H + 80) continue;
       for (let i = 0; i <= 5; i++) {
         const t = -sw + (2 * sw) * i / 5;
-        for (const yy of [c.y - sw - 0.15, c.y + sw + 0.15 - k]) { ctx.moveTo(...v.p(a.x + t, yy)); ctx.lineTo(...v.p(a.x + t, yy + k)); }
-        for (const xx of [a.x - sw - 0.15, a.x + sw + 0.15 - k]) { ctx.moveTo(...v.p(xx, c.y + t)); ctx.lineTo(...v.p(xx + k, c.y + t)); }
+        for (const yy of [c.y - sw + 0.1 - k, c.y + sw - 0.1]) { ctx.moveTo(...v.p(a.x + t, yy)); ctx.lineTo(...v.p(a.x + t, yy + k)); }
+        for (const xx of [a.x - sw + 0.1 - k, a.x + sw - 0.1]) { ctx.moveTo(...v.p(xx, c.y + t)); ctx.lineTo(...v.p(xx + k, c.y + t)); }
       }
     }
     ctx.stroke();
@@ -711,6 +809,7 @@ export class CityMap {
     const dirAng = (dx, dy) => { const a = v.p(0, 0), b = v.p(dx, dy); let g = Math.atan2(b[1] - a[1], b[0] - a[0]); if (g > Math.PI / 2) g -= Math.PI; if (g < -Math.PI / 2) g += Math.PI; return g; };
     const angA = dirAng(0, 1), angC = dirAng(1, 0);
     const showNum = v.s > 1.15;
+    const covered = (wx, wy) => this.landmarks.some((l) => l.kind === 'post' && wx > l.x && wx < l.x + l.w && wy > l.y && wy < l.y + l.d);
     const sign = (x, y, text, ang, major, num) => {
       if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
       ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
@@ -723,7 +822,7 @@ export class CityMap {
       ctx.restore();
     };
     for (let i = 0; i < A.length; i++) for (let j = 0; j < C.length - 1; j++) {
-      if ((j + i) % kA) continue; const [x, y] = v.p(A[i].x, (C[j].y + C[j + 1].y) / 2);
+      if ((j + i) % kA || covered(A[i].x, (C[j].y + C[j + 1].y) / 2)) continue; const [x, y] = v.p(A[i].x, (C[j].y + C[j + 1].y) / 2);
       sign(x, y, SUFFIX(A[i].n), angA, MAJOR.has(A[i].n), showNum && C[j].num != null ? `${C[j].num}s` : '');
     }
     for (let j = 0; j < C.length; j++) for (let i = 0; i < A.length - 1; i++) {
@@ -770,7 +869,7 @@ export class CityMap {
     const look = { skin: SKIN[Math.floor(r(1) * SKIN.length)], hair: HAIR[Math.floor(r(2) * HAIR.length)], shirt: SHIRT[Math.floor(r(3) * SHIRT.length)], pants: PANTS[Math.floor(r(4) * PANTS.length)], long: r(5) > 0.55 };
     const n = { id: seed, under, look, phase: r(6) * 6, speed: 0.8 + r(7) * 0.5, wait: r(8) * 5, path: [], target: null, inside: 0, thought: null, thoughtT: 0 };
     if (under) { const k = Math.floor(r(9) * this.tunnelSpots.length); const s = this.tunnelSpots[k]; n.x = s.x; n.y = s.y; n.node = k; }
-    else { const a = this.avenues[2 + Math.floor(r(9) * (this.avenues.length - 6))], c = this.cross[2 + Math.floor(r(10) * (this.cross.length - 6))]; n.x = a.x; n.y = c.y; }
+    else { const a = this.avenues[2 + Math.floor(r(9) * (this.avenues.length - 6))], c = this.cross[2 + Math.floor(r(10) * (this.cross.length - 6))], o = this.walkOff(); n.x = a.x + (r(11) > 0.5 ? o : -o); n.y = c.y + (r(12) > 0.5 ? o : -o); }
     return n;
   }
   chooseTarget(n) {
@@ -786,13 +885,13 @@ export class CityMap {
     for (let i = 0; i < pool.length; i++) { x -= w[i]; if (x <= 0) return pool[i]; }
     return pool[0];
   }
+  walkOff() { return this.streetW + 0.3; }   // pedestrians keep to the middle of the sidewalk
+  // walk on sidewalks only: out to the nearest sidewalk, along it, and across streets only at the crosswalks
   routeStreet(n, t) {
-    const near = (arr, v, k) => arr.reduce((b, a) => (Math.abs(a[k] - v) < Math.abs(b[k] - v) ? a : b))[k];
-    const ax = near(this.avenues, n.x, 'x'), cy = near(this.cross, t.y, 'y'), tx = near(this.avenues, t.x, 'x');
-    const pts = [];
-    if (Math.abs(n.x - ax) > 0.5) pts.push([n.x, near(this.cross, n.y, 'y')], [ax, near(this.cross, n.y, 'y')]);
-    pts.push([ax, cy], [tx, cy], [tx, t.y], [t.x, t.y]);
-    return pts;
+    const o = this.walkOff(), LX = this.avenues.flatMap((a) => [a.x - o, a.x + o]), LY = this.cross.flatMap((c) => [c.y - o, c.y + o]);
+    const near = (L, v) => L.reduce((b, a) => (Math.abs(a - v) < Math.abs(b - v) ? a : b));
+    const y1 = near(LY, n.y), x1 = near(LX, n.x), y2 = near(LY, t.y);
+    return [[n.x, y1], [x1, y1], [x1, y2], [t.x, y2], [t.x, t.y]].filter((q, i, arr) => !i || Math.hypot(q[0] - arr[i - 1][0], q[1] - arr[i - 1][1]) > 0.05);
   }
   routeTunnel(n, goal) {
     const T = this.tunnelSpots, start = n.node ?? 0, end = T.indexOf(goal);
@@ -816,9 +915,36 @@ export class CityMap {
         n.thought = styleFor(pl).emoji; n.thoughtFor = pl; n.thoughtT = 3.5;
       }
       const [tx, ty] = n.path[0], dx = tx - n.x, dy = ty - n.y, d = Math.hypot(dx, dy), sp = n.speed * dt * 2;
-      if (d <= sp) { n.x = tx; n.y = ty; n.path.shift(); } else { n.x += dx / d * sp; n.y += dy / d * sp; }
+      const nx = d <= sp ? tx : n.x + dx / d * sp, ny = d <= sp ? ty : n.y + dy / d * sp;
+      if (!n.under && this.mustWait(n.x, n.y, nx, ny)) { n.atLight = true; continue; }
+      n.atLight = false;
+      if (d <= sp) { n.x = tx; n.y = ty; n.path.shift(); } else { n.x = nx; n.y = ny; }
       n.phase += dt * 8 * n.speed;
     }
+  }
+
+  // about to step off the curb? only cross when the cars on that street have a red light
+  mustWait(x, y, nx, ny) {
+    const sw = this.streetW, now = performance.now();
+    let i, j, crossing;
+    if (Math.abs(ny - y) > Math.abs(nx - x)) {   // walking along an avenue → crossing a cross street
+      j = this.cross.findIndex((c) => Math.abs(c.y - ny) < sw && Math.abs(c.y - y) >= sw - 1e-6); if (j < 0) return false;
+      i = this.avenues.reduce((b, a, k) => (Math.abs(a.x - x) < Math.abs(this.avenues[b].x - x) ? k : b), 0); crossing = 'c';
+    } else {
+      i = this.avenues.findIndex((a) => Math.abs(a.x - nx) < sw && Math.abs(a.x - x) >= sw - 1e-6); if (i < 0) return false;
+      j = this.cross.reduce((b, c, k) => (Math.abs(c.y - y) < Math.abs(this.cross[b].y - y) ? k : b), 0); crossing = 'a';
+    }
+    // "walk" only while that street's cars are held at red, with a moment's clearance at each end
+    const ph = ((now / 1000 + i * 1.4 + j * 0.6) % 18) / 18;
+    const walk = crossing === 'c' ? ph > 0.12 && ph < 0.4 : ph > 0.62 && ph < 0.9;
+    if (!walk) return true;
+    // and never step out while a vehicle is in, or about to roll into, the crossing
+    const r = crossing === 'a'
+      ? { x0: this.avenues[i].x - sw - 0.3, x1: this.avenues[i].x + sw + 0.3, y0: y - 3, y1: y + 3 }
+      : { x0: x - 3, x1: x + 3, y0: this.cross[j].y - sw - 0.3, y1: this.cross[j].y + sw + 0.3 };
+    // (cars already stopped at their red light don't count unless they're actually in the crosswalk)
+    const tight = crossing === 'a' ? { ...r, y0: y - 0.7, y1: y + 0.7 } : { ...r, x0: x - 0.7, x1: x + 0.7 };
+    return [...(this.cars || []), ...(this.liveCars || []).map((c) => ({ ...c, moving: true }))].some((c) => { const b = this.carBox(c), R = c.moving ? r : tight; return b.x < R.x1 && b.x + b.w > R.x0 && b.y < R.y1 && b.y + b.d > R.y0; });
   }
 
   // ---------- view / input ----------
@@ -1043,7 +1169,7 @@ export class CityMap {
     const walk = N ? '#3a4152' : '#eef0f2', road = N ? '#20242f' : '#a3a9b2';
     for (const f of sides(v, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0)) poly(ctx, [v.p(...f.a), v.p(...f.b), v.p(...f.b, -0.8), v.p(...f.a, -0.8)], darken(N ? '#20253a' : '#d0d5db', f.shade));
     poly(ctx, [v.p(B.x0, B.y0), v.p(B.x1, B.y0), v.p(B.x1, B.y1), v.p(B.x0, B.y1)], N ? '#2c3244' : '#dde2e7');
-    this.drawBayouAndFreeways(N);
+    this.drawBayouAndFreeways(N, now);
     const A = this.avenues, C = this.cross, sw = this.streetW;
     const ax0 = A[0].x - sw, ax1 = A[A.length - 1].x + sw, cy0 = C[0].y - sw, cy1 = C[C.length - 1].y + sw;
     poly(ctx, [v.p(ax0, cy0), v.p(ax1, cy0), v.p(ax1, cy1), v.p(ax0, cy1)], road);
@@ -1058,10 +1184,13 @@ export class CityMap {
       ctx.setLineDash([]);
     }
     this.drawCrosswalks(N);
+    this.drawStreetlights(N);
     this.drawRail(N);
     this.drawBusStops(N);
     for (const a of this.areas) this.drawArea(a, N, 'flat');
     for (const f of this.fill) if (f.lot) this.drawLot(f, N);
+    this.drawShadows();
+    this.drawSignals(now);
     if (mode === 'both') for (const s of this.tunnelSpots) { const [x, y] = v.p(s.x, s.y); ellipse(ctx, x, y, 4, 2, 'rgba(32,201,151,.6)'); }
 
     const items = [];
@@ -1078,15 +1207,21 @@ export class CityMap {
     const ghost = mode === 'both' ? 0.4 : 1;
     for (const it of items) {
       if (it.f ? off(it.f.x, it.f.y, it.f.w, it.f.d, it.f.h) : it.l ? off(it.l.x, it.l.y, it.l.w, it.l.d, it.l.h + 3) : it.a ? off(it.a.r.x0, it.a.r.y0, it.a.r.x1 - it.a.r.x0, it.a.r.y1 - it.a.r.y0, 6) : false) continue;
-      if (it.f) box(ctx, v, it.f.x, it.f.y, it.f.w, it.f.d, it.f.h, N ? darken(it.f.c, 0.5) : it.f.c, 0, { alpha: ghost, mullions: it.f.glass, night: N });
+      if (it.f) {
+        box(ctx, v, it.f.x, it.f.y, it.f.w, it.f.d, it.f.h, N ? darken(it.f.c, 0.5) : it.f.c, 0, { alpha: ghost, mullions: it.f.glass, night: N });
+        if (it.f.h > 7 && v.s > 0.5) { const f = it.f, k = hash(f.x + ':' + f.y); box(ctx, v, f.x + f.w * (0.2 + k * 0.3), f.y + f.d * (0.25 + (1 - k) * 0.25), f.w * 0.28, f.d * 0.3, 0.7, N ? '#3b4252' : '#b8bec6', f.h, { alpha: ghost }); }   // rooftop plant room
+      }
       else if (it.l) this.drawLandmark(it.l, N, ghost);
       else if (it.a) this.drawArea(it.a, N, '3d', ghost);
       else if (it.t) this.drawTrain(it.t, N, ghost);
       else if (it.c) this.drawCar(it.c, N, ghost, now);
       else this.drawNpc(it.n, now, 0);
     }
+    this.drawBeacons(now, N);
+    this.drawClouds(now, N);
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
     this.drawRailOverlay();
+    this.drawBirds(now, N);
     this.drawStreetSigns(N);
     this.drawMarkers(false);
     this.drawLabels(N);
@@ -1127,11 +1262,42 @@ export class CityMap {
       box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, noTop: true }); ctx.globalAlpha = alpha; gableRoof(ctx, v, l.x, l.y, l.w, l.d, l.h, 1.6, darken(c, 0.15));
       const tw = Math.min(l.w, l.d) * 0.3; box(ctx, v, l.x + 0.3, l.y + l.d - tw - 0.3, tw, tw, l.h + 2.2, c, 0, o); ctx.globalAlpha = alpha; pyramid(ctx, v, l.x + 0.3, l.y + l.d - tw - 0.3, tw, tw, l.h + 2.2, 1.6, darken(c, 0.2));
     } else if (l.kind === 'aquarium') {
-      box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, o); ctx.globalAlpha = alpha;
-      const [cx, cy] = v.p(l.x + l.w * 0.3, l.y + l.d * 0.5, l.h + 3.2), R = 3.4 * ZU * v.s * 0.55;
-      ctx.strokeStyle = N ? '#ffd43b' : '#e8590c'; ctx.lineWidth = Math.max(1, v.s * 2); ctx.beginPath(); ctx.ellipse(cx, cy, R * 0.55, R, 0, 0, Math.PI * 2); ctx.stroke();
-      for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3 + performance.now() / 4000; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R * 0.55, cy + Math.sin(a) * R); ctx.stroke(); }
-      const [bx, by] = v.p(l.x + l.w * 0.3, l.y + l.d * 0.5, l.h); ctx.beginPath(); ctx.moveTo(bx - R * 0.3, by); ctx.lineTo(cx, cy); ctx.lineTo(bx + R * 0.3, by); ctx.stroke();
+      // Downtown Aquarium: teal hall with a blue crown, a white tower with a red roof, a pool and the big Ferris wheel
+      const now = performance.now(), hallD = l.d * 0.5, q = (x0, y0, x1, y1, z, col) => poly(ctx, [v.p(x0, y0, z), v.p(x1, y0, z), v.p(x1, y1, z), v.p(x0, y1, z)], col);
+      q(l.x, l.y + hallD, l.x + l.w, l.y + l.d, 0.02, N ? '#3a4a58' : '#e9e1cf');                                   // plaza
+      q(l.x + 0.4, l.y + hallD + 0.6, l.x + l.w * 0.55, l.y + l.d - 0.6, 0.04, N ? '#1d4f77' : '#74c0fc');           // pool
+      if (v.s > 0.4) { ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 3; i++) { const t = ((now / 2500 + i / 3) % 1), yy = l.y + hallD + 0.8 + t * (l.d - hallD - 1.6); ctx.moveTo(...v.p(l.x + 0.7, yy, 0.05)); ctx.lineTo(...v.p(l.x + l.w * 0.5, yy, 0.05)); } ctx.stroke(); }
+      box(ctx, v, l.x, l.y, l.w, hallD, 2.6, N ? '#2b5f73' : c, 0, { ...o, top: N ? '#3d6f84' : '#9bd1e3' });
+      ctx.globalAlpha = alpha; band(ctx, v, l.x, l.y, l.w, hallD, 1.9, 2.45, N ? '#ffd43b' : '#1864ab', 0.02); band(ctx, v, l.x, l.y, l.w, hallD, 0.25, 1.0, N ? 'rgba(255,224,140,.85)' : 'rgba(25,60,90,.55)', 0.5);
+      box(ctx, v, l.x + l.w * 0.55, l.y + hallD * 0.25, 1.1, 1.1, 4.4, '#f1f3f5', 0, o); ctx.globalAlpha = alpha; pyramid(ctx, v, l.x + l.w * 0.55, l.y + hallD * 0.25, 1.1, 1.1, 4.4, 1.2, '#e03131');
+      // Ferris wheel: a real vertical ring in 3D, turning slowly, with gondolas
+      const R = 2.3, wx = l.x + l.w * 0.72, wy = l.y + hallD + (l.d - hallD) * 0.55, wz = R + 0.5, ang = now / 9000;
+      const P = (a, r = R) => v.p(wx, wy + Math.cos(a) * r, wz + Math.sin(a) * r);
+      ctx.lineWidth = Math.max(1, v.s * 1.6); ctx.strokeStyle = N ? '#adb5bd' : '#868e96'; ctx.beginPath();
+      for (const dy of [-0.9, 0.9]) { ctx.moveTo(...v.p(wx - 0.3, wy + dy, 0)); ctx.lineTo(...v.p(wx, wy, wz)); ctx.lineTo(...v.p(wx + 0.3, wy + dy, 0)); }
+      ctx.stroke();
+      ctx.strokeStyle = N ? '#fff3bf' : '#f8f9fa'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); ctx.beginPath();
+      for (let i = 0; i <= 36; i++) { const pp = P((i / 36) * Math.PI * 2); i ? ctx.lineTo(...pp) : ctx.moveTo(...pp); } ctx.stroke();
+      ctx.lineWidth = Math.max(0.6, v.s * 0.8); ctx.beginPath(); for (let i = 0; i < 12; i++) { ctx.moveTo(...v.p(wx, wy, wz)); ctx.lineTo(...P(ang + (i / 12) * Math.PI * 2)); } ctx.stroke();
+      const GC = ['#e03131', '#1c7ed6', '#fcc419', '#2f9e44', '#ae3ec9', '#f76707'];
+      for (let i = 0; i < 12; i++) { const a = ang + (i / 12) * Math.PI * 2, [gx, gy] = v.p(wx, wy + Math.cos(a) * R, wz + Math.sin(a) * R - 0.35); circle(ctx, gx, gy, Math.max(1.4, v.s * 2.6), N ? (i % 2 ? '#ffe066' : '#ff8787') : GC[i % 6]); }
+      circle(ctx, ...v.p(wx, wy, wz), Math.max(1.5, v.s * 2.4), '#495057');
+    } else if (l.kind === 'post') {
+      // POST Houston: the old post office — long and low, ribbon windows, with the Skylawn rooftop park and farm
+      box(ctx, v, l.x, l.y, l.w, l.d, l.h, N ? darken(c, 0.4) : c, 0, { ...o, top: N ? '#2f5a3a' : '#9ccc78' });
+      ctx.globalAlpha = alpha;
+      for (const z of [0.7, 1.55, 2.4]) band(ctx, v, l.x, l.y, l.w, l.d, z, z + 0.42, N ? 'rgba(255,214,140,.8)' : 'rgba(46,58,74,.72)', 0.35);
+      band(ctx, v, l.x, l.y, l.w, l.d, 0, 0.45, N ? '#ffd43b' : '#f08c00', l.w * 0.3);   // street-level food hall frontage
+      const rz = l.h + 0.02, q = (x0, y0, x1, y1, col) => poly(ctx, [v.p(x0, y0, rz), v.p(x1, y0, rz), v.p(x1, y1, rz), v.p(x0, y1, rz)], col);
+      q(l.x + 0.3, l.y + 0.3, l.x + l.w - 0.3, l.y + 0.6, N ? '#59606e' : '#efe9db'); q(l.x + 0.3, l.y + l.d - 0.6, l.x + l.w - 0.3, l.y + l.d - 0.3, N ? '#59606e' : '#efe9db');   // parapet
+      if (v.s > 0.3) {
+        q(l.x + 0.8, l.y + l.d / 2 - 0.3, l.x + l.w - 0.8, l.y + l.d / 2 + 0.3, N ? '#6b7280' : '#e6dcc4');                     // promenade
+        for (let i = 0; i < 7; i++) { const yy = l.y + 0.9 + i * ((l.d / 2 - 1.4) / 7); q(l.x + 0.9, yy, l.x + l.w * 0.42, yy + 0.22, N ? '#2f5a3a' : '#5c9440'); }   // rooftop farm rows
+        box(ctx, v, l.x + l.w * 0.48, l.y + 1, l.w * 0.12, l.d / 2 - 1.6, 0.7, '#b9d7e8', rz, { alpha, mullions: true });   // greenhouse
+        ctx.globalAlpha = alpha;
+        for (let i = 0; i < 14; i++) { const tx = l.x + 0.9 + hash('pt' + i) * (l.w - 1.8), ty = l.y + l.d / 2 + 0.7 + hash('pq' + i) * (l.d / 2 - 1.3), [x, y] = v.p(tx, ty, rz), k = Math.max(0.5, v.s * 1.6); ellipse(ctx, x, y, 3 * k, 1.4 * k, 'rgba(0,0,0,.15)'); circle(ctx, x, y - 3.4 * k, 3 * k, N ? '#2f6b45' : '#4f9e4f'); circle(ctx, x - k, y - 4.4 * k, 1.5 * k, N ? '#3d8a59' : '#74b866'); }
+        const [sx, sy] = v.p(l.x + l.w * 0.82, l.y + l.d * 0.25, rz + 1.2); pill(ctx, sx, sy, 'POST', Math.max(9, Math.min(14, v.s * 13)), N ? 'rgba(255,212,59,.95)' : 'rgba(33,37,41,.9)', N ? '#212529' : '#fff');
+      }
     } else box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, mullions: l.kind === 'glass' });
     ctx.globalAlpha = 1;
   }
@@ -1142,9 +1308,20 @@ export class CityMap {
     if (pass === 'flat') {
       if (a.kind === 'park') {
         quad(r.x0, r.y0, r.x1, r.y1, 0, N ? '#24452f' : '#acd38f');
-        if (a.n === 'Discovery Green') { const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2; quad(cx - 2.5, cy + 0.5, cx + 2, cy + 3, 0.02, N ? '#2a4d6e' : '#8fd0f2'); }
+        if (a.n === 'Discovery Green') {
+          const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2; quad(cx - 2.5, cy + 0.5, cx + 2, cy + 3, 0.02, N ? '#2a4d6e' : '#8fd0f2');
+          if (v.s > 0.35) { const t = (performance.now() / 2600) % 1, [x, y] = v.p(cx - 0.25, cy + 1.75, 0.03); ctx.strokeStyle = `rgba(255,255,255,${0.7 * (1 - t)})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(x, y, 4 + t * 26 * v.s, (4 + t * 26 * v.s) / 2, 0, 0, 7); ctx.stroke(); }
+        }
         if (v.s > 0.22) for (let i = 0; i < 7; i++) { const tx = r.x0 + (r.x1 - r.x0) * (0.1 + hash(a.n + i) * 0.8), ty = r.y0 + (r.y1 - r.y0) * (0.1 + hash(i + a.n) * 0.8); const [x, y] = v.p(tx, ty); const k = v.s * 2.2; ellipse(ctx, x, y, 6 * k, 3 * k, 'rgba(0,0,0,.12)'); circle(ctx, x, y - 6 * k, 5.2 * k, N ? '#2f6b45' : '#5fae5a'); circle(ctx, x - 1.6 * k, y - 7.6 * k, 2.6 * k, N ? '#3d8a59' : '#7cc576'); }
-      } else quad(r.x0, r.y0, r.x1, r.y1, 0, N ? '#3d4456' : '#e7dfd0');
+      } else {
+        quad(r.x0, r.y0, r.x1, r.y1, 0, N ? '#3d4456' : '#e7dfd0');
+        if (a.n === 'Main Street Square' && v.s > 0.4) {   // the dancing fountain jets in the square
+          const now = performance.now(); ctx.lineCap = 'round';
+          for (let i = 0; i < 8; i++) { const fx = r.x0 + (r.x1 - r.x0) * (0.2 + 0.6 * ((i % 4) / 3)), fy = r.y0 + (r.y1 - r.y0) * (i < 4 ? 0.35 : 0.65), hgt = 0.4 + 1.1 * Math.abs(Math.sin(now / 700 + i * 0.8)), [x0, y0] = v.p(fx, fy, 0), [, y1] = v.p(fx, fy, hgt);
+            ellipse(ctx, x0, y0, 3 * v.s + 1, 1.5 * v.s + 0.5, N ? 'rgba(116,192,252,.5)' : 'rgba(116,192,252,.8)'); ctx.strokeStyle = N ? 'rgba(208,235,255,.8)' : 'rgba(255,255,255,.95)'; ctx.lineWidth = Math.max(1, v.s * 1.6); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); ctx.stroke(); }
+          ctx.lineCap = 'butt';
+        }
+      }
       return;
     }
     ctx.globalAlpha = alpha;
@@ -1165,12 +1342,19 @@ export class CityMap {
     ctx.globalAlpha = 1;
   }
 
-  drawBayouAndFreeways(N) {
+  drawBayouAndFreeways(N, now = performance.now()) {
     const ctx = this.ctx, v = this.v, B = this.bounds, A = this.avenues, C = this.cross;
     const yb = C[0].y - this.blockD * 1.4, pts = [];
     for (let x = B.x0; x <= B.x1; x += 2) pts.push([x, yb + Math.sin(x / 9) * 2 + Math.sin(x / 23) * 1.3]);
     const band = (w, col) => poly(ctx, [...pts.map(([x, y]) => v.p(x, y - w)), ...pts.slice().reverse().map(([x, y]) => v.p(x, y + w))], col);
     band(4, N ? '#24452f' : '#b6d79c'); band(1.9, N ? '#1c3a57' : '#7fbbd9');
+    // the bayou flows: little glints drift downstream
+    if (v.s > 0.2) {
+      const L = B.x1 - B.x0, ry = (x) => yb + Math.sin(x / 9) * 2 + Math.sin(x / 23) * 1.3;
+      ctx.strokeStyle = N ? 'rgba(165,216,255,.35)' : 'rgba(255,255,255,.75)'; ctx.lineWidth = Math.max(1, v.s * 1.5); ctx.lineCap = 'round'; ctx.beginPath();
+      for (let i = 0; i < 26; i++) { const x = B.x0 + ((now / 1000) * 0.9 + i * (L / 26) + hash('g' + i) * 6) % L, off = (hash('o' + i) - 0.5) * 2.4; ctx.moveTo(...v.p(x, ry(x) + off)); ctx.lineTo(...v.p(x + 1.6, ry(x + 1.6) + off)); }
+      ctx.stroke(); ctx.lineCap = 'butt';
+    }
     const fw = 2.2, road = N ? '#2b303c' : '#b7bcc4';
     const xW = A[0].x - this.blockW * 1.2, xE = A[A.length - 1].x + this.blockW * 0.9, yN = C[0].y - this.blockD * 2.3;
     poly(ctx, [v.p(xW - fw, B.y0), v.p(xW + fw, B.y0), v.p(xW + fw, B.y1), v.p(xW - fw, B.y1)], road);
