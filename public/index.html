@@ -16,7 +16,6 @@
 <body>
 <div class="wrap">
 <header id="top">
-  <button class="themebtn" id="themeBtn" aria-label="Day or night mode">🌙 Auto</button>
   <h1>Downtown Eats 🍽️</h1>
   <p id="hdr">Loading downtown Houston spots…</p>
 </header>
@@ -95,6 +94,10 @@
   <canvas id="city" aria-label="Isometric map of downtown Houston restaurants"></canvas>
   <button class="backpill" id="mapBack" aria-label="Back to previous view">‹ Back</button>
   <div class="hud">
+    <div class="seg scene" id="sceneSeg" role="group" aria-label="Day or night map">
+      <button data-s="day" class="on">☀️ Day</button>
+      <button data-s="night">🌙 Night</button>
+    </div>
     <div class="seg" id="layerSeg">
       <button data-m="street" class="on">🏙️ Street</button>
       <button data-m="both">⬍ Both</button>

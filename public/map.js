@@ -241,7 +241,7 @@ function pill(ctx, x, y, text, size, bg, fg = '#212529') {
 export class CityMap {
   constructor(canvas, places, opts = {}) {
     this.cv = canvas; this.ctx = canvas.getContext('2d'); this.opts = opts;
-    this.v = new View(); this.mode = 'street'; this.highlight = null; this.pick = null; this.hover = null;
+    this.v = new View(); this.mode = 'street'; this.scene = 'day'; this.highlight = null; this.pick = null; this.hover = null;
     this.openFn = opts.isOpen || (() => true);
     this.build(places);
     this.bindInput(); this.resize(); this.fit();
@@ -429,7 +429,7 @@ export class CityMap {
     return { av: a.n, cs: c.n, x: a.x, y: c.y, label: `${SUFFIX(a.n)} & ${SUFFIX(c.n)}` };
   }
   spotsNear(x, y, r = Math.max(this.blockW, this.blockD) * 1.25) {
-    return this.spots.map((s) => ({ s, d: Math.hypot(s.x - x, s.y - y) })).filter((o) => o.d <= r).sort((p, q) => p.d - q.d);
+    return this.spots.filter((s) => s.places.some((p) => this.sceneOk(p))).map((s) => ({ s, d: Math.hypot(s.x - x, s.y - y) })).filter((o) => o.d <= r).sort((p, q) => p.d - q.d);
   }
   markCorner(x, y, label, sticky) { this.mark = { x, y, label, t0: performance.now(), sticky }; }
   goTo(q) {
@@ -1287,7 +1287,10 @@ export class CityMap {
 
   lod() { const s = this.v.s; return s < 0.5 ? 'cluster' : s < 1.0 ? 'pin' : 'label'; }
   tunnelZ() { return this.mode === 'tunnel' ? 0 : -3; }
-  visibleSpots(under) { return this.spots.filter((s) => s.tunnel === under && (!this.highlight || s.places.some((p) => this.highlight.has(p.id)))); }
+  // Day map = food spots; Night map = bars, lounges and clubs only
+  sceneOk(p) { return this.scene === 'night' ? !!p.night : p.day !== false; }
+  setScene(sc) { this.scene = sc; this.themeNight = sc === 'night' ? true : null; this.pinCache?.clear?.(); }
+  visibleSpots(under) { return this.spots.filter((s) => s.tunnel === under && s.places.some((p) => this.sceneOk(p)) && (!this.highlight || s.places.some((p) => this.highlight.has(p.id)))); }
   clusters(under) {
     const m = new Map(), k = this.clusterSpan();
     for (const s of this.visibleSpots(under)) {

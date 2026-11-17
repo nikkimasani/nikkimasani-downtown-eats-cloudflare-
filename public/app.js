@@ -8,7 +8,7 @@ const $$ = (n) => '$'.repeat(n);
 const q = encodeURIComponent;
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._); t._ = setTimeout(() => t.classList.remove('on'), 2200); };
 
-let DATA = [], HH = { spots: {} }, META = {};
+let DATA = [], FOOD = [], HH = { spots: {} }, META = {};
 const MOODS = [
   { k: 'quick', e: '⚡', l: 'Quick bite' }, { k: 'healthy', e: '🥗', l: 'Light & healthy' }, { k: 'comfort', e: '🍔', l: 'Comfort food' },
   { k: 'spicy', e: '🌶️', l: 'Spicy' }, { k: 'adventurous', e: '🧭', l: 'Adventurous' }, { k: 'date', e: '🕯️', l: 'Date night' },
@@ -68,7 +68,7 @@ function score(r) {
   if (favs.has(r.name)) s += 1; if (isOpen(r)) s += 0.5; return s;
 }
 function ranked(opt) {
-  const list = DATA.filter((r) => matches(r, opt));
+  const list = FOOD.filter((r) => matches(r, opt));
   if (!st.moods.size) return list.map((r) => [r, 1 + (isOpen(r) ? 0.5 : 0)]);
   return list.map((r) => [r, score(r)]).filter((x) => x[1] >= 1).sort((a, b) => b[1] - a[1]);
 }
@@ -166,13 +166,13 @@ function didYouMean(q) {
 // ---------- Browse ----------
 let bq = '', fav1 = false, tun1 = false, open1 = false, hh1 = false, fc = new Set(), sortBy = 'name';
 function renderBrowse() {
-  const cuis = [...new Set(DATA.flatMap((r) => r.cuisines))].sort();
+  const cuis = [...new Set(FOOD.flatMap((r) => r.cuisines))].sort();
   $('#fCuisine').innerHTML = cuis.map((c) => `<button class="chip ${fc.has(c) ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
   const t = bq.trim();
   const sc = new Map();
-  let list = DATA.filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
+  let list = FOOD.filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
   list.sort(sortBy === 'name' ? (a, b) => (t ? sc.get(b) - sc.get(a) : 0) || a.name.localeCompare(b.name) : sortBy === 'price' ? (a, b) => a.price - b.price : (a, b) => b.price - a.price);
-  $('#bCount').textContent = `${list.length} of ${DATA.length} spots`;
+  $('#bCount').textContent = `${list.length} of ${FOOD.length} spots`;
   if (!list.length && t) {
     const sug = didYouMean(t);
     $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
@@ -210,7 +210,7 @@ function renderWeek() {
 function planDay(d, used) {
   const date = dayDate(DAYS.indexOf(d), week.slot);
   let list = ranked({ meal: week.slot, date });
-  if (!list.filter(([r]) => !used.has(r.name)).length) list = DATA.filter((r) => matches(r, { meal: week.slot, date })).map((r) => [r, score(r) + 1]);
+  if (!list.filter(([r]) => !used.has(r.name)).length) list = FOOD.filter((r) => matches(r, { meal: week.slot, date })).map((r) => [r, score(r) + 1]);
   const usedTypes = new Set(Object.entries(week.days).filter(([k, v]) => k !== d && v.name).map(([, v]) => (DATA.find((x) => x.name === v.name) || {}).type));
   const varied = list.filter(([r]) => !usedTypes.has(r.type));
   const r = weightedPick(varied.length ? varied : list, used);
@@ -274,7 +274,7 @@ function openSheet(id, from = null) {
   $('#sFav').onclick = () => { toggleFav(r); openSheet(id); };
   $('#sGo').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged'); openSheet(id); };
   $('#sDay').onclick = () => { const d = DAYS[new Date().getDay() - 1] || 'Mon'; week.days[d] = { name: r.name, address: r.address, lock: true }; save(); renderWeek(); toast('Added to ' + d); };
-  $('#sMap').onclick = (e) => { e.preventDefault(); closeSheet(); show('map'); city?.setPick(r.id); };
+  $('#sMap').onclick = (e) => { e.preventDefault(); closeSheet(); show('map'); if (city && !city.sceneOk(r)) setScene(r.day ? 'day' : 'night', true); city?.setPick(r.id); };
   $('#sNav').onclick = () => { closeSheet(); walkTo(r); };
   if (ASK) { const b = $('#sAsk'); b.style.display = 'block'; b.onclick = () => aboutPlace(r); }
 }
@@ -302,7 +302,7 @@ function initMap() {
     stops: metroStatic && metroStatic.stops,
     buildings: BUILDINGS,   // real footprints and heights from OpenStreetMap
     isOpen: (p) => isOpen(p) !== false,
-    onSelect: (places, spot) => places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label),
+    onSelect: (all, spot) => { const places = all.filter((p) => city.sceneOk(p)); return places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label); },
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
     onHistory: (n) => $('#mapBack').classList.toggle('show', n > 0),
     onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
@@ -316,14 +316,15 @@ function initMap() {
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to move · pinch or double-tap to zoom'; },
   });
   $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
-  applyTheme(); if (USER) city.setUser(USER);
+  if (USER) city.setUser(USER);
   pollMetro(); setInterval(pollMetro, 20000);
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
-  $('#legend').innerHTML = `<button class="lgd-toggle" id="lgdToggle" aria-expanded="true">Key <b>▾</b></button><div class="lgd-body"><span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><p class="lgd-hint">Drag to move · pinch or double-tap to zoom · twist two fingers to rotate · tap a street to name the corner${BUILDINGS ? ' · buildings © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors' : ''}</p></div>`;
+  $('#legend').innerHTML = `<button class="lgd-toggle" id="lgdToggle" aria-expanded="true">Key <b>▾</b></button><div class="lgd-body"><span><i class="dot" style="background:#e8590c"></i><b id="lgStreet" style="font-weight:inherit"></b></span><span><i class="dot" style="background:#12b886"></i><b id="lgTun" style="font-weight:inherit"></b></span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><p class="lgd-hint">Drag to move · pinch or double-tap to zoom · twist two fingers to rotate · tap a street to name the corner${BUILDINGS ? ' · buildings © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors' : ''}</p></div>`;
   const lg = $('#legend'), setLg = (open) => { lg.classList.toggle('min', !open); $('#lgdToggle').setAttribute('aria-expanded', open); try { localStorage.setItem('lgdOpen', open ? '1' : '0'); } catch (e) {} };
   let lgOpen = true; try { lgOpen = localStorage.getItem('lgdOpen') !== '0'; } catch (e) {}
   setLg(lgOpen); $('#lgdToggle').onclick = () => setLg(lg.classList.contains('min'));
+  setScene(SCENE, true);
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
@@ -394,18 +395,21 @@ $('#mapOpen').onclick = (e) => {
   city.setHighlight(mapOpen ? new Set(DATA.filter((r) => isOpen(r)).map((r) => r.id)) : (mapMatch ? new Set(ranked().map(([r]) => r.id)) : null));
 };
 
-// ---------- theme: auto (dark from sunset), light or dark — the map follows ----------
-let THEME = (() => { try { return localStorage.getItem('theme') || 'auto'; } catch (e) { return 'auto'; } })();
-const isNightNow = () => { const h = new Date().getHours() + new Date().getMinutes() / 60; return h >= 18.5 || h < 6.5; };
-function applyTheme() {
-  const dark = THEME === 'dark' || (THEME === 'auto' && (isNightNow() || $('#v-night').classList.contains('on')));
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  document.querySelector('meta[name=theme-color]').content = dark ? '#17120f' : '#d9481e';
-  $('#themeBtn').textContent = THEME === 'auto' ? (dark ? '🌙 Auto' : '☀️ Auto') : THEME === 'dark' ? '🌙 Night' : '☀️ Day';
-  if (city) city.themeNight = THEME === 'auto' ? null : THEME === 'dark';
+// ---------- map scene: ☀️ Day (food) vs 🌙 Night (bars & clubs) ----------
+let SCENE = 'day';
+function renderLegend() {
+  const L = DATA.filter((r) => (SCENE === 'night' ? r.night : r.day)), t = L.filter((r) => r.tunnel).length;
+  if ($('#lgStreet')) { $('#lgStreet').textContent = `${SCENE === 'night' ? 'Bars' : 'Street'} (${L.length - t})`; $('#lgTun').textContent = `Tunnels (${t})`; }
 }
-$('#themeBtn').onclick = () => { THEME = THEME === 'auto' ? 'dark' : THEME === 'dark' ? 'light' : 'auto'; try { localStorage.setItem('theme', THEME); } catch (e) {} applyTheme(); toast(THEME === 'auto' ? 'Theme follows the time of day' : THEME === 'dark' ? 'Night mode on' : 'Day mode on'); };
-setInterval(applyTheme, 60000);
+function setScene(sc, quiet) {
+  SCENE = sc; city?.setScene(sc);
+  document.querySelectorAll('#sceneSeg button').forEach((b) => b.classList.toggle('on', b.dataset.s === sc));
+  $('#v-map').classList.toggle('nightscene', sc === 'night');
+  renderLegend();
+  if (city && city.pick != null && DATA[city.pick] && !city.sceneOk(DATA[city.pick])) city.setPick(null);
+  if (!quiet) toast(sc === 'night' ? `🌙 Night: ${DATA.filter((r) => r.night).length} bars, lounges & clubs` : `☀️ Day: ${FOOD.length} spots for breakfast, brunch, lunch, dinner & happy hour`);
+}
+document.querySelectorAll('#sceneSeg button').forEach((b) => (b.onclick = () => setScene(b.dataset.s)));
 
 // ---------- Night: downtown bars, happy hours, late night ----------
 const NIGHT_F = [
@@ -420,7 +424,7 @@ function openLate(r) { const d = new Date(); d.setDate(d.getDate() + (d.getHours
 let nightF = new Set(), nightSort = 'now';
 function nightScore(r) { return (hhNow(r) ? 4 : 0) + (isOpen(r) === true ? 2 : 0) + (openLate(r) ? 1 : 0) + (r.bar && /bar|lounge|pub|club|saloon|brew/i.test(r.type) ? 0.5 : 0); }
 function renderNight() {
-  const bars = DATA.filter((r) => r.bar);
+  const bars = DATA.filter((r) => r.night);
   $('#nightChips').innerHTML = NIGHT_F.map((f) => `<button class="chip ${nightF.has(f.k) ? 'on' : ''}" data-nf="${f.k}">${f.l}</button>`).join('');
   let list = bars.filter((r) => [...nightF].every((k) => { const f = NIGHT_F.find((x) => x.k === k); return f.f ? f.f(r) : f.re.test(nightText(r)); }));
   const by = { now: (a, b) => nightScore(b) - nightScore(a) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
@@ -444,7 +448,7 @@ function barCard(r) {
 }
 $('#nightChips').onclick = (e) => { const b = e.target.closest('[data-nf]'); if (!b) return; const k = b.dataset.nf; nightF.has(k) ? nightF.delete(k) : nightF.add(k); renderNight(); };
 $('#nightSort').onchange = (e) => { nightSort = e.target.value; if (nightSort === 'near' && !USER) startLocate(); renderNight(); };
-$('#nightMap').onclick = () => { show('map'); city?.setHighlight(new Set(DATA.filter((r) => r.bar).map((r) => r.id))); toast('Showing downtown bars'); };
+$('#nightMap').onclick = () => { show('map'); setScene('night'); };
 document.addEventListener('click', (e) => { const w = e.target.closest('[data-walk]'); if (w) walkTo(DATA[+w.dataset.walk]); const o = e.target.closest('.hhcard[data-open], .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
 
 // ---------- you are here + walking navigation ----------
@@ -469,7 +473,7 @@ function listenCompass() {
 }
 const milesFromDowntown = () => { if (!USER) return '?'; const dy = (USER.lat - 29.7575) * 110850, dx = (USER.lng + 95.364) * 96680; return (Math.hypot(dx, dy) / 1609).toFixed(1); };
 function walkTo(r) {
-  show('map'); closeSheet();
+  show('map'); closeSheet(); if (city && !city.sceneOk(r)) setScene(r.night && !r.day ? 'night' : 'day', true);
   const go = () => {
     if (!city) return;
     const sp = city.spotForPlace(r.id);
@@ -512,7 +516,7 @@ function show(v) {
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
   if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight();
-  setTimeout(applyTheme, 0); if (v === 'map') { initMap(); city.resize(); }
+  if (v === 'map') { initMap(); city.resize(); }
   if (v !== 'map') window.scrollTo(0, 0);
   try { history.replaceState(null, '', '#' + v); } catch (e) {}
 }
@@ -569,13 +573,19 @@ async function aboutPlace(r) {
       const cats = (p.official && p.official.cats) || {};
       return { ...p, id: i, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
-    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); }
+    DATA.forEach((r) => {
+      const barish = /\b(bar|lounge|pub|nightclub|club|saloon|tavern|nightlife|speakeasy)\b/i.test(r.type || '');
+      const food = (r.meals || []).some((x) => /breakfast|brunch|lunch|dinner|full service|fast casual/i.test(x));
+      const barName = /\bbar\b|lounge|tavern|\bpub\b|saloon|moonshin|bottle|cellar|hearsay|speakeasy|club/i.test(r.name);
+      r.night = r.bar && (barish || barName || !food);            // night map: bars, lounges, clubs
+      r.day = !(r.night && !food);                     // day map: anywhere that serves meals
+    });
+    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
-  $('#hdr').textContent = `${DATA.length} downtown Houston spots · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
+  $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night'].includes(h)) show(h);
-  applyTheme();
   setupAsk();
 })();
 
