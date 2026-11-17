@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#d9481e">
+<meta name="description" content="Pick where to eat in downtown Houston — mood picker, live hours, happy hours, a weekly plan and an isometric city map with street-level and tunnel layers.">
+<title>Downtown Eats — Houston</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header id="top">
+  <h1>Downtown Eats 🍽️</h1>
+  <p id="hdr">Loading downtown Houston spots…</p>
+</header>
+
+<section class="view on" id="v-pick">
+  <h2>What are you feeling?</h2>
+  <div class="mood" id="moods"></div>
+  <h2>When?</h2>
+  <div class="chips" id="meal"></div>
+  <h2>Budget</h2>
+  <div class="chips" id="budget"></div>
+  <h2>Extras</h2>
+  <div class="chips" id="extras"></div>
+  <div style="margin-top:18px" class="row">
+    <button class="btn big" id="pickBtn">🎲 Pick for me</button>
+  </div>
+  <div id="pickOut" style="margin-top:14px"></div>
+  <div class="count" id="matchCount"></div>
+  <div class="grid" id="matches"></div>
+</section>
+
+<section class="view" id="v-ask">
+  <h2>Tell Claude what you're craving</h2>
+  <p class="sub">Describe your mood, who you're with, time and budget. Claude picks from the full downtown list, using today's hours.</p>
+  <textarea id="askTxt" placeholder="e.g. Rainy Tuesday, want something warm and spicy, under $20, ideally reachable through the tunnels"></textarea>
+  <div class="chips" style="margin:10px 0" id="askIdeas"></div>
+  <button class="btn big" id="askBtn">✨ Get recommendations</button>
+  <div id="askOut" style="margin-top:14px"></div>
+</section>
+
+<section class="view" id="v-week">
+  <h2>This week's plan</h2>
+  <p class="sub">Plans a varied pick for each weekday from your mood and filters, skipping places that are closed that day. 🔒 keeps a day, 🔄 swaps it.</p>
+  <div class="chips" id="weekSlot" style="margin-bottom:10px"></div>
+  <div class="week" id="week"></div>
+  <div class="row" style="margin-top:12px">
+    <button class="btn" id="planBtn">🗓️ Plan my week</button>
+    <button class="btn ghost" id="copyWeek">Copy plan</button>
+  </div>
+</section>
+
+<section class="view" id="v-browse">
+  <h2>All downtown spots</h2>
+  <input class="search" id="q" placeholder="Search name, cuisine, dish, street, tunnel…">
+  <div class="row" style="margin-top:10px">
+    <button class="chip" id="toggleF">Filters ▾</button>
+    <button class="chip" id="openOnly">🟢 Open now</button>
+    <button class="chip" id="hhOnly">🍹 Happy hour</button>
+    <button class="chip" id="favOnly">♥ Favorites</button>
+    <button class="chip" id="tunOnly">🚇 Tunnel</button>
+    <select class="chip" id="sort"><option value="name">A–Z</option><option value="price">Price ↑</option><option value="priced">Price ↓</option></select>
+  </div>
+  <div class="filters" id="filters">
+    <div class="fgroup"><label class="h">Cuisine</label><div class="chips" id="fCuisine"></div></div>
+  </div>
+  <div class="count" id="bCount"></div>
+  <div class="grid" id="browse"></div>
+</section>
+</div>
+
+<section class="view" id="v-map">
+  <canvas id="city" aria-label="Isometric map of downtown Houston restaurants"></canvas>
+  <div class="hud">
+    <div class="seg" id="layerSeg">
+      <button data-m="street" class="on">🏙️ Street</button>
+      <button data-m="both">⬍ Both</button>
+      <button data-m="tunnel" class="tun">🚇 Tunnels</button>
+    </div>
+    <button class="pill" id="mapOpen">🟢 Open now</button>
+    <button class="pill" id="mapMatch">🎯 My filters</button>
+  </div>
+  <div class="mapmsg" id="mapMsg">Drag to explore · tap a building or a Sim</div>
+  <div class="legend" id="legend"></div>
+  <div class="zoombox">
+    <button id="zin" aria-label="Zoom in">+</button>
+    <button id="zout" aria-label="Zoom out">−</button>
+    <button id="zfit" aria-label="Fit city">⌂</button>
+  </div>
+</section>
+
+<nav class="tabs">
+  <button data-v="pick" class="on"><span>🎯</span>Pick</button>
+  <button data-v="map"><span>🗺️</span>Map</button>
+  <button data-v="ask" id="askTab"><span>✨</span>Ask</button>
+  <button data-v="week"><span>🗓️</span>Week</button>
+  <button data-v="browse"><span>📖</span>Browse</button>
+</nav>
+
+<div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
+<div class="toast" id="toast"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

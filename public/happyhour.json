@@ -1,0 +1,21 @@
+{
+  "checked": "2026-11-17",
+  "note": "Happy hours and specials change often. Each entry links to where it was found; 'verify' means the source is older or listings disagree.",
+  "spots": {
+    "Xochi": { "when": "Mon–Fri 4–6 PM · Sat 3–6 PM", "deals": "$6 draft beers (Dos XX, Modelo, Victoria) plus happy hour rosé, white, red and sparkling", "source": "https://www.xochihouston.com/menu/happy-hour/", "confidence": "restaurant site" },
+    "Hearsay Market Square": { "when": "Mon–Fri 3–6 PM", "deals": "Appetizers ~$8, $5 domestic/local drafts, $6 select wine, $10 cocktails (another listing shows lower prices). Thursday: steak special $29.95 + $10 classic cocktails", "source": "https://opentable.fr/r/hearsay-gastro-lounge-houston", "confidence": "verify" },
+    "Benihana": { "when": "Mon–Fri 3–6 PM", "deals": "$3 / $6 / $9 happy hour menu of drinks and bites. Weekday 45-minute Power Lunch from $15.95", "source": "https://benihana.com/locations/houston-tx-ho", "confidence": "restaurant site" },
+    "Federal American Grill": { "when": "Daily 4–7 PM (bar area)", "deals": "$8 specialty cocktails, $6 select liquors (Jack Daniel's, Maker's Mark, Hendrick's and more)", "source": "https://opentable.com/restaurant/profile/1341886", "confidence": "OpenTable listing" },
+    "McCormick & Schmick's": { "when": "Mon–Fri 3:30–6:30 PM", "deals": "Bar bites and cocktails; $2 oysters featured in a 2025 segment", "source": "https://opentable.ie/r/mccormick-and-schmicks-houston-downtown-houston", "confidence": "OpenTable listing" },
+    "Toro Toro": { "when": "Daily 3–6 PM", "deals": "Bar, lounge and Suviche bar happy hour", "source": "https://www.fourseasons.com/houston/dining/menus/bayou-bottle/breakfast", "confidence": "hotel site" },
+    "Bayou & Bottle": { "when": "“Bayou Hour” daily 4–7 PM", "deals": "Discounted spirits and house wines, $5 draft beer", "source": "https://centralhouston.org/post/must-hit-happy-hours-downtown", "confidence": "verify" },
+    "MKT BAR": { "when": "Mon–Fri (2–7 PM per Phoenicia; another guide says 4–6)", "deals": "Beer and wine specials plus appetizers; steak night on Thursdays", "source": "https://phoeniciafoods.com/2016/02/12/best-bar-for-drinking-before-grocery-shopping/", "confidence": "verify" },
+    "Flying Saucer": { "when": "Weekdays 4–7 PM", "deals": "$1 off any of 200+ beers", "source": "https://centralhouston.org/post/must-hit-happy-hours-downtown", "confidence": "verify" },
+    "Guard & Grace": { "when": "Social hour Tue–Fri 3–5:30 PM", "deals": "Bar menu with queso lobster, smoked wagyu brisket tacos and beef-fat fries; discounted cocktails and drafts", "source": "https://www.houstoncitybook.com/happy-hour-houston/?page=28", "confidence": "verify" },
+    "The Nash": { "when": "Weekdays 5–6:30 PM", "deals": "Happy hour drinks and bites", "source": "https://www.houstoncitybook.com/happy-hour-houston/?page=73", "confidence": "verify" },
+    "La Calle": { "when": "Weekday afternoons (check times) · Taco Tuesday", "deals": "50% off the cantina food menu and select premiums, beer and margarita specials; Taco Tuesday $0.99 street tacos", "source": "https://centralhouston.org/post/dine-downtown-la-calle", "confidence": "verify" },
+    "Osso & Kristalla": { "when": "Mon–Thu 3–7 PM · all day Friday", "deals": "Happy hour drinks and bites at the bar and patio", "source": "https://lgbtq.visithoustontexas.com/listings/osso-%26-kristalla/30314/", "confidence": "visitor bureau listing" },
+    "Bungalow": { "when": "Now opens 4 PM daily at its new 909 Texas Ave location", "deals": "Moved from 405 Main St in Oct 2026; earlier happy hour featured $6 draft old fashioneds — confirm at the new spot", "source": "https://houston.culturemap.com/news/restaurants-bars/bungalow-dining-new-location-opening/", "confidence": "news, Oct 2026" },
+    "The Grove": { "when": "Weekdays (check times)", "deals": "Known for discounted small plates and drinks on the deck facing Discovery Green", "source": "https://www.houstonpress.com/?p=287171", "confidence": "verify" }
+  }
+}

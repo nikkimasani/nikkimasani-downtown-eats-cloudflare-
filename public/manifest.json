@@ -1,0 +1,9 @@
+{
+  "name": "Downtown Eats — Houston",
+  "short_name": "Downtown Eats",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbf6ef",
+  "theme_color": "#d9481e",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
