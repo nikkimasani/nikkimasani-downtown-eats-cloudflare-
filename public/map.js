@@ -512,19 +512,19 @@ export class CityMap {
     const line = (x0, y0, x1, y1, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(...v.p(x0, y0, 0.03)); ctx.lineTo(...v.p(x1, y1, 0.03)); ctx.stroke(); };
     const detail = v.s > 0.55, bed = N ? '#4a3a3a' : '#cdbfb8';
     // Red Line: two tracks down the middle of Main
-    quad(R.x - 0.95, R.y0, R.x + 0.95, R.y1, bed);
+    quad(R.x - 0.6, R.y0, R.x + 0.6, R.y1, bed);
     if (detail) {
       ctx.strokeStyle = N ? '#5b5050' : '#8f8178'; ctx.lineWidth = 1; ctx.beginPath();
       const [, sy0] = v.p(R.x, R.y0), step = 0.55;
-      for (let y = R.y0; y < R.y1; y += step) { const p = v.p(R.x, y); if (p[1] < -20 || p[1] > this.H + 20 || p[0] < -40 || p[0] > this.W + 40) continue; for (const o of [-0.32, 0.32]) { ctx.moveTo(...v.p(R.x + o - 0.24, y, 0.03)); ctx.lineTo(...v.p(R.x + o + 0.24, y, 0.03)); } }
+      for (let y = R.y0; y < R.y1; y += step) { const p = v.p(R.x, y); if (p[1] < -20 || p[1] > this.H + 20 || p[0] < -40 || p[0] > this.W + 40) continue; for (const o of [-0.28, 0.28]) { ctx.moveTo(...v.p(R.x + o - 0.17, y, 0.03)); ctx.lineTo(...v.p(R.x + o + 0.17, y, 0.03)); } }
       ctx.stroke();
-      for (const o of [-0.5, -0.14, 0.14, 0.5]) line(R.x + o, R.y0, R.x + o, R.y1, N ? '#a7a9ad' : '#5c626b', 1);
+      for (const o of [-0.4, -0.16, 0.16, 0.4]) line(R.x + o, R.y0, R.x + o, R.y1, N ? '#a7a9ad' : '#5c626b', 1);
     }
     line(R.x, R.y0, R.x, R.y1, 'rgba(224,49,49,' + (detail ? '.55' : '.95') + ')', detail ? 1.6 : Math.max(2.5, v.s * 9));
     // Green + Purple: single track each on Capitol (eastbound) and Rusk (westbound)
     for (const y of [R.capY, R.ruskY]) {
-      quad(R.xW, y - 0.5, R.xE, y + 0.5, bed);
-      if (detail) for (const o of [-0.17, 0.17]) line(R.xW, y + o, R.xE, y + o, N ? '#a7a9ad' : '#5c626b', 1);
+      quad(R.xW, y - 0.3, R.xE, y + 0.3, bed);
+      if (detail) for (const o of [-0.12, 0.12]) line(R.xW, y + o, R.xE, y + o, N ? '#a7a9ad' : '#5c626b', 1);
       line(R.xW, y - (detail ? 0.08 : 0.12), R.xE, y - (detail ? 0.08 : 0.12), 'rgba(47,158,68,.9)', detail ? 1.4 : Math.max(2, v.s * 6));
       line(R.xW, y + (detail ? 0.08 : 0.12), R.xE, y + (detail ? 0.08 : 0.12), 'rgba(112,72,232,.85)', detail ? 1.4 : Math.max(2, v.s * 6));
     }
@@ -533,10 +533,10 @@ export class CityMap {
       const col = st.line === 'red' ? '#e03131' : '#2f9e44';
       if (detail) {
         const along = st.line === 'red';
-        const pw = along ? 0.55 : 3.4, pd = along ? 3.4 : 0.55, px = along ? p.x + 1.0 : p.x - pw / 2, py = along ? p.y - pd / 2 : p.y + 0.6;
-        box(ctx, v, px, py, pw, pd, 0.25, N ? '#6b7280' : '#e9ecef');
-        box(ctx, v, px - (along ? 0.1 : 0), py, pw + (along ? 0.2 : 0), pd, 0.08, col, 1.25);
-        for (const k of [0.15, 0.85]) { const [x, yy] = along ? v.p(px + pw / 2, py + pd * k, 0.25) : v.p(px + pw * k, py + pd / 2, 0.25); const [, y2] = along ? v.p(px + pw / 2, py + pd * k, 1.25) : v.p(px + pw * k, py + pd / 2, 1.25); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x, y2); ctx.stroke(); }
+        const pw = along ? 0.24 : 2.4, pd = along ? 2.4 : 0.22, px = along ? p.x + 0.52 : p.x - pw / 2, py = along ? p.y - pd / 2 : p.y + 0.34;   // platforms sit inside the street, beside the tracks
+        box(ctx, v, px, py, pw, pd, 0.06, N ? '#6b7280' : '#e9ecef');
+        box(ctx, v, px - (along ? 0.04 : 0), py - (along ? 0 : 0.04), pw + (along ? 0.08 : 0), pd + (along ? 0 : 0.08), 0.04, col, 0.42);
+        for (const k of [0.15, 0.85]) { const [x, yy] = along ? v.p(px + pw / 2, py + pd * k, 0.06) : v.p(px + pw * k, py + pd / 2, 0.06); const [, y2] = along ? v.p(px + pw / 2, py + pd * k, 0.42) : v.p(px + pw * k, py + pd / 2, 0.42); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x, y2); ctx.stroke(); }
       } else { const [x, y] = v.p(p.x, p.y); circle(ctx, x, y, Math.max(3, v.s * 9), '#fff'); circle(ctx, x, y, Math.max(2, v.s * 6.5), col); }
     }
   }
@@ -866,8 +866,17 @@ export class CityMap {
     const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; };
     const fixes = STYLE_FIX.map((f) => ({ ...f, p: this.proj(f.at[0], f.at[1]) }));
     this.osm = []; this.osmLots = [];
+    const A = this.avenues, C = this.cross, sw = this.streetW, side = 0.32;   // building line: curb + ~3 m of sidewalk
+    const clip = (P, r) => {   // Sutherland–Hodgman against the block rectangle
+      const edges = [[(p) => p[0] >= r.x0, (a, b) => { const t = (r.x0 - a[0]) / (b[0] - a[0]); return [r.x0, a[1] + t * (b[1] - a[1])]; }], [(p) => p[0] <= r.x1, (a, b) => { const t = (r.x1 - a[0]) / (b[0] - a[0]); return [r.x1, a[1] + t * (b[1] - a[1])]; }],
+        [(p) => p[1] >= r.y0, (a, b) => { const t = (r.y0 - a[1]) / (b[1] - a[1]); return [a[0] + t * (b[0] - a[0]), r.y0]; }], [(p) => p[1] <= r.y1, (a, b) => { const t = (r.y1 - a[1]) / (b[1] - a[1]); return [a[0] + t * (b[0] - a[0]), r.y1]; }]];
+      for (const [inside, cut] of edges) { const out = []; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], ia = inside(a), ib = inside(b); if (ia) out.push(a); if (ia !== ib) out.push(cut(a, b)); } P = out; if (P.length < 3) return P; }
+      return P;
+    };
+    const blockOf = (x, y) => { const [i, j] = this.cellIdx(x, y); return { x0: i > 0 ? A[i - 1].x + sw + side : -1e9, x1: i < A.length ? A[i].x - sw - side : 1e9, y0: j > 0 ? C[j - 1].y + sw + side : -1e9, y1: j < C.length ? C[j].y - sw - side : 1e9 }; };
     for (const [ring, hM, minM, type, name, colour] of list) {
       let pts = ring.slice(0, -1).map(([la, ln]) => this.proj(la, ln)); if (pts.length < 3) continue;
+      { const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length; pts = clip(pts, blockOf(mx, my)); if (pts.length < 3) continue; }
       let ar = 0; for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length]; ar += a[0] * b[1] - b[0] * a[1]; }
       if (ar < 0) pts.reverse();   // counter-clockwise, so each wall's outward side is known
       const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), bb = { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
@@ -1516,7 +1525,7 @@ export class CityMap {
     for (const f of this.freewayLabels || []) { const [x, y] = v.p(f.x, f.y); pill(ctx, x, y, f.t, 10, f.water ? 'rgba(25,113,194,.85)' : 'rgba(33,37,41,.75)', '#fff'); }
     if (v.s > 0.3) {
       for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7); pill(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
-      for (const st of this.rail?.stations || []) { const [x, y] = v.p(st.x + (st.line === 'red' ? 1.3 : 0), st.y, 1.6); pill(ctx, x, y, '🚊 ' + st.n, 10, st.line === 'red' ? 'rgba(224,49,49,.92)' : 'rgba(47,158,68,.92)', '#fff'); }
+      for (const st of this.rail?.stations || []) { const [x, y] = v.p(st.x + (st.line === 'red' ? 0.6 : 0), st.y, 1.6); pill(ctx, x, y, '🚊 ' + st.n, 10, st.line === 'red' ? 'rgba(224,49,49,.92)' : 'rgba(47,158,68,.92)', '#fff'); }
       if (v.s > 0.42) { const lim = v.s > 0.8 ? 60 : 14; for (const o of (this.osmNamed || []).slice(0, lim)) { const [x, y] = v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (x > -60 && x < this.W + 60 && y > -20 && y < this.H + 20) pill(ctx, x, y, o.name, 10, 'rgba(255,255,255,.88)', '#343a40'); } }
       if (v.s > 0.42) for (const l of this.landmarks) { const [x, y] = v.p(l.x + l.w / 2, l.y + l.d / 2, l.h + 1.5); pill(ctx, x, y, l.n, 10, 'rgba(255,255,255,.88)', '#343a40'); }
     }
