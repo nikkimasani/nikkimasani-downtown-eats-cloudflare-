@@ -276,8 +276,8 @@ export class CityMap {
 
   spawnNpcs() {
     this.npcs = [];
-    for (let i = 0; i < 18; i++) this.npcs.push(this.newNpc(i, false));
-    for (let i = 0; i < Math.min(10, this.tunnelSpots.length); i++) this.npcs.push(this.newNpc(i + 1000, true));
+    for (let i = 0; i < 60; i++) this.npcs.push(this.newNpc(i, false));
+    for (let i = 0; i < Math.min(25, this.tunnelSpots.length * 1.2); i++) this.npcs.push(this.newNpc(i + 1000, true));
   }
   newNpc(seed, under) {
     const r = (k) => hash(seed + ':' + k);
@@ -327,7 +327,7 @@ export class CityMap {
         n.target = t; n.path = (n.under ? this.routeTunnel(n, t) : this.routeStreet(n, t)).filter(Boolean);
         if (!n.path.length) { n.wait = 1 + Math.random() * 3; n.target = null; continue; }
         const pl = t.places[Math.floor(Math.random() * t.places.length)];
-        n.thought = styleFor(pl).emoji; n.thoughtFor = pl; n.thoughtT = 2.5;
+        n.thought = styleFor(pl).emoji; n.thoughtFor = pl; n.thoughtT = 3.5;
       }
       const [tx, ty] = n.path[0], dx = tx - n.x, dy = ty - n.y, d = Math.hypot(dx, dy), sp = n.speed * dt * 2;
       if (d <= sp) { n.x = tx; n.y = ty; n.path.shift(); } else { n.x += dx / d * sp; n.y += dy / d * sp; }
@@ -411,9 +411,9 @@ export class CityMap {
   layers() { return this.mode === 'tunnel' ? [true] : this.mode === 'both' ? [true, false] : [false]; }
   hit(sx, sy) {
     const lod = this.lod();
-    if (lod !== 'cluster') for (const n of this.npcs) {
+    for (const n of this.npcs) {
       if (n.inside > 0 || !this.layers().includes(n.under)) continue;
-      const [x, y] = this.v.p(n.x, n.y, n.under ? this.tunnelZ() : 0), u = this.u() * 0.7;
+      const [x, y] = this.v.p(n.x, n.y, n.under ? this.tunnelZ() : 0), u = Math.max(0.55, this.u() * 0.8);
       if (Math.abs(sx - x) < 7 * u + 4 && sy < y + 3 && sy > y - 30 * u) return { npc: n };
     }
     let best = null, bd = 1e9;
@@ -479,7 +479,7 @@ export class CityMap {
     for (const f of this.fill) if (!f.lot) items.push({ k: f.x + f.w + f.y + f.d, f });
     for (const l of this.landmarks) items.push({ k: l.x + l.w + l.y + l.d, l });
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: a.r.x1 + a.r.y1, a });
-    if (lod !== 'cluster') for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: n.x + n.y + 0.5, n });
+    for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: n.x + n.y + 0.5, n });
     items.sort((p, q) => p.k - q.k);
     const ghost = mode === 'both' ? 0.4 : 1;
     for (const it of items) {
@@ -587,7 +587,7 @@ export class CityMap {
     for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; seg(A.x, A.y, Bn.x, A.y); seg(Bn.x, A.y, Bn.x, Bn.y); }
     ctx.strokeStyle = 'rgba(56,217,169,.85)'; ctx.lineWidth = Math.max(1.2, v.s * 2.5); ctx.shadowColor = '#38d9a9'; ctx.shadowBlur = 6;
     ctx.beginPath(); for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; ctx.moveTo(...v.p(A.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, Bn.y, z)); } ctx.stroke(); ctx.shadowBlur = 0;
-    if (this.lod() !== 'cluster') for (const n of this.npcs) if (n.under && n.inside <= 0) this.drawNpc(n, now, z);
+    for (const n of this.npcs) if (n.under && n.inside <= 0) this.drawNpc(n, now, z);
   }
 
   drawMarkers(under) {
@@ -615,11 +615,11 @@ export class CityMap {
   }
 
   drawNpc(n, now, z) {
-    const [x, y] = this.v.p(n.x, n.y, z), u = this.u() * 0.7;
+    const [x, y] = this.v.p(n.x, n.y, z), u = Math.max(0.55, this.u() * 0.8);
     if (x < -40 || y < -60 || x > this.W + 40 || y > this.H + 40) return;
     const gem = this.pick != null && n.target?.places.some((p) => p.id === this.pick) ? '#fcc419' : '#40c057';
     drawPerson(this.ctx, x, y, u, n.look, n.phase, !!n.path.length && n.wait <= 0, gem, now);
-    if (n.thought && n.thoughtT > 0 && this.lod() === 'label') pill(this.ctx, x + 12 * u, y - 38 * u, n.thought, 11, 'rgba(255,255,255,.95)');
+    if (n.thought && n.thoughtT > 0 && this.v.s > 0.3) pill(this.ctx, x + 12 * u, y - 38 * u, n.thought, 11, 'rgba(255,255,255,.95)');
   }
 
   drawLabels(N) {
