@@ -300,13 +300,13 @@ function initMap() {
     onVehicle: (c) => toast(c.live
       ? `● LIVE ${c.kind === 'train' ? '🚊 METRORail' : '🚌 METRO route'} ${c.route || ''}${c.rname ? ' — ' + c.rname : ''}${c.est ? ' · position estimated from METRO arrival predictions' : ''}`
       : c.kind === 'waymo' ? '🚗 Waymo — a driverless robotaxi (animated)' : c.kind === 'bus' ? '🚌 METRO bus (animated) — stops at the blue M signs' : c.line === 'red' ? '🚊 METRORail Red Line (animated) — runs down Main St' : '🚊 METRORail Green / Purple line (animated) — Capitol & Rusk'),
-    onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Pinch or tap a number to zoom in'; },
+    onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to move · pinch or double-tap to zoom'; },
   });
   $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
   pollMetro(); setInterval(pollMetro, 20000);
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
-  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><br><span style="color:#868e96">Pinch to zoom · twist two fingers to rotate · tap a street for its corner</span>`;
+  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><br><span style="color:#868e96">Drag to move · pinch or double-tap to zoom · twist to rotate · tap a street for its corner</span>`;
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));

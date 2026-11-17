@@ -213,6 +213,17 @@ function drawPerson(ctx, x, y, u, look, phase, moving, gem, now) {
     poly(ctx, [[x, py - 5.5 * u], [x + w, py], [x, py]], 'rgba(255,255,255,.4)');
   }
 }
+// pins are drawn many times a second: paint each colour/emoji once into a small bitmap and reuse it
+const SPRITES = new Map();
+function pinSprite(color, emoji, r, ring) {
+  const k = color + emoji + r + ring; let c = SPRITES.get(k); if (c) return c;
+  const dpr = Math.min(2, (typeof devicePixelRatio !== 'undefined' && devicePixelRatio) || 1), css = Math.ceil((r + 2) * 2 + 2);
+  c = document.createElement('canvas'); c.width = c.height = Math.ceil(css * dpr); c.css = css;
+  const g = c.getContext('2d'); g.scale(dpr, dpr); const m = css / 2;
+  circle(g, m, m, r + 1.8, ring); circle(g, m, m, r, color);
+  g.font = `${Math.round(r * 1.05)}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(emoji, m, m + 1);
+  SPRITES.set(k, c); return c;
+}
 function pill(ctx, x, y, text, size, bg, fg = '#212529') {
   ctx.font = `600 ${size}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
   const w = ctx.measureText(text).width + size * 0.9, h = size * 1.55;
@@ -767,7 +778,7 @@ export class CityMap {
     const w = pool.map((s) => {
       let k = 1 + s.places.length * 0.2;
       if (this.highlight) k *= s.places.some((p) => this.highlight.has(p.id)) ? 6 : 0.3;
-      if (!s.places.some((p) => this.openFn(p))) k *= 0.1;
+      if (!s.places.some((p) => this.openC(p))) k *= 0.1;
       if (this.pick != null && s.places.some((p) => p.id === this.pick)) k *= 10;
       return k;
     });
@@ -812,7 +823,7 @@ export class CityMap {
 
   // ---------- view / input ----------
   resize() {
-    const r = this.cv.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    const r = this.cv.getBoundingClientRect(), dpr = Math.min(this.maxDpr || 2, window.devicePixelRatio || 1);
     this.W = r.width; this.H = r.height; this.cv.width = r.width * dpr; this.cv.height = r.height * dpr; this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   centerOn(x, y, z = 0, fy = 0.55) { const [px, py] = this.v.p(x, y, z); this.v.ox += this.W / 2 - px; this.v.oy += this.H * fy - py; }
@@ -852,61 +863,101 @@ export class CityMap {
   }
   zoomTo(x, y, s, z = 0, keep) { if (!keep) this.remember(); this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, at: { x, y, z }, s, t: 0 }; }
   bindInput() {
-    const cv = this.cv; let drag = null, pinch = null, moved = 0; const pointers = new Map();
+    const cv = this.cv; let drag = null, pinch = null, moved = 0, lastTap = null, tapTimer = null; const pointers = new Map();
+    this.pointers = pointers;
     const pt = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-    const two = () => { const [a, b] = [...pointers.values()]; return { d: Math.hypot(a[0] - b[0], a[1] - b[1]), ang: Math.atan2(b[1] - a[1], b[0] - a[0]), m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] }; };
+    const two = () => { const [a, b] = [...pointers.values()]; return { d: Math.max(1, Math.hypot(a[0] - b[0], a[1] - b[1])), ang: Math.atan2(b[1] - a[1], b[0] - a[0]), m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] }; };
+    const startDrag = (p, rot) => { drag = { p, ox: this.v.ox, oy: this.v.oy, rot, vx: 0, vy: 0, t: performance.now() }; };
+    const stopMotion = () => { this.anim = null; this.rotAnim = null; this.fling = null; this.zoomAnim = null; };
     cv.addEventListener('contextmenu', (e) => e.preventDefault());
     cv.addEventListener('pointerdown', (e) => {
-      try { cv.setPointerCapture(e.pointerId); } catch (_) {} pointers.set(e.pointerId, pt(e)); moved = 0; this.anim = null; this.rotAnim = null;
-      if (pointers.size === 1) drag = { p: pt(e), ox: this.v.ox, oy: this.v.oy, rot: e.button === 2 || e.shiftKey || e.altKey };
-      else { const g = two(); pinch = { ...g, s: this.v.s, r: this.v.r }; drag = null; }
+      try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+      pointers.set(e.pointerId, pt(e)); stopMotion();
+      if (pointers.size === 1) { moved = 0; startDrag(pt(e), e.button === 2 || e.shiftKey || e.altKey); }
+      else if (pointers.size === 2) { const g = two(); pinch = { ...g, s: this.v.s, r: this.v.r, ang0: g.ang, rotating: false }; drag = null; moved += 20; }
     });
     cv.addEventListener('pointermove', (e) => {
-      if (!pointers.has(e.pointerId)) { this.hover = this.hit(...pt(e)); cv.style.cursor = this.hover ? 'pointer' : 'grab'; return; }
+      if (!pointers.has(e.pointerId)) { if (e.pointerType === 'mouse') { this.hover = this.hit(...pt(e)); cv.style.cursor = this.hover ? 'pointer' : 'grab'; } return; }
       pointers.set(e.pointerId, pt(e));
-      if (pinch && pointers.size === 2) {
+      if (pinch && pointers.size >= 2) {
         const g = two();
-        this.v.ox += g.m[0] - pinch.m[0]; this.v.oy += g.m[1] - pinch.m[1]; pinch.m = g.m;         // two-finger pan
-        this.zoomAt(g.m[0], g.m[1], pinch.s * g.d / pinch.d / this.v.s);                           // pinch to zoom
-        let da = g.ang - pinch.ang; da = Math.atan2(Math.sin(da), Math.cos(da));
-        if (Math.abs(da) > 0.06 || pinch.rotating) { pinch.rotating = true; this.rotateTo(pinch.r + da, g.m[0], g.m[1]); }   // twist to rotate
-        moved += 10;
+        this.v.ox += g.m[0] - pinch.m[0]; this.v.oy += g.m[1] - pinch.m[1]; pinch.m = g.m;            // two fingers move the map
+        this.zoomAt(g.m[0], g.m[1], (pinch.s * g.d) / pinch.d / this.v.s);                           // pinch to zoom
+        // twisting only kicks in after a clear turn (~17°), so ordinary pinches never spin the map
+        let da = g.ang - pinch.ang0; da = Math.atan2(Math.sin(da), Math.cos(da));
+        if (!pinch.rotating && Math.abs(da) > 0.3) { pinch.rotating = true; pinch.ang0 = g.ang; pinch.r = this.v.r; }
+        if (pinch.rotating) { let d2 = g.ang - pinch.ang0; d2 = Math.atan2(Math.sin(d2), Math.cos(d2)); this.rotateTo(pinch.r + d2, g.m[0], g.m[1]); }
+        return;
       }
-      else if (drag && drag.rot) { const p = pt(e); const dx = p[0] - drag.p[0]; moved += Math.abs(dx); this.rotateBy(-dx * 0.008); drag.p = p; }
-      else if (drag) { const p = pt(e); moved += Math.abs(p[0] - drag.p[0]) + Math.abs(p[1] - drag.p[1]); this.v.ox = drag.ox + p[0] - drag.p[0]; this.v.oy = drag.oy + p[1] - drag.p[1]; }
+      if (!drag) return;
+      const p = pt(e), now = performance.now();
+      if (drag.rot) { const dx = p[0] - drag.p[0]; moved += Math.abs(dx); this.rotateBy(-dx * 0.008); drag.p = p; return; }
+      const nx = drag.ox + p[0] - drag.p[0], ny = drag.oy + p[1] - drag.p[1], dt = Math.max(1, now - drag.t);
+      drag.vx = drag.vx * 0.6 + ((nx - this.v.ox) / dt) * 0.4; drag.vy = drag.vy * 0.6 + ((ny - this.v.oy) / dt) * 0.4; drag.t = now;   // px per ms, for a glide on release
+      moved = Math.max(moved, Math.hypot(p[0] - drag.p[0], p[1] - drag.p[1]));
+      this.v.ox = nx; this.v.oy = ny;
     });
+    const tap = (p) => {
+      const h = this.hit(...p);
+      if (h?.cluster) return this.zoomTo(h.cluster.x, h.cluster.y, Math.max(0.75, this.v.s * 2.4), h.cluster.z);
+      if (h?.spot) return this.opts.onSelect?.(h.spot.places, h.spot);
+      if (h?.npc) return this.opts.onNpc?.(h.npc);
+      if (h?.vehicle) return this.opts.onVehicle?.(h.vehicle);
+      if (h?.landmark) return this.opts.onLandmark?.(h.landmark);
+      if (this.mode === 'tunnel') return;
+      // empty map: a second tap within 300 ms zooms in there; a single tap on a street names the corner
+      const now = performance.now();
+      if (lastTap && now - lastTap.t < 320 && Math.hypot(p[0] - lastTap.p[0], p[1] - lastTap.p[1]) < 40) { clearTimeout(tapTimer); lastTap = null; this.zoomBy(2, p[0], p[1]); return; }
+      lastTap = { t: now, p };
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => {
+        const [wx, wy] = this.toWorld(...p), c = this.nearestCorner(wx, wy), near = Math.min(Math.abs(wx - c.x), Math.abs(wy - c.y));
+        if (near < this.streetW + 1.2) { this.markCorner(c.x, c.y, c.label, false); this.opts.onCorner?.(c, this.spotsNear(c.x, c.y)); }
+      }, 330);
+    };
     const up = (e) => {
-      pointers.delete(e.pointerId); if (pointers.size < 2) pinch = null;
-      if (drag && moved < 8) {
-        const h = this.hit(...pt(e));
-        if (h?.cluster) this.zoomTo(h.cluster.x, h.cluster.y, Math.max(0.75, this.v.s * 2.4), h.cluster.z);
-        else if (h?.spot) this.opts.onSelect?.(h.spot.places, h.spot);
-        else if (h?.npc) this.opts.onNpc?.(h.npc);
-        else if (h?.vehicle) this.opts.onVehicle?.(h.vehicle);
-        else if (h?.landmark) this.opts.onLandmark?.(h.landmark);
-        else if (this.mode !== 'tunnel') {
-          const [wx, wy] = this.toWorld(...pt(e)), c = this.nearestCorner(wx, wy), near = Math.min(Math.abs(wx - c.x), Math.abs(wy - c.y));
-          if (near < this.streetW + 1.2) { this.markCorner(c.x, c.y, c.label, false); this.opts.onCorner?.(c, this.spotsNear(c.x, c.y)); }
-        }
+      const wasPinch = !!pinch, p = pt(e);
+      pointers.delete(e.pointerId);
+      if (pointers.size === 1) {   // lifted one finger of a pinch: keep dragging with the other
+        pinch = null; startDrag([...pointers.values()][0], false); moved = 99; return;
+      }
+      if (pointers.size > 1) { const g = two(); pinch = { ...g, s: this.v.s, r: this.v.r, ang0: g.ang, rotating: false }; return; }
+      pinch = null;
+      if (drag && !drag.rot && !wasPinch && moved < 10 && e.type === 'pointerup') tap(p);
+      else if (drag && !drag.rot && moved >= 10 && performance.now() - drag.t < 80) {
+        const sp = Math.hypot(drag.vx, drag.vy); if (sp > 0.15) this.fling = { vx: drag.vx * 16, vy: drag.vy * 16 };   // px per frame
       }
       drag = null;
     };
     cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-    cv.addEventListener('wheel', (e) => { e.preventDefault(); const [x, y] = pt(e); if (e.shiftKey && !e.ctrlKey) this.rotateBy((e.deltaY || e.deltaX) * 0.004, x, y); else this.zoomAt(x, y, Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); this.anim = null; }, { passive: false });
-    // Safari trackpad / iOS gesture events: stop the page from zooming; on a Mac trackpad, use them to twist + pinch
+    cv.addEventListener('wheel', (e) => { e.preventDefault(); stopMotion(); const [x, y] = pt(e); if (e.shiftKey && !e.ctrlKey) this.rotateBy((e.deltaY || e.deltaX) * 0.004, x, y); else this.zoomAt(x, y, Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); }, { passive: false });
+    cv.addEventListener('dblclick', (e) => e.preventDefault());
+    // Safari: stop the page itself from zooming; on a Mac trackpad, use the gesture to pinch and twist
     let g0 = null;
     cv.addEventListener('gesturestart', (e) => { e.preventDefault(); g0 = pointers.size ? null : { r: this.v.r, s: this.v.s }; });
-    cv.addEventListener('gesturechange', (e) => { e.preventDefault(); if (!g0) return; const [x, y] = pt(e); this.zoomAt(x, y, g0.s * e.scale / this.v.s); this.rotateTo(g0.r + (e.rotation || 0) * Math.PI / 180, x, y); });
+    cv.addEventListener('gesturechange', (e) => { e.preventDefault(); if (!g0) return; const [x, y] = pt(e); this.zoomAt(x, y, (g0.s * e.scale) / this.v.s); if (Math.abs(e.rotation || 0) > 15) this.rotateTo(g0.r + ((e.rotation || 0) * Math.PI) / 180, x, y); });
     cv.addEventListener('gestureend', (e) => { e.preventDefault(); g0 = null; });
   }
+  // smooth zoom by a factor around a screen point (double-tap, + / − buttons)
+  zoomBy(k, sx = this.W / 2, sy = this.H / 2) { this.anim = null; this.zoomAnim = { k: Math.log(k), done: 0, sx, sy }; }
+  // never let the city slide off-screen: gently pull the middle of the screen back over downtown
+  keepInBounds() {
+    const B = this.bounds, [wx, wy] = this.toWorld(this.W / 2, this.H / 2);
+    const cx = Math.min(B.x1, Math.max(B.x0, wx)), cy = Math.min(B.y1, Math.max(B.y0, wy));
+    if (cx === wx && cy === wy) return;
+    const a = this.v.p(wx, wy), b = this.v.p(cx, cy); this.v.ox -= (b[0] - a[0]) * 0.18; this.v.oy -= (b[1] - a[1]) * 0.18;
+    if (this.fling) this.fling = null;
+  }
   zoomAt(x, y, k) { const ns = Math.min(3, Math.max(0.08, this.v.s * k)); k = ns / this.v.s; this.v.ox = x - (x - this.v.ox) * k; this.v.oy = y - (y - this.v.oy) * k; this.v.s = ns; }
-  zoom(k) { this.zoomAt(this.W / 2, this.H / 2, k); }
+  zoom(k) { this.zoomBy(k); }
   setMode(m) {
     const prev = this.mode; this.mode = m; this.opts.onMode?.(m);
     if (m === 'tunnel' && prev !== 'tunnel' && this.tunnelSpots.length && this.pick == null) {
       const T = this.tunnelSpots; this.zoomTo(T.reduce((a, s) => a + s.x, 0) / T.length, T.reduce((a, s) => a + s.y, 0) / T.length, Math.max(this.v.s, 0.55), 0, true);
     }
   }
+  // opening hours are parsed from text, so remember each answer for 30 s instead of re-parsing every frame
+  openC(p) { const now = Date.now(), c = (this._open = this._open || new Map()).get(p.id); if (c && now - c[1] < 30000) return c[0]; const v = this.openFn(p); this._open.set(p.id, [v, now]); return v; }
   setHighlight(ids) { this.highlight = ids; }
   setPick(id) { this.pick = id; if (id != null) this.focus(id); }
 
@@ -918,7 +969,7 @@ export class CityMap {
     for (const s of this.visibleSpots(under)) {
       const [i, j] = this.cellIdx(s.x, s.y), key = Math.floor(i / k) + ':' + Math.floor(j / k);
       const c = m.get(key) || { n: 0, x: 0, y: 0, open: 0 };
-      c.n += s.places.length; c.x += s.x * s.places.length; c.y += s.y * s.places.length; c.open += s.places.filter((p) => this.openFn(p)).length; m.set(key, c);
+      c.n += s.places.length; c.x += s.x * s.places.length; c.y += s.y * s.places.length; c.open += s.places.filter((p) => this.openC(p)).length; m.set(key, c);
     }
     return [...m.values()].map((c) => ({ ...c, x: c.x / c.n, y: c.y / c.n, z: under && this.mode !== 'street' ? this.tunnelZ() : 0 }));
   }
@@ -957,7 +1008,15 @@ export class CityMap {
   nightAmount(d = new Date()) { const h = d.getHours() + d.getMinutes() / 60; return h < 6 ? 1 : h < 7.5 ? (7.5 - h) / 1.5 : h < 18 ? 0 : h < 19.5 ? (h - 18) / 1.5 : 1; }
 
   frame(t) {
-    const dt = Math.min(0.05, (t - (this.last || t)) / 1000); this.last = t;
+    const raw = (t - (this.last || t)) / 1000, dt = Math.min(0.05, raw); this.last = t;
+    // if this device can't keep up, draw at a slightly lower resolution so panning stays smooth
+    if (raw > 0 && raw < 0.5 && !document.hidden) {
+      this.ema = (this.ema ?? 0.016) * 0.95 + raw * 0.05; this.slowFor = this.ema > 0.034 ? (this.slowFor || 0) + raw : 0;
+      if (this.slowFor > 1.5 && (this.maxDpr || 2) > 1) { this.maxDpr = Math.max(1, (this.maxDpr || 2) - 0.5); this.slowFor = 0; this.resize(); }
+    }
+    if (this.zoomAnim) { const z = this.zoomAnim, step = Math.min(z.k - z.done, z.k * dt * 5) || 0; if (Math.abs(z.k - z.done) < 1e-3 || !step) this.zoomAnim = null; else { this.zoomAt(z.sx, z.sy, Math.exp(step)); z.done += step; } }
+    if (this.fling) { const f = this.fling, k = Math.min(3, dt * 60); this.v.ox += f.vx * k; this.v.oy += f.vy * k; f.vx *= Math.pow(0.92, k); f.vy *= Math.pow(0.92, k); if (Math.hypot(f.vx, f.vy) < 0.3) this.fling = null; }
+    if (!this.pointers?.size && !this.anim) this.keepInBounds();
     if (this.rotAnim) { const a = this.rotAnim; a.t = Math.min(1, a.t + dt * 2.2); const e = 1 - Math.pow(1 - a.t, 3); this.rotateTo(a.from + a.d * e); if (a.t >= 1) this.rotAnim = null; }
     this.stepTraffic(dt); this.computeLive();
     if (this.anim) {
@@ -1014,8 +1073,11 @@ export class CityMap {
     if (!liveRail) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
     for (const c of [...(this.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(this.liveCars || [])]) { const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
     items.sort((p, q) => p.k - q.k);
+    // skip anything that can't be on screen (most of the city once you're zoomed in)
+    const W = this.W, H = this.H, off = (x, y, w, d, h) => { const [sx, sy] = v.p(x + w / 2, y + d / 2), r = (w + d) * TW * 0.5 * v.s + 20, up = h * ZU * v.s + r; return sx < -r || sx > W + r || sy < -r * 0.6 || sy - up > H; };
     const ghost = mode === 'both' ? 0.4 : 1;
     for (const it of items) {
+      if (it.f ? off(it.f.x, it.f.y, it.f.w, it.f.d, it.f.h) : it.l ? off(it.l.x, it.l.y, it.l.w, it.l.d, it.l.h + 3) : it.a ? off(it.a.r.x0, it.a.r.y0, it.a.r.x1 - it.a.r.x0, it.a.r.y1 - it.a.r.y0, 6) : false) continue;
       if (it.f) box(ctx, v, it.f.x, it.f.y, it.f.w, it.f.d, it.f.h, N ? darken(it.f.c, 0.5) : it.f.c, 0, { alpha: ghost, mullions: it.f.glass, night: N });
       else if (it.l) this.drawLandmark(it.l, N, ghost);
       else if (it.a) this.drawArea(it.a, N, '3d', ghost);
@@ -1155,11 +1217,10 @@ export class CityMap {
     }
     const lift = this.pinLift();
     for (const s of this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y))) {
-      const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openFn(p)), r = lod === 'label' ? 12 : 10;
+      const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
       ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r); ctx.stroke();
       ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');
-      circle(ctx, x, y - lift, r + 1.8, under ? '#c3fae8' : '#fff'); circle(ctx, x, y - lift, r, open ? s.style.color : '#adb5bd');
-      ctx.font = `${Math.round(r * 1.05)}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(s.style.emoji, x, y - lift + 1);
+      const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
       if (lod === 'label' || this.hover?.spot === s) pill(ctx, x, y - lift - r - 12, s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529');
     }
