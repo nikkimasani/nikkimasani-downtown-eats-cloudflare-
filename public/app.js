@@ -234,10 +234,12 @@ function initMap() {
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (places, spot) => places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label),
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
-    onMode: (m) => { document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to explore · tap a building or a Sim'; },
+    onLandmark: (l) => toast(`🏙️ ${l.n}`),
+    onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Pinch or tap a number to zoom in'; },
   });
   const tunnels = DATA.filter((r) => r.tunnel).length;
-  $('#legend').innerHTML = `<span><i class="dot" style="background:#ff7a45"></i>Street level (${DATA.length - tunnels})</span><span><i class="dot" style="background:#20c997"></i>Tunnels (${tunnels})</span><span>💎 Sims heading to eat</span>`;
+  setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
+  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><br><span style="color:#868e96">Numbers = spots on that block · tap to zoom</span>`;
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
