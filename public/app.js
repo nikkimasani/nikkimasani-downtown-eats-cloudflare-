@@ -289,7 +289,8 @@ let city = null, mapMatch = false, mapOpen = false;
 function initMap() {
   if (city) return;
   city = new CityMap($('#city'), DATA, {
-    stops: metroStatic && metroStatic.stops,   // METRO's surveyed stop corners line the street grid up with reality
+    stops: metroStatic && metroStatic.stops,
+    buildings: BUILDINGS,   // real footprints and heights from OpenStreetMap
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (places, spot) => places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label),
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
@@ -306,7 +307,7 @@ function initMap() {
   pollMetro(); setInterval(pollMetro, 20000);
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
-  $('#legend').innerHTML = `<button class="lgd-toggle" id="lgdToggle" aria-expanded="true">Key <b>▾</b></button><div class="lgd-body"><span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><p class="lgd-hint">Drag to move · pinch or double-tap to zoom · twist two fingers to rotate · tap a street to name the corner</p></div>`;
+  $('#legend').innerHTML = `<button class="lgd-toggle" id="lgdToggle" aria-expanded="true">Key <b>▾</b></button><div class="lgd-body"><span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><p class="lgd-hint">Drag to move · pinch or double-tap to zoom · twist two fingers to rotate · tap a street to name the corner${BUILDINGS ? ' · buildings © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors' : ''}</p></div>`;
   const lg = $('#legend'), setLg = (open) => { lg.classList.toggle('min', !open); $('#lgdToggle').setAttribute('aria-expanded', open); try { localStorage.setItem('lgdOpen', open ? '1' : '0'); } catch (e) {} };
   let lgOpen = true; try { lgOpen = localStorage.getItem('lgdOpen') !== '0'; } catch (e) {}
   setLg(lgOpen); $('#lgdToggle').onclick = () => setLg(lg.classList.contains('min'));
@@ -315,7 +316,7 @@ function initMap() {
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
 
 // ---------- live METRO buses and trains (when the site's METRO_API_KEY is set) ----------
-let metroStatic = null, metroLast = null;
+let metroStatic = null, metroLast = null, BUILDINGS = null;
 async function pollMetro() {
   if (!city || document.hidden) return;
   try {
@@ -432,8 +433,8 @@ async function aboutPlace(r) {
 // ---------- boot ----------
 (async () => {
   try {
-    const [pj, hj, oj, ms] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
-    metroStatic = ms;
+    const [pj, hj, oj, ms, bj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
+    metroStatic = ms; BUILDINGS = bj;
     META = { refreshed: pj.refreshed }; HH = hj;
     DATA = pj.places.map((p, i) => {
       const o = { ...(p.official || {}) };
