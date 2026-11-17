@@ -1,8 +1,8 @@
-name: Refresh restaurant details
+name: Refresh restaurant details and METRO stops
 on:
   workflow_dispatch:
   push:
-    paths: ['scripts/refresh.mjs', 'public/curated.json']
+    paths: ['scripts/refresh.mjs', 'scripts/metro-static.mjs', 'public/curated.json']
   schedule:
     - cron: '17 11 * * *'   # daily, ~5am Houston
 permissions:
@@ -15,9 +15,10 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - run: node scripts/refresh.mjs
+      - run: node scripts/metro-static.mjs
       - name: Commit if changed
         run: |
           git config user.name "downtown-eats-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add public/places.json
-          git diff --cached --quiet || (git commit -m "Refresh restaurant details" && git push)
+          git add public/places.json public/metro-static.json || git add public/places.json
+          git diff --cached --quiet || (git commit -m "Refresh restaurant details and METRO stops" && git push)
