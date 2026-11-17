@@ -1,5 +1,5 @@
 import { openState } from './hours.js';
-import { CityMap, styleFor } from './map.js';
+import { CityMap, styleFor, parseStreetQuery } from './map.js';
 
 const $ = (s) => document.querySelector(s);
 const store = { get(k, d) { try { const v = localStorage.getItem('dte_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('dte_' + k, JSON.stringify(v)); } catch (e) {} } };
@@ -91,6 +91,18 @@ function chipRow(el, items, isOn, onClick, after = renderPick) {
 }
 
 // ---------- Pick ----------
+// The match list renders in pages of 30 and keeps going as you scroll, so every match is reachable.
+let pickList = [], pickShown = 0;
+function morePicks(n) {
+  const box = $('#matches'); box.querySelector('.morebar')?.remove();
+  const next = pickList.slice(pickShown, pickShown + n); pickShown += next.length;
+  box.insertAdjacentHTML('beforeend', next.map(([r]) => card(r)).join(''));
+  const left = pickList.length - pickShown;
+  if (left > 0) box.insertAdjacentHTML('beforeend', `<div class="morebar"><span class="meta">Showing ${pickShown} of ${pickList.length}</span><button class="btn ghost" data-more="30">Show ${Math.min(30, left)} more</button><button class="btn ghost" data-more="all">Show all ${pickList.length}</button></div>`);
+}
+$('#matches').addEventListener('click', (e) => { const b = e.target.closest('[data-more]'); if (!b) return; e.stopPropagation(); morePicks(b.dataset.more === 'all' ? 1e9 : 30); });
+const moreObs = 'IntersectionObserver' in window ? new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting) && pickShown < pickList.length && $('#v-pick').classList.contains('on')) morePicks(30); }, { rootMargin: '400px' }) : null;
+new MutationObserver(() => { const m = $('#matches .morebar'); if (m && moreObs) { moreObs.disconnect(); moreObs.observe(m); } }).observe($('#matches'), { childList: true });
 function renderPick() {
   $('#moods').innerHTML = MOODS.map((m) => `<button data-m="${m.k}" class="${st.moods.has(m.k) ? 'on' : ''}"><b>${m.e}</b>${m.l}</button>`).join('');
   chipRow($('#meal'), MEALS, (x) => x === st.meal, (x) => (st.meal = x));
@@ -98,7 +110,9 @@ function renderPick() {
   chipRow($('#extras'), EXTRAS, (x) => st.extras.has(x.k), (x) => (st.extras.has(x.k) ? st.extras.delete(x.k) : st.extras.add(x.k)));
   const list = ranked();
   $('#matchCount').textContent = list.length ? `${list.length} spots match — best fits first` : '';
-  $('#matches').innerHTML = list.length ? list.slice(0, 24).map(([r]) => card(r)).join('') : '<div class="empty">Nothing matches all of that. Try removing a filter or a mood.</div>';
+  pickList = list; pickShown = 0;
+  $('#matches').innerHTML = list.length ? '' : '<div class="empty">Nothing matches all of that. Try removing a filter or a mood.</div>';
+  morePicks(30);
   if (city) city.setHighlight(mapMatch ? new Set(list.map(([r]) => r.id)) : null);
 }
 $('#moods').onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; const k = b.dataset.m; st.moods.has(k) ? st.moods.delete(k) : st.moods.add(k); save(); renderPick(); };
@@ -155,10 +169,15 @@ function renderBrowse() {
     const sug = didYouMean(t);
     $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
   } else $('#browse').innerHTML = list.map((r) => card(r)).join('') || '<div class="empty">No results.</div>';
+  const stq = t && parseStreetQuery(t);
+  if (stq) $('#browse').insertAdjacentHTML('afterbegin', `<div class="card corner-card"${stq.kind === 'parallel' ? '' : ' data-corner="1"'}><h3>📍 ${esc(stq.label)}</h3><div class="meta">${stq.kind === 'parallel' ? 'Pick one street from each direction, like Main & Texas.' : 'Tap to see it on the map with every spot within a block'}</div></div>`);
+  if (stq && !list.length) $('#bCount').textContent = 'Street search';
   for (const [id, on] of [['#favOnly', fav1], ['#tunOnly', tun1], ['#openOnly', open1], ['#hhOnly', hh1]]) $(id).classList.toggle('on', on);
 }
 $('#q').oninput = (e) => { bq = e.target.value; renderBrowse(); };
-$('#browse').addEventListener('click', (e) => { const b = e.target.closest('[data-sug]'); if (b) { $('#q').value = bq = b.dataset.sug; renderBrowse(); } });
+$('#browse').addEventListener('click', (e) => {
+  if (e.target.closest('[data-corner]')) { const q = parseStreetQuery(bq); show('map'); setTimeout(() => runFind({ st: q }), 60); return; }
+  const b = e.target.closest('[data-sug]'); if (b) { $('#q').value = bq = b.dataset.sug; renderBrowse(); } });
 $('#toggleF').onclick = () => $('#filters').classList.toggle('on');
 $('#favOnly').onclick = () => { fav1 = !fav1; renderBrowse(); };
 $('#tunOnly').onclick = () => { tun1 = !tun1; renderBrowse(); };
@@ -241,7 +260,7 @@ function openSheet(id, from = null) {
   <p class="disclaim">${r.extraSource ? `Not in the Downtown Houston directory — added from <a href="${esc(r.extraSource)}" target="_blank" rel="noopener">${esc(new URL(r.extraSource).hostname)}</a>. ` : ''}Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's notes. Menus and specials change — use the links for the latest.</p>`;
   $('#sheet').classList.add('on');
   $('#cls').onclick = closeSheet;
-  $('#sBack').onclick = () => (from ? listSheet(from.places, from.title) : closeSheet());
+  $('#sBack').onclick = () => (from ? listSheet(from.places, from.title, from.walk) : closeSheet());
   $('#sheet').scrollTop = 0; $('#panel').scrollTop = 0;
   $('#sFav').onclick = () => { toggleFav(r); openSheet(id); };
   $('#sGo').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged'); openSheet(id); };
@@ -250,14 +269,15 @@ function openSheet(id, from = null) {
   if (ASK) { const b = $('#sAsk'); b.style.display = 'block'; b.onclick = () => aboutPlace(r); }
 }
 let listCtx = null;
-function listSheet(places, title) {
-  listCtx = { places, title };
-  $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="lBack">‹ Back to map</button><button class="close" id="cls">×</button></div><h2>${esc(title)}</h2><p class="meta">${places.length} spots here${places[0].tunnel ? ' · underground' : ''}</p>
-  ${places.map((r) => { const o = openLabel(r); return `<div class="list-item" data-open="${r.id}"><div><b>${styleFor(r).emoji} ${esc(r.name)}</b><div class="meta">${$$(r.price)} · ${esc(r.type)}</div></div><span class="tag ${o.known ? (o.open ? 'open' : 'closed') : ''}">${esc(o.known ? (o.open ? 'Open' : 'Closed') : '—')}</span></div>`; }).join('')}`;
+function listSheet(places, title, walk) {
+  listCtx = { places, title, walk };
+  $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="lBack">‹ Back to map</button><button class="close" id="cls">×</button></div><h2>${esc(title)}</h2><p class="meta">${places.length} spots ${walk ? 'within about a block — closest first' : 'here' + (places[0].tunnel ? ' · underground' : '')}</p>
+  ${places.map((r) => { const o = openLabel(r); return `<div class="list-item" data-open="${r.id}"><div><b>${styleFor(r).emoji} ${esc(r.name)}</b><div class="meta">${$$(r.price)} · ${esc(r.type)}${walk ? ` · ${r.tunnel ? '🚇 tunnel · ' : ''}~${walk.get(r.id)} min walk` : ''}</div></div><span class="tag ${o.known ? (o.open ? 'open' : 'closed') : ''}">${esc(o.known ? (o.open ? 'Open' : 'Closed') : '—')}</span></div>`; }).join('')}`;
   $('#sheet').classList.add('on'); $('#cls').onclick = closeSheet; $('#lBack').onclick = closeSheet; $('#panel').scrollTop = 0;
 }
 function closeSheet() { $('#sheet').classList.remove('on'); }
 $('#sheet').onclick = (e) => { if (e.target.id === 'sheet') closeSheet(); const li = e.target.closest('.list-item'); if (li) openSheet(+li.dataset.open, listCtx); };
+// sheet "Back" returns to the same list (with walking times if it came from a corner search)
 function toggleFav(r) { favs.has(r.name) ? favs.delete(r.name) : favs.add(r.name); save(); }
 document.addEventListener('click', (e) => {
   const f = e.target.closest('[data-fav]'); if (f) { const r = DATA[+f.dataset.fav]; toggleFav(r); f.textContent = favs.has(r.name) ? '♥' : '♡'; return; }
@@ -273,15 +293,47 @@ function initMap() {
     onSelect: (places, spot) => places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label),
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
     onHistory: (n) => $('#mapBack').classList.toggle('show', n > 0),
-    onLandmark: (l) => toast(`🏙️ ${l.n}`),
+    onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
+    onCorner: (c, near) => showFound(c.label, near),
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Pinch or tap a number to zoom in'; },
   });
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
-  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><br><span style="color:#868e96">Numbers = spots on that block · tap to zoom</span>`;
+  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><br><span style="color:#868e96">Tap a number to zoom · tap a street for the corner name</span>`;
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
+
+// ---------- find a corner, an address or a spot on the map ----------
+const walkMin = (d) => Math.max(1, Math.round((d * 10) / 75));
+function showFound(label, near) {
+  const places = [], walk = new Map();
+  for (const { s, d } of near) for (const p of s.places) if (!walk.has(p.id)) { places.push(p); walk.set(p.id, walkMin(d)); }
+  const bar = $('#mapFound');
+  bar.innerHTML = `<div><b>📍 ${esc(label)}</b><div class="meta">${places.length ? `${places.length} spots within about a block` : 'No restaurants right at this corner'}</div></div>${places.length ? '<button class="btn" id="fSee">See them</button>' : ''}<button class="close" id="fX" aria-label="Close">×</button>`;
+  bar.classList.add('on');
+  if (places.length) $('#fSee').onclick = () => listSheet(places, 'Near ' + label, walk);
+  $('#fX').onclick = () => { bar.classList.remove('on'); if (city) city.mark = null; };
+}
+function findSuggestions(q) {
+  const out = [], st = parseStreetQuery(q);
+  if (st) out.push(st.kind === 'parallel' ? { t: '⚠️ ' + st.label } : { t: '📍 ' + st.label, st });
+  if (q.trim().length >= 2) DATA.map((r) => [r, searchScore(r, q)]).filter(([, v]) => v >= 2).sort((a, b) => b[1] - a[1]).slice(0, st ? 3 : 5).forEach(([r]) => out.push({ t: `${styleFor(r).emoji} ${r.name}${r.tunnel ? ' · tunnel' : ''}`, r }));
+  return out;
+}
+function runFind(item) {
+  $('#findBox').classList.remove('on'); $('#findIn').blur();
+  if (item.st) { const res = city.goTo(item.st); if (res) showFound(item.st.label, res.near); else toast("Couldn't place that on the map"); }
+  else if (item.r) { $('#mapFound').classList.remove('on'); city.setPick(item.r.id); toast(`📍 ${item.r.name}`); }
+}
+$('#mapFind').onclick = () => { const b = $('#findBox'); b.classList.toggle('on'); if (b.classList.contains('on')) { $('#findIn').focus(); renderFind(); } };
+function renderFind() {
+  const q = $('#findIn').value, list = findSuggestions(q);
+  $('#findList').innerHTML = list.length ? list.map((x, i) => `<button data-f="${i}" ${x.st || x.r ? '' : 'disabled'}>${esc(x.t)}</button>`).join('') : `<div class="meta">Try a corner like <b>Main &amp; Texas</b>, an address like <b>1000 Main</b>, or a restaurant name.</div>`;
+  $('#findList').onclick = (e) => { const b = e.target.closest('[data-f]'); if (b) runFind(list[+b.dataset.f]); };
+}
+$('#findIn').oninput = renderFind;
+$('#findForm').onsubmit = (e) => { e.preventDefault(); const l = findSuggestions($('#findIn').value).filter((x) => x.st || x.r); if (l.length) runFind(l[0]); else toast('No street corner or spot matches that'); };
 $('#mapBack').onclick = () => { closeSheet(); city?.back(); };
 $('#zin').onclick = () => city.zoom(1.4); $('#zout').onclick = () => city.zoom(1 / 1.4); $('#zfit').onclick = () => { city.anim = null; city.fitAll = !city.fitAll; city.fit(); };
 $('#mapMatch').onclick = (e) => { mapMatch = !mapMatch; e.currentTarget.classList.toggle('on', mapMatch); renderPick(); toast(mapMatch ? 'Highlighting spots that match your Pick filters' : 'Showing everything'); };

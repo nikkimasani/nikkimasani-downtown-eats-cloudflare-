@@ -87,7 +87,13 @@
     </div>
     <button class="pill" id="mapOpen">🟢 Open now</button>
     <button class="pill" id="mapMatch">🎯 My filters</button>
+    <button class="pill" id="mapFind">🔍 Find a corner</button>
   </div>
+  <div class="findbox" id="findBox">
+    <form id="findForm"><input id="findIn" type="search" autocomplete="off" enterkeyhint="search" placeholder="Main & Texas · 1000 Main · a restaurant"></form>
+    <div id="findList"></div>
+  </div>
+  <div class="foundbar" id="mapFound"></div>
   <div class="mapmsg" id="mapMsg">Pinch or tap a number to zoom in</div>
   <div class="legend" id="legend"></div>
   <div class="zoombox">

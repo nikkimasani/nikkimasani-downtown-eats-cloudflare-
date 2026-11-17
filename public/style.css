@@ -125,3 +125,22 @@ textarea{width:100%;min-height:84px;border-radius:14px;border:1px solid var(--li
   .zoombox button{width:46px;height:46px}
 }
 @media (hover:hover){.chip:hover,.btn.ghost:hover,.mood button:hover{border-color:var(--accent)}.card .open-btn:hover{text-decoration:underline}}
+
+.morebar{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:14px 4px 6px}.morebar .meta{width:100%;text-align:center}
+
+.findbox{position:absolute;left:10px;right:10px;top:108px;z-index:6;background:#fff;border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:10px;display:none;max-width:460px}
+.findbox.on{display:block}
+.findbox input{width:100%;box-sizing:border-box;font-size:16px;padding:11px 12px;border:1.5px solid #dee2e6;border-radius:12px;outline:none}
+.findbox input:focus{border-color:#1c7ed6}
+#findList{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+#findList button{text-align:left;background:none;border:0;padding:10px 8px;border-radius:10px;font-size:15px;color:#212529;cursor:pointer}
+#findList button:hover,#findList button:focus{background:#f1f3f5}
+#findList button:disabled{color:#868e96;cursor:default}
+#findList .meta{padding:6px 8px}
+.foundbar{position:absolute;left:10px;right:62px;bottom:122px;z-index:5;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.16);padding:10px 10px 10px 14px;display:none;align-items:center;gap:10px;max-width:460px}
+.foundbar.on{display:flex}
+.foundbar>div{flex:1;min-width:0}
+.foundbar .btn{white-space:nowrap}
+.foundbar .close{background:none;border:0;font-size:22px;color:#868e96;cursor:pointer;padding:0 4px}
+.corner-card{cursor:pointer;border:2px solid #1c7ed6 !important;background:#e7f5ff !important}
+@media(min-width:700px){.findbox{left:16px;top:70px}.foundbar{left:16px;right:auto;width:420px;bottom:24px}}

@@ -28,6 +28,14 @@ const LANDMARKS = [
   { n: 'Hilton Americas', b: ['Austin', 'La Branch', 'Lamar', 'Dallas'], h: 10.2, kind: 'box', c: '#d8cbb8' },
   { n: 'Marriott Marquis', b: ['La Branch', 'Crawford', 'Walker', 'McKinney'], h: 10.6, kind: 'box', c: '#d2d7de' },
   { n: 'City Hall', b: ['Bagby', 'Brazos', 'Walker', 'McKinney'], h: 3.8, kind: 'box', c: '#e3dccd', half: true },
+  { n: 'Jones Hall', b: ['Smith', 'Louisiana', 'Texas', 'Capitol'], h: 4.6, kind: 'theater', c: '#cfae8a' },
+  { n: 'Alley Theatre', b: ['Smith', 'Louisiana', 'Prairie', 'Texas'], h: 4.2, kind: 'theater', c: '#b99272' },
+  { n: 'Wortham Center', b: ['Brazos', 'Smith', 'Prairie', 'Texas'], h: 5, kind: 'theater', c: '#b07a60' },
+  { n: 'Bayou Place', b: ['Brazos', 'Smith', 'Texas', 'Capitol'], h: 2.6, kind: 'theater', c: '#d8b48e' },
+  { n: 'Central Library', b: ['Brazos', 'Smith', 'McKinney', 'Lamar'], h: 3.6, kind: 'box', c: '#e5dbc4' },
+  { n: 'Christ Church Cathedral', b: ['Fannin', 'San Jacinto', 'Prairie', 'Texas'], h: 2.6, kind: 'church', c: '#c8b9a0', half: true },
+  { n: 'Hobby Center', b: ['W', 'Bagby', 'Rusk', 'Walker'], h: 4.4, kind: 'theater', c: '#c4a27c' },
+  { n: 'Downtown Aquarium', b: ['W', 'Bagby', 'Congress', 'Prairie'], h: 2.4, kind: 'aquarium', c: '#7fb4c9' },
 ];
 const AREAS = [
   { n: 'Discovery Green', b: ['La Branch', 'Crawford', 'McKinney', 'Lamar'], kind: 'park', grow: [0, 1.2, 0, 0] },
@@ -37,7 +45,38 @@ const AREAS = [
   { n: 'Daikin Park', b: ['Crawford', 'Hamilton', 'Congress', 'Texas'], kind: 'ballpark' },
   { n: 'Toyota Center', b: ['La Branch', 'Crawford', 'Polk', 'Bell'], kind: 'arena' },
   { n: 'George R. Brown Convention Center', b: ['Jackson', 'Hamilton', 'Rusk', 'Polk'], kind: 'grb' },
+  { n: 'Sam Houston Park', b: ['W', 'Bagby', 'McKinney', 'Dallas'], kind: 'park' },
 ];
+// METRORail (stations from METRO / Wikipedia). Red Line runs down the middle of Main St; the Green and
+// Purple lines share one eastbound track on Capitol and one westbound track on Rusk, from Smith St east.
+const RED_STATIONS = [
+  { n: 'UH–Downtown', at: 'bayouNorth' }, { n: 'Preston', at: ['Preston'] }, { n: 'Central Station Main', num: 714 },
+  { n: 'Main Street Square', at: ['Walker', 'McKinney', 'Lamar', 'Dallas'] }, { n: 'Bell', at: ['Clay', 'Bell', 'Leeland'] },
+  { n: 'Downtown Transit Center', at: 'south' },
+];
+const GP_STATIONS = [{ n: 'Theater District', av: 'Smith' }, { n: 'Central Station Capitol / Rusk', num: 1115 }, { n: 'Convention District', av: 'Jackson' }];
+const SUFFIX = (n) => n === 'Texas' ? 'Texas Ave' : n + ' St';
+export const STREETS = { avenues: AVENUES, cross: CROSS, full: SUFFIX };
+
+// "Main & Texas", "main and texas st", "corner of Fannin/Walker", "San Jac @ Rusk", or an address like "1000 Main"
+export function parseStreetQuery(q) {
+  const f = (x) => String(x).toLowerCase().replace(/[^a-z0-9 &/@,]/g, ' ').replace(/\b(street|st|avenue|ave|av|blvd)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  const lev = (a, b) => { const m = a.length, n = b.length; let p = Array.from({ length: n + 1 }, (_, j) => j); for (let i = 1; i <= m; i++) { const c = [i]; for (let j = 1; j <= n; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); p = c; } return p[n]; };
+  const street = (t) => {
+    const w = t.replace(/ /g, ''); if (w.length < 3) return null; let best = null, bd = 9;
+    for (const n of [...AVENUES, ...CROSS]) { const k = norm(n), d = k === w ? 0 : k.startsWith(w) && w.length >= 4 ? 0.5 : w.length >= 5 ? lev(w, k) : 9; if (d < bd && d <= (w.length >= 7 ? 2 : 1)) { bd = d; best = n; } }
+    return best;
+  };
+  let t = f(q).replace(/^(the )?(corner|intersection) of /, '');
+  const addr = t.match(/^(\d{2,4}) (?:n |north )?([a-z ]+)$/);
+  if (addr) { const st = street(addr[2]); if (st) return { kind: 'address', num: +addr[1], street: st, label: `${addr[1]} ${SUFFIX(st)}` }; }
+  const parts = t.split(/ ?(?:&|\/|@|,| and | at | x ) ?/).map((x) => x.trim()).filter(Boolean);
+  if (parts.length !== 2) return null;
+  const a = street(parts[0]), b = street(parts[1]); if (!a || !b) return null;
+  const av = AVENUES.includes(a) ? a : AVENUES.includes(b) ? b : null, cs = CROSS.includes(a) ? a : CROSS.includes(b) ? b : null;
+  if (!av || !cs) return { kind: 'parallel', a, b, label: `${SUFFIX(a)} and ${SUFFIX(b)} run parallel — they never meet` };
+  return { kind: 'corner', av, cs, label: `${SUFFIX(av)} & ${SUFFIX(cs)}` };
+}
 
 // ---------- helpers ----------
 const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -191,6 +230,8 @@ export class CityMap {
       this.avenues = AVENUES.map((n, k) => ({ n, x: fx.a + fx.b * (snap(n0) + 100 * k) }));
       this.cross = CROSS.map((n, k) => ({ n, y: fy.a + fy.b * (snap(m0) + 100 * k) }));
       this.blockW = Math.abs(fx.b * 100); this.blockD = Math.abs(fy.b * 100);
+      this.fitX = fx; this.fitY = fy;   // address number → position (cross-street numbers → x, avenue numbers → y)
+      this.avenues.forEach((a, k) => (a.num = snap(n0) + 100 * k)); this.cross.forEach((c, k) => (c.num = snap(m0) + 100 * k));
     } else {
       this.avenues = AVENUES.map((n, k) => ({ n, x: -70 + k * 10 })); this.cross = CROSS.map((n, k) => ({ n, y: -90 + k * 10 })); this.blockW = this.blockD = 10;
     }
@@ -216,7 +257,8 @@ export class CityMap {
     const A = this.avenues, C = this.cross;
     this.bounds = { x0: A[0].x - this.blockW * 2.2, x1: A[A.length - 1].x + this.blockW * 1.6, y0: C[0].y - this.blockD * 2.8, y1: C[C.length - 1].y + this.blockD * 1.2 };
     for (const s of this.spots) { const b = this.bounds; b.x0 = Math.min(b.x0, s.x - 4); b.x1 = Math.max(b.x1, s.x + 4); b.y0 = Math.min(b.y0, s.y - 4); b.y1 = Math.max(b.y1, s.y + 4); }
-    this.buildCity(); this.buildTunnels(); this.spawnNpcs();
+    this.bayouY = C[0].y - this.blockD * 1.4;
+    this.buildCity(); this.buildRail(); this.buildTunnels(); this.spawnNpcs();
   }
 
   // Keep every pin inside a building: move it into the block it belongs to (never on the asphalt),
@@ -253,6 +295,7 @@ export class CityMap {
   clusterSpan() { const s = this.v.s; return s < 0.2 ? 4 : s < 0.34 ? 2 : 1; }
   rectFor(b, inset = 0) {
     const [w, e, n, s] = b, sw = this.streetW;
+    if (w === 'W') { if (!(n in this.csY) || !(s in this.csY)) return null; const bx = this.avX.Bagby; return { x0: bx - this.blockW * 0.92 + inset, x1: bx - sw - 0.4 - inset, y0: Math.min(this.csY[n], this.csY[s]) + sw + inset, y1: Math.max(this.csY[n], this.csY[s]) - sw - inset }; }
     if (!(w in this.avX) || !(e in this.avX) || !(n in this.csY) || !(s in this.csY)) return null;
     return { x0: Math.min(this.avX[w], this.avX[e]) + sw + inset, x1: Math.max(this.avX[w], this.avX[e]) - sw - inset, y0: Math.min(this.csY[n], this.csY[s]) + sw + inset, y1: Math.max(this.csY[n], this.csY[s]) - sw - inset };
   }
@@ -262,6 +305,7 @@ export class CityMap {
     const taken = [];
     const half = (r, side) => side === 'east' ? { ...r, x0: (r.x0 + r.x1) / 2 + 0.3 } : side === 'west' ? { ...r, x1: (r.x0 + r.x1) / 2 - 0.3 } : r;
     for (const a of AREAS) { let r = this.rectFor(a.b); if (!r) continue; r = half(r, a.half); this.areas.push({ ...a, r }); taken.push(r); }
+    if ('Main' in this.avX && 'Fannin' in this.avX) this.areas.push({ n: "Allen's Landing", kind: 'park', r: { x0: this.avX.Main + this.streetW + 0.4, x1: this.avX.Fannin - this.streetW, y0: this.cross[0].y - 5.6, y1: this.cross[0].y - this.streetW - 0.5 } });
     for (const l of LANDMARKS) {
       let r = this.rectFor(l.b, 1.2); if (!r) continue; if (l.half) r = half(r, 'west');
       const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2, w = (r.x1 - r.x0) * (l.kind === 'twin' ? 0.9 : 0.72), d = (r.y1 - r.y0) * 0.72;
@@ -287,6 +331,192 @@ export class CityMap {
         this.fill.push({ x: mid + 0.4, y: r.y0 + 0.5, w: r.x1 - mid - 0.9, d: r.y1 - r.y0 - 1, h: h * 0.55, c: PAL[(i * 3 + j) % PAL.length] });
       } else this.fill.push({ x: r.x0 + 0.5, y: r.y0 + 0.5, w: r.x1 - r.x0 - 1, d: r.y1 - r.y0 - 1, h, c, glass: inCore && seed > 0.5 });
     }
+  }
+
+  // ---------- streets & addresses ----------
+  numY(n) { return this.fitY ? this.fitY.a + this.fitY.b * n : null; }   // avenue address → y
+  numX(n) { return this.fitX ? this.fitX.a + this.fitX.b * n : null; }   // cross-street address → x
+  corner(av, cs) { return av in this.avX && cs in this.csY ? { x: this.avX[av], y: this.csY[cs] } : null; }
+  locate(q) {   // q from parseStreetQuery
+    if (q.kind === 'corner') return this.corner(q.av, q.cs);
+    if (q.kind === 'address') {
+      if (q.street in this.avX && this.fitY) return { x: this.avX[q.street], y: this.numY(q.num) };
+      if (q.street in this.csY && this.fitX) return { x: this.numX(q.num), y: this.csY[q.street] };
+    }
+    return null;
+  }
+  nearestCorner(x, y) {
+    const a = this.avenues.reduce((b, k) => (Math.abs(k.x - x) < Math.abs(b.x - x) ? k : b)), c = this.cross.reduce((b, k) => (Math.abs(k.y - y) < Math.abs(b.y - y) ? k : b));
+    return { av: a.n, cs: c.n, x: a.x, y: c.y, label: `${SUFFIX(a.n)} & ${SUFFIX(c.n)}` };
+  }
+  spotsNear(x, y, r = Math.max(this.blockW, this.blockD) * 1.25) {
+    return this.spots.map((s) => ({ s, d: Math.hypot(s.x - x, s.y - y) })).filter((o) => o.d <= r).sort((p, q) => p.d - q.d);
+  }
+  markCorner(x, y, label, sticky) { this.mark = { x, y, label, t0: performance.now(), sticky }; }
+  goTo(q) {
+    const at = this.locate(q); if (!at) return null;
+    if (this.mode === 'tunnel') this.setMode('street');
+    this.zoomTo(at.x, at.y, Math.max(this.v.s, 1.05)); this.markCorner(at.x, at.y, q.label, true);
+    return { ...at, near: this.spotsNear(at.x, at.y) };
+  }
+  toWorld(sx, sy) { const v = this.v, a = (sx - v.ox) / (TW / 2 * v.s), b = (sy - v.oy) / (TH / 2 * v.s); return [(a + b) / 2, (b - a) / 2]; }
+
+  // ---------- METRORail ----------
+  buildRail() {
+    const A = this.avX, Y = this.csY, C = this.cross, mid = (...ns) => ns.reduce((t, n) => t + Y[n], 0) / ns.length;
+    this.rail = null; if (!('Main' in A) || !('Capitol' in Y) || !('Rusk' in Y)) return;
+    const yNorth = this.bayouY - this.blockD * 0.55, ySouth = C[C.length - 1].y + this.blockD * 0.7;
+    const red = RED_STATIONS.map((st) => {
+      let ys;
+      if (st.at === 'bayouNorth') ys = [yNorth]; else if (st.at === 'south') ys = [ySouth];
+      else if (st.num) ys = [this.numY(st.num) ?? mid('Capitol', 'Rusk')];
+      else if (st.at.length === 4) ys = [mid(st.at[0], st.at[1]), mid(st.at[2], st.at[3])];
+      else if (st.at.length === 3) ys = [mid(st.at[0], st.at[1]), mid(st.at[1], st.at[2])];
+      else ys = [Y[st.at[0]]];
+      return { n: st.n, line: 'red', plats: ys.map((y) => ({ x: A.Main, y })), x: A.Main, y: ys.reduce((a, b) => a + b, 0) / ys.length };
+    });
+    const xE = this.bounds.x1, xW = A.Smith;
+    const gp = GP_STATIONS.map((st) => { const x = st.av ? A[st.av] : this.numX(st.num) ?? (A.Fannin + A['San Jacinto']) / 2; return { n: st.n, line: 'gp', x, y: (Y.Capitol + Y.Rusk) / 2, plats: [{ x, y: Y.Capitol }, { x, y: Y.Rusk }] }; });
+    this.rail = { x: A.Main, y0: this.bounds.y0, y1: this.bounds.y1, capY: Y.Capitol, ruskY: Y.Rusk, xW, xE, stations: [...red, ...gp] };
+    const redStops = red.flatMap((s) => s.plats.map((p) => p.y)).sort((a, b) => a - b);
+    this.trains = [
+      { line: 'red', pos: redStops[1], dir: 1, wait: 0, stops: redStops, lo: yNorth - 6, hi: ySouth + 6 },
+      { line: 'red', pos: redStops[redStops.length - 2], dir: -1, wait: 1.5, stops: redStops, lo: yNorth - 6, hi: ySouth + 6 },
+      { line: 'gp', pos: xW, dir: 1, wait: 2, stops: gp.map((s) => s.x).sort((a, b) => a - b), lo: xW, hi: xE - 2, track: 'cap', color: '#2f9e44' },
+      { line: 'gp', pos: (xW + xE) / 2, dir: -1, wait: 0, stops: gp.map((s) => s.x).sort((a, b) => a - b), lo: xW, hi: xE - 2, track: 'rusk', color: '#7048e8' },
+    ];
+  }
+  stepTrains(dt) {
+    for (const t of this.trains || []) {
+      if (t.wait > 0) { t.wait -= dt; continue; }
+      const sp = t.line === 'red' ? 2.6 : 2.2, next = t.pos + t.dir * sp * dt;
+      const hitStop = t.stops.find((y) => (t.dir > 0 ? y > t.pos && y <= next : y < t.pos && y >= next));
+      if (hitStop != null) { t.pos = hitStop; t.wait = 2.8; continue; }
+      t.pos = next;
+      if (t.pos > t.hi || t.pos < t.lo) {
+        if (t.line === 'red') { t.dir *= -1; t.pos = Math.max(t.lo, Math.min(t.hi, t.pos)); t.wait = 3; }
+        else { t.track = t.track === 'cap' ? 'rusk' : 'cap'; t.dir *= -1; t.pos = Math.max(t.lo, Math.min(t.hi, t.pos)); t.wait = 3; t.color = t.color === '#2f9e44' ? '#7048e8' : '#2f9e44'; }
+      }
+    }
+  }
+  trainBox(t) {   // world box of a two-car train
+    const R = this.rail, L = 5.2, W = 0.95;
+    if (t.line === 'red') return { x: R.x - W / 2 + (t.dir > 0 ? 0.32 : -0.32), y: t.pos - L / 2, w: W, d: L, along: 'y' };
+    const y = t.track === 'cap' ? R.capY : R.ruskY; return { x: t.pos - L / 2, y: y - W / 2, w: L, d: W, along: 'x' };
+  }
+  drawTrain(t, N, alpha) {
+    const ctx = this.ctx, v = this.v, b = this.trainBox(t), h = 1.15, body = N ? '#cfd4da' : '#f8f9fa', stripe = t.line === 'red' ? '#e03131' : t.color;
+    box(ctx, v, b.x, b.y, b.w, b.d, h, body, 0.05, { alpha });
+    ctx.globalAlpha = alpha;
+    const face = (z0, z1, col) => b.along === 'y'
+      ? poly(ctx, [v.p(b.x + b.w, b.y + 0.15, z0), v.p(b.x + b.w, b.y + b.d - 0.15, z0), v.p(b.x + b.w, b.y + b.d - 0.15, z1), v.p(b.x + b.w, b.y + 0.15, z1)], col)
+      : poly(ctx, [v.p(b.x + 0.15, b.y + b.d, z0), v.p(b.x + b.w - 0.15, b.y + b.d, z0), v.p(b.x + b.w - 0.15, b.y + b.d, z1), v.p(b.x + 0.15, b.y + b.d, z1)], col);
+    face(0.3, 0.52, stripe); face(0.66, 0.98, N ? 'rgba(255,224,140,.9)' : 'rgba(40,54,74,.85)');
+    const m = b.along === 'y' ? [v.p(b.x + b.w, b.y + b.d / 2, 0.05), v.p(b.x + b.w, b.y + b.d / 2, h + 0.05)] : [v.p(b.x + b.w / 2, b.y + b.d, 0.05), v.p(b.x + b.w / 2, b.y + b.d, h + 0.05)];
+    ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...m[0]); ctx.lineTo(...m[1]); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  drawRail(N) {
+    const R = this.rail; if (!R) return; const ctx = this.ctx, v = this.v;
+    const quad = (x0, y0, x1, y1, col) => poly(ctx, [v.p(x0, y0, 0.02), v.p(x1, y0, 0.02), v.p(x1, y1, 0.02), v.p(x0, y1, 0.02)], col);
+    const line = (x0, y0, x1, y1, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(...v.p(x0, y0, 0.03)); ctx.lineTo(...v.p(x1, y1, 0.03)); ctx.stroke(); };
+    const detail = v.s > 0.55, bed = N ? '#4a3a3a' : '#cdbfb8';
+    // Red Line: two tracks down the middle of Main
+    quad(R.x - 0.95, R.y0, R.x + 0.95, R.y1, bed);
+    if (detail) {
+      ctx.strokeStyle = N ? '#5b5050' : '#8f8178'; ctx.lineWidth = 1; ctx.beginPath();
+      const [, sy0] = v.p(R.x, R.y0), step = 0.55;
+      for (let y = R.y0; y < R.y1; y += step) { const p = v.p(R.x, y); if (p[1] < -20 || p[1] > this.H + 20 || p[0] < -40 || p[0] > this.W + 40) continue; for (const o of [-0.32, 0.32]) { ctx.moveTo(...v.p(R.x + o - 0.24, y, 0.03)); ctx.lineTo(...v.p(R.x + o + 0.24, y, 0.03)); } }
+      ctx.stroke();
+      for (const o of [-0.5, -0.14, 0.14, 0.5]) line(R.x + o, R.y0, R.x + o, R.y1, N ? '#a7a9ad' : '#5c626b', 1);
+    }
+    line(R.x, R.y0, R.x, R.y1, 'rgba(224,49,49,' + (detail ? '.55' : '.95') + ')', detail ? 1.6 : Math.max(2.5, v.s * 9));
+    // Green + Purple: single track each on Capitol (eastbound) and Rusk (westbound)
+    for (const y of [R.capY, R.ruskY]) {
+      quad(R.xW, y - 0.5, R.xE, y + 0.5, bed);
+      if (detail) for (const o of [-0.17, 0.17]) line(R.xW, y + o, R.xE, y + o, N ? '#a7a9ad' : '#5c626b', 1);
+      line(R.xW, y - (detail ? 0.08 : 0.12), R.xE, y - (detail ? 0.08 : 0.12), 'rgba(47,158,68,.9)', detail ? 1.4 : Math.max(2, v.s * 6));
+      line(R.xW, y + (detail ? 0.08 : 0.12), R.xE, y + (detail ? 0.08 : 0.12), 'rgba(112,72,232,.85)', detail ? 1.4 : Math.max(2, v.s * 6));
+    }
+    // platforms
+    for (const st of R.stations) for (const p of st.plats) {
+      const col = st.line === 'red' ? '#e03131' : '#2f9e44';
+      if (detail) {
+        const along = st.line === 'red';
+        const pw = along ? 0.55 : 3.4, pd = along ? 3.4 : 0.55, px = along ? p.x + 1.0 : p.x - pw / 2, py = along ? p.y - pd / 2 : p.y + 0.6;
+        box(ctx, v, px, py, pw, pd, 0.25, N ? '#6b7280' : '#e9ecef');
+        box(ctx, v, px - (along ? 0.1 : 0), py, pw + (along ? 0.2 : 0), pd, 0.08, col, 1.25);
+        for (const k of [0.15, 0.85]) { const [x, yy] = along ? v.p(px + pw / 2, py + pd * k, 0.25) : v.p(px + pw * k, py + pd / 2, 0.25); const [, y2] = along ? v.p(px + pw / 2, py + pd * k, 1.25) : v.p(px + pw * k, py + pd / 2, 1.25); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x, y2); ctx.stroke(); }
+      } else { const [x, y] = v.p(p.x, p.y); circle(ctx, x, y, Math.max(3, v.s * 9), '#fff'); circle(ctx, x, y, Math.max(2, v.s * 6.5), col); }
+    }
+  }
+
+  drawRailOverlay() {
+    const R = this.rail, v = this.v; if (!R || v.s > 0.55) return; const ctx = this.ctx;
+    const line = (x0, y0, x1, y1, col, w, off = 0) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); const a = v.p(x0, y0), b = v.p(x1, y1); ctx.moveTo(a[0], a[1] + off); ctx.lineTo(b[0], b[1] + off); ctx.stroke(); };
+    ctx.lineCap = 'round';
+    line(R.x, R.y0, R.x, R.y1, 'rgba(255,255,255,.9)', 7); line(R.x, R.y0, R.x, R.y1, '#e03131', 4);
+    for (const y of [R.capY, R.ruskY]) { line(R.xW, y, R.xE, y, 'rgba(255,255,255,.9)', 7); line(R.xW, y, R.xE, y, '#2f9e44', 2.4, -1.1); line(R.xW, y, R.xE, y, '#7048e8', 2.4, 1.1); }
+    ctx.lineCap = 'butt';
+    for (const st of R.stations) { const [x, y] = v.p(st.x, st.y); circle(ctx, x, y, 6, '#fff'); circle(ctx, x, y, 4, st.line === 'red' ? '#e03131' : '#2f9e44'); }
+  }
+
+  // ---------- street signs & crosswalks ----------
+  drawCrosswalks(N) {
+    const v = this.v; if (v.s < 0.7) return;
+    const ctx = this.ctx, sw = this.streetW, k = 0.85;
+    ctx.strokeStyle = N ? 'rgba(255,255,255,.35)' : 'rgba(255,255,255,.9)'; ctx.lineWidth = Math.max(1, v.s * 1.6); ctx.beginPath();
+    for (const a of this.avenues) for (const c of this.cross) {
+      const [sx, sy] = v.p(a.x, c.y); if (sx < -80 || sx > this.W + 80 || sy < -80 || sy > this.H + 80) continue;
+      for (let i = 0; i <= 5; i++) {
+        const t = -sw + (2 * sw) * i / 5;
+        for (const yy of [c.y - sw - 0.15, c.y + sw + 0.15 - k]) { ctx.moveTo(...v.p(a.x + t, yy)); ctx.lineTo(...v.p(a.x + t, yy + k)); }
+        for (const xx of [a.x - sw - 0.15, a.x + sw + 0.15 - k]) { ctx.moveTo(...v.p(xx, c.y + t)); ctx.lineTo(...v.p(xx + k, c.y + t)); }
+      }
+    }
+    ctx.stroke();
+  }
+  drawStreetSigns(N) {
+    const v = this.v; if (v.s < 0.28) return;
+    const ctx = this.ctx, A = this.avenues, C = this.cross, size = Math.round(Math.min(13.5, 9 + v.s * 3));
+    const px = (dx, dy) => { const a = v.p(0, 0), b = v.p(dx, dy); return Math.hypot(b[0] - a[0], b[1] - a[1]); };
+    const kA = Math.max(1, Math.ceil(300 / px(0, this.blockD))), kC = Math.max(1, Math.ceil(300 / px(this.blockW, 0)));
+    const angA = Math.atan2(TH / 2, -TW / 2) - Math.PI, angC = Math.atan2(TH / 2, TW / 2);
+    const showNum = v.s > 1.15;
+    const sign = (x, y, text, ang, major, num) => {
+      if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+      ctx.font = `700 ${size}px system-ui, -apple-system, sans-serif`;
+      const label = num ? `${text}  ·  ${num}` : text, w = ctx.measureText(label).width + size * 1.1, h = size * 1.55;
+      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2 + 1, -h / 2 + 2, w, h, 4) : ctx.rect(-w / 2 + 1, -h / 2 + 2, w, h); ctx.fill();
+      ctx.fillStyle = major ? '#1b6e3f' : '#2b7a4b'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2, -h / 2, w, h, 4) : ctx.rect(-w / 2, -h / 2, w, h); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, 0, 0.5);
+      ctx.restore();
+    };
+    for (let i = 0; i < A.length; i++) for (let j = 0; j < C.length - 1; j++) {
+      if ((j + i) % kA) continue; const [x, y] = v.p(A[i].x, (C[j].y + C[j + 1].y) / 2);
+      sign(x, y, SUFFIX(A[i].n), angA, MAJOR.has(A[i].n), showNum && C[j].num != null ? `${C[j].num}s` : '');
+    }
+    for (let j = 0; j < C.length; j++) for (let i = 0; i < A.length - 1; i++) {
+      if ((i + j + 1) % kC) continue; const [x, y] = v.p((A[i].x + A[i + 1].x) / 2, C[j].y);
+      sign(x, y, SUFFIX(C[j].n), angC, MAJOR.has(C[j].n), showNum && A[i].num != null ? `${A[i].num}s` : '');
+    }
+    if (v.s > 1.5) {   // corner plates at every intersection when zoomed right in
+      ctx.font = `700 10px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (const a of A) for (const c of C) {
+        const [x, y] = v.p(a.x - this.streetW - 0.6, c.y - this.streetW - 0.6, 2.2); if (x < -60 || x > this.W + 60 || y < -20 || y > this.H + 20) continue;
+        const [bx, by] = v.p(a.x - this.streetW - 0.6, c.y - this.streetW - 0.6); ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(x, y + 8); ctx.stroke();
+        const t = `${a.n} / ${c.n}`, w = ctx.measureText(t).width + 8; ctx.fillStyle = '#1b6e3f'; ctx.fillRect(x - w / 2, y - 7, w, 14); ctx.fillStyle = '#fff'; ctx.fillText(t, x, y + 0.5);
+      }
+    }
+  }
+  drawMark(now) {
+    const m = this.mark; if (!m || this.mode === 'tunnel') return;
+    const age = (now - m.t0) / 1000; if (!m.sticky && age > 7) { this.mark = null; return; }
+    const ctx = this.ctx, [x, y] = this.v.p(m.x, m.y), r = 10 + (age * 18) % 26;
+    ctx.strokeStyle = `rgba(28,126,214,${1 - ((age * 18) % 26) / 26})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(x, y, r * 1.6, r * 0.8, 0, 0, Math.PI * 2); ctx.stroke();
+    ellipse(ctx, x, y, 7, 3.5, '#1c7ed6'); pill(ctx, x, y - 26, '📍 ' + m.label, 12, 'rgba(28,126,214,.95)', '#fff');
   }
 
   buildTunnels() {
@@ -421,6 +651,10 @@ export class CityMap {
         else if (h?.spot) this.opts.onSelect?.(h.spot.places, h.spot);
         else if (h?.npc) this.opts.onNpc?.(h.npc);
         else if (h?.landmark) this.opts.onLandmark?.(h.landmark);
+        else if (this.mode !== 'tunnel') {
+          const [wx, wy] = this.toWorld(...pt(e)), c = this.nearestCorner(wx, wy), near = Math.min(Math.abs(wx - c.x), Math.abs(wy - c.y));
+          if (near < this.streetW + 1.2) { this.markCorner(c.x, c.y, c.label, false); this.opts.onCorner?.(c, this.spotsNear(c.x, c.y)); }
+        }
       }
       drag = null;
     };
@@ -466,6 +700,9 @@ export class CityMap {
         for (const s of this.visibleSpots(under)) { const [x, y] = this.v.p(s.x, s.y, under ? this.tunnelZ() : 0); const d = Math.hypot(sx - x, sy - (y - this.pinLift())); if (d < 18 && d < bd) { bd = d; best = { spot: s }; } }
       }
     }
+    if (!best && this.mode !== 'tunnel') for (const st of this.rail?.stations || []) {
+      const [x, y] = this.v.p(st.x + (st.line === 'red' ? 1.3 : 0), st.y, 1.6); if (Math.abs(sx - x) < 60 && Math.abs(sy - y) < 11 && this.v.s > 0.3) return { landmark: { n: '🚊 ' + st.n + (st.line === 'red' ? ' · Red Line' : ' · Green & Purple lines'), station: true } };
+    }
     if (!best && this.mode !== 'tunnel') for (const l of this.landmarks) {
       const [x, y] = this.v.p(l.x + l.w / 2, l.y + l.d / 2, l.h * 0.6);
       if (Math.abs(sx - x) < l.w * TW * this.v.s * 0.4 && Math.abs(sy - y) < l.h * ZU * this.v.s * 0.4) return { landmark: l };
@@ -482,7 +719,7 @@ export class CityMap {
       const a = this.anim; a.t = Math.min(1, a.t + dt * 1.8); const e = 1 - Math.pow(1 - a.t, 3);
       if (a.to) {
         this.v.s = a.from.s + (a.to.s - a.from.s) * e; this.v.ox = a.from.x + (a.to.ox - a.from.x) * e; this.v.oy = a.from.y + (a.to.oy - a.from.y) * e;
-        if (a.t >= 1) this.anim = null; this.stepNpcs(dt); this.draw(t); return;
+        if (a.t >= 1) this.anim = null; this.stepNpcs(dt); this.stepTrains(dt); this.draw(t); return;
       }
       this.v.s = a.from.s + (a.s - a.from.s) * e; this.v.ox = 0; this.v.oy = 0;
       const z = a.at.z ?? (a.at.tunnel && this.mode !== 'street' ? this.tunnelZ() : 0);
@@ -490,7 +727,7 @@ export class CityMap {
       this.v.ox = a.from.x + (tx - a.from.x) * e; this.v.oy = a.from.y + (ty - a.from.y) * e;
       if (a.t >= 1) this.anim = null;
     }
-    this.stepNpcs(dt);
+    this.stepNpcs(dt); this.stepTrains(dt);
     this.draw(t);
   }
 
@@ -517,6 +754,8 @@ export class CityMap {
       for (const c of C) { ctx.beginPath(); ctx.moveTo(...v.p(ax0, c.y)); ctx.lineTo(...v.p(ax1, c.y)); ctx.stroke(); }
       ctx.setLineDash([]);
     }
+    this.drawCrosswalks(N);
+    this.drawRail(N);
     for (const a of this.areas) this.drawArea(a, N, 'flat');
     for (const f of this.fill) if (f.lot) this.drawLot(f, N);
     if (mode === 'both') for (const s of this.tunnelSpots) { const [x, y] = v.p(s.x, s.y); ellipse(ctx, x, y, 4, 2, 'rgba(32,201,151,.6)'); }
@@ -526,17 +765,22 @@ export class CityMap {
     for (const l of this.landmarks) items.push({ k: l.x + l.w + l.y + l.d, l });
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: a.r.x1 + a.r.y1, a });
     for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: n.x + n.y + 0.5, n });
+    for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: b.x + b.w + b.y + b.d, t }); }
     items.sort((p, q) => p.k - q.k);
     const ghost = mode === 'both' ? 0.4 : 1;
     for (const it of items) {
       if (it.f) box(ctx, v, it.f.x, it.f.y, it.f.w, it.f.d, it.f.h, N ? darken(it.f.c, 0.5) : it.f.c, 0, { alpha: ghost, mullions: it.f.glass, night: N });
       else if (it.l) this.drawLandmark(it.l, N, ghost);
       else if (it.a) this.drawArea(it.a, N, '3d', ghost);
+      else if (it.t) this.drawTrain(it.t, N, ghost);
       else this.drawNpc(it.n, now, 0);
     }
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
+    this.drawRailOverlay();
+    this.drawStreetSigns(N);
     this.drawMarkers(false);
     this.drawLabels(N);
+    this.drawMark(now);
     if (night > 0) { ctx.fillStyle = `rgba(14,18,48,${0.1 * night})`; ctx.fillRect(0, 0, this.W, this.H); }
     this.drawPickBeacon(now);
   }
@@ -565,6 +809,18 @@ export class CityMap {
     } else if (l.kind === 'chase') {
       box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, mullions: true }); ctx.globalAlpha = alpha;
       poly(ctx, [v.p(l.x + l.w * 0.7, l.y + l.d, l.h), v.p(l.x + l.w, l.y + l.d * 0.7, l.h), v.p(l.x + l.w, l.y + l.d * 0.7, 0), v.p(l.x + l.w * 0.7, l.y + l.d, 0)], lighten(c, 0.08));
+    } else if (l.kind === 'theater') {
+      box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, o); ctx.globalAlpha = alpha;
+      poly(ctx, [v.p(l.x + l.w * 0.15, l.y + l.d, 1.1), v.p(l.x + l.w * 0.85, l.y + l.d, 1.1), v.p(l.x + l.w * 0.85, l.y + l.d + 0.6, 1.0), v.p(l.x + l.w * 0.15, l.y + l.d + 0.6, 1.0)], N ? '#ffd43b' : '#c92a2a');
+    } else if (l.kind === 'church') {
+      box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, noTop: true }); ctx.globalAlpha = alpha; gableRoof(ctx, v, l.x, l.y, l.w, l.d, l.h, 1.6, darken(c, 0.15));
+      const tw = Math.min(l.w, l.d) * 0.3; box(ctx, v, l.x + 0.3, l.y + l.d - tw - 0.3, tw, tw, l.h + 2.2, c, 0, o); ctx.globalAlpha = alpha; pyramid(ctx, v, l.x + 0.3, l.y + l.d - tw - 0.3, tw, tw, l.h + 2.2, 1.6, darken(c, 0.2));
+    } else if (l.kind === 'aquarium') {
+      box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, o); ctx.globalAlpha = alpha;
+      const [cx, cy] = v.p(l.x + l.w * 0.3, l.y + l.d * 0.5, l.h + 3.2), R = 3.4 * ZU * v.s * 0.55;
+      ctx.strokeStyle = N ? '#ffd43b' : '#e8590c'; ctx.lineWidth = Math.max(1, v.s * 2); ctx.beginPath(); ctx.ellipse(cx, cy, R * 0.55, R, 0, 0, Math.PI * 2); ctx.stroke();
+      for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3 + performance.now() / 4000; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R * 0.55, cy + Math.sin(a) * R); ctx.stroke(); }
+      const [bx, by] = v.p(l.x + l.w * 0.3, l.y + l.d * 0.5, l.h); ctx.beginPath(); ctx.moveTo(bx - R * 0.3, by); ctx.lineTo(cx, cy); ctx.lineTo(bx + R * 0.3, by); ctx.stroke();
     } else box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, mullions: l.kind === 'glass' });
     ctx.globalAlpha = 1;
   }
@@ -671,13 +927,14 @@ export class CityMap {
   drawLabels(N) {
     const ctx = this.ctx, v = this.v, A = this.avenues, C = this.cross;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.font = `600 ${Math.round(Math.min(12, 8 + v.s * 4))}px system-ui, sans-serif`; ctx.fillStyle = N ? 'rgba(255,255,255,.6)' : 'rgba(52,58,64,.62)';
-    const all = v.s > 0.7;
+    ctx.font = `700 ${Math.round(Math.min(13, 9 + v.s * 4))}px system-ui, sans-serif`; ctx.fillStyle = N ? 'rgba(255,255,255,.8)' : 'rgba(33,37,41,.85)';
+    const all = v.s > 0.5;
     for (const a of A) if (all || MAJOR.has(a.n)) { const [x, y] = v.p(a.x, C[0].y - 1.6); ctx.fillText(a.n, x, y); }
     for (const c of C) if (all || MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 2.4, c.y); ctx.fillText(c.n, x, y); }
     for (const f of this.freewayLabels || []) { const [x, y] = v.p(f.x, f.y); pill(ctx, x, y, f.t, 10, f.water ? 'rgba(25,113,194,.85)' : 'rgba(33,37,41,.75)', '#fff'); }
     if (v.s > 0.3) {
       for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7); pill(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
+      for (const st of this.rail?.stations || []) { const [x, y] = v.p(st.x + (st.line === 'red' ? 1.3 : 0), st.y, 1.6); pill(ctx, x, y, '🚊 ' + st.n, 10, st.line === 'red' ? 'rgba(224,49,49,.92)' : 'rgba(47,158,68,.92)', '#fff'); }
       if (v.s > 0.42) for (const l of this.landmarks) { const [x, y] = v.p(l.x + l.w / 2, l.y + l.d / 2, l.h + 1.5); pill(ctx, x, y, l.n, 10, 'rgba(255,255,255,.88)', '#343a40'); }
     }
   }
