@@ -105,10 +105,29 @@ function lsq(pts) {
 }
 const median = (a) => { a = [...a].sort((p, q) => p - q); return a[a.length >> 1]; };
 
+// The view can spin a full 360°: world points are rotated about a pivot, then drawn isometric.
 export class View {
-  constructor() { this.s = 0.3; this.ox = 0; this.oy = 0; }
-  p(x, y, z = 0) { return [(x - y) * TW / 2 * this.s + this.ox, (x + y) * TH / 2 * this.s - z * ZU * this.s + this.oy]; }
+  constructor() { this.s = 0.3; this.ox = 0; this.oy = 0; this.cx = 0; this.cy = 0; this.setRot(0); }
+  setRot(r) { const T = Math.PI * 2; this.r = ((r % T) + T) % T; this.c = Math.cos(this.r); this.sn = Math.sin(this.r); }
+  p(x, y, z = 0) {
+    const dx = x - this.cx, dy = y - this.cy, X = dx * this.c - dy * this.sn, Y = dx * this.sn + dy * this.c;
+    return [(X - Y) * TW / 2 * this.s + this.ox, (X + Y) * TH / 2 * this.s - z * ZU * this.s + this.oy];
+  }
+  depth(x, y) { const dx = x - this.cx, dy = y - this.cy; return dx * (this.c + this.sn) + dy * (this.c - this.sn); }
+  boxDepth(x, y, w, d) { return Math.max(this.depth(x, y), this.depth(x + w, y), this.depth(x, y + d), this.depth(x + w, y + d)); }
+  vis(nx, ny) { const X = nx * this.c - ny * this.sn, Y = nx * this.sn + ny * this.c; return [X + Y, X - Y]; }   // [faces viewer, faces right]
 }
+// the four side faces of a box: [normal x, normal y, corner a, corner b] in unit-box coordinates
+const FACES = [[1, 0, 1, 0, 1, 1], [0, 1, 0, 1, 1, 1], [-1, 0, 0, 0, 0, 1], [0, -1, 0, 0, 1, 0]];
+function sides(v, x, y, w, d) {
+  const out = [];
+  for (const [nx, ny, ax, ay, bx, by] of FACES) {
+    const [f, r] = v.vis(nx, ny); if (f <= 0.0001) continue;
+    out.push({ a: [x + ax * w, y + ay * d], b: [x + bx * w, y + by * d], n: [nx, ny], f, shade: 0.135 + 0.065 * r / Math.SQRT2 });
+  }
+  return out;
+}
+const lerp2 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 function poly(ctx, pts, fill, stroke, lw = 1) {
   ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath();
   if (fill) { ctx.fillStyle = fill; ctx.fill(); }
@@ -119,45 +138,54 @@ const ellipse = (ctx, x, y, rx, ry, fill) => { ctx.beginPath(); ctx.ellipse(x, y
 
 function box(ctx, v, x, y, w, d, h, c, z0 = 0, o = {}) {
   const z1 = z0 + h; ctx.globalAlpha = o.alpha ?? 1;
-  poly(ctx, [v.p(x + w, y, z1), v.p(x + w, y + d, z1), v.p(x + w, y + d, z0), v.p(x + w, y, z0)], darken(c, 0.2));
-  poly(ctx, [v.p(x, y + d, z1), v.p(x + w, y + d, z1), v.p(x + w, y + d, z0), v.p(x, y + d, z0)], darken(c, 0.07));
-  if (o.mullions && v.s > 0.28) {
-    ctx.strokeStyle = o.night ? 'rgba(255,214,140,.35)' : 'rgba(255,255,255,.22)'; ctx.lineWidth = 1;
-    const n = Math.max(2, Math.round(w * 1.2));
-    for (let i = 1; i < n; i++) { const f = i / n; ctx.beginPath(); ctx.moveTo(...v.p(x + w * f, y + d, z0 + 0.4)); ctx.lineTo(...v.p(x + w * f, y + d, z1 - 0.2)); ctx.stroke(); }
-    const m = Math.max(2, Math.round(d * 1.2));
-    for (let i = 1; i < m; i++) { const f = i / m; ctx.beginPath(); ctx.moveTo(...v.p(x + w, y + d * f, z0 + 0.4)); ctx.lineTo(...v.p(x + w, y + d * f, z1 - 0.2)); ctx.stroke(); }
-  }
-  if (o.night && !o.mullions && h > 2 && v.s > 0.28) {
-    for (let i = 0; i < Math.min(14, h * 0.8); i++) {
-      const r = hash(x + ',' + y + ',' + i), zz = z0 + 0.6 + r * (h - 1.2), fx = 0.1 + hash(i + ':' + x) * 0.8;
-      if (r > 0.5) poly(ctx, [v.p(x + w * fx, y + d, zz), v.p(x + w * fx + 0.35, y + d, zz), v.p(x + w * fx + 0.35, y + d, zz + 0.3), v.p(x + w * fx, y + d, zz + 0.3)], 'rgba(255,212,120,.85)');
+  for (const f of sides(v, x, y, w, d)) {
+    poly(ctx, [v.p(...f.a, z1), v.p(...f.b, z1), v.p(...f.b, z0), v.p(...f.a, z0)], darken(c, f.shade));
+    const len = Math.hypot(f.b[0] - f.a[0], f.b[1] - f.a[1]);
+    if (o.mullions && v.s > 0.28) {
+      ctx.strokeStyle = o.night ? 'rgba(255,214,140,.35)' : 'rgba(255,255,255,.22)'; ctx.lineWidth = 1;
+      const n = Math.max(2, Math.round(len * 1.2)); ctx.beginPath();
+      for (let i = 1; i < n; i++) { const q = lerp2(f.a, f.b, i / n); ctx.moveTo(...v.p(...q, z0 + 0.4)); ctx.lineTo(...v.p(...q, z1 - 0.2)); }
+      ctx.stroke();
+    }
+    if (o.night && !o.mullions && h > 2 && v.s > 0.28) {
+      for (let i = 0; i < Math.min(14, h * 0.8); i++) {
+        const r = hash(x + ',' + y + ',' + i + f.n), zz = z0 + 0.6 + r * (h - 1.2), t = 0.1 + hash(i + ':' + x + f.n) * 0.8, t2 = Math.min(1, t + 0.35 / Math.max(len, 0.5));
+        if (r > 0.5) { const q1 = lerp2(f.a, f.b, t), q2 = lerp2(f.a, f.b, t2); poly(ctx, [v.p(...q1, zz), v.p(...q2, zz), v.p(...q2, zz + 0.3), v.p(...q1, zz + 0.3)], 'rgba(255,212,120,.85)'); }
+      }
     }
   }
-  if (!o.noTop) poly(ctx, [v.p(x, y, z1), v.p(x + w, y, z1), v.p(x + w, y + d, z1), v.p(x, y + d, z1)], lighten(c, 0.1), 'rgba(255,255,255,.18)');
+  if (!o.noTop) poly(ctx, [v.p(x, y, z1), v.p(x + w, y, z1), v.p(x + w, y + d, z1), v.p(x, y + d, z1)], o.top || lighten(c, 0.1), 'rgba(255,255,255,.18)');
   ctx.globalAlpha = 1;
+}
+// a band (stripe, window row) painted on every visible side of a box
+function band(ctx, v, x, y, w, d, z0, z1, col, inset = 0.12) {
+  for (const f of sides(v, x, y, w, d)) {
+    const len = Math.hypot(f.b[0] - f.a[0], f.b[1] - f.a[1]), k = Math.min(0.45, inset / Math.max(len, 0.01));
+    const a = lerp2(f.a, f.b, k), b = lerp2(f.a, f.b, 1 - k);
+    poly(ctx, [v.p(...a, z0), v.p(...b, z0), v.p(...b, z1), v.p(...a, z1)], col);
+  }
 }
 function pyramid(ctx, v, x, y, w, d, z, h, c) {
   const ap = v.p(x + w / 2, y + d / 2, z + h);
-  poly(ctx, [v.p(x + w, y, z), v.p(x + w, y + d, z), ap], darken(c, 0.2));
-  poly(ctx, [v.p(x, y + d, z), v.p(x + w, y + d, z), ap], darken(c, 0.06));
+  for (const f of sides(v, x, y, w, d)) poly(ctx, [v.p(...f.a, z), v.p(...f.b, z), ap], darken(c, f.shade));
+}
+// a box whose top is a sloped plane: hs = heights at corners (x,y) (x+w,y) (x+w,y+d) (x,y+d)
+function prism(ctx, v, x, y, w, d, z, hs, c, topCol) {
+  const C = [[x, y], [x + w, y], [x + w, y + d], [x, y + d]], H = (q) => hs[C.findIndex((k) => k[0] === q[0] && k[1] === q[1])] ?? 0;
+  for (const f of sides(v, x, y, w, d)) { const ha = H(f.a), hb = H(f.b); if (ha <= 0 && hb <= 0) continue; poly(ctx, [v.p(...f.a, z), v.p(...f.b, z), v.p(...f.b, z + hb), v.p(...f.a, z + ha)], darken(c, f.shade)); }
+  poly(ctx, C.map((q, i) => v.p(q[0], q[1], z + hs[i])), topCol);
 }
 function gableRoof(ctx, v, x, y, w, d, z, h, c) {
+  const halves = [];
   for (let i = 0; i < 3; i++) {
-    const gx = x + i * w / 3, gw = w / 3, zr = z + h * (i === 1 ? 1.25 : 1);
-    poly(ctx, [v.p(gx, y + d, z), v.p(gx + gw, y + d, z), v.p(gx + gw / 2, y + d, zr)], darken(c, 0.04));
-    poly(ctx, [v.p(gx + gw / 2, y, zr), v.p(gx + gw / 2, y + d, zr), v.p(gx + gw, y + d, z), v.p(gx + gw, y, z)], darken(c, 0.2));
+    const gx = x + i * w / 3, gw = w / 3, hr = h * (i === 1 ? 1.25 : 1);
+    halves.push([gx, gw / 2, [0, hr, hr, 0], -1], [gx + gw / 2, gw / 2, [hr, 0, 0, hr], 1]);
   }
+  halves.sort((a, b) => v.depth(a[0] + a[1] / 2, y + d / 2) - v.depth(b[0] + b[1] / 2, y + d / 2));
+  for (const [hx, hw, hs, nx] of halves) { const [, r] = v.vis(nx, 0); prism(ctx, v, hx, y, hw, d, z, hs, c, darken(c, 0.12 + 0.08 * r / Math.SQRT2)); }
 }
 function wedgeTop(ctx, v, x, y, w, d, z, h, c, flip) {
-  if (!flip) {
-    poly(ctx, [v.p(x + w, y, z), v.p(x + w, y + d, z), v.p(x + w, y + d, z + h), v.p(x + w, y, z + h)], darken(c, 0.25));
-    poly(ctx, [v.p(x, y + d, z), v.p(x + w, y + d, z), v.p(x + w, y + d, z + h)], darken(c, 0.1));
-    poly(ctx, [v.p(x, y, z), v.p(x, y + d, z), v.p(x + w, y + d, z + h), v.p(x + w, y, z + h)], lighten(c, 0.15));
-  } else {
-    poly(ctx, [v.p(x, y + d, z), v.p(x + w, y + d, z), v.p(x, y + d, z + h)], darken(c, 0.1));
-    poly(ctx, [v.p(x + w, y, z), v.p(x + w, y + d, z), v.p(x, y + d, z + h), v.p(x, y, z + h)], lighten(c, 0.1));
-  }
+  prism(ctx, v, x, y, w, d, z, flip ? [h, 0, 0, h] : [0, h, h, 0], c, lighten(c, 0.12));
 }
 
 // ---------- Sims-style character ----------
@@ -258,7 +286,9 @@ export class CityMap {
     this.bounds = { x0: A[0].x - this.blockW * 2.2, x1: A[A.length - 1].x + this.blockW * 1.6, y0: C[0].y - this.blockD * 2.8, y1: C[C.length - 1].y + this.blockD * 1.2 };
     for (const s of this.spots) { const b = this.bounds; b.x0 = Math.min(b.x0, s.x - 4); b.x1 = Math.max(b.x1, s.x + 4); b.y0 = Math.min(b.y0, s.y - 4); b.y1 = Math.max(b.y1, s.y + 4); }
     this.bayouY = C[0].y - this.blockD * 1.4;
-    this.buildCity(); this.buildRail(); this.buildTunnels(); this.spawnNpcs();
+    this.v.cx = (this.avX.Main ?? 0); this.v.cy = (this.csY.Walker ?? 0);
+    this.northW = [uy, vy];   // which way true north points in map units
+    this.buildCity(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
   }
 
   // Keep every pin inside a building: move it into the block it belongs to (never on the asphalt),
@@ -359,7 +389,18 @@ export class CityMap {
     this.zoomTo(at.x, at.y, Math.max(this.v.s, 1.05)); this.markCorner(at.x, at.y, q.label, true);
     return { ...at, near: this.spotsNear(at.x, at.y) };
   }
-  toWorld(sx, sy) { const v = this.v, a = (sx - v.ox) / (TW / 2 * v.s), b = (sy - v.oy) / (TH / 2 * v.s); return [(a + b) / 2, (b - a) / 2]; }
+  toWorld(sx, sy) {
+    const v = this.v, a = (sx - v.ox) / (TW / 2 * v.s), b = (sy - v.oy) / (TH / 2 * v.s), X = (a + b) / 2, Y = (b - a) / 2;
+    return [v.cx + X * v.c + Y * v.sn, v.cy - X * v.sn + Y * v.c];
+  }
+  // spin the map about a screen point (default: the middle of the screen)
+  rotateTo(r, sx = this.W / 2, sy = this.H / 2) {
+    const [wx, wy] = this.toWorld(sx, sy); this.v.setRot(r); const [px, py] = this.v.p(wx, wy); this.v.ox += sx - px; this.v.oy += sy - py;
+    this.opts.onRotate?.(this.compass());
+  }
+  rotateBy(da, sx, sy) { this.rotateTo(this.v.r + da, sx, sy); }
+  spin(to) { let from = this.v.r, d = ((to - from) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI; this.rotAnim = { from, d, t: 0 }; }
+  compass() { const a = this.v.p(0, 0), b = this.v.p(this.northW[0], this.northW[1]); return Math.atan2(b[0] - a[0], -(b[1] - a[1])); }   // screen angle of north, 0 = up
 
   // ---------- METRORail ----------
   buildRail() {
@@ -382,6 +423,7 @@ export class CityMap {
     this.trains = [
       { line: 'red', pos: redStops[1], dir: 1, wait: 0, stops: redStops, lo: yNorth - 6, hi: ySouth + 6 },
       { line: 'red', pos: redStops[redStops.length - 2], dir: -1, wait: 1.5, stops: redStops, lo: yNorth - 6, hi: ySouth + 6 },
+      { line: 'red', pos: redStops[Math.floor(redStops.length / 2)], dir: 1, wait: 4, stops: redStops, lo: yNorth - 6, hi: ySouth + 6 },
       { line: 'gp', pos: xW, dir: 1, wait: 2, stops: gp.map((s) => s.x).sort((a, b) => a - b), lo: xW, hi: xE - 2, track: 'cap', color: '#2f9e44' },
       { line: 'gp', pos: (xW + xE) / 2, dir: -1, wait: 0, stops: gp.map((s) => s.x).sort((a, b) => a - b), lo: xW, hi: xE - 2, track: 'rusk', color: '#7048e8' },
     ];
@@ -408,12 +450,11 @@ export class CityMap {
     const ctx = this.ctx, v = this.v, b = this.trainBox(t), h = 1.15, body = N ? '#cfd4da' : '#f8f9fa', stripe = t.line === 'red' ? '#e03131' : t.color;
     box(ctx, v, b.x, b.y, b.w, b.d, h, body, 0.05, { alpha });
     ctx.globalAlpha = alpha;
-    const face = (z0, z1, col) => b.along === 'y'
-      ? poly(ctx, [v.p(b.x + b.w, b.y + 0.15, z0), v.p(b.x + b.w, b.y + b.d - 0.15, z0), v.p(b.x + b.w, b.y + b.d - 0.15, z1), v.p(b.x + b.w, b.y + 0.15, z1)], col)
-      : poly(ctx, [v.p(b.x + 0.15, b.y + b.d, z0), v.p(b.x + b.w - 0.15, b.y + b.d, z0), v.p(b.x + b.w - 0.15, b.y + b.d, z1), v.p(b.x + 0.15, b.y + b.d, z1)], col);
-    face(0.3, 0.52, stripe); face(0.66, 0.98, N ? 'rgba(255,224,140,.9)' : 'rgba(40,54,74,.85)');
-    const m = b.along === 'y' ? [v.p(b.x + b.w, b.y + b.d / 2, 0.05), v.p(b.x + b.w, b.y + b.d / 2, h + 0.05)] : [v.p(b.x + b.w / 2, b.y + b.d, 0.05), v.p(b.x + b.w / 2, b.y + b.d, h + 0.05)];
-    ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...m[0]); ctx.lineTo(...m[1]); ctx.stroke();
+    band(ctx, v, b.x, b.y, b.w, b.d, 0.05 + 0.25, 0.05 + 0.47, stripe, 0.1); band(ctx, v, b.x, b.y, b.w, b.d, 0.05 + 0.62, 0.05 + 0.95, N ? 'rgba(255,224,140,.9)' : 'rgba(40,54,74,.85)', 0.35);
+    // pantographs reaching up to the overhead wire
+    ctx.strokeStyle = N ? '#adb5bd' : '#495057'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.beginPath();
+    for (const k of [0.3, 0.7]) { const q = b.along === 'y' ? [b.x + b.w / 2, b.y + b.d * k] : [b.x + b.w * k, b.y + b.d / 2]; ctx.moveTo(...v.p(...q, h + 0.05)); ctx.lineTo(...v.p(q[0] + (b.along === 'y' ? 0 : 0.35), q[1] + (b.along === 'y' ? 0.35 : 0), h + 0.6)); ctx.lineTo(...v.p(...q, h + 0.75)); }
+    ctx.stroke();
     ctx.globalAlpha = 1;
   }
   drawRail(N) {
@@ -461,6 +502,99 @@ export class CityMap {
     for (const st of R.stations) { const [x, y] = v.p(st.x, st.y); circle(ctx, x, y, 6, '#fff'); circle(ctx, x, y, 4, st.line === 'red' ? '#e03131' : '#2f9e44'); }
   }
 
+  // ---------- traffic: METRO buses on loops with stops, Waymos roaming the grid ----------
+  spawnTraffic() {
+    this.cars = []; const A = this.avenues, C = this.cross;
+    const ai = (n) => A.findIndex((a) => a.n === n), ci = (n) => C.findIndex((c) => c.n === n);
+    const LOOPS = [
+      [['Travis', 'Pierce'], ['Travis', 'Franklin'], ['Milam', 'Franklin'], ['Milam', 'Pierce']],
+      [['Bagby', 'Walker'], ['Hamilton', 'Walker'], ['Hamilton', 'McKinney'], ['Bagby', 'McKinney']],
+      [['Smith', 'Leeland'], ['Louisiana', 'Leeland'], ['Louisiana', 'Congress'], ['Smith', 'Congress']],
+      [['Fannin', 'Texas'], ['La Branch', 'Texas'], ['La Branch', 'Polk'], ['Fannin', 'Polk']],
+    ];
+    this.busStops = [];
+    LOOPS.forEach((loop, li) => {
+      const corners = loop.map(([a, c]) => [ai(a), ci(c)]); if (corners.some(([i, j]) => i < 0 || j < 0)) return;
+      const path = [];
+      for (let k = 0; k < corners.length; k++) {
+        let [i, j] = corners[k]; const [i2, j2] = corners[(k + 1) % corners.length];
+        while (i !== i2 || j !== j2) { path.push([i, j]); if (i !== i2) i += Math.sign(i2 - i); else j += Math.sign(j2 - j); }
+      }
+      path.forEach((n, k) => { if (k % 3 === 1) this.busStops.push({ n, route: li }); });
+      for (let b = 0; b < 2; b++) this.cars.push({ kind: 'bus', route: li, path, k: Math.floor(b * path.length / 2), t: 0, wait: b * 2, speed: 2.3 });
+    });
+    const okEdge = (i, j, i2, j2) => i2 >= 0 && j2 >= 0 && i2 < A.length && j2 < C.length && !(i === i2 && A[i].n === 'Main');   // Main is the rail mall
+    this.okEdge = okEdge;
+    for (let k = 0; k < 14; k++) {
+      const i = Math.floor(hash('wi' + k) * A.length), j = Math.floor(hash('wj' + k) * C.length);
+      const c = { kind: 'waymo', at: [i, j], to: null, t: 0, wait: hash('ww' + k) * 3, speed: 3.4 + hash('ws' + k) };
+      this.pickNext(c); this.cars.push(c);
+    }
+  }
+  pickNext(c) {
+    const [i, j] = c.at, prev = c.from, opts = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([di, dj]) => [i + di, j + dj]).filter(([i2, j2]) => this.okEdge(i, j, i2, j2));
+    let choices = opts.filter(([i2, j2]) => !prev || i2 !== prev[0] || j2 !== prev[1]); if (!choices.length) choices = opts;
+    const fwd = prev && choices.find(([i2, j2]) => i2 - i === i - prev[0] && j2 - j === j - prev[1]);
+    c.to = fwd && Math.random() < 0.6 ? fwd : choices[Math.floor(Math.random() * choices.length)];
+  }
+  node(n) { return [this.avenues[n[0]].x, this.cross[n[1]].y]; }
+  carEnds(c) { return c.kind === 'bus' ? [c.path[c.k], c.path[(c.k + 1) % c.path.length]] : [c.at, c.to]; }
+  carPos(c) {
+    const [a, b] = this.carEnds(c), p = this.node(a), q = this.node(b), dx = Math.sign(q[0] - p[0]), dy = Math.sign(q[1] - p[1]);
+    const lane = this.streetW * 0.5;   // drive on the right
+    return { x: p[0] + (q[0] - p[0]) * c.t - dy * lane, y: p[1] + (q[1] - p[1]) * c.t + dx * lane, dx, dy, len: Math.hypot(q[0] - p[0], q[1] - p[1]) };
+  }
+  carBox(c) {
+    const P = this.carPos(c), L = c.kind === 'bus' ? 4.3 : 1.9, W = c.kind === 'bus' ? 1.05 : 0.85;
+    return P.dx ? { x: P.x - L / 2, y: P.y - W / 2, w: L, d: W, P } : { x: P.x - W / 2, y: P.y - L / 2, w: W, d: L, P };
+  }
+  stepTraffic(dt) {
+    const cars = this.cars || []; if (!cars.length) return;
+    const key = (c) => { const [a, b] = this.carEnds(c); return a + '>' + b; }, lanes = new Map();
+    for (const c of cars) { const k = key(c); (lanes.get(k) || lanes.set(k, []).get(k)).push(c); }
+    for (const c of cars) {
+      if (c.wait > 0) { c.wait -= dt; continue; }
+      const P = this.carPos(c), gap = (c.kind === 'bus' ? 5.4 : 3) / P.len;
+      if (lanes.get(key(c)).some((o) => o !== c && o.t > c.t && o.t - c.t < gap)) continue;   // don't rear-end the car ahead
+      if (c.kind === 'bus' && c.t < 1 && this.trainNear(P)) continue;
+      c.t += (c.speed * dt) / P.len;
+      if (c.t < 1) continue;
+      c.t = 0;
+      if (c.kind === 'bus') { c.k = (c.k + 1) % c.path.length; if (c.k % 3 === 1) c.wait = 2.6; }
+      else { c.from = c.at; c.at = c.to; this.pickNext(c); if (Math.random() < 0.45) c.wait = 0.4 + Math.random() * 0.6; }
+    }
+  }
+  trainNear() { return false; }
+  drawCar(c, N, alpha, now) {
+    const ctx = this.ctx, v = this.v, b = this.carBox(c);
+    if (c.kind === 'bus') {
+      box(ctx, v, b.x, b.y, b.w, b.d, 1.35, N ? '#ced4da' : '#f8f9fa', 0.12, { alpha });
+      ctx.globalAlpha = alpha;
+      band(ctx, v, b.x, b.y, b.w, b.d, 0.2, 0.42, '#1c5fa8', 0.05);
+      band(ctx, v, b.x, b.y, b.w, b.d, 0.42, 0.5, '#e03131', 0.05);
+      band(ctx, v, b.x, b.y, b.w, b.d, 0.72, 1.25, N ? 'rgba(255,224,140,.9)' : 'rgba(40,54,74,.82)', 0.25);
+      ctx.globalAlpha = 1;
+      if (v.s > 0.9) { const [x, y] = v.p(b.x + b.w / 2, b.y + b.d / 2, 2.4); pill(ctx, x, y, '🚌 ' + ['82', '11', '85', '40'][c.route % 4], 9, 'rgba(28,95,168,.92)', '#fff'); }
+    } else {
+      const P = b.P;
+      box(ctx, v, b.x, b.y, b.w, b.d, 0.55, N ? '#dee2e6' : '#ffffff', 0.12, { alpha });
+      const cw = b.w * (P.dx ? 0.55 : 0.82), cd = b.d * (P.dx ? 0.82 : 0.55);
+      box(ctx, v, b.x + (b.w - cw) / 2 - P.dx * 0.12, b.y + (b.d - cd) / 2 - P.dy * 0.12, cw, cd, 0.36, N ? '#55647a' : '#3d4b5e', 0.67, { alpha, top: N ? '#e9ecef' : '#f8f9fa' });
+      const dome = 0.26, [cx, cy] = [b.x + b.w / 2 - P.dx * 0.12, b.y + b.d / 2 - P.dy * 0.12];
+      box(ctx, v, cx - dome / 2, cy - dome / 2, dome, dome, 0.2, '#212529', 1.03, { alpha });
+      if (v.s > 0.6) { const [x, y] = v.p(cx, cy, 1.25), a = now / 120; ctx.globalAlpha = alpha; circle(ctx, x + Math.cos(a) * 2 * v.s, y + Math.sin(a) * v.s, Math.max(1, v.s * 1.4), '#4dabf7'); ctx.globalAlpha = 1; }
+    }
+  }
+  drawBusStops(N) {
+    if (this.v.s < 0.6 || !this.busStops) return; const ctx = this.ctx, v = this.v, sw = this.streetW;
+    for (const st of this.busStops) {
+      const [x0, y0] = this.node(st.n), [x, y] = v.p(x0 + sw + 0.5, y0 + sw + 0.5), [, yt] = v.p(x0 + sw + 0.5, y0 + sw + 0.5, 2.1);
+      if (x < -20 || x > this.W + 20 || y < -40 || y > this.H + 20) continue;
+      ctx.strokeStyle = '#495057'; ctx.lineWidth = Math.max(1, v.s * 1.3); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, yt); ctx.stroke();
+      const r = Math.max(3, v.s * 4.5); ctx.fillStyle = '#1c5fa8'; ctx.fillRect(x - r, yt - r * 1.4, r * 2, r * 1.4); ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.round(r * 1.1)}px system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('M', x, yt - r * 0.7);
+    }
+  }
+
   // ---------- street signs & crosswalks ----------
   drawCrosswalks(N) {
     const v = this.v; if (v.s < 0.7) return;
@@ -481,7 +615,8 @@ export class CityMap {
     const ctx = this.ctx, A = this.avenues, C = this.cross, size = Math.round(Math.min(13.5, 9 + v.s * 3));
     const px = (dx, dy) => { const a = v.p(0, 0), b = v.p(dx, dy); return Math.hypot(b[0] - a[0], b[1] - a[1]); };
     const kA = Math.max(1, Math.ceil(300 / px(0, this.blockD))), kC = Math.max(1, Math.ceil(300 / px(this.blockW, 0)));
-    const angA = Math.atan2(TH / 2, -TW / 2) - Math.PI, angC = Math.atan2(TH / 2, TW / 2);
+    const dirAng = (dx, dy) => { const a = v.p(0, 0), b = v.p(dx, dy); let g = Math.atan2(b[1] - a[1], b[0] - a[0]); if (g > Math.PI / 2) g -= Math.PI; if (g < -Math.PI / 2) g += Math.PI; return g; };
+    const angA = dirAng(0, 1), angC = dirAng(1, 0);
     const showNum = v.s > 1.15;
     const sign = (x, y, text, ang, major, num) => {
       if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
@@ -614,14 +749,15 @@ export class CityMap {
   }
   remember() {
     this.viewStack = this.viewStack || [];
-    this.viewStack.push({ s: this.v.s, ox: this.v.ox, oy: this.v.oy, mode: this.mode });
+    this.viewStack.push({ s: this.v.s, ox: this.v.ox, oy: this.v.oy, mode: this.mode, r: this.v.r });
     if (this.viewStack.length > 20) this.viewStack.shift();
     this.opts.onHistory?.(this.viewStack.length);
   }
   back() {
     const prev = (this.viewStack || []).pop(); if (!prev) return false;
     if (prev.mode !== this.mode) { this.mode = prev.mode; this.opts.onMode?.(prev.mode); }
-    this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, to: prev, t: 0 };
+    if (prev.r != null && Math.abs(prev.r - this.v.r) > 1e-4) { this.v.setRot(prev.r); this.opts.onRotate?.(this.compass()); this.v.ox = prev.ox; this.v.oy = prev.oy; this.v.s = prev.s; this.anim = null; }
+    else this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, to: prev, t: 0 };
     this.opts.onHistory?.(this.viewStack.length);
     return true;
   }
@@ -636,11 +772,25 @@ export class CityMap {
   bindInput() {
     const cv = this.cv; let drag = null, pinch = null, moved = 0; const pointers = new Map();
     const pt = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-    cv.addEventListener('pointerdown', (e) => { cv.setPointerCapture(e.pointerId); pointers.set(e.pointerId, pt(e)); moved = 0; this.anim = null; if (pointers.size === 1) drag = { p: pt(e), ox: this.v.ox, oy: this.v.oy }; else { const [a, b] = [...pointers.values()]; pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), s: this.v.s }; drag = null; } });
+    const two = () => { const [a, b] = [...pointers.values()]; return { d: Math.hypot(a[0] - b[0], a[1] - b[1]), ang: Math.atan2(b[1] - a[1], b[0] - a[0]), m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] }; };
+    cv.addEventListener('contextmenu', (e) => e.preventDefault());
+    cv.addEventListener('pointerdown', (e) => {
+      try { cv.setPointerCapture(e.pointerId); } catch (_) {} pointers.set(e.pointerId, pt(e)); moved = 0; this.anim = null; this.rotAnim = null;
+      if (pointers.size === 1) drag = { p: pt(e), ox: this.v.ox, oy: this.v.oy, rot: e.button === 2 || e.shiftKey || e.altKey };
+      else { const g = two(); pinch = { ...g, s: this.v.s, r: this.v.r }; drag = null; }
+    });
     cv.addEventListener('pointermove', (e) => {
       if (!pointers.has(e.pointerId)) { this.hover = this.hit(...pt(e)); cv.style.cursor = this.hover ? 'pointer' : 'grab'; return; }
       pointers.set(e.pointerId, pt(e));
-      if (pinch && pointers.size === 2) { const [a, b] = [...pointers.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); this.zoomAt((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, pinch.s * d / pinch.d / this.v.s); moved += 10; }
+      if (pinch && pointers.size === 2) {
+        const g = two();
+        this.v.ox += g.m[0] - pinch.m[0]; this.v.oy += g.m[1] - pinch.m[1]; pinch.m = g.m;         // two-finger pan
+        this.zoomAt(g.m[0], g.m[1], pinch.s * g.d / pinch.d / this.v.s);                           // pinch to zoom
+        let da = g.ang - pinch.ang; da = Math.atan2(Math.sin(da), Math.cos(da));
+        if (Math.abs(da) > 0.06 || pinch.rotating) { pinch.rotating = true; this.rotateTo(pinch.r + da, g.m[0], g.m[1]); }   // twist to rotate
+        moved += 10;
+      }
+      else if (drag && drag.rot) { const p = pt(e); const dx = p[0] - drag.p[0]; moved += Math.abs(dx); this.rotateBy(-dx * 0.008); drag.p = p; }
       else if (drag) { const p = pt(e); moved += Math.abs(p[0] - drag.p[0]) + Math.abs(p[1] - drag.p[1]); this.v.ox = drag.ox + p[0] - drag.p[0]; this.v.oy = drag.oy + p[1] - drag.p[1]; }
     });
     const up = (e) => {
@@ -650,6 +800,7 @@ export class CityMap {
         if (h?.cluster) this.zoomTo(h.cluster.x, h.cluster.y, Math.max(0.75, this.v.s * 2.4), h.cluster.z);
         else if (h?.spot) this.opts.onSelect?.(h.spot.places, h.spot);
         else if (h?.npc) this.opts.onNpc?.(h.npc);
+        else if (h?.vehicle) this.opts.onVehicle?.(h.vehicle);
         else if (h?.landmark) this.opts.onLandmark?.(h.landmark);
         else if (this.mode !== 'tunnel') {
           const [wx, wy] = this.toWorld(...pt(e)), c = this.nearestCorner(wx, wy), near = Math.min(Math.abs(wx - c.x), Math.abs(wy - c.y));
@@ -659,7 +810,12 @@ export class CityMap {
       drag = null;
     };
     cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-    cv.addEventListener('wheel', (e) => { e.preventDefault(); const [x, y] = pt(e); this.zoomAt(x, y, Math.exp(-e.deltaY * 0.0015)); this.anim = null; }, { passive: false });
+    cv.addEventListener('wheel', (e) => { e.preventDefault(); const [x, y] = pt(e); if (e.shiftKey && !e.ctrlKey) this.rotateBy((e.deltaY || e.deltaX) * 0.004, x, y); else this.zoomAt(x, y, Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); this.anim = null; }, { passive: false });
+    // Safari trackpad / iOS gesture events: stop the page from zooming; on a Mac trackpad, use them to twist + pinch
+    let g0 = null;
+    cv.addEventListener('gesturestart', (e) => { e.preventDefault(); g0 = pointers.size ? null : { r: this.v.r, s: this.v.s }; });
+    cv.addEventListener('gesturechange', (e) => { e.preventDefault(); if (!g0) return; const [x, y] = pt(e); this.zoomAt(x, y, g0.s * e.scale / this.v.s); this.rotateTo(g0.r + (e.rotation || 0) * Math.PI / 180, x, y); });
+    cv.addEventListener('gestureend', (e) => { e.preventDefault(); g0 = null; });
   }
   zoomAt(x, y, k) { const ns = Math.min(3, Math.max(0.08, this.v.s * k)); k = ns / this.v.s; this.v.ox = x - (x - this.v.ox) * k; this.v.oy = y - (y - this.v.oy) * k; this.v.s = ns; }
   zoom(k) { this.zoomAt(this.W / 2, this.H / 2, k); }
@@ -692,6 +848,10 @@ export class CityMap {
       const [x, y] = this.v.p(n.x, n.y, n.under ? this.tunnelZ() : 0), u = Math.max(0.55, this.u() * 0.8);
       if (Math.abs(sx - x) < 7 * u + 4 && sy < y + 3 && sy > y - 30 * u) return { npc: n };
     }
+    if (this.mode !== 'tunnel' && this.v.s > 0.35) for (const c of [...(this.cars || []), ...(this.trains || []).map((t) => ({ ...this.trainBox(t), kind: 'train', line: t.line }))]) {
+      const b = c.kind === 'train' ? c : this.carBox(c), [x, y] = this.v.p(b.x + b.w / 2, b.y + b.d / 2, 0.8);
+      if (Math.hypot(sx - x, sy - y) < Math.max(10, 16 * this.v.s)) return { vehicle: c };
+    }
     let best = null, bd = 1e9;
     for (const under of this.layers()) {
       if (lod === 'cluster') {
@@ -715,6 +875,8 @@ export class CityMap {
 
   frame(t) {
     const dt = Math.min(0.05, (t - (this.last || t)) / 1000); this.last = t;
+    if (this.rotAnim) { const a = this.rotAnim; a.t = Math.min(1, a.t + dt * 2.2); const e = 1 - Math.pow(1 - a.t, 3); this.rotateTo(a.from + a.d * e); if (a.t >= 1) this.rotAnim = null; }
+    this.stepTraffic(dt);
     if (this.anim) {
       const a = this.anim; a.t = Math.min(1, a.t + dt * 1.8); const e = 1 - Math.pow(1 - a.t, 3);
       if (a.to) {
@@ -737,8 +899,7 @@ export class CityMap {
     if (mode === 'tunnel') { this.drawGhostGrid(); this.drawTunnels(now); this.drawMarkers(true); this.drawPickBeacon(now); return; }
 
     const walk = N ? '#3a4152' : '#eef0f2', road = N ? '#20242f' : '#a3a9b2';
-    poly(ctx, [v.p(B.x0, B.y1), v.p(B.x1, B.y1), v.p(B.x1, B.y1, -0.8), v.p(B.x0, B.y1, -0.8)], N ? '#1a1e2a' : '#c4c9cf');
-    poly(ctx, [v.p(B.x1, B.y0), v.p(B.x1, B.y1), v.p(B.x1, B.y1, -0.8), v.p(B.x1, B.y0, -0.8)], N ? '#151925' : '#b3b9c0');
+    for (const f of sides(v, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0)) poly(ctx, [v.p(...f.a), v.p(...f.b), v.p(...f.b, -0.8), v.p(...f.a, -0.8)], darken(N ? '#20253a' : '#d0d5db', f.shade));
     poly(ctx, [v.p(B.x0, B.y0), v.p(B.x1, B.y0), v.p(B.x1, B.y1), v.p(B.x0, B.y1)], N ? '#2c3244' : '#dde2e7');
     this.drawBayouAndFreeways(N);
     const A = this.avenues, C = this.cross, sw = this.streetW;
@@ -756,16 +917,18 @@ export class CityMap {
     }
     this.drawCrosswalks(N);
     this.drawRail(N);
+    this.drawBusStops(N);
     for (const a of this.areas) this.drawArea(a, N, 'flat');
     for (const f of this.fill) if (f.lot) this.drawLot(f, N);
     if (mode === 'both') for (const s of this.tunnelSpots) { const [x, y] = v.p(s.x, s.y); ellipse(ctx, x, y, 4, 2, 'rgba(32,201,151,.6)'); }
 
     const items = [];
-    for (const f of this.fill) if (!f.lot) items.push({ k: f.x + f.w + f.y + f.d, f });
-    for (const l of this.landmarks) items.push({ k: l.x + l.w + l.y + l.d, l });
-    for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: a.r.x1 + a.r.y1, a });
-    for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: n.x + n.y + 0.5, n });
-    for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: b.x + b.w + b.y + b.d, t }); }
+    for (const f of this.fill) if (!f.lot) items.push({ k: v.boxDepth(f.x, f.y, f.w, f.d), f });
+    for (const l of this.landmarks) items.push({ k: v.boxDepth(l.x, l.y, l.w, l.d), l });
+    for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
+    for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
+    for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
+    for (const c of this.cars || []) { const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
     items.sort((p, q) => p.k - q.k);
     const ghost = mode === 'both' ? 0.4 : 1;
     for (const it of items) {
@@ -773,6 +936,7 @@ export class CityMap {
       else if (it.l) this.drawLandmark(it.l, N, ghost);
       else if (it.a) this.drawArea(it.a, N, '3d', ghost);
       else if (it.t) this.drawTrain(it.t, N, ghost);
+      else if (it.c) this.drawCar(it.c, N, ghost, now);
       else this.drawNpc(it.n, now, 0);
     }
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
@@ -808,10 +972,11 @@ export class CityMap {
       for (const [k, hf] of [[1, 0.62], [0.8, 0.22], [0.6, 0.1]]) { const w = l.w * k, d = l.d * k, x = l.x + (l.w - w) / 2, y = l.y + (l.d - d) / 2; box(ctx, v, x, y, w, d, l.h * hf, c, z, o); ctx.globalAlpha = alpha; gableRoof(ctx, v, x, y, w, d, z + l.h * hf, 1.2, c); z += l.h * hf; }
     } else if (l.kind === 'chase') {
       box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, mullions: true }); ctx.globalAlpha = alpha;
-      poly(ctx, [v.p(l.x + l.w * 0.7, l.y + l.d, l.h), v.p(l.x + l.w, l.y + l.d * 0.7, l.h), v.p(l.x + l.w, l.y + l.d * 0.7, 0), v.p(l.x + l.w * 0.7, l.y + l.d, 0)], lighten(c, 0.08));
+      if (v.vis(1, 1)[0] > 0) poly(ctx, [v.p(l.x + l.w * 0.7, l.y + l.d, l.h), v.p(l.x + l.w, l.y + l.d * 0.7, l.h), v.p(l.x + l.w, l.y + l.d * 0.7, 0), v.p(l.x + l.w * 0.7, l.y + l.d, 0)], lighten(c, 0.08));
     } else if (l.kind === 'theater') {
       box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, o); ctx.globalAlpha = alpha;
-      poly(ctx, [v.p(l.x + l.w * 0.15, l.y + l.d, 1.1), v.p(l.x + l.w * 0.85, l.y + l.d, 1.1), v.p(l.x + l.w * 0.85, l.y + l.d + 0.6, 1.0), v.p(l.x + l.w * 0.15, l.y + l.d + 0.6, 1.0)], N ? '#ffd43b' : '#c92a2a');
+      const F = sides(v, l.x, l.y, l.w, l.d).sort((a, b) => b.f - a.f)[0];
+      if (F) { const a = lerp2(F.a, F.b, 0.15), b = lerp2(F.a, F.b, 0.85), o = [F.n[0] * 0.6, F.n[1] * 0.6]; poly(ctx, [v.p(...a, 1.1), v.p(...b, 1.1), v.p(b[0] + o[0], b[1] + o[1], 1.0), v.p(a[0] + o[0], a[1] + o[1], 1.0)], N ? '#ffd43b' : '#c92a2a'); }
     } else if (l.kind === 'church') {
       box(ctx, v, l.x, l.y, l.w, l.d, l.h, c, 0, { ...o, noTop: true }); ctx.globalAlpha = alpha; gableRoof(ctx, v, l.x, l.y, l.w, l.d, l.h, 1.6, darken(c, 0.15));
       const tw = Math.min(l.w, l.d) * 0.3; box(ctx, v, l.x + 0.3, l.y + l.d - tw - 0.3, tw, tw, l.h + 2.2, c, 0, o); ctx.globalAlpha = alpha; pyramid(ctx, v, l.x + 0.3, l.y + l.d - tw - 0.3, tw, tw, l.h + 2.2, 1.6, darken(c, 0.2));
@@ -885,7 +1050,7 @@ export class CityMap {
   drawTunnels(now) {
     const ctx = this.ctx, v = this.v, z = this.tunnelZ(), T = this.tunnelSpots; if (!T.length) return;
     const w = 0.8;
-    const seg = (ax, ay, bx, by) => { const x0 = Math.min(ax, bx) - w, x1 = Math.max(ax, bx) + w, y0 = Math.min(ay, by) - w, y1 = Math.max(ay, by) + w; poly(ctx, [v.p(x0, y0, z), v.p(x1, y0, z), v.p(x1, y1, z), v.p(x0, y1, z)], '#34425c'); poly(ctx, [v.p(x0, y1, z), v.p(x1, y1, z), v.p(x1, y1, z + 0.5), v.p(x0, y1, z + 0.5)], '#26324a'); };
+    const seg = (ax, ay, bx, by) => { const x0 = Math.min(ax, bx) - w, x1 = Math.max(ax, bx) + w, y0 = Math.min(ay, by) - w, y1 = Math.max(ay, by) + w; poly(ctx, [v.p(x0, y0, z), v.p(x1, y0, z), v.p(x1, y1, z), v.p(x0, y1, z)], '#34425c'); for (const f of sides(v, x0, y0, x1 - x0, y1 - y0)) poly(ctx, [v.p(...f.a, z), v.p(...f.b, z), v.p(...f.b, z + 0.5), v.p(...f.a, z + 0.5)], '#26324a'); };
     for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; seg(A.x, A.y, Bn.x, A.y); seg(Bn.x, A.y, Bn.x, Bn.y); }
     ctx.strokeStyle = 'rgba(56,217,169,.85)'; ctx.lineWidth = Math.max(1.2, v.s * 2.5); ctx.shadowColor = '#38d9a9'; ctx.shadowBlur = 6;
     ctx.beginPath(); for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; ctx.moveTo(...v.p(A.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, Bn.y, z)); } ctx.stroke(); ctx.shadowBlur = 0;
@@ -905,7 +1070,7 @@ export class CityMap {
       return;
     }
     const lift = this.pinLift();
-    for (const s of this.visibleSpots(under).sort((a, b) => a.x + a.y - (b.x + b.y))) {
+    for (const s of this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y))) {
       const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openFn(p)), r = lod === 'label' ? 12 : 10;
       ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r); ctx.stroke();
       ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');

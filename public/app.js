@@ -295,11 +295,14 @@ function initMap() {
     onHistory: (n) => $('#mapBack').classList.toggle('show', n > 0),
     onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
     onCorner: (c, near) => showFound(c.label, near),
+    onRotate: (a) => { $('#needle').style.transform = `rotate(${a}rad)`; },
+    onVehicle: (c) => toast(c.kind === 'waymo' ? '🚗 Waymo — a driverless robotaxi, giving rides in downtown Houston' : c.kind === 'bus' ? '🚌 METRO local bus — stops at the blue M signs' : c.line === 'red' ? '🚊 METRORail Red Line — runs down Main St' : '🚊 METRORail Green / Purple line — Capitol & Rusk'),
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Pinch or tap a number to zoom in'; },
   });
+  $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
-  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><br><span style="color:#868e96">Tap a number to zoom · tap a street for the corner name</span>`;
+  $('#legend').innerHTML = `<span><i class="dot" style="background:#e8590c"></i>Street (${DATA.length - tunnels})</span><span><i class="dot" style="background:#12b886"></i>Tunnels (${tunnels})</span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><br><span style="color:#868e96">Pinch to zoom · twist two fingers to rotate · tap a street for its corner</span>`;
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
@@ -335,6 +338,8 @@ function renderFind() {
 $('#findIn').oninput = renderFind;
 $('#findForm').onsubmit = (e) => { e.preventDefault(); const l = findSuggestions($('#findIn').value).filter((x) => x.st || x.r); if (l.length) runFind(l[0]); else toast('No street corner or spot matches that'); };
 $('#mapBack').onclick = () => { closeSheet(); city?.back(); };
+$('#zcomp').onclick = () => city?.spin(0);
+$('#zrot').onclick = () => city?.spin(city.v.r + Math.PI / 2);
 $('#zin').onclick = () => city.zoom(1.4); $('#zout').onclick = () => city.zoom(1 / 1.4); $('#zfit').onclick = () => { city.anim = null; city.fitAll = !city.fitAll; city.fit(); };
 $('#mapMatch').onclick = (e) => { mapMatch = !mapMatch; e.currentTarget.classList.toggle('on', mapMatch); renderPick(); toast(mapMatch ? 'Highlighting spots that match your Pick filters' : 'Showing everything'); };
 $('#mapOpen').onclick = (e) => {
@@ -415,5 +420,5 @@ async function aboutPlace(r) {
 document.addEventListener('keydown', (e) => {
   if (e.target.matches('input, textarea, select')) return;
   if (e.key === 'Escape') { if ($('#sheet').classList.contains('on')) closeSheet(); else if ($('#v-map').classList.contains('on')) city?.back(); }
-  if ($('#v-map').classList.contains('on') && city) { if (e.key === '+' || e.key === '=') city.zoom(1.3); if (e.key === '-') city.zoom(1 / 1.3); }
+  if ($('#v-map').classList.contains('on') && city) { if (e.key === '+' || e.key === '=') city.zoom(1.3); if (e.key === '-') city.zoom(1 / 1.3); if (e.key === 'q' || e.key === '[') city.rotateBy(-Math.PI / 12); if (e.key === 'e' || e.key === ']') city.rotateBy(Math.PI / 12); if (e.key === 'n') city.spin(0); }
 });
