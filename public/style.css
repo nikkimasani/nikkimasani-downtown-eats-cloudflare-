@@ -151,3 +151,7 @@ textarea{width:100%;min-height:84px;border-radius:14px;border:1px solid var(--li
 #needle i{position:absolute;left:50%;top:8px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #e03131;transform:translateX(-50%)}
 #needle i::after{content:'';position:absolute;left:-5px;top:9px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:9px solid #adb5bd}
 #zrot{font-size:22px}
+
+.livechip{background:#e03131 !important;color:#fff !important;font-weight:700}
+.livechip.warn{background:#fff3bf !important;color:#5c3c00 !important}
+.livechip[hidden]{display:none}

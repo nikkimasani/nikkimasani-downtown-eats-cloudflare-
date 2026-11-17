@@ -288,6 +288,7 @@ export class CityMap {
     this.bayouY = C[0].y - this.blockD * 1.4;
     this.v.cx = (this.avX.Main ?? 0); this.v.cy = (this.csY.Walker ?? 0);
     this.northW = [uy, vy];   // which way true north points in map units
+    this.proj = proj;
     this.buildCity(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
   }
 
@@ -545,7 +546,7 @@ export class CityMap {
     return { x: p[0] + (q[0] - p[0]) * c.t - dy * lane, y: p[1] + (q[1] - p[1]) * c.t + dx * lane, dx, dy, len: Math.hypot(q[0] - p[0], q[1] - p[1]) };
   }
   carBox(c) {
-    const P = this.carPos(c), L = c.kind === 'bus' ? 4.3 : 1.9, W = c.kind === 'bus' ? 1.05 : 0.85;
+    const P = c.P || this.carPos(c), L = c.kind === 'bus' ? 4.3 : c.kind === 'train' ? 5.2 : 1.9, W = c.kind === 'bus' ? 1.05 : c.kind === 'train' ? 0.95 : 0.85;
     return P.dx ? { x: P.x - L / 2, y: P.y - W / 2, w: L, d: W, P } : { x: P.x - W / 2, y: P.y - L / 2, w: W, d: L, P };
   }
   stepTraffic(dt) {
@@ -567,14 +568,19 @@ export class CityMap {
   trainNear() { return false; }
   drawCar(c, N, alpha, now) {
     const ctx = this.ctx, v = this.v, b = this.carBox(c);
-    if (c.kind === 'bus') {
+    if (c.kind === 'train') {
+      box(ctx, v, b.x, b.y, b.w, b.d, 1.15, N ? '#cfd4da' : '#f8f9fa', 0.05, { alpha }); ctx.globalAlpha = alpha;
+      band(ctx, v, b.x, b.y, b.w, b.d, 0.3, 0.52, c.color || '#e03131', 0.1); band(ctx, v, b.x, b.y, b.w, b.d, 0.67, 1.0, N ? 'rgba(255,224,140,.9)' : 'rgba(40,54,74,.85)', 0.35);
+      ctx.globalAlpha = 1;
+      if (v.s > 0.7) { const [x, y] = v.p(b.x + b.w / 2, b.y + b.d / 2, 2.4); pill(ctx, x, y, '● LIVE 🚊 ' + (c.route || ''), 9, 'rgba(224,49,49,.95)', '#fff'); }
+    } else if (c.kind === 'bus') {
       box(ctx, v, b.x, b.y, b.w, b.d, 1.35, N ? '#ced4da' : '#f8f9fa', 0.12, { alpha });
       ctx.globalAlpha = alpha;
       band(ctx, v, b.x, b.y, b.w, b.d, 0.2, 0.42, '#1c5fa8', 0.05);
       band(ctx, v, b.x, b.y, b.w, b.d, 0.42, 0.5, '#e03131', 0.05);
       band(ctx, v, b.x, b.y, b.w, b.d, 0.72, 1.25, N ? 'rgba(255,224,140,.9)' : 'rgba(40,54,74,.82)', 0.25);
       ctx.globalAlpha = 1;
-      if (v.s > 0.9) { const [x, y] = v.p(b.x + b.w / 2, b.y + b.d / 2, 2.4); pill(ctx, x, y, '🚌 ' + ['82', '11', '85', '40'][c.route % 4], 9, 'rgba(28,95,168,.92)', '#fff'); }
+      if (v.s > (c.live ? 0.7 : 0.9)) { const [x, y] = v.p(b.x + b.w / 2, b.y + b.d / 2, 2.4); pill(ctx, x, y, c.live ? '● LIVE 🚌 ' + (c.route || '') : '🚌 ' + ['82', '11', '85', '40'][c.route % 4], 9, c.live ? 'rgba(224,49,49,.95)' : 'rgba(28,95,168,.92)', '#fff'); }
     } else {
       const P = b.P;
       box(ctx, v, b.x, b.y, b.w, b.d, 0.55, N ? '#dee2e6' : '#ffffff', 0.12, { alpha });
@@ -584,6 +590,44 @@ export class CityMap {
       box(ctx, v, cx - dome / 2, cy - dome / 2, dome, dome, 0.2, '#212529', 1.03, { alpha });
       if (v.s > 0.6) { const [x, y] = v.p(cx, cy, 1.25), a = now / 120; ctx.globalAlpha = alpha; circle(ctx, x + Math.cos(a) * 2 * v.s, y + Math.sin(a) * v.s, Math.max(1, v.s * 1.4), '#4dabf7'); ctx.globalAlpha = 1; }
     }
+  }
+  // ---------- live METRO (from /api/metro): real positions, or positions estimated from predicted stop times ----------
+  setLive(data, stat) { this.liveData = data; this.liveStat = stat || this.liveStat; if (!data) this.liveCars = []; }
+  computeLive() {
+    const L = this.liveData; if (!L) { this.liveCars = []; return; }
+    const now = Date.now() / 1000, R = (this.liveStat && this.liveStat.routes) || {}, S = (this.liveStat && this.liveStat.stops) || {};
+    const raw = [], seen = new Set();
+    for (const v of L.vehicles || []) { const [x, y] = this.proj(v.lat, v.lng); raw.push({ id: 'v' + (v.id || v.trip), trip: v.trip, route: v.route, x, y, vid: v.id }); if (v.trip) seen.add(v.trip); }
+    for (const t of L.trips || []) {
+      if (seen.has(t.id)) continue;
+      const st = t.s.filter(([sid]) => S[sid]).sort((a, b) => a[1] - b[1]); let pos = null;
+      for (let i = 0; i < st.length - 1; i++) if (st[i][1] <= now && now < st[i + 1][1]) { const a = S[st[i][0]], b = S[st[i + 1][0]], f = (now - st[i][1]) / Math.max(1, st[i + 1][1] - st[i][1]); pos = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]; break; }
+      if (!pos) continue;
+      const [x, y] = this.proj(pos[0], pos[1]); raw.push({ id: 't' + t.id, trip: t.id, route: t.route, x, y, vid: t.vid, est: true });
+    }
+    const prev = this.livePrev || new Map(), next = new Map(), B = this.bounds, out = [];
+    const A = this.avenues, C = this.cross, R2 = this.rail;
+    for (const o of raw) {
+      if (o.x < B.x0 || o.x > B.x1 || o.y < B.y0 || o.y > B.y1) continue;
+      const ri = R[o.route] || [o.route || '', 3, '', ''], kind = ri[1] === 0 || ri[1] === 1 || ri[1] === 2 ? 'train' : 'bus';
+      const p = prev.get(o.id);
+      const sx = p ? p.sx + (o.x - p.sx) * 0.06 : o.x, sy = p ? p.sy + (o.y - p.sy) * 0.06 : o.y;   // glide toward each new fix
+      let hx = p ? p.hx : 0, hy = p ? p.hy : 1; const mx = o.x - (p ? p.sx : o.x), my = o.y - (p ? p.sy : o.y);
+      if (Math.hypot(mx, my) > 0.3) { hx = mx; hy = my; }
+      next.set(o.id, { sx, sy, hx, hy });
+      // keep vehicles on the roads/tracks
+      let x = sx, y = sy, dx = 0, dy = 0;
+      const nm = (ri[0] + ' ' + ri[3]).toLowerCase(), onMain = /red/.test(nm) || (!/green|purple/.test(nm) && R2 && Math.abs(x - R2.x) < Math.min(Math.abs(y - R2.capY), Math.abs(y - R2.ruskY)));
+      if (kind === 'train' && R2 && onMain && Math.abs(x - R2.x) < 8) { dy = hy >= 0 ? 1 : -1; x = R2.x + (dy > 0 ? 0.32 : -0.32); }
+      else if (kind === 'train' && R2 && !onMain && Math.min(Math.abs(y - R2.capY), Math.abs(y - R2.ruskY)) < 8) { dx = hx >= 0 ? 1 : -1; y = dx > 0 ? R2.capY : R2.ruskY; }
+      else {
+        const na = A.reduce((b, a) => (Math.abs(a.x - x) < Math.abs(b.x - x) ? a : b)), nc = C.reduce((b, c) => (Math.abs(c.y - y) < Math.abs(b.y - y) ? c : b));
+        const lane = this.streetW * 0.5;
+        if (Math.abs(na.x - x) < Math.abs(nc.y - y)) { dy = hy >= 0 ? 1 : -1; x = na.x - dy * lane; } else { dx = hx >= 0 ? 1 : -1; y = nc.y + dx * lane; }
+      }
+      out.push({ kind, live: true, est: o.est, P: { x, y, dx, dy }, route: ri[0] || o.route, color: ri[2] ? '#' + ri[2] : kind === 'train' ? '#e03131' : null, rname: ri[3], vid: o.vid });
+    }
+    this.livePrev = next; this.liveCars = out;
   }
   drawBusStops(N) {
     if (this.v.s < 0.6 || !this.busStops) return; const ctx = this.ctx, v = this.v, sw = this.streetW;
@@ -848,8 +892,9 @@ export class CityMap {
       const [x, y] = this.v.p(n.x, n.y, n.under ? this.tunnelZ() : 0), u = Math.max(0.55, this.u() * 0.8);
       if (Math.abs(sx - x) < 7 * u + 4 && sy < y + 3 && sy > y - 30 * u) return { npc: n };
     }
-    if (this.mode !== 'tunnel' && this.v.s > 0.35) for (const c of [...(this.cars || []), ...(this.trains || []).map((t) => ({ ...this.trainBox(t), kind: 'train', line: t.line }))]) {
-      const b = c.kind === 'train' ? c : this.carBox(c), [x, y] = this.v.p(b.x + b.w / 2, b.y + b.d / 2, 0.8);
+    const liveOn = !!this.liveData;
+    if (this.mode !== 'tunnel' && this.v.s > 0.35) for (const c of [...(this.liveCars || []), ...(this.cars || []).filter((c) => !liveOn || c.kind !== 'bus'), ...(liveOn ? [] : (this.trains || []).map((t) => ({ ...this.trainBox(t), kind: 'train', line: t.line, sim: true })))]) {
+      const b = c.sim ? c : this.carBox(c), [x, y] = this.v.p(b.x + b.w / 2, b.y + b.d / 2, 0.8);
       if (Math.hypot(sx - x, sy - y) < Math.max(10, 16 * this.v.s)) return { vehicle: c };
     }
     let best = null, bd = 1e9;
@@ -876,7 +921,7 @@ export class CityMap {
   frame(t) {
     const dt = Math.min(0.05, (t - (this.last || t)) / 1000); this.last = t;
     if (this.rotAnim) { const a = this.rotAnim; a.t = Math.min(1, a.t + dt * 2.2); const e = 1 - Math.pow(1 - a.t, 3); this.rotateTo(a.from + a.d * e); if (a.t >= 1) this.rotAnim = null; }
-    this.stepTraffic(dt);
+    this.stepTraffic(dt); this.computeLive();
     if (this.anim) {
       const a = this.anim; a.t = Math.min(1, a.t + dt * 1.8); const e = 1 - Math.pow(1 - a.t, 3);
       if (a.to) {
@@ -927,8 +972,9 @@ export class CityMap {
     for (const l of this.landmarks) items.push({ k: v.boxDepth(l.x, l.y, l.w, l.d), l });
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
     for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
-    for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
-    for (const c of this.cars || []) { const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
+    const live = !!this.liveData;
+    if (!live) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
+    for (const c of [...(this.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(this.liveCars || [])]) { const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
     items.sort((p, q) => p.k - q.k);
     const ghost = mode === 'both' ? 0.4 : 1;
     for (const it of items) {
