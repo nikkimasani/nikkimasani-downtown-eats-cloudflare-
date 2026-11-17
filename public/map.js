@@ -207,6 +207,7 @@ export class CityMap {
       groups.get(key).places.push(p);
     }
     this.spots = [...groups.values()];
+    this.snapSpots();
     for (const s of this.spots) {
       s.style = styleFor(s.places[0]);
       s.label = s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
@@ -218,6 +219,32 @@ export class CityMap {
     this.buildCity(); this.buildTunnels(); this.spawnNpcs();
   }
 
+  // Keep every pin inside a building: move it into the block it belongs to (never on the asphalt),
+  // and lay out several pins in one block on a tidy sub-grid so they don't pile up.
+  snapSpots() {
+    const A = this.avenues, C = this.cross, sw = this.streetW, pad = 1.6;
+    const blocks = new Map();
+    for (const s of this.spots) {
+      let [i, j] = this.cellIdx(s.x, s.y);
+      i = Math.min(Math.max(i, 1), A.length - 1); j = Math.min(Math.max(j, 1), C.length - 1);   // edge spots go to the outermost block
+      const k = (s.tunnel ? 'T' : 'S') + i + ':' + j;
+      if (!blocks.has(k)) blocks.set(k, { i, j, list: [] });
+      blocks.get(k).list.push(s);
+      s.ox = s.x; s.oy = s.y;
+    }
+    for (const { i, j, list } of blocks.values()) {
+      const x0 = A[i - 1].x + sw + pad, x1 = A[i].x - sw - pad, y0 = C[j - 1].y + sw + pad, y1 = C[j].y - sw - pad;
+      if (list.length === 1) { const s = list[0]; s.x = Math.min(x1, Math.max(x0, s.x)); s.y = Math.min(y1, Math.max(y0, s.y)); continue; }
+      const n = list.length, cols = Math.ceil(Math.sqrt(n)), rows = Math.ceil(n / cols);
+      list.sort((a, b) => (a.oy - b.oy) || (a.ox - b.ox));
+      list.forEach((s, k) => {
+        const c = k % cols, r = Math.floor(k / cols);
+        s.x = x0 + (x1 - x0) * (cols === 1 ? 0.5 : c / (cols - 1));
+        s.y = y0 + (y1 - y0) * (rows === 1 ? 0.5 : r / (rows - 1));
+      });
+    }
+    this.spotBlocks = new Set([...blocks.values()].filter((b) => b.list.some((s) => !s.tunnel)).map((b) => b.i - 1 + '-' + (b.j - 1)));
+  }
   cellIdx(x, y) {
     const i = this.avenues.findIndex((a) => a.x > x), j = this.cross.findIndex((c) => c.y > y);
     return [i < 0 ? this.avenues.length : i, j < 0 ? this.cross.length : j];
@@ -247,7 +274,8 @@ export class CityMap {
       const r = { x0: A[i].x + sw, x1: A[i + 1].x - sw, y0: C[j].y + sw, y1: C[j + 1].y - sw };
       const t = taken.find((t) => t.x0 < r.x1 - 0.5 && t.x1 > r.x0 + 0.5 && t.y0 < r.y1 - 0.5 && t.y1 > r.y0 + 0.5);
       if (t) { if (t.x0 - r.x0 > 3) this.fill.push({ x: r.x0 + 0.6, y: r.y0 + 0.6, w: t.x0 - r.x0 - 1.4, d: r.y1 - r.y0 - 1.2, h: 3, c: PAL[(i + j) % PAL.length] }); continue; }
-      const seed = hash(i + '-' + j), dist = Math.hypot(((r.x0 + r.x1) / 2 - core.x) / (this.blockW * 4), ((r.y0 + r.y1) / 2 - core.y) / (this.blockD * 4));
+      const hasFood = this.spotBlocks?.has(i + '-' + j);
+      const seed = hasFood ? 0.4 + hash(i + '-' + j) * 0.6 : hash(i + '-' + j), dist = Math.hypot(((r.x0 + r.x1) / 2 - core.x) / (this.blockW * 4), ((r.y0 + r.y1) / 2 - core.y) / (this.blockD * 4));
       const inCore = dist < 1;
       if (!inCore && seed < 0.22) { this.fill.push({ x: r.x0, y: r.y0, w: r.x1 - r.x0, d: r.y1 - r.y0, h: 0.05, lot: true }); continue; }
       if (!inCore && seed < 0.36) { this.fill.push({ x: r.x0 + 0.5, y: r.y0 + 0.5, w: r.x1 - r.x0 - 1, d: r.y1 - r.y0 - 1, h: 2.4, c: '#b9bcc2' }); continue; }

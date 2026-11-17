@@ -126,7 +126,7 @@ function lev(a, b) {
 //        1 every word found (at a word start) in cuisine / dishes / street / notes
 function searchScore(r, q) {
   const phrase = fold(q).replace(/\s+/g, ' ').trim(), words = phrase.split(' ').filter(Boolean); if (!words.length) return 1;
-  const name = fold(r.name).replace(/\s+/g, ' ').trim(), nameWords = name.split(' '), flat = name.replace(/ /g, '');
+  const name = fold([r.name, ...(r.aliases || [])].join(' ')).replace(/\s+/g, ' ').trim(), nameWords = name.split(' '), flat = name.replace(/ /g, '');
   if (name.includes(phrase) || flat.includes(phrase.replace(/ /g, ''))) return 4;
   if (words.every((w) => nameWords.some((t) => t.startsWith(w)))) return 3;
   const close = (w, t) => { const k = w.length >= 5 ? 2 : w.length >= 3 ? 1 : 0; return k > 0 && (lev(w, t.slice(0, w.length)) <= k || lev(w, t) <= k); };
@@ -213,6 +213,7 @@ function openSheet(id, from = null) {
   $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="sBack">‹ ${from ? 'Back to list' : 'Back'}</button><button class="close" id="cls">×</button></div>
   <h2>${esc(r.name)}</h2>
   <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.venue ? ' · ' + esc(r.venue) : ''}</div>
+  ${r.aliases?.length ? `<div class="meta">Also called ${r.aliases.map(esc).join(' · ')}</div>` : ''}
   <div class="tags">${statusTags(r)}</div>
   <p style="margin:10px 0 4px">📍 ${esc(r.address)}${r.tunnel ? `<br>🚇 Underground — ${esc(r.tunnel)} (tunnel shops are mostly weekday daytime)` : '<br>🏙️ Street level'}</p>
   ${r.phone ? `<p style="margin:4px 0">📞 <a href="tel:${esc(r.phone.replace(/[^\d+]/g, ''))}">${esc(r.phone)}</a></p>` : ''}
@@ -237,7 +238,7 @@ function openSheet(id, from = null) {
   <button class="btn ghost" id="sDay">🗓️ Add to today</button></div>
   <button class="btn" id="sAsk" style="margin-top:10px;width:100%;display:none">✨ What should I order here?</button>
   <div class="ai h" id="sAi"></div>
-  <p class="disclaim">Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's notes. Menus and specials change — use the links for the latest.</p>`;
+  <p class="disclaim">${r.extraSource ? `Not in the Downtown Houston directory — added from <a href="${esc(r.extraSource)}" target="_blank" rel="noopener">${esc(new URL(r.extraSource).hostname)}</a>. ` : ''}Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's notes. Menus and specials change — use the links for the latest.</p>`;
   $('#sheet').classList.add('on');
   $('#cls').onclick = closeSheet;
   $('#sBack').onclick = () => (from ? listSheet(from.places, from.title) : closeSheet());
@@ -347,8 +348,8 @@ async function aboutPlace(r) {
       const o = { ...(p.official || {}) };
       if (o.facebook && /Downtown-Houston|115104521841645|\s/.test(o.facebook)) o.facebook = null;   // directory's own page, not the restaurant's
       const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
-      if (fix) { Object.assign(o, fix); o.corrected = fix.source; }
-      return { ...p, id: i, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected };
+      if (fix) { Object.assign(o, fix); if (fix.hours) o.corrected = fix.source; o.aliases = fix.aliases || []; o.extraSource = fix.notInDirectory ? fix.source : null; }
+      return { ...p, id: i, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;

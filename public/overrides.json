@@ -2,11 +2,31 @@
   "note": "Hand-checked corrections applied on top of the Downtown Houston listing data (which the daily refresh rewrites). Key = restaurant name, or 'name|street number' when a name repeats.",
   "spots": {
     "Benihana": {
-      "hours": "Sun–Thu 11am–10pm, Fri–Sat 11am–11pm",
+      "hours": "Sun\u2013Thu 11am\u201310pm, Fri\u2013Sat 11am\u201311pm",
       "phone": "(713) 659-8231",
       "website": "https://www.benihana.com/locations/houston-tx-ho/",
       "source": "https://www.benihana.com/locations/houston-tx-ho/",
       "checked": "2026-11-17"
+    },
+    "China Ocean": {
+      "aliases": [
+        "Hibachi Grill",
+        "China Ocean & Hibachi Grill",
+        "California Live Grill"
+      ],
+      "phone": "(346) 564-0699",
+      "source": "https://www.mapquest.com/us/texas/china-ocean-hibachi-grill-aka-california-live-grill-447777838",
+      "checked": "2026-11-17",
+      "keepHours": true
+    },
+    "Whataburger": {
+      "lat": 29.75684,
+      "lng": -95.3658,
+      "hours": "Mon\u2013Fri 7am\u20134pm",
+      "street": "1000 Main St STE T34",
+      "source": "https://reviews.birdeye.com/whataburger-173504988706517",
+      "checked": "2026-11-17",
+      "notInDirectory": true
     }
   }
 }
