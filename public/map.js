@@ -625,7 +625,8 @@ export class CityMap {
         const lane = this.streetW * 0.5;
         if (Math.abs(na.x - x) < Math.abs(nc.y - y)) { dy = hy >= 0 ? 1 : -1; x = na.x - dy * lane; } else { dx = hx >= 0 ? 1 : -1; y = nc.y + dx * lane; }
       }
-      out.push({ kind, live: true, est: o.est, P: { x, y, dx, dy }, route: ri[0] || o.route, color: ri[2] ? '#' + ri[2] : kind === 'train' ? '#e03131' : null, rname: ri[3], vid: o.vid });
+      const tname = (ri[3] || '').replace(/^metro\s*rail\s*/i, '').toLowerCase().replace(/\b\w/g, (m) => m.toUpperCase());
+      out.push({ kind, live: true, est: o.est, P: { x, y, dx, dy }, route: kind === 'train' && tname ? tname : ri[0] || o.route, color: ri[2] ? '#' + ri[2] : kind === 'train' ? '#e03131' : null, rname: ri[3], vid: o.vid });
     }
     this.livePrev = next; this.liveCars = out;
   }
