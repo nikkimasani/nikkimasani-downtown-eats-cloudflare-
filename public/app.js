@@ -25,6 +25,14 @@ let week = store.get('week', { slot: 'Lunch', days: {} });
 const save = () => { store.set('moods', [...st.moods]); store.set('meal', st.meal); store.set('budget', st.budget); store.set('extras', [...st.extras]); store.set('favs', [...favs]); store.set('visits', visits); store.set('week', week); };
 
 const hhFor = (r) => HH.spots[r.name] || null;
+// is happy hour on right now? (the "when" text uses the same day/time grammar as opening hours)
+const hhNow = (r, d) => { const h = hhFor(r); if (!h) return null; const s = openState(h.when.replace(/[“”"][^“”"]*[“”"]/g, '').replace(/\(.*?\)/g, ''), d); return s.known && s.open ? s : null; };
+const navLinks = (r) => { const dest = r.lat ? `${r.lat},${r.lng}` : encodeURIComponent(r.address); return { apple: `https://maps.apple.com/?daddr=${dest}&dirflg=w`, google: `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=walking` }; };
+let USER = null;   // { lat, lng, acc, heading }
+function walkMinsTo(r) {   // along the street grid, ~80 m a minute
+  if (!USER || !r.lat) return null; const dy = (r.lat - USER.lat) * 110850, dx = (r.lng - USER.lng) * 96680, m = (Math.abs(dx) + Math.abs(dy)) * 0.95;
+  return m > 4000 ? null : Math.max(1, Math.round(m / 80));
+}
 const isOpen = (r, d) => { const s = openState(r.hours, d); return s.known ? s.open : (r.tunnel ? null : null); };
 const openLabel = (r) => openState(r.hours);
 const links = (r) => ({
@@ -72,8 +80,8 @@ function weightedPick(list, avoid = new Set()) {
 
 // ---------- cards ----------
 function statusTags(r) {
-  const o = openLabel(r), hh = hhFor(r);
-  return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
+  const o = openLabel(r), hh = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
+  return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
 }
 function card(r, hero) {
   return `<div class="card ${hero ? 'hero spin' : ''}">
@@ -123,7 +131,7 @@ $('#pickBtn').onclick = () => {
   lastPick = r.name;
   $('#pickOut').innerHTML = card(r, true) + `<div class="row" style="margin-top:8px"><button class="btn ghost" id="again">🎲 Spin again</button><button class="btn ghost" id="seeMap">🗺️ Walk me there</button><button class="btn ghost" id="going">✅ I'm going</button></div>`;
   $('#again').onclick = () => $('#pickBtn').click();
-  $('#seeMap').onclick = () => { show('map'); city?.setPick(r.id); };
+  $('#seeMap').onclick = () => walkTo(r);
   $('#going').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged — enjoy ' + r.name + '!'); };
   city?.setPick(r.id);
 };
@@ -252,6 +260,7 @@ function openSheet(id, from = null) {
     ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">🏙️ Downtown listing</a>` : ''}
     <a href="#" id="sMap">🎮 Show on map</a>
   </div>
+  <div class="row" style="margin-bottom:10px"><button class="btn" id="sNav">🧭 Walk me there</button><a class="btn ghost" href="${navLinks(r).apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn ghost" href="${navLinks(r).google}" target="_blank" rel="noopener">Google Maps</a></div>
   <div class="row"><button class="btn ghost" id="sFav">${favs.has(r.name) ? '♥ Favorited' : '♡ Favorite'}</button>
   <button class="btn ghost" id="sGo">✅ I'm going${visits[r.name] ? ` (${visits[r.name]}×)` : ''}</button>
   <button class="btn ghost" id="sDay">🗓️ Add to today</button></div>
@@ -266,6 +275,7 @@ function openSheet(id, from = null) {
   $('#sGo').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged'); openSheet(id); };
   $('#sDay').onclick = () => { const d = DAYS[new Date().getDay() - 1] || 'Mon'; week.days[d] = { name: r.name, address: r.address, lock: true }; save(); renderWeek(); toast('Added to ' + d); };
   $('#sMap').onclick = (e) => { e.preventDefault(); closeSheet(); show('map'); city?.setPick(r.id); };
+  $('#sNav').onclick = () => { closeSheet(); walkTo(r); };
   if (ASK) { const b = $('#sAsk'); b.style.display = 'block'; b.onclick = () => aboutPlace(r); }
 }
 let listCtx = null;
@@ -298,12 +308,15 @@ function initMap() {
     onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
     onCorner: (c, near) => showFound(c.label, near),
     onRotate: (a) => { $('#needle').style.transform = `rotate(${a}rad)`; },
+    onNav: (st) => renderNav(st),
+    onFollow: () => { const b = $('#nvFollow'); if (b) b.textContent = '📍 Recenter'; },
     onVehicle: (c) => toast(c.live
       ? `● LIVE ${c.kind === 'train' ? '🚊 METRORail' : '🚌 METRO route'} ${c.route || ''}${c.rname ? ' — ' + c.rname : ''}${c.est ? ' · position estimated from METRO arrival predictions' : ''}`
       : c.kind === 'waymo' ? '🚗 Waymo — a driverless robotaxi (animated)' : c.kind === 'bus' ? '🚌 METRO bus (animated) — stops at the blue M signs' : c.line === 'red' ? '🚊 METRORail Red Line (animated) — runs down Main St' : '🚊 METRORail Green / Purple line (animated) — Capitol & Rusk'),
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to move · pinch or double-tap to zoom'; },
   });
   $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
+  applyTheme(); if (USER) city.setUser(USER);
   pollMetro(); setInterval(pollMetro, 20000);
   const tunnels = DATA.filter((r) => r.tunnel).length;
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
@@ -381,13 +394,125 @@ $('#mapOpen').onclick = (e) => {
   city.setHighlight(mapOpen ? new Set(DATA.filter((r) => isOpen(r)).map((r) => r.id)) : (mapMatch ? new Set(ranked().map(([r]) => r.id)) : null));
 };
 
+// ---------- theme: auto (dark from sunset), light or dark — the map follows ----------
+let THEME = (() => { try { return localStorage.getItem('theme') || 'auto'; } catch (e) { return 'auto'; } })();
+const isNightNow = () => { const h = new Date().getHours() + new Date().getMinutes() / 60; return h >= 18.5 || h < 6.5; };
+function applyTheme() {
+  const dark = THEME === 'dark' || (THEME === 'auto' && (isNightNow() || $('#v-night').classList.contains('on')));
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.querySelector('meta[name=theme-color]').content = dark ? '#17120f' : '#d9481e';
+  $('#themeBtn').textContent = THEME === 'auto' ? (dark ? '🌙 Auto' : '☀️ Auto') : THEME === 'dark' ? '🌙 Night' : '☀️ Day';
+  if (city) city.themeNight = THEME === 'auto' ? null : THEME === 'dark';
+}
+$('#themeBtn').onclick = () => { THEME = THEME === 'auto' ? 'dark' : THEME === 'dark' ? 'light' : 'auto'; try { localStorage.setItem('theme', THEME); } catch (e) {} applyTheme(); toast(THEME === 'auto' ? 'Theme follows the time of day' : THEME === 'dark' ? 'Night mode on' : 'Day mode on'); };
+setInterval(applyTheme, 60000);
+
+// ---------- Night: downtown bars, happy hours, late night ----------
+const NIGHT_F = [
+  { k: 'hh', l: '🍹 Happy hour now', f: (r) => !!hhNow(r) }, { k: 'open', l: '🟢 Open now', f: (r) => isOpen(r) === true }, { k: 'late', l: '🌃 Open late', f: (r) => openLate(r) },
+  { k: 'cocktail', l: '🍸 Cocktails', re: /cocktail|speakeasy|lounge|spirit|bandista|angel share|bad news|foxheart|henke|behind closed/i }, { k: 'beer', l: '🍺 Beer', re: /pub|brew|tap|saloon|beer|ale|saucer|dive|icehouse/i },
+  { k: 'wine', l: '🍷 Wine', re: /wine|vino|cellar/i }, { k: 'whiskey', l: '🥃 Whiskey', re: /bourbon|whiske?y|bottle|moonshin/i }, { k: 'sports', l: '📺 Sports', re: /sports|biggio|pub|saloon|tavern/i },
+  { k: 'music', l: '🎶 Music & DJs', re: /blues|music|dj|jazz|piano|concert|club|cherry|distrito|bauhaus|dipper/i }, { k: 'club', l: '💃 Dance', re: /nightclub|club|dance|cherry|distrito/i },
+  { k: 'patio', l: '🌇 Patio & rooftop', re: /patio|rooftop|roof|terrace|garden|lawn/i },
+];
+const nightText = (r) => [r.name, r.type, r.note, ...(r.cuisines || []), ...(r.meals || []), ...(r.vibes || [])].join(' ');
+function openLate(r) { const d = new Date(); d.setDate(d.getDate() + (d.getHours() < 5 ? 0 : 1)); d.setHours(0, 45, 0, 0); return isOpen(r, d) === true || r.lateListed; }
+let nightF = new Set(), nightSort = 'now';
+function nightScore(r) { return (hhNow(r) ? 4 : 0) + (isOpen(r) === true ? 2 : 0) + (openLate(r) ? 1 : 0) + (r.bar && /bar|lounge|pub|club|saloon|brew/i.test(r.type) ? 0.5 : 0); }
+function renderNight() {
+  const bars = DATA.filter((r) => r.bar);
+  $('#nightChips').innerHTML = NIGHT_F.map((f) => `<button class="chip ${nightF.has(f.k) ? 'on' : ''}" data-nf="${f.k}">${f.l}</button>`).join('');
+  let list = bars.filter((r) => [...nightF].every((k) => { const f = NIGHT_F.find((x) => x.k === k); return f.f ? f.f(r) : f.re.test(nightText(r)); }));
+  const by = { now: (a, b) => nightScore(b) - nightScore(a) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
+  list.sort(by[nightSort] || by.now);
+  const onNow = bars.filter((r) => hhNow(r)), openNow = bars.filter((r) => isOpen(r) === true).length;
+  $('#nightSub').textContent = `${bars.length} downtown bars & lounges · ${openNow} open now · ${onNow.length} happy hour${onNow.length === 1 ? '' : 's'} on right now`;
+  $('#hhNowRow').innerHTML = onNow.length ? `<h3 class="nh">🍹 Happy hour right now</h3><div class="hscroll">${onNow.map((r) => { const s = hhNow(r), h = hhFor(r); return `<button class="hhcard" data-open="${r.id}"><b>${esc(r.name)}</b><span>${esc(h.deals)}</span><em>${s.closesAt ? 'Ends ' + esc(s.closesAt) : 'On now'}${walkMinsTo(r) != null ? ' · 🚶 ' + walkMinsTo(r) + ' min' : ''}</em></button>`; }).join('')}</div>` : `<div class="meta" style="margin:6px 0 4px">No verified happy hours on right now — tap 🍹 on a bar to see when its next one starts.</div>`;
+  $('#nightList').innerHTML = list.map((r) => barCard(r)).join('') || '<div class="empty">No bars match all of those. Try removing a filter.</div>';
+  $('#nightCount').textContent = `${list.length} spot${list.length === 1 ? '' : 's'}`;
+}
+function barCard(r) {
+  const o = openLabel(r), h = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
+  return `<div class="card bar">
+  <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
+  <h3>${esc(r.name)}</h3>
+  <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div>
+  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
+  ${h ? `<div class="hhbox ${hn ? 'on' : ''}"><b>🍹 ${hn ? 'Happy hour now' + (hn.closesAt ? ' · till ' + esc(hn.closesAt) : '') : esc(h.when)}</b><span>${esc(h.deals)}</span>${h.confidence === 'verify' ? '<em>Double-check before you go</em>' : ''}</div>`
+      : r.hhListed ? `<div class="hhbox"><b>🍹 Listed for happy hour</b><span>Times and prices aren't published yet — check with the bar.</span></div>` : ''}
+  <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`;
+}
+$('#nightChips').onclick = (e) => { const b = e.target.closest('[data-nf]'); if (!b) return; const k = b.dataset.nf; nightF.has(k) ? nightF.delete(k) : nightF.add(k); renderNight(); };
+$('#nightSort').onchange = (e) => { nightSort = e.target.value; if (nightSort === 'near' && !USER) startLocate(); renderNight(); };
+$('#nightMap').onclick = () => { show('map'); city?.setHighlight(new Set(DATA.filter((r) => r.bar).map((r) => r.id))); toast('Showing downtown bars'); };
+document.addEventListener('click', (e) => { const w = e.target.closest('[data-walk]'); if (w) walkTo(DATA[+w.dataset.walk]); const o = e.target.closest('.hhcard[data-open], .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
+
+// ---------- you are here + walking navigation ----------
+let watchId = null, compass = null;
+function startLocate(cb) {
+  if (!('geolocation' in navigator)) { toast('Location isn\'t available in this browser'); return false; }
+  if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') DeviceOrientationEvent.requestPermission().then((s) => s === 'granted' && listenCompass()).catch(() => {}); else listenCompass();
+  if (watchId != null) { cb?.(); return true; }
+  let first = true;
+  watchId = navigator.geolocation.watchPosition((pos) => {
+    USER = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy, heading: compass ?? (pos.coords.heading ?? null) };
+    city?.setUser(USER); $('#zloc').classList.add('on');
+    if (first) { first = false; cb?.(); if (city && !city.user?.inside) toast(`You're about ${milesFromDowntown()} mi from downtown — the map shows downtown only`); }
+    if ($('#v-night').classList.contains('on')) renderNight();
+  }, (err) => { toast(err.code === 1 ? 'Location permission is off — turn it on for this site in your browser settings' : 'Couldn\'t get your location right now'); watchId = null; $('#zloc').classList.remove('on'); }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 20000 });
+  return true;
+}
+function listenCompass() {
+  if (listenCompass.on) return; listenCompass.on = true;
+  const h = (e) => { const v = e.webkitCompassHeading ?? (e.absolute && e.alpha != null ? 360 - e.alpha : null); if (v != null) { compass = v; if (USER) { USER.heading = v; city?.setUser(USER); } } };
+  window.addEventListener('deviceorientationabsolute', h); window.addEventListener('deviceorientation', h);
+}
+const milesFromDowntown = () => { if (!USER) return '?'; const dy = (USER.lat - 29.7575) * 110850, dx = (USER.lng + 95.364) * 96680; return (Math.hypot(dx, dy) / 1609).toFixed(1); };
+function walkTo(r) {
+  show('map'); closeSheet();
+  const go = () => {
+    if (!city) return;
+    const sp = city.spotForPlace(r.id);
+    if (!sp) { toast('No map location for ' + r.name); return; }
+    if (!city.user?.inside) { showNavFar(r); return; }
+    city.setPick(r.id); city.startNav({ x: sp.x, y: sp.y, label: r.name, tunnel: !!r.tunnel, id: r.id, lat: r.lat, lng: r.lng });
+  };
+  if (USER && city?.user) go(); else { toast('Finding you…'); startLocate(go); }
+}
+function showNavFar(r) {
+  const L = navLinks(r), p = $('#navPanel');
+  p.innerHTML = `<div class="nv-main"><div class="nv-ico">📍</div><div><b>You're ${milesFromDowntown()} mi from downtown</b><div class="meta">Use your maps app to get to ${esc(r.name)} — once you're downtown, tap 🧭 again for walking directions here.</div></div></div><div class="nv-row"><a class="btn sm" href="${L.apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn sm ghost" href="${L.google}" target="_blank" rel="noopener">Google Maps</a><button class="btn sm ghost" id="nvEnd">Close</button></div>`;
+  p.classList.add('on'); $('#nvEnd').onclick = () => p.classList.remove('on');
+}
+function renderNav(st) {
+  const p = $('#navPanel');
+  if (!st) { p.classList.remove('on'); return; }
+  const r = DATA[st.target.id], L = r ? navLinks(r) : null, eta = new Date(Date.now() + st.minutes * 60000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  if (st.arrived) {
+    p.innerHTML = `<div class="nv-main"><div class="nv-ico">🏁</div><div><b>You've arrived at ${esc(st.target.label)}</b>${st.target.tunnel ? '<div class="meta">Take the escalator or stairs down to the tunnel level.</div>' : '<div class="meta">Enjoy!</div>'}</div></div><div class="nv-row"><button class="btn sm" id="nvEnd">Done</button></div>`;
+    p.classList.add('on'); $('#nvEnd').onclick = () => city.stopNav(); return;
+  }
+  const dist = (m) => (m >= 1000 ? (m / 1609).toFixed(1) + ' mi' : m + ' m');
+  p.innerHTML = `<div class="nv-main"><div class="nv-ico">${st.next ? st.next.icon : st.cur.icon}</div><div><b>${st.next ? `In ${dist(st.toNext)}, ${esc(st.next.text.charAt(0).toLowerCase() + st.next.text.slice(1))}` : esc(st.cur.text)}</b><div class="meta">${st.next ? 'Now: ' + esc(st.cur.text) + ' · ' : ''}${st.minutes} min · ${dist(st.remaining)} · arrive ${eta}${st.rerouted ? ' · rerouted' : ''}</div></div></div>
+  <div class="nv-row"><button class="btn sm ghost" id="nvSteps">Steps</button>${L ? `<a class="btn sm ghost" href="${L.apple}" target="_blank" rel="noopener"> Maps</a>` : ''}<button class="btn sm ghost" id="nvFollow">${city.follow ? '📍 Following' : '📍 Recenter'}</button><button class="btn sm" id="nvEnd">End</button></div>
+  <ol class="nv-steps" id="nvList" hidden>${st.steps.map((s) => `<li>${s.icon} ${esc(s.text)}${s.len ? ` <span class="meta">· ${dist(s.len)}</span>` : ''}</li>`).join('')}</ol>`;
+  p.classList.add('on');
+  $('#nvEnd').onclick = () => city.stopNav();
+  $('#nvSteps').onclick = () => { const l = $('#nvList'); l.hidden = !l.hidden; navStepsOpen = !l.hidden; };
+  $('#nvFollow').onclick = () => { city.locateMe(); renderNav(st); };
+  if (navStepsOpen) $('#nvList').hidden = false;
+}
+let navStepsOpen = false;
+$('#zloc').onclick = () => { if (USER && city?.user) { if (!city.locateMe()) toast(`You're about ${milesFromDowntown()} mi from downtown`); } else { toast('Finding you…'); startLocate(() => city?.locateMe()); } };
+
 // ---------- tabs ----------
 document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => show(b.dataset.v)));
 function show(v) {
   document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v));
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
-  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'map') { initMap(); city.resize(); }
+  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight();
+  setTimeout(applyTheme, 0); if (v === 'map') { initMap(); city.resize(); }
   if (v !== 'map') window.scrollTo(0, 0);
   try { history.replaceState(null, '', '#' + v); } catch (e) {}
 }
@@ -441,13 +566,16 @@ async function aboutPlace(r) {
       if (o.facebook && /Downtown-Houston|115104521841645|\s/.test(o.facebook)) o.facebook = null;   // directory's own page, not the restaurant's
       const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
       if (fix) { Object.assign(o, fix); if (fix.hours) o.corrected = fix.source; o.aliases = fix.aliases || []; o.extraSource = fix.notInDirectory ? fix.source : null; }
-      return { ...p, id: i, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
+      const cats = (p.official && p.official.cats) || {};
+      return { ...p, id: i, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
+    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').textContent = `${DATA.length} downtown Houston spots · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
   renderPick();
-  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map'].includes(h)) show(h);
+  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night'].includes(h)) show(h);
+  applyTheme();
   setupAsk();
 })();
 

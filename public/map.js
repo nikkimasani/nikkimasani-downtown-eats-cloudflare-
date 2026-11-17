@@ -707,6 +707,112 @@ export class CityMap {
     // keep the animated trains unless METRO's feed actually carries rail trips right now
     this.liveRailSeen = (L.trips || []).some((t) => { const r = R[t.route]; return r && (r[1] === 0 || r[1] === 1 || r[1] === 2); });
   }
+  // ---------- you are here + walking navigation ----------
+  setUser(u) {
+    if (!u) { this.user = null; return; }
+    const [x, y] = this.proj(u.lat, u.lng), B = this.bounds;
+    this.user = { ...u, x, y, inside: x > B.x0 - 5 && x < B.x1 + 5 && y > B.y0 - 5 && y < B.y1 + 5 };
+    if (this.follow && this.user.inside && !this.pointers?.size) this.zoomTo(x, y, Math.max(this.v.s, this.nav ? 1.1 : 0.9), 0, true);
+    if (this.nav) this.updateNav();
+  }
+  locateMe() { if (!this.user?.inside) return false; this.follow = true; this.zoomTo(this.user.x, this.user.y, Math.max(this.v.s, 1.0)); return true; }
+  // street-grid walking route on the sidewalks, with turn-by-turn steps
+  startNav(target) {
+    if (!this.user?.inside) return null;
+    if (this.mode === 'tunnel') this.setMode('street');
+    this.nav = { target, rerouted: 0 }; this.follow = true; this.buildRoute(); this.updateNav();
+    return this.nav;
+  }
+  stopNav() { this.nav = null; this.follow = false; this.opts.onNav?.(null); }
+  buildRoute() {
+    const n = this.nav, u = this.user, t = n.target;
+    let pts = [[u.x, u.y], ...this.routeStreet({ x: u.x, y: u.y }, { x: t.x, y: t.y })];
+    pts = pts.filter((q, i) => !i || Math.hypot(q[0] - pts[i - 1][0], q[1] - pts[i - 1][1]) > 0.05);
+    const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+    n.pts = pts; n.cum = cum; n.total = cum[cum.length - 1]; n.steps = this.routeSteps(pts, cum, t); n.builtAt = performance.now();
+  }
+  streetAlong(a, b) {   // which street a sidewalk segment runs along
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, alongAv = Math.abs(b[1] - a[1]) >= Math.abs(b[0] - a[0]);
+    if (alongAv) { const av = this.avenues.reduce((p, q) => (Math.abs(q.x - mx) < Math.abs(p.x - mx) ? q : p)); return Math.abs(av.x - mx) < this.streetW + 1.2 ? SUFFIX(av.n) : null; }
+    const cs = this.cross.reduce((p, q) => (Math.abs(q.y - my) < Math.abs(p.y - my) ? q : p)); return Math.abs(cs.y - my) < this.streetW + 1.2 ? SUFFIX(cs.n) : null;
+  }
+  compassWord(dx, dy) {   // downtown's grid is skewed, but Houstonians call Main St north–south: use the grid's own directions
+    if (Math.abs(dy) >= Math.abs(dx)) return dy < 0 ? 'north' : 'south';
+    return dx > 0 ? 'east' : 'west';
+  }
+  trueCompassWord(dx, dy) {
+    const N = this.northW, E = this.eastW, n = dx * N[0] + dy * N[1], e = dx * E[0] + dy * E[1], a = (Math.atan2(e, n) * 180) / Math.PI;
+    return ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'][((Math.round(a / 45) % 8) + 8) % 8];
+  }
+  routeSteps(pts, cum, t) {
+    const legs = [];
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], d = cum[i] - cum[i - 1]; if (d < 0.05) continue;
+      const dir = [(b[0] - a[0]) / d, (b[1] - a[1]) / d], last = legs[legs.length - 1];
+      if (last && Math.abs(last.dir[0] * dir[0] + last.dir[1] * dir[1]) > 0.98) { last.to = i; last.len += d; continue; }
+      legs.push({ from: i - 1, to: i, len: d, dir, street: this.streetAlong(a, b) });
+    }
+    // ignore the little jogs onto and across the sidewalk: keep legs of ~20 m or more, then re-merge
+    let L2 = legs.filter((L, k) => L.len >= 1.8 || legs.length === 1 || (k === legs.length - 1 && !L.street));
+    const merged = []; for (const L of L2) { const last = merged[merged.length - 1]; if (last && Math.abs(last.dir[0] * L.dir[0] + last.dir[1] * L.dir[1]) > 0.98) { last.len += L.len; last.to = L.to; } else merged.push({ ...L }); }
+    legs.length = 0; legs.push(...merged);
+    const steps = []; const m = (u) => Math.round(u * 10);
+    legs.forEach((L, k) => {
+      const prev = legs[k - 1], meters = m(L.len), lastLeg = k === legs.length - 1;
+      if (lastLeg && !L.street) { steps.push({ at: cum[L.from], icon: '🏁', text: `${t.label || 'Destination'} is right here${t.tunnel ? ' — take the escalator down to the tunnel level' : ''}`, len: meters, end: true }); return; }
+      if (!prev) { if (L.len < 0.6 && !L.street) return; steps.push({ at: cum[L.from], icon: '⬆️', text: `Head ${this.compassWord(...L.dir)}${L.street ? ' on ' + L.street : ' to the sidewalk'}`, len: meters }); return; }
+      const cr = prev.dir[0] * L.dir[1] - prev.dir[1] * L.dir[0], turn = cr > 0 ? 'right' : 'left';
+      steps.push({ at: cum[L.from], icon: turn === 'right' ? '➡️' : '⬅️', text: `Turn ${turn}${L.street ? ' onto ' + L.street : ''}`, len: meters, crossing: false });
+    });
+    if (!steps.length || !steps[steps.length - 1].end) steps.push({ at: cum[cum.length - 1], icon: '🏁', text: `Arrive at ${t.label || 'your destination'}${t.tunnel ? ' — take the escalator down to the tunnel level' : ''}`, len: 0, end: true });
+    return steps;
+  }
+  updateNav() {
+    const n = this.nav, u = this.user; if (!n || !u) return;
+    let best = { d: 1e9, along: 0, i: 0 };
+    for (let i = 1; i < n.pts.length; i++) {
+      const a = n.pts[i - 1], b = n.pts[i], vx = b[0] - a[0], vy = b[1] - a[1], L2 = vx * vx + vy * vy || 1e-9;
+      const t = Math.max(0, Math.min(1, ((u.x - a[0]) * vx + (u.y - a[1]) * vy) / L2)), px = a[0] + vx * t, py = a[1] + vy * t, d = Math.hypot(u.x - px, u.y - py);
+      if (d < best.d) best = { d, along: n.cum[i - 1] + t * Math.sqrt(L2), i };
+    }
+    const now = performance.now();
+    if (best.d > 3 && now - n.builtAt > 4000) { n.rerouted++; this.buildRoute(); return this.updateNav(); }   // off the route by 30 m+: find a new way
+    n.along = best.along; const remaining = Math.max(0, n.total - best.along);
+    const stepIdx = Math.max(0, n.steps.findIndex((s, k) => k === n.steps.length - 1 || n.steps[k + 1].at > best.along + 0.05));
+    const next = n.steps[Math.min(stepIdx + 1, n.steps.length - 1)], cur = n.steps[stepIdx];
+    const arrived = remaining < 2;
+    this.opts.onNav?.({ cur, next: next !== cur ? next : null, toNext: Math.round(Math.max(0, (next?.at ?? n.total) - best.along) * 10), remaining: Math.round(remaining * 10), minutes: Math.max(1, Math.round((remaining * 10) / 80)), arrived, target: n.target, rerouted: n.rerouted, steps: n.steps });
+  }
+  drawRoute(now) {
+    const n = this.nav; if (!n?.pts || this.mode === 'tunnel') return; const ctx = this.ctx, v = this.v;
+    const P = n.pts.map((q) => v.p(q[0], q[1], 0.06));
+    const path = () => { ctx.beginPath(); P.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); };
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    path(); ctx.strokeStyle = 'rgba(255,255,255,.95)'; ctx.lineWidth = Math.max(7, v.s * 11); ctx.stroke();
+    path(); ctx.strokeStyle = '#1c7ed6'; ctx.lineWidth = Math.max(4.5, v.s * 7); ctx.stroke();
+    path(); ctx.setLineDash([2, 12]); ctx.lineDashOffset = -now / 35; ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = Math.max(2, v.s * 3); ctx.stroke(); ctx.setLineDash([]);
+    ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
+    const t = n.target, [fx, fy] = v.p(t.x, t.y, 0.05), [, ft] = v.p(t.x, t.y, 2.2);   // destination flag
+    ctx.strokeStyle = '#212529'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx, ft); ctx.stroke();
+    poly(ctx, [[fx, ft], [fx + 16, ft + 6], [fx, ft + 12]], '#e03131', '#fff', 1.5); ellipse(ctx, fx, fy, 5, 2.5, 'rgba(0,0,0,.25)');
+  }
+  drawUser(now) {
+    const u = this.user; if (!u?.inside || this.mode === 'tunnel') return; const ctx = this.ctx, v = this.v;
+    const ring = (r, z = 0.03) => { const pts = []; for (let i = 0; i < 28; i++) { const a = (i / 28) * Math.PI * 2; pts.push(v.p(u.x + Math.cos(a) * r, u.y + Math.sin(a) * r, z)); } return pts; };
+    const accU = Math.min(12, Math.max(0.4, (u.acc || 20) / 10));
+    poly(ctx, ring(accU), 'rgba(28,126,214,.12)', 'rgba(28,126,214,.4)', 1);
+    if (u.heading != null && !Number.isNaN(u.heading)) {   // which way you're facing
+      const h = (u.heading * Math.PI) / 180, N = this.northW, E = this.eastW, R = 2.2, cone = [v.p(u.x, u.y, 0.04)];
+      for (let k = -1; k <= 1; k += 0.25) { const a = h + k * 0.45, dx = N[0] * Math.cos(a) + E[0] * Math.sin(a), dy = N[1] * Math.cos(a) + E[1] * Math.sin(a); cone.push(v.p(u.x + dx * R, u.y + dy * R, 0.04)); }
+      poly(ctx, cone, 'rgba(28,126,214,.28)');
+    }
+    const [x, y] = v.p(u.x, u.y, 0.05), pulse = (now / 1600) % 1;
+    ctx.strokeStyle = `rgba(28,126,214,${0.6 * (1 - pulse)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y, 8 + pulse * 22, (8 + pulse * 22) / 2, 0, 0, 7); ctx.stroke();
+    circle(ctx, x, y, 9, '#fff'); circle(ctx, x, y, 6.5, '#1c7ed6');
+    if (v.s > 0.35 && !this.nav) pill(ctx, x, y - 22, 'You are here', 11, 'rgba(28,126,214,.95)', '#fff');
+  }
+  spotForPlace(id) { return this.spots.find((s) => s.places.some((p) => p.id === id)); }
+
   // ---------- ambience: sun shadows, clouds, signals, streetlights, beacons, birds ----------
   sun() {   // shadow direction for the real time of day in Houston: long in the morning/evening, short at noon
     const d = new Date(), key = d.getHours() * 60 + d.getMinutes(); if (this._sunK === key) return this._sun;
@@ -1090,6 +1196,7 @@ export class CityMap {
     cv.addEventListener('pointerdown', (e) => {
       try { cv.setPointerCapture(e.pointerId); } catch (_) {}
       pointers.set(e.pointerId, pt(e)); stopMotion();
+      if (this.follow) { this.follow = false; this.opts.onFollow?.(false); }
       if (pointers.size === 1) { moved = 0; startDrag(pt(e), e.button === 2 || e.shiftKey || e.altKey); }
       else if (pointers.size === 2) { const g = two(); pinch = { ...g, s: this.v.s, r: this.v.r, ang0: g.ang, rotating: false }; drag = null; moved += 20; }
     });
@@ -1225,7 +1332,8 @@ export class CityMap {
   }
   u() { return Math.min(1.1, Math.max(0.5, this.v.s * 1.1)); }
   pinLift() { return 16 * Math.min(1.2, Math.max(0.8, this.v.s)); }
-  nightAmount(d = new Date()) { const h = d.getHours() + d.getMinutes() / 60; return h < 6 ? 1 : h < 7.5 ? (7.5 - h) / 1.5 : h < 18 ? 0 : h < 19.5 ? (h - 18) / 1.5 : 1; }
+  nightAmount(d = new Date()) {
+    if (this.themeNight != null) return this.themeNight ? 1 : 0; const h = d.getHours() + d.getMinutes() / 60; return h < 6 ? 1 : h < 7.5 ? (7.5 - h) / 1.5 : h < 18 ? 0 : h < 19.5 ? (h - 18) / 1.5 : 1; }
 
   frame(t) {
     const raw = (t - (this.last || t)) / 1000, dt = Math.min(0.05, raw); this.last = t;
@@ -1320,7 +1428,9 @@ export class CityMap {
     this.drawRailOverlay();
     this.drawBirds(now, N);
     this.drawStreetSigns(N);
+    this.drawRoute(now);
     this.drawMarkers(false);
+    this.drawUser(now);
     this.drawLabels(N);
     this.drawMark(now);
     if (night > 0) { ctx.fillStyle = `rgba(14,18,48,${0.1 * night})`; ctx.fillRect(0, 0, this.W, this.H); }

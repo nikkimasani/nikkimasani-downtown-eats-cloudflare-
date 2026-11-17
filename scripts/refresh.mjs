@@ -42,12 +42,17 @@ function parse(slug, h) {
 
 const list = await get(`${BASE}/experience/dining`);
 if (!list) { console.error('Could not load dining list; keeping existing places.json'); process.exit(0); }
-const slugs = [...new Set([...list.matchAll(/href="\/go\/([^"]+)"/g)].map((m) => m[1]))];
-console.log('listings', slugs.length);
+const slugsOf = (html) => [...new Set([...(html || '').matchAll(/href="\/go\/([^"]+)"/g)].map((m) => m[1]))];
+const slugs = slugsOf(list);
+// the bars + nightlife directory and the happy hour / late night lists
+const [barsHtml, hhHtml, lateHtml] = await Promise.all(['bars-nightlife', 'dining/happy-hour', 'dining/late-night'].map((p) => get(`${BASE}/experience/${p}`)));
+const BAR = new Set(slugsOf(barsHtml)), HH = new Set(slugsOf(hhHtml)), LATE = new Set(slugsOf(lateHtml));
+for (const s of [...BAR, ...HH, ...LATE]) if (!slugs.includes(s)) slugs.push(s);
+console.log('listings', slugs.length, '· bars', BAR.size, '· happy hour', HH.size, '· late night', LATE.size);
 const details = [];
 const queue = [...slugs];
 await Promise.all(Array.from({ length: 5 }, async () => {
-  while (queue.length) { const s = queue.shift(); const h = await get(`${BASE}/go/${s}`); if (h) details.push(parse(s, h)); await sleep(200); }
+  while (queue.length) { const s = queue.shift(); const h = await get(`${BASE}/go/${s}`); if (h) details.push({ ...parse(s, h), cats: { bar: BAR.has(s), hh: HH.has(s), late: LATE.has(s) } }); await sleep(200); }
 }));
 console.log('details', details.length);
 
@@ -65,8 +70,10 @@ const places = curated.map((c) => {
 // listings that are new on the site since the curated list was made
 const dupe = (d) => places.some((p) => norm(p.name) === norm(d.name) && (!d.street || num(p.address) === num(d.street)));
 const extra = details.filter((d) => !used.has(d.slug) && !dupe(d)).map((d, i) => ({
-  id: curated.length + i, name: d.name, address: `${d.street}, Houston, TX`, tunnel: null, cuisines: d.tags.slice(0, 1),
-  meals: [], price: 2, vibes: [], type: d.tags[0] || 'Restaurant', note: 'New on the Downtown Houston directory.', tryit: '', official: d, isNew: true,
+  id: curated.length + i, name: d.name, address: `${d.street}, Houston, TX`, tunnel: /tunnel/i.test(d.tags.join(' ')) ? 'Downtown Tunnel' : null, cuisines: d.cats.bar ? ['Bar'] : d.tags.slice(0, 1),
+  meals: [...(d.cats.hh ? ['Happy Hour'] : []), ...(d.cats.late ? ['Late Night'] : [])], price: 2, vibes: d.cats.bar ? ['nightlife'] : [],
+  type: d.cats.bar ? (d.tags.find((t) => /bar|lounge|pub|club|brew|wine|night/i.test(t)) || 'Bar') : d.tags[0] || 'Restaurant',
+  note: d.cats.bar ? 'On the Downtown Houston bars + nightlife list.' : 'New on the Downtown Houston directory.', tryit: '', official: d, isNew: !d.cats.bar,
 }));
 const out = { refreshed: new Date().toISOString(), source: `${BASE}/experience/dining`, places: [...places, ...extra] };
 fs.writeFileSync('public/places.json', JSON.stringify(out));

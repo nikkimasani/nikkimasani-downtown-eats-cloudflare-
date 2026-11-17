@@ -16,6 +16,7 @@
 <body>
 <div class="wrap">
 <header id="top">
+  <button class="themebtn" id="themeBtn" aria-label="Day or night mode">🌙 Auto</button>
   <h1>Downtown Eats 🍽️</h1>
   <p id="hdr">Loading downtown Houston spots…</p>
 </header>
@@ -57,6 +58,20 @@
   </div>
 </section>
 
+<section class="view" id="v-night">
+  <h2>Tonight downtown 🌙</h2>
+  <p class="sub" id="nightSub"></p>
+  <div id="hhNowRow"></div>
+  <div class="chips" id="nightChips" style="margin-top:10px"></div>
+  <div class="row" style="margin-top:10px;align-items:center">
+    <select class="chip" id="nightSort"><option value="now">Best right now</option><option value="near">Closest to me</option><option value="az">A–Z</option></select>
+    <button class="chip" id="nightMap">🗺️ Bars on the map</button>
+    <span class="count" id="nightCount" style="margin:0 0 0 auto"></span>
+  </div>
+  <div class="grid" id="nightList" style="margin-top:10px"></div>
+  <p class="disclaim">Bars come from the Downtown Houston "Bars + Nightlife", "Happy Hour" and "Late Night" lists, refreshed daily. Happy hour deals are checked by hand and change often — tap through to confirm.</p>
+</section>
+
 <section class="view" id="v-browse">
   <h2>All downtown spots</h2>
   <input class="search" id="q" placeholder="Search name, cuisine, dish, street, tunnel…">
@@ -95,9 +110,11 @@
     <div id="findList"></div>
   </div>
   <div class="foundbar" id="mapFound"></div>
+  <div class="navpanel" id="navPanel" aria-live="polite"></div>
   <div class="mapmsg" id="mapMsg">Drag to move · pinch or double-tap to zoom</div>
   <div class="legend" id="legend"></div>
   <div class="zoombox">
+    <button id="zloc" class="locbtn" aria-label="Show where I am" title="Show where I am">➤</button>
     <button id="zcomp" class="compass" aria-label="Point north" title="Tap to face north"><span id="needle"><b>N</b><i></i></span></button>
     <button id="zrot" aria-label="Rotate map" title="Rotate 90° (or twist with two fingers)">⟳</button>
     <button id="zin" aria-label="Zoom in">+</button>
@@ -110,6 +127,7 @@
   <button data-v="pick" class="on"><span>🎯</span>Pick</button>
   <button data-v="map"><span>🗺️</span>Map</button>
   <button data-v="ask" id="askTab"><span>✨</span>Ask</button>
+  <button data-v="night"><span>🌙</span>Night</button>
   <button data-v="week"><span>🗓️</span>Week</button>
   <button data-v="browse"><span>📖</span>Browse</button>
 </nav>
