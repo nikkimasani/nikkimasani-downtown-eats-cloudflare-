@@ -175,9 +175,11 @@ $('#copyWeek').onclick = async () => {
 };
 
 // ---------- detail sheet ----------
-function openSheet(id) {
+let sheetFrom = null;
+function openSheet(id, from = null) {
+  sheetFrom = from;
   const r = DATA[id]; if (!r) return; const L = links(r), o = openLabel(r), hh = hhFor(r);
-  $('#panel').innerHTML = `<button class="close" id="cls">×</button>
+  $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="sBack">‹ ${from ? 'Back to list' : 'Back'}</button><button class="close" id="cls">×</button></div>
   <h2>${esc(r.name)}</h2>
   <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.venue ? ' · ' + esc(r.venue) : ''}</div>
   <div class="tags">${statusTags(r)}</div>
@@ -207,19 +209,23 @@ function openSheet(id) {
   <p class="disclaim">Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's notes. Menus and specials change — use the links for the latest.</p>`;
   $('#sheet').classList.add('on');
   $('#cls').onclick = closeSheet;
+  $('#sBack').onclick = () => (from ? listSheet(from.places, from.title) : closeSheet());
+  $('#sheet').scrollTop = 0; $('#panel').scrollTop = 0;
   $('#sFav').onclick = () => { toggleFav(r); openSheet(id); };
   $('#sGo').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged'); openSheet(id); };
   $('#sDay').onclick = () => { const d = DAYS[new Date().getDay() - 1] || 'Mon'; week.days[d] = { name: r.name, address: r.address, lock: true }; save(); renderWeek(); toast('Added to ' + d); };
   $('#sMap').onclick = (e) => { e.preventDefault(); closeSheet(); show('map'); city?.setPick(r.id); };
   if (ASK) { const b = $('#sAsk'); b.style.display = 'block'; b.onclick = () => aboutPlace(r); }
 }
+let listCtx = null;
 function listSheet(places, title) {
-  $('#panel').innerHTML = `<button class="close" id="cls">×</button><h2>${esc(title)}</h2><p class="meta">${places.length} spots here${places[0].tunnel ? ' · underground' : ''}</p>
+  listCtx = { places, title };
+  $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="lBack">‹ Back to map</button><button class="close" id="cls">×</button></div><h2>${esc(title)}</h2><p class="meta">${places.length} spots here${places[0].tunnel ? ' · underground' : ''}</p>
   ${places.map((r) => { const o = openLabel(r); return `<div class="list-item" data-open="${r.id}"><div><b>${styleFor(r).emoji} ${esc(r.name)}</b><div class="meta">${$$(r.price)} · ${esc(r.type)}</div></div><span class="tag ${o.known ? (o.open ? 'open' : 'closed') : ''}">${esc(o.known ? (o.open ? 'Open' : 'Closed') : '—')}</span></div>`; }).join('')}`;
-  $('#sheet').classList.add('on'); $('#cls').onclick = closeSheet;
+  $('#sheet').classList.add('on'); $('#cls').onclick = closeSheet; $('#lBack').onclick = closeSheet; $('#panel').scrollTop = 0;
 }
 function closeSheet() { $('#sheet').classList.remove('on'); }
-$('#sheet').onclick = (e) => { if (e.target.id === 'sheet') closeSheet(); const li = e.target.closest('.list-item'); if (li) openSheet(+li.dataset.open); };
+$('#sheet').onclick = (e) => { if (e.target.id === 'sheet') closeSheet(); const li = e.target.closest('.list-item'); if (li) openSheet(+li.dataset.open, listCtx); };
 function toggleFav(r) { favs.has(r.name) ? favs.delete(r.name) : favs.add(r.name); save(); }
 document.addEventListener('click', (e) => {
   const f = e.target.closest('[data-fav]'); if (f) { const r = DATA[+f.dataset.fav]; toggleFav(r); f.textContent = favs.has(r.name) ? '♥' : '♡'; return; }
@@ -234,6 +240,7 @@ function initMap() {
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (places, spot) => places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label),
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
+    onHistory: (n) => $('#mapBack').classList.toggle('show', n > 0),
     onLandmark: (l) => toast(`🏙️ ${l.n}`),
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Pinch or tap a number to zoom in'; },
   });
@@ -243,6 +250,7 @@ function initMap() {
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
+$('#mapBack').onclick = () => { closeSheet(); city?.back(); };
 $('#zin').onclick = () => city.zoom(1.4); $('#zout').onclick = () => city.zoom(1 / 1.4); $('#zfit').onclick = () => { city.anim = null; city.fitAll = !city.fitAll; city.fit(); };
 $('#mapMatch').onclick = (e) => { mapMatch = !mapMatch; e.currentTarget.classList.toggle('on', mapMatch); renderPick(); toast(mapMatch ? 'Highlighting spots that match your Pick filters' : 'Showing everything'); };
 $('#mapOpen').onclick = (e) => {

@@ -354,13 +354,27 @@ export class CityMap {
       this.centerOn((this.avX.Main ?? 0) + 4, (this.csY.Walker ?? 0) + 4, 0, 0.5);
     }
   }
+  remember() {
+    this.viewStack = this.viewStack || [];
+    this.viewStack.push({ s: this.v.s, ox: this.v.ox, oy: this.v.oy, mode: this.mode });
+    if (this.viewStack.length > 20) this.viewStack.shift();
+    this.opts.onHistory?.(this.viewStack.length);
+  }
+  back() {
+    const prev = (this.viewStack || []).pop(); if (!prev) return false;
+    if (prev.mode !== this.mode) { this.mode = prev.mode; this.opts.onMode?.(prev.mode); }
+    this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, to: prev, t: 0 };
+    this.opts.onHistory?.(this.viewStack.length);
+    return true;
+  }
   focus(id) {
     const s = this.spots.find((s) => s.places.some((p) => p.id === id)); if (!s) return;
+    this.remember();
     if (s.tunnel && this.mode === 'street') this.setMode('both');
     if (!s.tunnel && this.mode === 'tunnel') this.setMode('street');
     this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, at: s, s: Math.max(this.v.s, 0.85), t: 0 };
   }
-  zoomTo(x, y, s, z = 0) { this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, at: { x, y, z }, s, t: 0 }; }
+  zoomTo(x, y, s, z = 0, keep) { if (!keep) this.remember(); this.anim = { from: { s: this.v.s, x: this.v.ox, y: this.v.oy }, at: { x, y, z }, s, t: 0 }; }
   bindInput() {
     const cv = this.cv; let drag = null, pinch = null, moved = 0; const pointers = new Map();
     const pt = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
@@ -390,7 +404,7 @@ export class CityMap {
   setMode(m) {
     const prev = this.mode; this.mode = m; this.opts.onMode?.(m);
     if (m === 'tunnel' && prev !== 'tunnel' && this.tunnelSpots.length && this.pick == null) {
-      const T = this.tunnelSpots; this.zoomTo(T.reduce((a, s) => a + s.x, 0) / T.length, T.reduce((a, s) => a + s.y, 0) / T.length, Math.max(this.v.s, 0.55));
+      const T = this.tunnelSpots; this.zoomTo(T.reduce((a, s) => a + s.x, 0) / T.length, T.reduce((a, s) => a + s.y, 0) / T.length, Math.max(this.v.s, 0.55), 0, true);
     }
   }
   setHighlight(ids) { this.highlight = ids; }
@@ -438,6 +452,10 @@ export class CityMap {
     const dt = Math.min(0.05, (t - (this.last || t)) / 1000); this.last = t;
     if (this.anim) {
       const a = this.anim; a.t = Math.min(1, a.t + dt * 1.8); const e = 1 - Math.pow(1 - a.t, 3);
+      if (a.to) {
+        this.v.s = a.from.s + (a.to.s - a.from.s) * e; this.v.ox = a.from.x + (a.to.ox - a.from.x) * e; this.v.oy = a.from.y + (a.to.oy - a.from.y) * e;
+        if (a.t >= 1) this.anim = null; this.stepNpcs(dt); this.draw(t); return;
+      }
       this.v.s = a.from.s + (a.s - a.from.s) * e; this.v.ox = 0; this.v.oy = 0;
       const z = a.at.z ?? (a.at.tunnel && this.mode !== 'street' ? this.tunnelZ() : 0);
       const [px, py] = this.v.p(a.at.x, a.at.y, z), tx = this.W / 2 - px, ty = this.H * 0.55 - py;
