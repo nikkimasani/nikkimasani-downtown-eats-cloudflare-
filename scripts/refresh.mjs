@@ -27,7 +27,7 @@ function parse(slug, h) {
   const street = lines.find((l) => /^\d/.test(l)) || '';
   const venue = lines[0] && !/^\d/.test(lines[0]) ? lines[0] : null;
   const hours = g(/<h2 class="on-detail">Hours<\/h2>([\s\S]*?)(?:<h2|<\/div>\s*<\/div>|<div class="col)/);
-  const ok = (u) => u && !/downtownhouston|#NAME/i.test(u);
+  const ok = (u) => u && !/downtownhouston|Downtown-Houston|115104521841645|#NAME|\s/i.test(u);
   const fb = g(/href="(https?:\/\/(?:www\.)?facebook\.com\/[^"]+)"/), ig = g(/href="(https?:\/\/(?:www\.)?instagram\.com\/[^"]+)"/);
   return {
     slug, name: strip(g(/<h1>([\s\S]*?)<\/h1>/) || ''), street, venue, phone,

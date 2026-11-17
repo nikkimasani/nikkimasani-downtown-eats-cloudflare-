@@ -114,20 +114,51 @@ $('#pickBtn').onclick = () => {
   city?.setPick(r.id);
 };
 
+// ---------- fuzzy search (typo-tolerant: "Benni" finds Benihana, "chipolte" finds Chipotle) ----------
+const fold = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9 ]/g, ' ');
+function lev(a, b) {
+  if (a === b) return 0; const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return prev[n];
+}
+// tiers: 4 name contains the phrase · 3 every word starts a name word · 2 typo match on the name
+//        1 every word found (at a word start) in cuisine / dishes / street / notes
+function searchScore(r, q) {
+  const phrase = fold(q).replace(/\s+/g, ' ').trim(), words = phrase.split(' ').filter(Boolean); if (!words.length) return 1;
+  const name = fold(r.name).replace(/\s+/g, ' ').trim(), nameWords = name.split(' '), flat = name.replace(/ /g, '');
+  if (name.includes(phrase) || flat.includes(phrase.replace(/ /g, ''))) return 4;
+  if (words.every((w) => nameWords.some((t) => t.startsWith(w)))) return 3;
+  const close = (w, t) => { const k = w.length >= 5 ? 2 : w.length >= 3 ? 1 : 0; return k > 0 && (lev(w, t.slice(0, w.length)) <= k || lev(w, t) <= k); };
+  if (words.every((w) => w.length >= 3 && (nameWords.some((t) => close(w, t)) || close(w, flat)))) return 2;
+  const hay = ' ' + fold([r.type, r.address, r.note, r.tryit, r.tunnel, ...r.cuisines, ...r.meals].join(' ')).replace(/\s+/g, ' ') + ' ';
+  if (words.every((w) => hay.includes(' ' + w) || (w.endsWith('s') && w.length > 3 && hay.includes(' ' + w.slice(0, -1))))) return 1;
+  return 0;
+}
+function didYouMean(q) {
+  const w = fold(q).replace(/ /g, '');
+  return [...new Set(DATA.map((r) => r.name))].map((n) => [n, Math.min(lev(w, fold(n).replace(/ /g, '')), lev(w, fold(n).replace(/ /g, '').slice(0, w.length)) + 1)])
+    .sort((a, b) => a[1] - b[1]).slice(0, 3).filter(([, d]) => d <= Math.max(3, w.length / 2)).map(([n]) => n);
+}
+
 // ---------- Browse ----------
 let bq = '', fav1 = false, tun1 = false, open1 = false, hh1 = false, fc = new Set(), sortBy = 'name';
 function renderBrowse() {
   const cuis = [...new Set(DATA.flatMap((r) => r.cuisines))].sort();
   $('#fCuisine').innerHTML = cuis.map((c) => `<button class="chip ${fc.has(c) ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
-  const t = bq.toLowerCase().trim();
-  let list = DATA.filter((r) => (!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))) &&
-    (!t || [r.name, r.type, r.address, r.note, r.tryit, r.tunnel, ...r.cuisines, ...r.meals].join(' ').toLowerCase().includes(t)));
-  list.sort(sortBy === 'name' ? (a, b) => a.name.localeCompare(b.name) : sortBy === 'price' ? (a, b) => a.price - b.price : (a, b) => b.price - a.price);
+  const t = bq.trim();
+  const sc = new Map();
+  let list = DATA.filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
+  list.sort(sortBy === 'name' ? (a, b) => (t ? sc.get(b) - sc.get(a) : 0) || a.name.localeCompare(b.name) : sortBy === 'price' ? (a, b) => a.price - b.price : (a, b) => b.price - a.price);
   $('#bCount').textContent = `${list.length} of ${DATA.length} spots`;
-  $('#browse').innerHTML = list.map((r) => card(r)).join('') || '<div class="empty">No results.</div>';
+  if (!list.length && t) {
+    const sug = didYouMean(t);
+    $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
+  } else $('#browse').innerHTML = list.map((r) => card(r)).join('') || '<div class="empty">No results.</div>';
   for (const [id, on] of [['#favOnly', fav1], ['#tunOnly', tun1], ['#openOnly', open1], ['#hhOnly', hh1]]) $(id).classList.toggle('on', on);
 }
 $('#q').oninput = (e) => { bq = e.target.value; renderBrowse(); };
+$('#browse').addEventListener('click', (e) => { const b = e.target.closest('[data-sug]'); if (b) { $('#q').value = bq = b.dataset.sug; renderBrowse(); } });
 $('#toggleF').onclick = () => $('#filters').classList.toggle('on');
 $('#favOnly').onclick = () => { fav1 = !fav1; renderBrowse(); };
 $('#tunOnly').onclick = () => { tun1 = !tun1; renderBrowse(); };
@@ -185,7 +216,7 @@ function openSheet(id, from = null) {
   <div class="tags">${statusTags(r)}</div>
   <p style="margin:10px 0 4px">📍 ${esc(r.address)}${r.tunnel ? `<br>🚇 Underground — ${esc(r.tunnel)} (tunnel shops are mostly weekday daytime)` : '<br>🏙️ Street level'}</p>
   ${r.phone ? `<p style="margin:4px 0">📞 <a href="tel:${esc(r.phone.replace(/[^\d+]/g, ''))}">${esc(r.phone)}</a></p>` : ''}
-  <div class="info"><b>Hours (official listing)</b>${esc(r.hours || 'Not listed')}${o.known ? `<div class="meta" style="margin-top:4px">${esc(o.label)} right now</div>` : ''}</div>
+  <div class="info"><b>Hours ${r.corrected ? '(from the restaurant)' : '(official listing)'}</b>${esc(r.hours || 'Not listed')}${o.known ? `<div class="meta" style="margin-top:4px">${esc(o.label)} right now</div>` : ''}</div>
   ${hh ? `<div class="info hh"><b>🍹 Happy hour & specials</b><div><strong>${esc(hh.when)}</strong></div><div style="margin-top:4px">${esc(hh.deals)}</div><div class="meta" style="margin-top:6px">Source: <a href="${esc(hh.source)}" target="_blank" rel="noopener">${esc(new URL(hh.source).hostname.replace('www.', ''))}</a> · ${esc(hh.confidence)} · checked ${esc(HH.checked)}</div></div>`
     : r.meals.includes('Happy Hour') ? `<div class="info hh"><b>🍹 Happy hour</b>Listed as offering happy hour — times and prices not verified yet. <a href="${L.specials}" target="_blank" rel="noopener">Look up today's deals →</a></div>` : ''}
   ${r.note ? `<p style="margin:8px 0">${esc(r.note)}</p>` : ''}
@@ -310,11 +341,14 @@ async function aboutPlace(r) {
 // ---------- boot ----------
 (async () => {
   try {
-    const [pj, hj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} }))]);
+    const [pj, hj, oj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} }))]);
     META = { refreshed: pj.refreshed }; HH = hj;
     DATA = pj.places.map((p, i) => {
-      const o = p.official || {};
-      return { ...p, id: i, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue };
+      const o = { ...(p.official || {}) };
+      if (o.facebook && /Downtown-Houston|115104521841645|\s/.test(o.facebook)) o.facebook = null;   // directory's own page, not the restaurant's
+      const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
+      if (fix) { Object.assign(o, fix); o.corrected = fix.source; }
+      return { ...p, id: i, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected };
     });
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
@@ -323,3 +357,10 @@ async function aboutPlace(r) {
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map'].includes(h)) show(h);
   setupAsk();
 })();
+
+// keyboard: Esc closes a sheet, or steps the map back; +/- zoom the map
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, textarea, select')) return;
+  if (e.key === 'Escape') { if ($('#sheet').classList.contains('on')) closeSheet(); else if ($('#v-map').classList.contains('on')) city?.back(); }
+  if ($('#v-map').classList.contains('on') && city) { if (e.key === '+' || e.key === '=') city.zoom(1.3); if (e.key === '-') city.zoom(1 / 1.3); }
+});
