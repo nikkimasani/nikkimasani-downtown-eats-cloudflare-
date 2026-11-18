@@ -32,7 +32,7 @@ export async function openPOV(city, opts = {}) {
     <div class="pov-nav" hidden></div>
     <div class="pov-hint">Drag to look around · use the pad to walk · tap a pin for details</div>
     <div class="pov-pad"><div class="pov-knob"></div></div>
-    <div class="pov-side"><button class="pov-btn round" data-a="labels" title="Show or hide pins">📍</button><button class="pov-btn round" data-a="people" title="Show or hide people and traffic">🚶</button></div>`;
+    <div class="pov-side"><button class="pov-btn round" data-a="tunnel" title="Go down to the tunnels">🚇</button><button class="pov-btn round" data-a="labels" title="Show or hide pins">📍</button><button class="pov-btn round" data-a="people" title="Show or hide people and traffic">🚶</button></div>`;
   document.body.appendChild(wrap);
   const cv = wrap.querySelector('canvas'), $ = (q) => wrap.querySelector(q);
   const renderer = new T.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: 'high-performance' });
@@ -81,22 +81,37 @@ export async function openPOV(city, opts = {}) {
     for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const on = lit ? hash(i * 7 + j * 13 + 'w') > 0.55 : true; if (!on) continue; g.fillStyle = lit ? '#ffd890' : '#a9b7c6'; g.fillRect(i * 64 + 12, j * 64 + 14, 40, 34); }
     const t = new T.CanvasTexture(c); t.wrapS = t.wrapT = T.RepeatWrapping; t.repeat.set(1 / (3.2 * 4), 1 / (3.6 * 4)); t.colorSpace = T.SRGBColorSpace; return keep(t); };
   const wallParts = [], roofParts = [];
-  const pushBuilding = (pts, h, z0, color) => {
+  const glassParts = [], shopParts = [];
+  const pushBuilding = (pts, h, z0, color, glass, shops) => {
     const shape = new T.Shape(pts.map(([x, y]) => new T.Vector2(x * S, -y * S)));
     let g; try { g = new T.ExtrudeGeometry(shape, { depth: Math.max(2, h * S), bevelEnabled: false }); } catch (e) { return; }
     g.rotateX(-Math.PI / 2); g.translate(0, z0 * S, 0);
     const col = new T.Color(color), roof = col.clone().multiplyScalar(0.82);
-    for (const gr of g.groups) { const part = sliceGroup(g, gr.start, gr.count), n = part.attributes.position.count, cols = new Float32Array(n * 3), c = gr.materialIndex === 0 ? roof : col; for (let k = 0; k < n; k++) { cols[k * 3] = c.r; cols[k * 3 + 1] = c.g; cols[k * 3 + 2] = c.b; } part.setAttribute('color', new T.BufferAttribute(cols, 3)); (gr.materialIndex === 0 ? roofParts : wallParts).push(part); }
+    for (const gr of g.groups) { const part = sliceGroup(g, gr.start, gr.count), n = part.attributes.position.count, cols = new Float32Array(n * 3), c = gr.materialIndex === 0 ? roof : col; for (let k = 0; k < n; k++) { cols[k * 3] = c.r; cols[k * 3 + 1] = c.g; cols[k * 3 + 2] = c.b; } part.setAttribute('color', new T.BufferAttribute(cols, 3)); (gr.materialIndex === 0 ? roofParts : glass ? glassParts : wallParts).push(part); }
     g.dispose();
+    if (shops && !(z0 > 0.05)) {   // a lit shopfront band around the ground floor
+      let cx = 0, cy = 0; for (const q of pts) { cx += q[0] / pts.length; cy += q[1] / pts.length; }
+      for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length], L = Math.hypot(b[0] - a[0], b[1] - a[1]) * S; if (L < 4) continue;
+        let nx = (b[1] - a[1]), ny = -(b[0] - a[0]); const nl = Math.hypot(nx, ny); nx /= nl; ny /= nl; const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; if ((mx - cx) * nx + (my - cy) * ny < 0) { nx = -nx; ny = -ny; }
+        const o = 0.06 / S, ax = (a[0] + nx * o) * S, az = (a[1] + ny * o) * S, bx = (b[0] + nx * o) * S, bz = (b[1] + ny * o) * S, y0 = 0.35, y1 = 4.1, u = L / 3.2;
+        const g2 = new T.BufferGeometry(); g2.setAttribute('position', new T.BufferAttribute(new Float32Array([ax, y0, az, bx, y0, bz, bx, y1, bz, ax, y0, az, bx, y1, bz, ax, y1, az]), 3));
+        g2.setAttribute('uv', new T.BufferAttribute(new Float32Array([0, 0, u, 0, u, 1, 0, 0, u, 1, 0, 1]), 2)); g2.computeVertexNormals(); shopParts.push(g2); } }
   };
   const solids = [];   // for walking collisions, in map units
-  for (const o of city.osm || []) { pushBuilding(o.pts, o.h, o.z0 || 0, o.c); if (o.h >= 0.3 && !(o.z0 > 0.3)) solids.push({ bb: o.bb, pts: o.pts }); }
+  for (const o of city.osm || []) { pushBuilding(o.pts, o.h, o.z0 || 0, o.c, o.glass || o.h >= 8.5, o.h >= 0.6 && !/parking|church|garage|standin/.test(o.type || '')); if (o.h >= 0.3 && !(o.z0 > 0.3)) solids.push({ bb: o.bb, pts: o.pts }); }
   for (const l of city.landmarks || []) { const p = [[l.x, l.y], [l.x + l.w, l.y], [l.x + l.w, l.y + l.d], [l.x, l.y + l.d]]; pushBuilding(p, l.h || 2, 0, l.kind === 'aquarium' ? '#5c9fd6' : '#b9a58c'); solids.push({ bb: { x0: l.x, x1: l.x + l.w, y0: l.y, y1: l.y + l.d }, pts: p }); }
   for (const a of city.areas || []) if (['grb', 'arena', 'ballpark'].includes(a.kind)) { const r = a.r, p = [[r.x0, r.y0], [r.x1, r.y0], [r.x1, r.y1], [r.x0, r.y1]]; pushBuilding(p, a.kind === 'grb' ? 3.2 : a.kind === 'arena' ? 4 : 5, 0, a.kind === 'grb' ? '#d9dee3' : a.kind === 'arena' ? '#7b8794' : '#c8b9a2'); solids.push({ bb: { x0: r.x0, x1: r.x1, y0: r.y0, y1: r.y1 }, pts: p }); }
   const blocked = (x, y) => solids.some((o) => x > o.bb.x0 - 0.05 && x < o.bb.x1 + 0.05 && y > o.bb.y0 - 0.05 && y < o.bb.y1 + 0.05 && inPoly(x, y, o.pts));
   const walls = new T.Mesh(keep(merge(wallParts)), keep(new T.MeshLambertMaterial({ vertexColors: true, map: winTex(false), emissive: night ? '#ffcf7a' : '#000', emissiveMap: night ? winTex(true) : null, emissiveIntensity: night ? 1.1 : 0 })));
   const roofs = new T.Mesh(keep(merge(roofParts)), keep(new T.MeshLambertMaterial({ vertexColors: true })));
-  scene.add(walls, roofs); wallParts.forEach((g) => g.dispose()); roofParts.forEach((g) => g.dispose());
+  scene.add(walls, roofs);
+  if (glassParts.length) { const gm = new T.Mesh(keep(merge(glassParts)), keep(new T.MeshStandardMaterial({ vertexColors: true, map: winTex(false), metalness: 0.55, roughness: 0.22, envMap: scene.background, envMapIntensity: night ? 0.35 : 1.1, emissive: night ? '#ffcf7a' : '#000', emissiveMap: night ? winTex(true) : null, emissiveIntensity: night ? 1 : 0 }))); scene.add(gm); }
+  if (shopParts.length) { const sc2 = document.createElement('canvas'); sc2.width = 256; sc2.height = 256; const s2 = sc2.getContext('2d');
+    s2.fillStyle = night ? '#1b1d22' : '#2a2f36'; s2.fillRect(0, 0, 256, 256); s2.fillStyle = night ? '#ffd9a0' : '#7f97ab'; s2.fillRect(14, 70, 228, 176); s2.fillStyle = night ? '#e8b46a' : '#5f7486'; s2.fillRect(14, 70, 228, 30);
+    s2.fillStyle = night ? '#1b1d22' : '#2a2f36'; for (let k = 0; k < 4; k++) s2.fillRect(14 + k * 76, 70, 6, 176); s2.fillStyle = night ? '#ff8a5c' : '#b0503a'; s2.fillRect(14, 20, 228, 34);
+    const stx = keep(new T.CanvasTexture(sc2)); stx.wrapS = T.RepeatWrapping; stx.colorSpace = T.SRGBColorSpace;
+    const sm = new T.Mesh(keep(merge(shopParts)), keep(new T.MeshLambertMaterial({ map: stx, emissive: night ? '#ffffff' : '#000', emissiveMap: night ? stx : null, emissiveIntensity: night ? 0.75 : 0, side: T.DoubleSide }))); scene.add(sm); }
+  wallParts.forEach((g) => g.dispose()); roofParts.forEach((g) => g.dispose()); glassParts.forEach((g) => g.dispose()); shopParts.forEach((g) => g.dispose());
 
   // people and vehicles, mirrored from the map's own simulation
   const MAXP = 200, MAXV = 120;
@@ -105,7 +120,7 @@ export async function openPOV(city, opts = {}) {
   const vehicles = new T.InstancedMesh(keep(new T.BoxGeometry(1, 1, 1)), keep(new T.MeshLambertMaterial()), MAXV);
   const glassBand = new T.InstancedMesh(keep(new T.BoxGeometry(1, 1, 1)), keep(new T.MeshLambertMaterial({ color: night ? '#ffe39a' : '#2f3b4a', emissive: night ? '#7a5a1a' : '#000' })), MAXV);
   for (const m of [bodies, heads, vehicles, glassBand]) { m.instanceMatrix.setUsage(T.DynamicDrawUsage); m.frustumCulled = false; scene.add(m); }
-  const REAL = { waymo: [4.9, 2.0, 1.6, '#f1f3f5'], bus: [12, 2.6, 3.2, '#3b6fb6'], train: [30, 2.65, 3.6, '#e9ecef'] };
+  const REAL = { waymo: [4.9, 2.0, 1.6, '#f1f3f5'], bus: [12, 2.6, 3.2, '#3b6fb6'], train: [30, 2.65, 3.6, '#e03131'] };
 
   // pins (AR-style: visible through walls, nearest ones only) and corner signs
   const labelTex = (txt, emoji, bg) => { const c = document.createElement('canvas'), g = c.getContext('2d'); c.width = 512; c.height = 128; g.font = '700 40px system-ui, sans-serif'; const w = Math.min(500, g.measureText(txt).width + 120);
@@ -152,6 +167,20 @@ export async function openPOV(city, opts = {}) {
     const crowns = new T.InstancedMesh(keep(new T.IcosahedronGeometry(1.6, 0)), keep(new T.MeshLambertMaterial({ color: night ? '#3c6b4a' : '#4f8a3c', flatShading: true })), pts.length);
     pts.forEach(([x, y], i) => { const k = 0.8 + hash(y.toFixed(2) + x.toFixed(2)) * 0.5; M.makeTranslation(x * S, 1.35, y * S); trunks.setMatrixAt(i, M); M.compose(V.set(x * S, 3.3 * k, y * S), Q.identity(), SC.set(k, k * 1.15, k)); crowns.setMatrixAt(i, M); crowns.setColorAt(i, col.set(night ? ['#3c6b4a', '#42744f', '#365f43'][i % 3] : ['#4f8a3c', '#5d9945', '#457a35'][i % 3])); });
     scene.add(trunks, crowns); }
+  // METRORail platforms: raised platform, canopy on posts, and a name board
+  { const R = city.rail; if (R?.stations) { const plat = [], roof = [], posts = [];
+      for (const st of R.stations) for (const pl of st.plats || [st]) { const alongY = st.line === 'red' || Math.abs(pl.x - R.x) < 0.5;
+        for (const side of [-1, 1]) { const ox = alongY ? side * 0.95 : 0, oy = alongY ? 0 : side * 0.62, cx = (pl.x + ox) * S, cz = (pl.y + oy) * S, Lx = alongY ? 3 : 28, Lz = alongY ? 28 : 3;
+          plat.push([cx, cz, Lx, Lz]); roof.push([cx, cz, Lx + 0.6, Lz * 0.7]); for (const k of [-1, 0, 1]) posts.push([cx + (alongY ? 0 : k * 9), cz + (alongY ? k * 9 : 0)]); }
+        const sgc = document.createElement('canvas'); sgc.width = 512; sgc.height = 96; const sg = sgc.getContext('2d'); sg.fillStyle = st.line === 'red' ? '#c92a2a' : st.line === 'green' ? '#2b8a3e' : '#5f3dc4'; rr(sg, 2, 2, 508, 92, 12); sg.fill(); sg.fillStyle = '#fff'; sg.font = '700 44px system-ui, sans-serif'; sg.textAlign = 'center'; sg.textBaseline = 'middle'; sg.fillText('🚉 ' + st.n, 256, 50);
+        const bt = keep(new T.CanvasTexture(sgc)); bt.colorSpace = T.SRGBColorSpace; const sp = new T.Sprite(keep(new T.SpriteMaterial({ map: bt }))); sp.scale.set(8, 1.5, 1); sp.position.set(pl.x * S, 5.4, pl.y * S); scene.add(sp); }
+      const box = (arr, h, y, colr) => { const parts = arr.map(([x, z, lx, lz]) => { const g = new T.BoxGeometry(lx, h, lz).toNonIndexed(); g.translate(x, y, z); return g; }); const m = new T.Mesh(keep(merge(parts)), keep(new T.MeshLambertMaterial({ color: colr }))); parts.forEach((g) => g.dispose()); scene.add(m); };
+      box(plat, 0.45, 0.22, night ? '#55585f' : '#c8c3b8'); box(roof, 0.2, 4.2, night ? '#3d4a5c' : '#9fb3c8');
+      const pm = new T.InstancedMesh(keep(new T.CylinderGeometry(0.1, 0.1, 3.8, 6)), poleMat, posts.length); posts.forEach(([x, z], i) => { M.makeTranslation(x, 2.3, z); pm.setMatrixAt(i, M); }); scene.add(pm);
+      const rails = []; const addR = (ax, ay, bx, by) => { for (const o of [-0.08, 0.08]) { const alongY = Math.abs(bx - ax) < 1e-6, L = (alongY ? Math.abs(by - ay) : Math.abs(bx - ax)) * S; const g = new T.BoxGeometry(alongY ? 0.08 : L, 0.12, alongY ? L : 0.08).toNonIndexed(); g.translate(((ax + bx) / 2 + (alongY ? o : 0)) * S, 0.15, ((ay + by) / 2 + (alongY ? 0 : o)) * S); rails.push(g); } };
+      for (const side of [-0.32, 0.32]) addR(R.x + side, R.y0, R.x + side, R.y1); if (R.xW != null) for (const y of [R.capY, R.ruskY]) addR(R.xW, y, R.xE, y);
+      const rm = new T.Mesh(keep(merge(rails)), keep(new T.MeshLambertMaterial({ color: '#9aa1a8' }))); rails.forEach((g) => g.dispose()); scene.add(rm); } }
+
   // walking route, when navigation is on
   let routeMesh = null, routeBuilt = null;
   const routeMat = keep(new T.MeshBasicMaterial({ color: '#1c7ed6', transparent: true, opacity: 0.85 }));
@@ -161,7 +190,49 @@ export async function openPOV(city, opts = {}) {
     if (!n?.pts) return; const parts = [];
     for (let k = 1; k < n.pts.length; k++) { const [ax, ay] = n.pts[k - 1], [bx, by] = n.pts[k], L = Math.hypot(bx - ax, by - ay) * S; if (L < 0.05) continue; const g = new T.BoxGeometry(1.1, 0.06, L + 1.1).toNonIndexed(); g.rotateY(Math.atan2(bx - ax, by - ay)); g.translate(((ax + bx) / 2) * S, 0.2, ((ay + by) / 2) * S); parts.push(g); }
     routeMesh = new T.Mesh(merge(parts), routeMat); parts.forEach((g) => g.dispose()); scene.add(routeMesh);
+    const arr = []; for (let k = 1; k < n.pts.length; k++) { const [ax, ay] = n.pts[k - 1], [bx, by] = n.pts[k], L = Math.hypot(bx - ax, by - ay) * S, ang = Math.atan2(bx - ax, by - ay); for (let d = 2; d < L - 1; d += 5) { const t = d / L; arr.push([(ax + (bx - ax) * t) * S, (ay + (by - ay) * t) * S, ang]); } }
+    const sh = new T.Shape(); sh.moveTo(0, 0.9); sh.lineTo(0.75, -0.2); sh.lineTo(0.42, -0.2); sh.lineTo(0, 0.38); sh.lineTo(-0.42, -0.2); sh.lineTo(-0.75, -0.2); sh.closePath();
+    const ag = new T.ShapeGeometry(sh); ag.rotateX(-Math.PI / 2); ag.rotateY(Math.PI);
+    const am = new T.InstancedMesh(ag, arrowMat, arr.length); arr.forEach(([x, z, ang], i) => { Q.setFromAxisAngle(up, ang); M.compose(V.set(x, 0.26, z), Q, SC.set(1, 1, 1)); am.setMatrixAt(i, M); }); routeMesh.add(am);
   };
+  const arrowMat = keep(new T.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.95 }));
+
+  // ---- the tunnel network, one level down: lit corridors linking the tunnel shops ----
+  const streetObjs = scene.children.filter((o) => !o.isLight);
+  const tunnel = new T.Group(); tunnel.visible = false; scene.add(tunnel);
+  const TW2 = 0.24, legs = [];   // half-width in map units (~5 m corridors)
+  { const TS = city.tunnelSpots || []; for (const [a, b] of city.tunnelEdges || []) { const A0 = TS[a], B0 = TS[b]; if (!A0 || !B0) continue; for (const L of [[A0.x, A0.y, B0.x, A0.y], [B0.x, A0.y, B0.x, B0.y]]) if (Math.hypot(L[2] - L[0], L[3] - L[1]) > 0.05) legs.push(L); }
+    const fl = [], ce = [], wl = [];
+    for (const [ax, ay, bx, by] of legs) { const x0 = Math.min(ax, bx) - TW2, x1 = Math.max(ax, bx) + TW2, y0 = Math.min(ay, by) - TW2, y1 = Math.max(ay, by) + TW2; if (x1 - x0 < 1e-3 || y1 - y0 < 1e-3) continue;
+      const g = new T.BoxGeometry((x1 - x0) * S, 0.1, (y1 - y0) * S).toNonIndexed(); g.translate(((x0 + x1) / 2) * S, -0.05, ((y0 + y1) / 2) * S); fl.push(g);
+      const c2 = g.clone(); c2.translate(0, 3.6, 0); ce.push(c2);
+      const horiz = Math.abs(bx - ax) > Math.abs(by - ay);
+      for (const sd of [-1, 1]) { const w = horiz ? new T.BoxGeometry((x1 - x0) * S, 3.6, 0.15) : new T.BoxGeometry(0.15, 3.6, (y1 - y0) * S); const wg = w.toNonIndexed(); w.dispose(); wg.translate(horiz ? ((x0 + x1) / 2) * S : (sd < 0 ? x0 : x1) * S, 1.8, horiz ? (sd < 0 ? y0 : y1) * S : ((y0 + y1) / 2) * S); wl.push(wg); } }
+    if (fl.length) {
+      const tm = (arr, colr, em) => { const m = new T.Mesh(keep(merge(arr)), keep(new T.MeshLambertMaterial({ color: colr, emissive: em || '#000', side: T.DoubleSide }))); arr.forEach((g) => g.dispose()); tunnel.add(m); };
+      tm(fl, '#c9c2b4'); tm(ce, '#eef1f4', '#9aa3ad');
+      { const m = new T.Mesh(keep(merge(wl)), keep(new T.MeshLambertMaterial({ color: '#e7d9c4', emissive: '#5a4e40', transparent: true, opacity: 0.6, depthWrite: false, side: T.DoubleSide }))); wl.forEach((g) => g.dispose()); tunnel.add(m); }
+      // ceiling light strips
+      const strips = []; for (const [ax, ay, bx, by] of legs) { const L = Math.hypot(bx - ax, by - ay) * S; if (L < 1) continue; const g = new T.BoxGeometry(Math.abs(bx - ax) > 1e-6 ? L : 0.5, 0.05, Math.abs(bx - ax) > 1e-6 ? 0.5 : L).toNonIndexed(); g.translate(((ax + bx) / 2) * S, 3.52, ((ay + by) / 2) * S); strips.push(g); }
+      const lm = new T.Mesh(keep(merge(strips)), keep(new T.MeshBasicMaterial({ color: '#fffbea' }))); strips.forEach((g) => g.dispose()); tunnel.add(lm);
+    }
+  }
+  const tunnelPins = [];
+  for (const s of (city.tunnelSpots || [])) { if (!s.places?.length) continue; const st = s.style || {}, sp = new T.Sprite(keep(new T.SpriteMaterial({ map: labelTex(s.label, st.emoji || '📍', 'rgba(18,184,134,.95)'), depthTest: false, transparent: true }))); sp.scale.set(7, 1.75, 1); sp.position.set(s.x * S, 2.6, s.y * S); sp.renderOrder = 10; sp.userData.spot = s; sp.visible = false; tunnel.add(sp); tunnelPins.push(sp); }
+  tunnel.traverse((o) => { if (o.isMesh) o.frustumCulled = false; });
+  const inTunnel = (x, y) => legs.some(([ax, ay, bx, by]) => x > Math.min(ax, bx) - TW2 + 0.04 && x < Math.max(ax, bx) + TW2 - 0.04 && y > Math.min(ay, by) - TW2 + 0.04 && y < Math.max(ay, by) + TW2 - 0.04);
+  let under = false, streetPos = null;
+  const setUnder = (u) => {
+    if (u && !legs.length) return;
+    under = u; tunnel.visible = u; for (const o of streetObjs) o.visible = !u ? (o.userData.wasVis ?? true) : (o.userData.wasVis = o.visible, false);
+    if (u) { streetPos = { x: me.x, y: me.y }; let best = null, bd = 1e9; for (const [ax, ay, bx, by] of legs) for (let t = 0.05; t <= 0.951; t += 0.1) { const x = ax + (bx - ax) * t, y = ay + (by - ay) * t, d = Math.hypot(x - me.x, y - me.y); if (d < bd) { bd = d; best = t <= 0.5 ? [x, y, bx - ax, by - ay] : [x, y, ax - bx, ay - by]; } }
+      me.x = best[0]; me.y = best[1]; me.yaw = Math.atan2(-best[2], -best[3]); me.pitch = -0.12; scene.fog = new T.Fog('#2b2a27', 20, 140); scene.background = new T.Color('#2b2a27'); hemi.intensity = 2.2; hemi.color.set('#fff6e6'); hemi.groundColor.set('#8a8172');
+      $('.pov-title').textContent = '🚇 Downtown tunnels'; follow = false; }
+    else { const tp = { x: me.x, y: me.y }; if (blocked(tp.x, tp.y)) { for (let rad = 0.3; rad < 8 && blocked(tp.x, tp.y); rad += 0.3) for (let a = 0; a < 6.28; a += 0.4) if (!blocked(me.x + Math.cos(a) * rad, me.y + Math.sin(a) * rad)) { tp.x = me.x + Math.cos(a) * rad; tp.y = me.y + Math.sin(a) * rad; break; } }
+      me.x = tp.x; me.y = tp.y; scene.fog = streetFog; scene.background = streetBg; hemi.intensity = hemiI; hemi.color.copy(hemiC); hemi.groundColor.copy(hemiG); $('.pov-title').textContent = '🧍 Street view'; }
+    $('[data-a=tunnel]').textContent = u ? '⬆️' : '🚇'; $('[data-a=tunnel]').title = u ? 'Back up to the street' : 'Go down to the tunnels';
+  };
+  const streetFog = scene.fog, streetBg = scene.background, hemi = scene.children.find((o) => o.isHemisphereLight), hemiI = hemi.intensity, hemiC = hemi.color.clone(), hemiG = hemi.groundColor.clone();
 
   // ---- the walker ----
   const me = { x: opts.start?.x ?? city.v.cx, y: opts.start?.y ?? city.v.cy, yaw: opts.start?.yaw ?? 0, pitch: opts.start?.pitch ?? 0.02 };
@@ -176,20 +247,20 @@ export async function openPOV(city, opts = {}) {
   let drag = null; const ray = new T.Raycaster(), ndc = new T.Vector2();
   cv.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, moved: 0, id: e.pointerId }; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
   cv.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy); me.yaw += dx * 0.0055; me.pitch = Math.max(-1.1, Math.min(1.1, me.pitch + dy * 0.004)); if (drag.moved > 8 && follow && city.user?.heading != null) setFollow(false); });
-  cv.addEventListener('pointerup', (e) => { if (drag && drag.moved < 8) { const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(pins.filter((p) => p.visible))[0]; if (hit) opts.onPick?.(hit.object.userData.spot); } drag = null; });
+  cv.addEventListener('pointerup', (e) => { if (drag && drag.moved < 8) { const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects([...pins, ...tunnelPins].filter((p) => p.visible))[0]; if (hit) opts.onPick?.(hit.object.userData.spot); } drag = null; });
   // joystick
   const padEl = $('.pov-pad'), knob = $('.pov-knob'); let padId = null;
   const padMove = (e) => { const r = padEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, R = r.width / 2; let dx = (e.clientX - cx) / R, dy = (e.clientY - cy) / R; const m = Math.hypot(dx, dy); if (m > 1) { dx /= m; dy /= m; } pad = [dx, dy]; knob.style.transform = `translate(${dx * R * 0.6}px, ${dy * R * 0.6}px)`; };
   padEl.addEventListener('pointerdown', (e) => { padId = e.pointerId; try { padEl.setPointerCapture(e.pointerId); } catch (_) {} padMove(e); if (follow) setFollow(false); e.preventDefault(); });
   padEl.addEventListener('pointermove', (e) => { if (e.pointerId === padId) padMove(e); });
   const padEnd = () => { padId = null; pad = [0, 0]; knob.style.transform = ''; }; padEl.addEventListener('pointerup', padEnd); padEl.addEventListener('pointercancel', padEnd);
-  wrap.addEventListener('click', (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (a === 'close') close(); if (a === 'follow') setFollow(!follow); if (a === 'labels') { showPins = !showPins; e.target.closest('button').classList.toggle('off', !showPins); } if (a === 'people') { showLife = !showLife; e.target.closest('button').classList.toggle('off', !showLife); } });
+  wrap.addEventListener('click', (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (a === 'close') close(); if (a === 'tunnel') setUnder(!under); if (a === 'follow') setFollow(!follow); if (a === 'labels') { showPins = !showPins; e.target.closest('button').classList.toggle('off', !showPins); } if (a === 'people') { showLife = !showLife; e.target.closest('button').classList.toggle('off', !showLife); } });
   const resize = () => { const w = wrap.clientWidth, h = wrap.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
   window.addEventListener('resize', resize); resize();
   city.paused = true;
   setTimeout(() => $('.pov-hint')?.classList.add('fade'), 5000);
 
-  let raf = 0, last = performance.now(), navTick = 0;
+  let raf = 0, last = performance.now(), navTick = 0, moveTick = 0;
   const loop = (t) => {
     const dt = Math.min(0.05, (t - last) / 1000); last = t;
     // movement: pad / keys, in the direction you're looking
@@ -197,18 +268,21 @@ export async function openPOV(city, opts = {}) {
     if (keys.has('KeyW') || keys.has('ArrowUp')) f += 1; if (keys.has('KeyS') || keys.has('ArrowDown')) f -= 1; if (keys.has('KeyA')) s -= 1; if (keys.has('KeyD')) s += 1;
     if (keys.has('ArrowLeft')) me.yaw += dt * 1.8; if (keys.has('ArrowRight')) me.yaw -= dt * 1.8;
     if (f || s) { const sp = 0.45 * dt, dx = (-Math.sin(me.yaw) * f + Math.cos(me.yaw) * s) * sp, dy = (-Math.cos(me.yaw) * f - Math.sin(me.yaw) * s) * sp;
-      if (!blocked(me.x + dx, me.y)) me.x += dx; if (!blocked(me.x, me.y + dy)) me.y += dy;
+      const ok = (x, y) => (under ? inTunnel(x, y) : !blocked(x, y)); if (ok(me.x + dx, me.y)) me.x += dx; if (ok(me.x, me.y + dy)) me.y += dy;
       me.x = Math.max(B.x0 - 10, Math.min(B.x1 + 10, me.x)); me.y = Math.max(B.y0 - 10, Math.min(B.y1 + 10, me.y)); }
     if (follow && city.user?.inside) { const u = city.user; me.x += (u.x - me.x) * Math.min(1, dt * 3); me.y += (u.y - me.y) * Math.min(1, dt * 3);
       if (u.heading != null && !Number.isNaN(u.heading)) { const h = (u.heading * Math.PI) / 180, N = city.northW, E = city.eastW, dx = N[0] * Math.cos(h) + E[0] * Math.sin(h), dy = N[1] * Math.cos(h) + E[1] * Math.sin(h), want = Math.atan2(-dx, -dy); let d = ((want - me.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI; me.yaw += d * Math.min(1, dt * 4); } }
-    camera.position.set(me.x * S, EYE + Math.sin(t / 180) * ((f || s) ? 0.04 : 0), me.y * S); camera.rotation.set(me.pitch, me.yaw, 0);
+    if (under) follow = false;
+    camera.position.set(me.x * S, EYE + Math.sin(t / 180) * ((f || s) ? 0.04 : 0), me.y * S);
+    if (opts.onMove && (moveTick += dt) > 0.3) { moveTick = 0; opts.onMove({ x: me.x, y: me.y, yaw: me.yaw, under }); } camera.rotation.set(me.pitch, me.yaw, 0);
     // pins & signs: nearest only
     const near = pins.map((p) => [p, Math.hypot(p.position.x / S - me.x, p.position.z / S - me.y)]).filter(([, d]) => d < 30).sort((a, b) => a[1] - b[1]).slice(0, 18);
-    for (const p of pins) p.visible = false; if (showPins) for (const [p, d] of near) { p.visible = true; const k = Math.max(0.85, Math.min(1.8, d / 8)); p.scale.set(12 * k, 3 * k, 1); }
-    for (const sg of signs) sg.visible = Math.hypot(sg.userData.x - me.x, sg.userData.y - me.y) < 22;
+    for (const p of tunnelPins) { const d = Math.hypot(p.position.x / S - me.x, p.position.z / S - me.y); p.visible = under && showPins && d < 25; }
+    for (const p of pins) p.visible = false; if (showPins && !under) for (const [p, d] of near) { p.visible = true; const k = Math.max(0.85, Math.min(1.8, d / 8)); p.scale.set(12 * k, 3 * k, 1); }
+    for (const sg of signs) sg.visible = !under && Math.hypot(sg.userData.x - me.x, sg.userData.y - me.y) < 22;
     // people
     let np = 0;
-    if (showLife) for (const n of city.npcs) { if (n.under || n.inside > 0 || np >= MAXP) continue; const bob = Math.abs(Math.sin((n.phase || 0) * 2)) * 0.05;
+    if (showLife) for (const n of city.npcs) { if (!!n.under !== under || n.inside > 0 || np >= MAXP) continue; const bob = Math.abs(Math.sin((n.phase || 0) * 2)) * 0.05;
       M.makeTranslation(n.x * S, 0.15 + 0.72 + bob, n.y * S); bodies.setMatrixAt(np, M); bodies.setColorAt(np, col.set(n.look?.shirt || '#4dabf7'));
       M.makeTranslation(n.x * S, 0.15 + 1.6 + bob, n.y * S); heads.setMatrixAt(np, M); heads.setColorAt(np, col.set(n.look?.skin || '#c68642')); np++; }
     bodies.count = heads.count = np; bodies.instanceMatrix.needsUpdate = heads.instanceMatrix.needsUpdate = true; if (np) { bodies.instanceColor.needsUpdate = heads.instanceColor.needsUpdate = true; }
@@ -217,8 +291,8 @@ export async function openPOV(city, opts = {}) {
     const put = (b, kind, colr) => { if (nv >= MAXV) return; const [L, W, H, c0] = REAL[kind] || REAL.waymo, alongX = b.w > b.d; Q.setFromAxisAngle(up, alongX ? Math.PI / 2 : 0);
       V.set((b.x + b.w / 2) * S, H / 2 + 0.05, (b.y + b.d / 2) * S); SC.set(W, H, L); M.compose(V, Q, SC); vehicles.setMatrixAt(nv, M); vehicles.setColorAt(nv, col.set(colr || c0));
       V.y = H * 0.68; SC.set(W * 1.02, H * 0.28, L * 0.92); M.compose(V, Q, SC); glassBand.setMatrixAt(nv, M); nv++; };
-    if (showLife) {
-      for (const c of [...(city.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(city.liveCars || [])]) put(city.carBox(c), c.kind, c.kind === 'train' ? '#e9ecef' : null);
+    if (showLife && !under) {
+      for (const c of [...(city.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(city.liveCars || [])]) put(city.carBox(c), c.kind, c.kind === 'train' ? '#e03131' : null);
       if (!liveRail) for (const tr of city.trains || []) put(city.trainBox(tr), 'train');
     }
     vehicles.count = glassBand.count = nv; vehicles.instanceMatrix.needsUpdate = glassBand.instanceMatrix.needsUpdate = true; if (nv) vehicles.instanceColor.needsUpdate = true;
@@ -235,7 +309,7 @@ export async function openPOV(city, opts = {}) {
     disposables.forEach((d) => d.dispose?.()); renderer.dispose(); renderer.forceContextLoss?.(); wrap.remove();
     city.paused = false; opts.onClose?.({ x: me.x, y: me.y });
   }
-  return { close, where: () => ({ ...me }) };
+  return { close, where: () => ({ ...me }), under: () => under, _dbg: () => ({ legs: legs.length, kids: tunnel.children.length, vis: tunnel.visible, me: { ...me }, cam: camera.position.toArray(), inT: inTunnel(me.x, me.y), meshes: tunnel.children.filter((c) => c.isMesh).map((c) => [c.visible, c.geometry.attributes.position.count, c.geometry.boundingSphere && c.geometry.boundingSphere.center.toArray().map((v) => Math.round(v)), c.material.type, c.material.opacity]), legs0: legs.slice(0, 3) }) };
 
   // ---- helpers (hoisted) ----
   function merge(geos) {

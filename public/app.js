@@ -294,7 +294,7 @@ function openSheet(id, from = null) {
   $('#sGo').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged'); openSheet(id); };
   $('#sDay').onclick = () => { const d = DAYS[new Date().getDay() - 1] || 'Mon'; week.days[d] = { name: r.name, address: r.address, lock: true }; save(); renderWeek(); toast('Added to ' + d); };
   $('#sMap').onclick = (e) => { e.preventDefault(); closeSheet(); show('map'); if (city && !city.sceneOk(r)) setScene(r.day ? 'day' : 'night', true); city?.setPick(r.id); };
-  $('#sNav').onclick = () => { closeSheet(); if (povCtl) { const sp = city.spotForPlace(r.id); if (city.user?.inside && sp) city.startNav({ x: sp.x, y: sp.y, label: r.name, tunnel: !!r.tunnel, id: r.id, lat: r.lat, lng: r.lng }); else toast('Turn on 📍 Find me downtown to get directions'); return; } walkTo(r); };
+  $('#sNav').onclick = () => { closeSheet(); if (povCtl) { const sp = city.spotForPlace(r.id); if (!sp) return; if (!(city.user?.inside && !city.user.virtual)) { const w = povCtl.where(); city.user = { x: w.x, y: w.y, inside: true, acc: 5, heading: null, virtual: true }; } city.startNav({ x: sp.x, y: sp.y, label: r.name, tunnel: !!r.tunnel, id: r.id, lat: r.lat, lng: r.lng }); toast('🧭 Follow the arrows on the sidewalk'); return; } walkTo(r); };
   $('#sPov').onclick = () => { closeSheet(); if (povCtl) { povCtl.close(); setTimeout(() => openStreetView(r), 50); return; } show('map'); if (city && !city.sceneOk(r)) setScene(r.day ? 'day' : 'night', true); openStreetView(r); };
   if (ASK) { const b = $('#sAsk'); b.style.display = 'block'; b.onclick = () => aboutPlace(r); }
 }
@@ -607,10 +607,11 @@ async function openStreetView(r) {
     povCtl = await openPOV(city, { start, follow,
       onPick: (s) => { const places = s.places.filter((p) => city.sceneOk(p)); places.length === 1 ? openSheet(places[0].id) : listSheet(places, s.label); },
       navText: () => (lastNav && !lastNav.arrived ? `${lastNav.next ? lastNav.next.icon + ' In ' + lastNav.toNext + ' m, ' + lastNav.next.text.charAt(0).toLowerCase() + lastNav.next.text.slice(1) : lastNav.cur.icon + ' ' + lastNav.cur.text} · ${lastNav.minutes} min` : lastNav?.arrived ? `🏁 You've arrived at ${lastNav.target.label}` : ''),
-      onClose: (p) => { povCtl = null; document.body.classList.remove('in-pov'); city.zoomTo(p.x, p.y, Math.max(city.v.s, 1.1)); } });
+      onMove: (m) => { if (city.user?.virtual) { city.user.x = m.x; city.user.y = m.y; if (city.nav) city.updateNav(); } },
+      onClose: (p) => { if (city.user?.virtual) { city.stopNav(); city.user = null; if (USER) city.setUser(USER); } povCtl = null; document.body.classList.remove('in-pov'); city.zoomTo(p.x, p.y, Math.max(city.v.s, 1.1)); } });
   } catch (e) { console.warn(e); toast('Street view needs WebGL, which this browser has turned off'); povCtl = null; document.body.classList.remove('in-pov'); }
 }
-$('#povBtn').onclick = () => openStreetView(null); window._pov = openStreetView;
+$('#povBtn').onclick = () => openStreetView(null); window._pov = openStreetView; window._povc = () => povCtl;
 $('#findMe').onclick = findMe; $('#walkView').onclick = () => toggleWalk();
 const milesFromDowntown = () => { if (!USER) return '?'; const dy = (USER.lat - 29.7575) * 110850, dx = (USER.lng + 95.364) * 96680; return (Math.hypot(dx, dy) / 1609).toFixed(1); };
 function walkTo(r) {

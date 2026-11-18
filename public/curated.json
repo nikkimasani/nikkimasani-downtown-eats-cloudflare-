@@ -5147,5 +5147,72 @@
   "type": "Bar",
   "note": "The anchor bar at Lyric Market, with house cocktails and weekday happy hour.",
   "tryit": "House cocktails"
+ },
+ {
+  "id": 239,
+  "name": "Figo Sugo",
+  "address": "409 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "Italian",
+  "note": "Pizza al taglio counter at Bravery Chef Hall — three-day-fermented dough, light and crispy.",
+  "tryit": "Pizza al taglio"
+ },
+ {
+  "id": 240,
+  "name": "Margaux's Oyster Bar",
+  "address": "409 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Seafood"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 3,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "Oyster Bar",
+  "note": "Raw bar and seafood counter inside Bravery Chef Hall.",
+  "tryit": "Oysters on the half shell"
+ },
+ {
+  "id": 241,
+  "name": "C3",
+  "address": "409 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee",
+   "Cocktails"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual",
+   "date"
+  ],
+  "type": "Coffee & Cocktails",
+  "note": "Lounge by Bravery Chef Hall's Travis St entrance serving coffee by day and cocktails later.",
+  "tryit": "Espresso or a house cocktail"
  }
 ]

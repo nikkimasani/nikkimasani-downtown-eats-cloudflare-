@@ -124,6 +124,36 @@
       "source": "https://www.pressreader.com/usa/houston-chronicle-sunday/20231210/282557317987125",
       "checked": "2026-11-17",
       "notInDirectory": true
+    },
+    "Figo Sugo": {
+      "lat": 29.761613,
+      "lng": -95.362194,
+      "street": "409 Travis St",
+      "venue": "Bravery Chef Hall",
+      "hours": "Daily 11am–9pm, Thu till 10pm, Fri–Sat till 11pm",
+      "source": "https://lgbtq.visithoustontexas.com/listings/bravery-chef-hall/31051/",
+      "checked": "2026-11-17",
+      "notInDirectory": true
+    },
+    "Margaux's Oyster Bar": {
+      "lat": 29.761613,
+      "lng": -95.362194,
+      "street": "409 Travis St",
+      "venue": "Bravery Chef Hall",
+      "hours": "Daily 11am–9pm, Thu till 10pm, Fri–Sat till 11pm",
+      "source": "https://lgbtq.visithoustontexas.com/listings/bravery-chef-hall/31051/",
+      "checked": "2026-11-17",
+      "notInDirectory": true
+    },
+    "C3": {
+      "lat": 29.76168,
+      "lng": -95.36214,
+      "street": "409 Travis St",
+      "venue": "Bravery Chef Hall",
+      "hours": "Check before you go",
+      "source": "https://secrethouston.com/bravery-chef-hall-houston/",
+      "checked": "2026-11-17",
+      "notInDirectory": true
     }
   }
 }
