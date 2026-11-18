@@ -1,5 +1,6 @@
 // First-person street view: the same downtown (real OpenStreetMap buildings, the same people, cars,
 // trains and pins) seen from eye level. three.js is loaded only when this view is opened.
+import { TUNNEL_COLORS, tunnelSection } from './map.js';
 const S = 10;          // 1 map unit = 10 m
 const EYE = 1.7;       // metres
 
@@ -201,7 +202,7 @@ export async function openPOV(city, opts = {}) {
   const streetObjs = scene.children.filter((o) => !o.isLight);
   const tunnel = new T.Group(); tunnel.visible = false; scene.add(tunnel);
   const TW2 = 0.24, legs = [];   // half-width in map units (~5 m corridors)
-  { const TS = city.tunnelSpots || []; for (const [a, b] of city.tunnelEdges || []) { const A0 = TS[a], B0 = TS[b]; if (!A0 || !B0) continue; for (const L of [[A0.x, A0.y, B0.x, A0.y], [B0.x, A0.y, B0.x, B0.y]]) if (Math.hypot(L[2] - L[0], L[3] - L[1]) > 0.05) legs.push(L); }
+  { const TS = city.tunnelSpots || []; for (const [a, b] of city.tunnelEdges || []) { const A0 = TS[a], B0 = TS[b]; if (!A0 || !B0) continue; const sec = tunnelSection(B0) || tunnelSection(A0); for (const L of [[A0.x, A0.y, B0.x, A0.y], [B0.x, A0.y, B0.x, B0.y]]) if (Math.hypot(L[2] - L[0], L[3] - L[1]) > 0.05) { L.sec = sec; legs.push(L); } }
     const fl = [], ce = [], wl = [];
     for (const [ax, ay, bx, by] of legs) { const x0 = Math.min(ax, bx) - TW2, x1 = Math.max(ax, bx) + TW2, y0 = Math.min(ay, by) - TW2, y1 = Math.max(ay, by) + TW2; if (x1 - x0 < 1e-3 || y1 - y0 < 1e-3) continue;
       const g = new T.BoxGeometry((x1 - x0) * S, 0.1, (y1 - y0) * S).toNonIndexed(); g.translate(((x0 + x1) / 2) * S, -0.05, ((y0 + y1) / 2) * S); fl.push(g);
@@ -215,6 +216,9 @@ export async function openPOV(city, opts = {}) {
       // ceiling light strips
       const strips = []; for (const [ax, ay, bx, by] of legs) { const L = Math.hypot(bx - ax, by - ay) * S; if (L < 1) continue; const g = new T.BoxGeometry(Math.abs(bx - ax) > 1e-6 ? L : 0.5, 0.05, Math.abs(bx - ax) > 1e-6 ? 0.5 : L).toNonIndexed(); g.translate(((ax + bx) / 2) * S, 3.52, ((ay + by) / 2) * S); strips.push(g); }
       const lm = new T.Mesh(keep(merge(strips)), keep(new T.MeshBasicMaterial({ color: '#fffbea' }))); strips.forEach((g) => g.dispose()); tunnel.add(lm);
+      // a coloured stripe down the middle of each corridor, in that tunnel section's map colour
+      const bySec = new Map(); for (const L of legs) { const c = TUNNEL_COLORS[L.sec] || '#38d9a9'; if (!bySec.has(c)) bySec.set(c, []); const [ax, ay, bx, by] = L, len = Math.hypot(bx - ax, by - ay) * S; const g = new T.BoxGeometry(Math.abs(bx - ax) > 1e-6 ? len : 0.7, 0.02, Math.abs(bx - ax) > 1e-6 ? 0.7 : len).toNonIndexed(); g.translate(((ax + bx) / 2) * S, 0.01, ((ay + by) / 2) * S); bySec.get(c).push(g); }
+      for (const [c, arr] of bySec) { const mm = new T.Mesh(keep(merge(arr)), keep(new T.MeshBasicMaterial({ color: c }))); arr.forEach((g) => g.dispose()); tunnel.add(mm); }
     }
   }
   const tunnelPins = [];
@@ -260,19 +264,19 @@ export async function openPOV(city, opts = {}) {
   city.paused = true;
   setTimeout(() => $('.pov-hint')?.classList.add('fade'), 5000);
 
-  let raf = 0, last = performance.now(), navTick = 0, moveTick = 0;
+  let raf = 0, last = performance.now(), navTick = 0, moveTick = 0, secTick = 0;
   const loop = (t) => {
     const dt = Math.min(0.05, (t - last) / 1000); last = t;
     // movement: pad / keys, in the direction you're looking
     let f = -pad[1], s = pad[0];
     if (keys.has('KeyW') || keys.has('ArrowUp')) f += 1; if (keys.has('KeyS') || keys.has('ArrowDown')) f -= 1; if (keys.has('KeyA')) s -= 1; if (keys.has('KeyD')) s += 1;
     if (keys.has('ArrowLeft')) me.yaw += dt * 1.8; if (keys.has('ArrowRight')) me.yaw -= dt * 1.8;
-    if (f || s) { const sp = 0.45 * dt, dx = (-Math.sin(me.yaw) * f + Math.cos(me.yaw) * s) * sp, dy = (-Math.cos(me.yaw) * f - Math.sin(me.yaw) * s) * sp;
+    if (f || s) { const sp = 0.75 * dt, dx = (-Math.sin(me.yaw) * f + Math.cos(me.yaw) * s) * sp, dy = (-Math.cos(me.yaw) * f - Math.sin(me.yaw) * s) * sp;
       const ok = (x, y) => (under ? inTunnel(x, y) : !blocked(x, y)); if (ok(me.x + dx, me.y)) me.x += dx; if (ok(me.x, me.y + dy)) me.y += dy;
       me.x = Math.max(B.x0 - 10, Math.min(B.x1 + 10, me.x)); me.y = Math.max(B.y0 - 10, Math.min(B.y1 + 10, me.y)); }
     if (follow && city.user?.inside) { const u = city.user; me.x += (u.x - me.x) * Math.min(1, dt * 3); me.y += (u.y - me.y) * Math.min(1, dt * 3);
       if (u.heading != null && !Number.isNaN(u.heading)) { const h = (u.heading * Math.PI) / 180, N = city.northW, E = city.eastW, dx = N[0] * Math.cos(h) + E[0] * Math.sin(h), dy = N[1] * Math.cos(h) + E[1] * Math.sin(h), want = Math.atan2(-dx, -dy); let d = ((want - me.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI; me.yaw += d * Math.min(1, dt * 4); } }
-    if (under) follow = false;
+    if (under) { follow = false; if ((secTick += dt) > 0.5) { secTick = 0; const L = legs.find(([ax, ay, bx, by]) => me.x > Math.min(ax, bx) - TW2 && me.x < Math.max(ax, bx) + TW2 && me.y > Math.min(ay, by) - TW2 && me.y < Math.max(ay, by) + TW2); if (L) $('.pov-title').textContent = '🚇 ' + (L.sec || 'Downtown tunnels'); } }
     camera.position.set(me.x * S, EYE + Math.sin(t / 180) * ((f || s) ? 0.04 : 0), me.y * S);
     if (opts.onMove && (moveTick += dt) > 0.3) { moveTick = 0; opts.onMove({ x: me.x, y: me.y, yaw: me.yaw, under }); } camera.rotation.set(me.pitch, me.yaw, 0);
     // pins & signs: nearest only

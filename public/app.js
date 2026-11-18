@@ -84,14 +84,14 @@ function statusTags(r) {
   return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
 }
 function card(r, hero) {
-  return `<div class="card ${hero ? 'hero spin' : ''}">
+  return `<div class="card tap ${hero ? 'hero spin' : ''}" data-open="${r.id}">
   <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
   <h3>${esc(r.name)}</h3>
   <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div>
   ${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}
-  ${r.tryit ? `<p class="try">Try: ${esc(r.tryit)}</p>` : ''}
-  <div class="tags">${statusTags(r)}${r.meals.filter((m) => m !== 'Happy Hour').slice(0, 4).map((m) => `<span class="tag">${esc(m)}</span>`).join('')}</div>
-  <button class="open-btn" data-open="${r.id}">Details, hours & specials →</button></div>`;
+  ${hero && r.tryit ? `<p class="try">Try: ${esc(r.tryit)}</p>` : ''}
+  <div class="tags">${statusTags(r)}</div>
+  ${hero ? `<button class="open-btn" data-open="${r.id}">Details, hours & specials →</button>` : ''}</div>`;
 }
 function chipRow(el, items, isOn, onClick, after = renderPick) {
   el.innerHTML = items.map((it, i) => `<button class="chip ${isOn(it) ? 'on' : ''}" data-i="${i}">${esc(it.l ?? it)}</button>`).join('');
@@ -116,6 +116,8 @@ function renderPick() {
   chipRow($('#meal'), MEALS, (x) => x === st.meal, (x) => (st.meal = x));
   chipRow($('#budget'), BUDGET, (x) => x.k === st.budget, (x) => (st.budget = x.k));
   chipRow($('#extras'), EXTRAS, (x) => st.extras.has(x.k), (x) => (st.extras.has(x.k) ? st.extras.delete(x.k) : st.extras.add(x.k)));
+  const ex = st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '';
+  const bl = (BUDGET.find((b) => b.k === st.budget) || {}).l; $('#filtSum').textContent = `${st.meal === 'Any' ? 'Any time' : st.meal} · ${!bl || bl === 'Any' ? 'Any budget' : bl}${ex}`;
   const list = ranked();
   $('#matchCount').textContent = list.length ? `${list.length} spots match — best fits first` : '';
   pickList = list; pickShown = 0;
@@ -311,7 +313,8 @@ $('#sheet').onclick = (e) => { if (e.target.id === 'sheet') closeSheet(); const 
 function toggleFav(r) { favs.has(r.name) ? favs.delete(r.name) : favs.add(r.name); save(); }
 document.addEventListener('click', (e) => {
   const f = e.target.closest('[data-fav]'); if (f) { const r = DATA[+f.dataset.fav]; toggleFav(r); f.textContent = favs.has(r.name) ? '♥' : '♡'; return; }
-  const o = e.target.closest('.card [data-open]'); if (o) openSheet(+o.dataset.open);
+  if (e.target.closest('button, a, [data-walk], [data-fav]') && !e.target.closest('.open-btn, .bar-actions [data-open]')) return;
+  const o = e.target.closest('.card [data-open], .card.tap[data-open]'); if (o && !o.closest('#nightList, #coffeeList')) openSheet(+o.dataset.open);
 });
 
 // ---------- map ----------
@@ -342,7 +345,7 @@ function initMap() {
   setTimeout(() => $('#mapMsg').classList.add('fade'), 4500);
   $('#legend').innerHTML = `<button class="lgd-toggle" id="lgdToggle" aria-expanded="true">Key <b>▾</b></button><div class="lgd-body"><span><i class="dot" style="background:#e8590c"></i><b id="lgStreet" style="font-weight:inherit"></b></span><span><i class="dot" style="background:#12b886"></i><b id="lgTun" style="font-weight:inherit"></b></span><span><i class="dot" style="background:#868e96"></i>Closed</span><span><i class="dot" style="background:#e03131"></i>Red Line</span><span><i class="dot" style="background:linear-gradient(90deg,#2f9e44 50%,#7048e8 50%)"></i>Green/Purple</span><span>🚌 Bus</span><span>🚗 Waymo</span><p class="lgd-hint">Drag to move · pinch or double-tap to zoom · twist two fingers to rotate · tap a street to name the corner${BUILDINGS ? ' · buildings © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors' : ''}</p></div>`;
   const lg = $('#legend'), setLg = (open) => { lg.classList.toggle('min', !open); $('#lgdToggle').setAttribute('aria-expanded', open); try { localStorage.setItem('lgdOpen', open ? '1' : '0'); } catch (e) {} };
-  let lgOpen = true; try { lgOpen = localStorage.getItem('lgdOpen') !== '0'; } catch (e) {}
+  let lgOpen = innerWidth > 600; try { const s = localStorage.getItem('lgdOpen'); if (s != null) lgOpen = s === '1'; } catch (e) {}
   setLg(lgOpen); $('#lgdToggle').onclick = () => setLg(lg.classList.contains('min'));
   setScene(SCENE, true); applyView(); applyLight();
   renderPick();
@@ -395,9 +398,52 @@ function findSuggestions(q) {
 function runFind(item) {
   $('#findBox').classList.remove('on'); $('#findIn').blur();
   if (item.st) { const res = city.goTo(item.st); if (res) showFound(item.st.label, res.near); else toast("Couldn't place that on the map"); }
-  else if (item.r) { $('#mapFound').classList.remove('on'); city.setPick(item.r.id); toast(`📍 ${item.r.name}`); }
+  else if (item.r) { $('#mapFound').classList.remove('on'); if (!city.sceneOk(item.r)) setScene(item.r.day ? 'day' : 'night', true); city.setPick(item.r.id); lastFound = item.r; $('#findIn').value = item.r.name; toast(`📍 ${item.r.name} — tap ROUTE for walking directions`); }
 }
-$('#mapFind').onclick = () => { const b = $('#findBox'); b.classList.toggle('on'); if (b.classList.contains('on')) { $('#findIn').focus(); renderFind(); } };
+$('#mapFind').onclick = () => { $('#moreBtn').click(); $('#findIn').focus(); };
+$('#findIn').addEventListener('focus', () => { $('#findBox').classList.add('on'); renderFind(); });
+$('#findIn').addEventListener('blur', () => setTimeout(() => { if (document.activeElement !== $('#findIn')) $('#findBox').classList.remove('on'); }, 250));
+let lastFound = null;
+$('#sbRoute').onclick = () => {   // route to what's searched (or picked) — straight into walking directions
+  const q = $('#findIn').value.trim(), top = q ? findSuggestions(q).find((x) => x.r || x.st) : null;
+  const r = top?.r || (!q && (lastFound || (city?.pick != null ? DATA[city.pick] : null)));
+  if (r) { $('#findBox').classList.remove('on'); $('#findIn').blur(); walkTo(r); return; }
+  if (top?.st) { runFind(top); toast('Pick a spot near that corner, then tap ROUTE'); return; }
+  $('#findIn').focus(); toast('Search for a place, then tap ROUTE');
+};
+// ---------- quick filters along the bottom of the map ----------
+const CHIPS = [
+  { k: 'all', l: 'All' },
+  { k: 'open', l: '🟢 Open now', f: (r) => isOpen(r) === true },
+  { k: 'hh', l: '🍹 Happy hour now', f: (r) => !!hhNow(r) },
+  { k: 'saved', l: '♥ Saved', f: (r) => favs.has(r.name) },
+  { k: 'coffee', l: '☕ Coffee', f: (r) => isCoffee(r) },
+  { k: 'mex', l: '🌮 Mexican', re: /mexican|tex-mex|taco|taqueria|birria/i },
+  { k: 'pizza', l: '🍕 Pizza', re: /pizza/i },
+  { k: 'burger', l: '🍔 Burgers', re: /burger|american|diner/i },
+  { k: 'asian', l: '🍜 Asian', re: /asian|chinese|vietnam|pho|thai|korean|ramen|noodle|dumpling/i },
+  { k: 'sushi', l: '🍣 Sushi', re: /sushi|japanese|izakaya/i },
+  { k: 'italian', l: '🍝 Italian', re: /italian|pasta/i },
+  { k: 'steak', l: '🥩 Steak', re: /steak|chophouse/i },
+  { k: 'bbq', l: '🍖 BBQ', re: /bbq|barbecue|smokehouse/i },
+  { k: 'seafood', l: '🦐 Seafood', re: /seafood|oyster|fish|crab/i },
+  { k: 'healthy', l: '🥗 Healthy', re: /salad|healthy|vegan|vegetarian|poke|bowl/i },
+  { k: 'park', l: '🅿️ Parking' },
+];
+let chip = 'all';
+const chipText = (r) => [r.name, r.type, ...(r.cuisines || [])].join(' ');
+function renderChips() { $('#mapChips').innerHTML = CHIPS.map((c) => `<button class="mchip ${chip === c.k ? 'on' : ''}" data-c="${c.k}">${c.l}</button>`).join(''); }
+function applyChip(quiet) {
+  if (!city) return; const c = CHIPS.find((x) => x.k === chip);
+  city.showParking = chip === 'park';
+  if (chip === 'all' || chip === 'park') { city.setHighlight(null); if (chip === 'park' && !quiet) toast('🅿️ Garages in dark blue, surface lots in light blue'); return; }
+  const ids = DATA.filter((r) => (c.f ? c.f(r) : c.re.test(chipText(r))) && city.sceneOk(r)).map((r) => r.id);
+  city.setHighlight(new Set(ids)); if (!quiet) toast(ids.length ? `${c.l}: ${ids.length} spot${ids.length === 1 ? '' : 's'}` : `No ${c.l.replace(/^\S+ /, '').toLowerCase()} spots on this map`);
+  mapOpen = false; $('#mapOpen')?.classList.remove('on');
+}
+$('#mapChips').onclick = (e) => { const b = e.target.closest('[data-c]'); if (!b) return; chip = chip === b.dataset.c ? 'all' : b.dataset.c; renderChips(); applyChip(); };
+renderChips();
+$('#findMe').onclick = () => findMe();
 function renderFind() {
   const q = $('#findIn').value, list = findSuggestions(q);
   $('#findList').innerHTML = list.length ? list.map((x, i) => `<button data-f="${i}" ${x.st || x.r ? '' : 'disabled'}>${esc(x.t)}</button>`).join('') : `<div class="meta">Try a corner like <b>Main &amp; Texas</b>, an address like <b>1000 Main</b>, or a restaurant name.</div>`;
@@ -441,6 +487,7 @@ function setScene(sc, quiet) {
   $('#v-map').classList.toggle('nightscene', sc === 'night');
   renderLegend();
   if (city && city.pick != null && DATA[city.pick] && !city.sceneOk(DATA[city.pick])) city.setPick(null);
+  if (typeof applyChip === 'function' && chip !== 'all') applyChip(true);
   if (!quiet) toast(sc === 'night' ? `🌙 Night: ${DATA.filter((r) => r.night).length} bars, lounges & clubs` : `☀️ Day: ${FOOD.length} spots for breakfast, brunch, lunch, dinner & happy hour`);
 }
 document.querySelectorAll('#sceneSeg button').forEach((b) => (b.onclick = () => setScene(b.dataset.s)));
@@ -568,11 +615,11 @@ let walkOn = false;
 function toggleWalk(force) {
   walkOn = force ?? !walkOn; $('#walkView').classList.toggle('on', walkOn);
   if (!walkOn) { city?.setWalkView(false); return; }
-  const go = () => { if (!city.setWalkView(true)) { walkOn = false; $('#walkView').classList.remove('on'); locHelp('far', () => toggleWalk(true)); } else { $('#legend').classList.add('min'); toast('🚶 Walk view: the map turns with you'); } };
+  const go = () => { if (!city.setWalkView(true)) { walkOn = false; $('#walkView').classList.remove('on'); locHelp('far', () => toggleWalk(true)); } else { $('#legend').classList.add('min'); toast('🧭 Following you — the map turns as you walk'); } };
   if (USER && city?.user) go(); else { toast('Finding you…'); startLocate(go); }
 }
 // ---------- compact controls + show/hide ----------
-$('#moreBtn').onclick = () => { const m = $('#hudMore'), open = m.hidden; m.hidden = !open; $('#moreBtn').setAttribute('aria-expanded', open); $('#moreBtn').textContent = open ? '✕ Close' : '☰ More'; };
+$('#moreBtn').onclick = () => { const m = $('#hudMore'), open = m.hidden; m.hidden = !open; $('#moreBtn').setAttribute('aria-expanded', open); $('#moreBtn').innerHTML = open ? '✕<span class="lbl"> Close</span>' : '☰<span class="lbl"> More</span>'; };
 function applyLight() {   // live: sun and dark follow the clock; otherwise Day = daylight, Night = night
   let live = false; try { live = !!VIEW.liveLight; } catch (e) {}
   if (city) city.themeNight = live ? null : SCENE === 'night';
@@ -581,8 +628,8 @@ function applyLight() {   // live: sun and dark follow the clock; otherwise Day 
 const VIEW = (() => { try { return JSON.parse(localStorage.getItem('mapView') || '{}'); } catch (e) { return {}; } })();
 function applyView() {
   if (city) city.hide = { ...VIEW.hide };
-  $('#v-map').classList.toggle('no-legend', !!VIEW.ui?.legend); $('#v-map').classList.toggle('no-zoom', !!VIEW.ui?.zoom);
-  document.querySelectorAll('#hideToggles input').forEach((i) => { i.checked = i.dataset.h ? !VIEW.hide?.[i.dataset.h] : !VIEW.ui?.[i.dataset.ui]; });
+  $('#v-map').classList.toggle('no-legend', VIEW.ui?.legend ?? true); $('#v-map').classList.toggle('no-zoom', !!VIEW.ui?.zoom);
+  document.querySelectorAll('#hideToggles input').forEach((i) => { i.checked = i.dataset.h ? !VIEW.hide?.[i.dataset.h] : !(i.dataset.ui === 'legend' ? (VIEW.ui?.legend ?? true) : VIEW.ui?.[i.dataset.ui]); });
   try { localStorage.setItem('mapView', JSON.stringify(VIEW)); } catch (e) {}
 }
 $('#liveLight').onchange = (e) => { VIEW.liveLight = e.target.checked; applyLight(); applyView(); toast(VIEW.liveLight ? '🕒 Light now follows the time of day' : SCENE === 'night' ? '🌙 Always night lighting' : '☀️ Always daylight'); };
@@ -612,7 +659,7 @@ async function openStreetView(r) {
   } catch (e) { console.warn(e); toast('Street view needs WebGL, which this browser has turned off'); povCtl = null; document.body.classList.remove('in-pov'); }
 }
 $('#povBtn').onclick = () => openStreetView(null); window._pov = openStreetView; window._povc = () => povCtl;
-$('#findMe').onclick = findMe; $('#walkView').onclick = () => toggleWalk();
+$('#walkView').onclick = () => toggleWalk();
 const milesFromDowntown = () => { if (!USER) return '?'; const dy = (USER.lat - 29.7575) * 110850, dx = (USER.lng + 95.364) * 96680; return (Math.hypot(dx, dy) / 1609).toFixed(1); };
 function walkTo(r) {
   show('map'); closeSheet(); if (city && !city.sceneOk(r)) setScene(r.night && !r.day ? 'night' : 'day', true);
@@ -651,10 +698,13 @@ function renderNav(st) {
 let navStepsOpen = false;
 $('#zloc').onclick = findMe;
 
+document.addEventListener('click', (e) => { const b = e.target.closest('.subtabs [data-v]'); if (b) show(b.dataset.v); });
 // ---------- tabs ----------
 document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => show(b.dataset.v)));
 function show(v) {
-  document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v));
+  const grp = ['browse', 'coffee', 'night'].includes(v) ? 'explore' : null;
+  document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v || (grp && x.dataset.group === grp)));
+  document.querySelectorAll('.subtabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v));
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
   if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee();

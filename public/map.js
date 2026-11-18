@@ -243,6 +243,10 @@ function pillFit(ctx, x, y, text, size, bg, fg) {
   if (!fits(x - w / 2 - 2, y - h / 2 - 1, x + w / 2 + 2, y + h / 2 + 1)) return false;
   pill(ctx, x, y, text, size, bg, fg); return true;
 }
+const hexA = (h, a) => { const n = parseInt((h || '#e8590c').slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a.toFixed(3)})`; };
+const TUNNEL_COLORS = { 'N. Travis Tunnel': '#7048e8', 'Downtown Tunnel Loop': '#e03131', 'N. Louisiana Tunnel': '#1c7ed6', 'E. McKinney Tunnel': '#f76707', 'Lamar Tunnel': '#d6c41c', 'W. Walker Tunnel': '#15aabf' };
+const tunnelSection = (s) => s?.places?.find((p) => p.tunnel)?.tunnel || null;
+export { TUNNEL_COLORS, tunnelSection };
 function pill(ctx, x, y, text, size, bg, fg = '#212529') {
   ctx.font = `600 ${size}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
   const w = ctx.measureText(text).width + size * 0.9, h = size * 1.55;
@@ -1552,6 +1556,7 @@ export class CityMap {
     this.drawRoute(now);
     this.drawMarkers(false);
     if (!this.hide.signs) this.drawStreetSigns(N);
+    if (this.showParking && mode !== 'tunnel') this.drawParking();
     this.drawUser(now);
     if (!this.hide.labels) this.drawLabels(N);
     TAKEN = null;
@@ -1707,13 +1712,23 @@ export class CityMap {
     for (const c of C) if (MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 3, c.y); ctx.fillText(c.n, x, y); }
   }
 
+  drawParking() {
+    const ctx = this.ctx, v = this.v, W = this.W, H = this.H, r = Math.max(7, Math.min(13, 10 * v.s));
+    const badge = (x, y, big) => { if (x < -20 || x > W + 20 || y < -20 || y > H + 20) return; ctx.fillStyle = big ? '#1c7ed6' : '#4dabf7'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - r, y - r, r * 2, r * 2, 4) : ctx.rect(x - r, y - r, r * 2, r * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#fff'; ctx.font = `800 ${Math.round(r * 1.25)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('P', x, y + 1); };
+    for (const o of this.osm || []) if (o.type === 'parking' && o.h >= 0.8) { const [x, y] = v.p(o.cx, o.cy, o.z0 + o.h + 0.15); badge(x, y, true); }
+    if (v.s > 0.6) for (const l of this.osmLots || []) { const [x, y] = v.p((l.bb.x0 + l.bb.x1) / 2, (l.bb.y0 + l.bb.y1) / 2, 0.05); badge(x, y, false); }
+  }
   drawTunnels(now) {
     const ctx = this.ctx, v = this.v, z = this.tunnelZ(), T = this.tunnelSpots; if (!T.length) return;
     const w = 0.8;
     const seg = (ax, ay, bx, by) => { const x0 = Math.min(ax, bx) - w, x1 = Math.max(ax, bx) + w, y0 = Math.min(ay, by) - w, y1 = Math.max(ay, by) + w; poly(ctx, [v.p(x0, y0, z), v.p(x1, y0, z), v.p(x1, y1, z), v.p(x0, y1, z)], '#34425c'); for (const f of sides(v, x0, y0, x1 - x0, y1 - y0)) poly(ctx, [v.p(...f.a, z), v.p(...f.b, z), v.p(...f.b, z + 0.5), v.p(...f.a, z + 0.5)], '#26324a'); };
     for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; seg(A.x, A.y, Bn.x, A.y); seg(Bn.x, A.y, Bn.x, Bn.y); }
-    ctx.strokeStyle = 'rgba(56,217,169,.85)'; ctx.lineWidth = Math.max(1.2, v.s * 2.5); ctx.shadowColor = '#38d9a9'; ctx.shadowBlur = 6;
-    ctx.beginPath(); for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; ctx.moveTo(...v.p(A.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, Bn.y, z)); } ctx.stroke(); ctx.shadowBlur = 0;
+    // each tunnel section in its own colour, like the official tunnel map
+    const groups = new Map(); for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b], sec = tunnelSection(Bn) || tunnelSection(A) || 'Tunnel'; if (!groups.has(sec)) groups.set(sec, []); groups.get(sec).push([A, Bn]); }
+    ctx.lineWidth = Math.max(1.6, v.s * 3.2); ctx.lineCap = ctx.lineJoin = 'round';
+    for (const [sec, E] of groups) { const c = TUNNEL_COLORS[sec] || '#38d9a9'; ctx.strokeStyle = c; ctx.shadowColor = c; ctx.shadowBlur = 8; ctx.beginPath(); for (const [A, Bn] of E) { ctx.moveTo(...v.p(A.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, A.y, z)); ctx.lineTo(...v.p(Bn.x, Bn.y, z)); } ctx.stroke(); }
+    ctx.shadowBlur = 0;
+    if (v.s > 0.55) for (const [sec, E] of groups) { const [A, Bn] = E[Math.floor(E.length / 2)], [x, y] = v.p((A.x + Bn.x) / 2, A.y, z); pill(ctx, x, y - 10, sec, 10.5, TUNNEL_COLORS[sec] || '#38d9a9', '#fff'); }
     for (const n of this.npcs) if (n.under && n.inside <= 0) this.drawNpc(n, now, z);
   }
 
@@ -1743,6 +1758,7 @@ export class CityMap {
       const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
       ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r); ctx.stroke();
       ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');
+      if (this.highlight && s.places.some((p) => this.highlight.has(p.id))) { const pulse = 0.55 + 0.45 * Math.sin(performance.now() / 320 + s.x), g = ctx.createRadialGradient(x, y - lift, r * 0.6, x, y - lift, r * 2.4); g.addColorStop(0, hexA(s.style.color, 0.55 * pulse)); g.addColorStop(1, hexA(s.style.color, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - lift, r * 2.4, 0, 7); ctx.fill(); }
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
       if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || under || lbl.has(s))) { const off = lbl.get(s) || [0, 0]; pill(ctx, x + off[0], y - lift - r - 12 + off[1], s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529'); }
