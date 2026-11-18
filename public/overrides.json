@@ -49,6 +49,20 @@
       "source": "https://texas.apwa.org/wp-content/uploads/sites/58/2026/06/DowntownRestaurantList_2026.pdf",
       "checked": "2026-11-17",
       "notInDirectory": true
+    },
+    "Dean's Downtown": {
+      "lat": 29.76196,
+      "lng": -95.36134,
+      "street": "316 Main St"
+    },
+    "No Vacancy": {
+      "lat": 29.76112,
+      "lng": -95.36178,
+      "street": "410 Main St",
+      "hours": "Evenings — check before you go",
+      "source": "https://www.preservationhouston.org/calendar/2026/7/22/pier-beam-happy-hour",
+      "checked": "2026-11-17",
+      "notInDirectory": true
     }
   }
 }

@@ -4994,5 +4994,27 @@
   "type": "Sports Bar",
   "note": "Big sports bar at GreenStreet with walls of TVs, steps from Toyota Center.",
   "tryit": "Wings, burgers"
+ },
+ {
+  "id": 232,
+  "name": "No Vacancy",
+  "address": "410 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar",
+   "Cocktails"
+  ],
+  "meals": [
+   "Late Night"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "nightlife",
+   "group"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Immersive cocktail bar dressed as a vintage roadside motel in one of Main Street's oldest buildings, with private themed rooms you can book by the hour.",
+  "tryit": "Signature cocktails; book a themed room for a group"
  }
 ]
