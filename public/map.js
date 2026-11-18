@@ -88,6 +88,8 @@ export function parseStreetQuery(q) {
 const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const mix = (h, t, to = 255) => '#' + rgb(h).map((v) => Math.round(v + (to - v) * t).toString(16).padStart(2, '0')).join('');
 const lighten = (h, t) => mix(h, t, 255), darken = (h, t) => mix(h, t, 0);
+const mixC = (a, b, t) => { const A = rgb(a), B = rgb(b); return '#' + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, '0')).join(''); };
+const ptIn = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const a = P[i], b = P[j]; if ((a[1] > y) !== (b[1] > y) && x < ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]) + a[0]) c = !c; } return c; };
 const hash = (s) => { let h = 2166136261; s = String(s); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
 const norm = (s) => s.toLowerCase().replace(/[^a-z]/g, '');
 
@@ -1145,7 +1147,8 @@ export class CityMap {
       let c = /^#[0-9a-f]{6}$/i.test(colour || '') ? colour : glass ? GLASS[Math.floor(k * GLASS.length)] : hM >= 25 ? CONCRETE[Math.floor(k * CONCRETE.length)] : LOW[Math.floor(k * LOW.length)];
       const mat = String(material || '').toLowerCase().split(';')[0];
       if (!/^#[0-9a-f]{6}$/i.test(colour || '') && MAT[mat]) c = MAT[mat][Math.floor(k * MAT[mat].length)];
-      const isGlass = glass || mat === 'glass' || /glass/.test(mat);
+      const lum = /^#[0-9a-f]{6}$/i.test(colour || '') ? rgb(colour).reduce((a, x, i) => a + x * [0.3, 0.59, 0.11][i], 0) / 255 : 1;
+      const isGlass = glass || mat === 'glass' || /glass/.test(mat) || (h >= 8 && lum < 0.38 && !/brick|stone|concrete/.test(mat));   // dark towers downtown are tinted glass
       if (mat === 'glass' && !glass) c = GLASS[Math.floor(k * GLASS.length)];
       if (type === 'parking') c = '#b9bcc2';
       const o = { pts, bb, h, z0, c, glass: isGlass, name, type, cx, cy };
@@ -1204,11 +1207,25 @@ export class CityMap {
     if (!(v.s < 0.3 && o.h < 1.5)) for (let i = 0; i < n; i++) {
       const a = P[i], b = P[(i + 1) % n], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 0.05) continue;
       const nx = dy / L, ny = -dx / L, [f, r] = v.vis(nx, ny); if (f <= 0.001) continue;
-      walls.push({ a, b, L, shade: 0.135 + 0.065 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
+      walls.push({ a, b, L, sun: Math.max(0, r / Math.SQRT2), shade: 0.135 + 0.065 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
     }
     walls.sort((p, q) => p.d - q.d);
+    const fancy = v.s >= 0.3 && o.h > 1.2, warm = this._warm || 0;
     for (const w of walls) {
-      poly(ctx, [v.p(w.a[0], w.a[1], z1), v.p(w.b[0], w.b[1], z1), v.p(w.b[0], w.b[1], z0), v.p(w.a[0], w.a[1], z0)], darken(col, w.shade));
+      const quad = [v.p(w.a[0], w.a[1], z1), v.p(w.b[0], w.b[1], z1), v.p(w.b[0], w.b[1], z0), v.p(w.a[0], w.a[1], z0)];
+      let base = darken(col, w.shade);
+      if (!N && warm > 0 && w.sun > 0) base = mixC(base, '#ffb36b', warm * 0.32 * w.sun);   // sun-facing walls catch the warm light
+      if (fancy) {   // lighter toward the top, darker at the street, glass picks up the sky
+        const mx = (quad[0][0] + quad[1][0]) / 2, g = ctx.createLinearGradient(mx, (quad[0][1] + quad[1][1]) / 2, mx, (quad[2][1] + quad[3][1]) / 2);
+        if (o.glass && !N) { const sky = warm > 0.3 ? mixC('#c9d9ef', '#ffc58f', Math.min(1, (warm - 0.3) * 1.6)) : '#d4e3f5'; g.addColorStop(0, mixC(base, sky, 0.42)); g.addColorStop(0.45, mixC(base, sky, 0.12)); g.addColorStop(0.55, base); g.addColorStop(1, darken(base, 0.16)); }
+        else if (o.glass) { g.addColorStop(0, lighten(base, 0.12)); g.addColorStop(1, darken(base, 0.2)); }
+        else { g.addColorStop(0, lighten(base, N ? 0.04 : 0.09)); g.addColorStop(0.8, base); g.addColorStop(1, darken(base, 0.14)); }
+        poly(ctx, quad, g);
+      } else poly(ctx, quad, base);
+      if (fancy && o.glass && o.h > 2 && v.s > 0.45) {   // spandrel bands between floors
+        ctx.strokeStyle = N ? 'rgba(0,0,0,.18)' : 'rgba(20,40,70,.12)'; ctx.lineWidth = 1; ctx.beginPath();
+        const step = o.h > 15 ? 0.84 : 0.42; for (let z = z0 + step; z < z1 - 0.1; z += step) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
+      }
       if (v.s < 0.32 || w.L < 0.4) continue;
       if (o.grid) {   // punched windows in a grid (Four Seasons)
         ctx.strokeStyle = N ? 'rgba(255,214,140,.55)' : o.grid; ctx.lineWidth = Math.max(1, v.s * 1.6); ctx.globalAlpha = alpha * 0.55; ctx.beginPath();
@@ -1228,7 +1245,19 @@ export class CityMap {
         poly(ctx, [v.p(...q1, zz), v.p(...q2, zz), v.p(...q2, zz + 0.16), v.p(...q1, zz + 0.16)], 'rgba(255,212,120,.85)');
       }
     }
+    if (v.s >= 0.3 && o.h > 1.2 && walls.length) {   // light catching the corners and the top edge
+      ctx.strokeStyle = N ? 'rgba(255,255,255,.06)' : 'rgba(255,255,255,.28)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (const w of walls) { ctx.moveTo(...v.p(w.a[0], w.a[1], z0)); ctx.lineTo(...v.p(w.a[0], w.a[1], z1)); ctx.lineTo(...v.p(w.b[0], w.b[1], z1)); } ctx.stroke();
+    }
     poly(ctx, P.map((p) => v.p(p[0], p[1], z1)), N ? lighten(col, 0.08) : lighten(col, 0.12), 'rgba(255,255,255,.2)');
+    if (!o.roof && !o.pool && o.h > 2.5 && v.s > 0.3 && o.type !== 'lot' && o.type !== 'parking') {
+      const sx = o.bb.x1 - o.bb.x0, sy = o.bb.y1 - o.bb.y0, k = hash(o.cx + ':' + o.cy);
+      if (sx > 1 && sy > 1) {   // parapet line, then a rooftop mechanical penthouse
+        poly(ctx, P.map((p) => v.p(o.cx + (p[0] - o.cx) * 0.9, o.cy + (p[1] - o.cy) * 0.9, z1 + 0.005)), null, N ? 'rgba(0,0,0,.25)' : 'rgba(0,0,0,.1)');
+        if (o.type !== "crown" && ptIn(o.cx, o.cy, P)) { const w2 = Math.min(sx, sy) * (0.22 + k * 0.16), d2 = w2 * (0.7 + k * 0.6), hh = 0.18 + k * 0.3;
+          prism(ctx, v, o.cx - w2 / 2 + (k - 0.5) * sx * 0.2, o.cy - d2 / 2, w2, d2, z1, [hh, hh, hh, hh], N ? darken(col, 0.2) : mixC(col, '#d9dde2', 0.5), N ? darken(col, 0.05) : mixC(lighten(col, 0.1), '#e8ebee', 0.5)); }
+      }
+    }
     if (o.roof) this.drawRoof(o, N);
     if (o.pool && v.s > 0.3) {   // rooftop pool deck
       const cx = o.cx, cy = o.cy, s2 = Math.min(o.bb.x1 - o.bb.x0, o.bb.y1 - o.bb.y0) * 0.22;
@@ -1560,10 +1589,14 @@ export class CityMap {
   }
   u() { return Math.min(1.1, Math.max(0.5, this.v.s * 1.1)); }
   pinLift() { return 16 * Math.min(1.2, Math.max(0.8, this.v.s)); }
+  warmAmount(d = new Date()) {   // 0..1, peaks around sunset
+    if (this.themeNight === true) return 0; if (this.themeNight === false) return 0.22; const h = d.getHours() + d.getMinutes() / 60;
+    return Math.max(0, 1 - Math.abs(h - 17.9) / 1.6) * 0.9 + Math.max(0, 1 - Math.abs(h - 7.3) / 1.0) * 0.5; }
   nightAmount(d = new Date()) {
     if (this.themeNight != null) return this.themeNight ? 1 : 0; const h = d.getHours() + d.getMinutes() / 60; return h < 6 ? 1 : h < 7.5 ? (7.5 - h) / 1.5 : h < 18 ? 0 : h < 19.5 ? (h - 18) / 1.5 : 1; }
 
   frame(t) {
+    this._warm = this.warmAmount();
     const raw = (t - (this.last || t)) / 1000, dt = Math.min(0.05, raw); this.last = t;
     // if this device can't keep up, draw at a slightly lower resolution so panning stays smooth
     if (raw > 0 && raw < 0.5 && !document.hidden) {

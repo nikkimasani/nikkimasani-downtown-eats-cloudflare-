@@ -1,4 +1,4 @@
-import { openState } from './hours.js';
+import { openState, parseHours, fmt } from './hours.js';
 import { CityMap, styleFor, parseStreetQuery } from './map.js';
 
 const $ = (s) => document.querySelector(s);
@@ -26,7 +26,12 @@ const save = () => { store.set('moods', [...st.moods]); store.set('meal', st.mea
 
 const hhFor = (r) => HH.spots[r.name] || null;
 // is happy hour on right now? (the "when" text uses the same day/time grammar as opening hours)
-const hhNow = (r, d) => { const h = hhFor(r); if (!h) return null; const s = openState(h.when.replace(/[“”"][^“”"]*[“”"]/g, '').replace(/\(.*?\)/g, ''), d); return s.known && s.open ? s : null; };
+// is happy hour on right now? (the "when" text uses the same day/time grammar as opening hours)
+// Not on days the place is closed, and never past closing time; "till" is shown as a clock time.
+const closedAllDay = (r, d) => { const p = parseHours(r.hours); if (!p || p.always) return false; const day = d.getDay(); return !p.rules.some((x) => !x.closed && x.days.includes(day)); };
+const hhNow = (r, d = new Date()) => { const h = hhFor(r); if (!h) return null; const s = openState(h.when.replace(/[“”"][^“”"]*[“”"]/g, '').replace(/\(.*?\)/g, ''), d); if (!(s.known && s.open)) return null;
+  if (closedAllDay(r, d)) return null; const o = openState(r.hours, d); let end = s.closesAt; if (o.known && o.open && o.closesAt != null && o.closesAt < end) end = o.closesAt;
+  return { ...s, end, closesAt: end != null ? fmt(end) : null }; };
 const navLinks = (r) => { const dest = r.lat ? `${r.lat},${r.lng}` : encodeURIComponent(r.address); return { apple: `https://maps.apple.com/?daddr=${dest}&dirflg=w`, google: `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=walking` }; };
 let USER = null;   // { lat, lng, acc, heading }
 function walkMinsTo(r) {   // along the street grid, ~80 m a minute

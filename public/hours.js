@@ -65,6 +65,7 @@ export function parseHours(text) {
     const aRaw = tm[1].toLowerCase().replace(/\./g, '');
     let start = parseTime(aRaw, (aRaw.match(/(a|p)m?$/) || [])[1] || (endAp === 'p' && parseInt(aRaw) >= 10 && parseInt(aRaw) < 12 ? 'a' : endAp === 'p' && parseInt(aRaw) < 6 ? 'p' : 'a'));
     if (start == null || end == null) continue;
+    if (end === 720 && start < 720 && start >= 300 && /^12/.test(b)) end = 1440;   // listings that write midnight as "12PM"
     if (end <= start) end += 24 * 60;           // past midnight
     rules.push({ days, start, end });
     lastDays = days;
@@ -72,7 +73,7 @@ export function parseHours(text) {
   return rules.length ? { always: false, rules } : null;
 }
 
-const fmt = (m) => { m = ((m % 1440) + 1440) % 1440; let h = Math.floor(m / 60), mm = m % 60; const ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12; return h + (mm ? ':' + String(mm).padStart(2, '0') : '') + ap; };
+export const fmt = (m) => { m = ((m % 1440) + 1440) % 1440; let h = Math.floor(m / 60), mm = m % 60; const ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12; return h + (mm ? ':' + String(mm).padStart(2, '0') : '') + ap; };
 
 export function openState(text, date = new Date()) {
   const p = parseHours(text);
