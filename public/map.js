@@ -1706,11 +1706,15 @@ export class CityMap {
       }
       return;
     }
-    const lift = this.pinLift(), list = this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y)), lbl = new Set();
+    const lift = this.pinLift(), list = this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y)), lbl = new Map();
     if (TAKEN && !under) {
       const rr = lod === 'label' ? 12 : 10;
       for (const s of list) { const [x, y] = v.p(s.x, s.y, z); fits(x - rr, y - lift - rr, x + rr, y - lift + rr, true); }
-      for (let k = list.length - 1; k >= 0; k--) { const s = list[k]; if (!((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s)) continue; const [x, y] = v.p(s.x, s.y, z), t = s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label; ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(t).width + 10, yy = y - lift - rr - 12; if (this.hover?.spot === s || this.pick != null && s.places.some((p) => p.id === this.pick) ? fits(x - w / 2, yy - 9, x + w / 2, yy + 9, true) : fits(x - w / 2 - 2, yy - 10, x + w / 2 + 2, yy + 10)) lbl.add(s); }
+      for (let k = list.length - 1; k >= 0; k--) { const s = list[k]; if (!((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s)) continue; const [x, y] = v.p(s.x, s.y, z), t = s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label; ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(t).width + 10, yy = y - lift - rr - 12;
+        if (this.hover?.spot === s || this.pick != null && s.places.some((p) => p.id === this.pick)) { fits(x - w / 2, yy - 9, x + w / 2, yy + 9, true); lbl.set(s, 0); continue; }
+        // try above the pin, then below it, then to either side
+        const tries = [[0, yy], [0, y - lift + rr + 12], [w / 2 + rr + 4, y - lift], [-(w / 2 + rr + 4), y - lift]];
+        for (const [dx, ty] of tries) if (fits(x + dx - w / 2 - 2, ty - 10, x + dx + w / 2 + 2, ty + 10)) { lbl.set(s, [dx, ty - yy]); break; } }
     }
     for (const s of list) {
       const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
@@ -1718,7 +1722,7 @@ export class CityMap {
       ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
-      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || under || lbl.has(s))) pill(ctx, x, y - lift - r - 12, s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529');
+      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || under || lbl.has(s))) { const off = lbl.get(s) || [0, 0]; pill(ctx, x + off[0], y - lift - r - 12 + off[1], s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529'); }
     }
   }
 

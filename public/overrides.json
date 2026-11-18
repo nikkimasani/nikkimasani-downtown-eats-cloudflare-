@@ -56,11 +56,26 @@
       "street": "316 Main St"
     },
     "No Vacancy": {
-      "lat": 29.76112,
-      "lng": -95.36178,
+      "lat": 29.76122,
+      "lng": -95.3617,
       "street": "410 Main St",
       "hours": "Evenings — check before you go",
       "source": "https://www.preservationhouston.org/calendar/2026/7/22/pier-beam-happy-hour",
+      "checked": "2026-11-17",
+      "notInDirectory": true
+    },
+    "Bar Moxy": {
+      "lat": 29.761,
+      "lng": -95.3619,
+      "street": "412 Main St",
+      "venue": "Moxy Houston Downtown",
+      "phone": "(855) 487-6699",
+      "hours": "Hotel lobby bar — check hours before you go",
+      "aliases": [
+        "Moxy Hotel",
+        "Moxy Houston Downtown"
+      ],
+      "source": "https://lgbtq.visithoustontexas.com/listings/moxy-houston-downtown/32029/",
       "checked": "2026-11-17",
       "notInDirectory": true
     }

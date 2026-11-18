@@ -5016,5 +5016,28 @@
   "type": "Cocktail Bar",
   "note": "Immersive cocktail bar dressed as a vintage roadside motel in one of Main Street's oldest buildings, with private themed rooms you can book by the hour.",
   "tryit": "Signature cocktails; book a themed room for a group"
+ },
+ {
+  "id": 233,
+  "name": "Bar Moxy",
+  "address": "412 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar",
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "nightlife",
+   "group",
+   "casual"
+  ],
+  "type": "Hotel Bar",
+  "note": "The Moxy Houston Downtown's lobby bar on Bar Row — check-in doubles as the bar, with driftwood tables and a mechanical bull.",
+  "tryit": "Signature cocktail (hotel guests get one at check-in)"
  }
 ]
