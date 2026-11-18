@@ -241,7 +241,7 @@ function pill(ctx, x, y, text, size, bg, fg = '#212529') {
 export class CityMap {
   constructor(canvas, places, opts = {}) {
     this.cv = canvas; this.ctx = canvas.getContext('2d'); this.opts = opts;
-    this.v = new View(); this.mode = 'street'; this.scene = 'day'; this.highlight = null; this.pick = null; this.hover = null;
+    this.v = new View(); this.mode = 'street'; this.scene = 'day'; this.hide = {}; this.highlight = null; this.pick = null; this.hover = null;
     this.openFn = opts.isOpen || (() => true);
     this.build(places);
     this.bindInput(); this.resize(); this.fit();
@@ -1353,6 +1353,10 @@ export class CityMap {
   // opening hours are parsed from text, so remember each answer for 30 s instead of re-parsing every frame
   openC(p) { const now = Date.now(), c = (this._open = this._open || new Map()).get(p.id); if (c && now - c[1] < 30000) return c[0]; const v = this.openFn(p); this._open.set(p.id, [v, now]); return v; }
   setHighlight(ids) { this.highlight = ids; }
+  screenCenter() {   // the ground point under the middle of the screen
+    const v = this.v, sx = this.W / 2, sy = this.H * 0.55, a = (sx - v.ox) / (TW / 2 * v.s), b = (sy - v.oy) / (TH / 2 * v.s), X = (a + b) / 2, Y = (b - a) / 2;
+    return { x: v.cx + X * v.c + Y * v.sn, y: v.cy - X * v.sn + Y * v.c };
+  }
   setPick(id) { this.pick = id; if (id != null) this.focus(id); }
 
   lod() { const s = this.v.s; return s < 0.5 ? 'cluster' : s < 1.0 ? 'pin' : 'label'; }
@@ -1433,7 +1437,7 @@ export class CityMap {
       if (a.t >= 1) this.anim = null;
     }
     this.stepNpcs(dt); this.stepTrains(dt);
-    this.draw(t);
+    if (!this.paused) this.draw(t);
   }
 
   draw(now) {
@@ -1474,10 +1478,10 @@ export class CityMap {
     for (const l of this.landmarks) items.push({ k: v.boxDepth(l.x, l.y, l.w, l.d), l });
     for (const o of this.osm || []) { const [sx, sy] = v.p(o.cx, o.cy), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20, up = (o.z0 + o.h) * ZU * v.s; if (sx < -r || sx > this.W + r || sy + r < 0 || sy - up - r > this.H) continue; items.push({ k: this.osmDepth(o), o }); }
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
-    for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
+    if (!this.hide.people) for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
     const live = !!this.liveData, liveRail = live && (this.liveCars || []).some((c) => c.kind === 'train') || this.liveRailSeen;
-    if (!liveRail) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
-    for (const c of [...(this.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(this.liveCars || [])]) { const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
+    if (!liveRail && !this.hide.trains) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
+    for (const c of [...(this.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(this.liveCars || [])]) { if (c.kind === 'train' ? this.hide.trains : this.hide.traffic) continue; const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
     items.sort((p, q) => p.k - q.k);
     // skip anything that can't be on screen (most of the city once you're zoomed in)
     const W = this.W, H = this.H, off = (x, y, w, d, h) => { const [sx, sy] = v.p(x + w / 2, y + d / 2), r = (w + d) * TW * 0.5 * v.s + 20, up = h * ZU * v.s + r; return sx < -r || sx > W + r || sy < -r * 0.6 || sy - up > H; };
@@ -1495,16 +1499,15 @@ export class CityMap {
       else if (it.c) this.drawCar(it.c, N, ghost, now);
       else this.drawNpc(it.n, now, 0);
     }
-    this.drawBeacons(now, N);
-    this.drawClouds(now, N);
+    if (!this.hide.sky) { this.drawBeacons(now, N); this.drawClouds(now, N); }
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
     this.drawRailOverlay();
-    this.drawBirds(now, N);
-    this.drawStreetSigns(N);
+    if (!this.hide.sky) this.drawBirds(now, N);
+    if (!this.hide.signs) this.drawStreetSigns(N);
     this.drawRoute(now);
     this.drawMarkers(false);
     this.drawUser(now);
-    this.drawLabels(N);
+    if (!this.hide.labels) this.drawLabels(N);
     this.drawMark(now);
     if (night > 0) { ctx.fillStyle = `rgba(14,18,48,${0.1 * night})`; ctx.fillRect(0, 0, this.W, this.H); }
     this.drawPickBeacon(now);
@@ -1686,7 +1689,7 @@ export class CityMap {
       ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
-      if (lod === 'label' || this.hover?.spot === s) pill(ctx, x, y - lift - r - 12, s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529');
+      if ((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) pill(ctx, x, y - lift - r - 12, s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529');
     }
   }
 

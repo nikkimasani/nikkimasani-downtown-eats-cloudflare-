@@ -260,7 +260,7 @@ function openSheet(id, from = null) {
     ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">🏙️ Downtown listing</a>` : ''}
     <a href="#" id="sMap">🎮 Show on map</a>
   </div>
-  <div class="row" style="margin-bottom:10px"><button class="btn" id="sNav">🧭 Walk me there</button><a class="btn ghost" href="${navLinks(r).apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn ghost" href="${navLinks(r).google}" target="_blank" rel="noopener">Google Maps</a></div>
+  <div class="row" style="margin-bottom:10px"><button class="btn" id="sNav">🧭 Walk me there</button><button class="btn ghost" id="sPov">🧍 Street view</button><a class="btn ghost" href="${navLinks(r).apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn ghost" href="${navLinks(r).google}" target="_blank" rel="noopener">Google Maps</a></div>
   <div class="row"><button class="btn ghost" id="sFav">${favs.has(r.name) ? '♥ Favorited' : '♡ Favorite'}</button>
   <button class="btn ghost" id="sGo">✅ I'm going${visits[r.name] ? ` (${visits[r.name]}×)` : ''}</button>
   <button class="btn ghost" id="sDay">🗓️ Add to today</button></div>
@@ -275,7 +275,8 @@ function openSheet(id, from = null) {
   $('#sGo').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged'); openSheet(id); };
   $('#sDay').onclick = () => { const d = DAYS[new Date().getDay() - 1] || 'Mon'; week.days[d] = { name: r.name, address: r.address, lock: true }; save(); renderWeek(); toast('Added to ' + d); };
   $('#sMap').onclick = (e) => { e.preventDefault(); closeSheet(); show('map'); if (city && !city.sceneOk(r)) setScene(r.day ? 'day' : 'night', true); city?.setPick(r.id); };
-  $('#sNav').onclick = () => { closeSheet(); walkTo(r); };
+  $('#sNav').onclick = () => { closeSheet(); if (povCtl) { const sp = city.spotForPlace(r.id); if (city.user?.inside && sp) city.startNav({ x: sp.x, y: sp.y, label: r.name, tunnel: !!r.tunnel, id: r.id, lat: r.lat, lng: r.lng }); else toast('Turn on 📍 Find me downtown to get directions'); return; } walkTo(r); };
+  $('#sPov').onclick = () => { closeSheet(); if (povCtl) { povCtl.close(); setTimeout(() => openStreetView(r), 50); return; } show('map'); if (city && !city.sceneOk(r)) setScene(r.day ? 'day' : 'night', true); openStreetView(r); };
   if (ASK) { const b = $('#sAsk'); b.style.display = 'block'; b.onclick = () => aboutPlace(r); }
 }
 let listCtx = null;
@@ -308,7 +309,7 @@ function initMap() {
     onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
     onCorner: (c, near) => showFound(c.label, near),
     onRotate: (a) => { $('#needle').style.transform = `rotate(${a}rad)`; },
-    onNav: (st) => renderNav(st),
+    onNav: (st) => { lastNav = st; renderNav(st); },
     onFollow: () => { const b = $('#nvFollow'); if (b) b.textContent = '📍 Recenter'; },
     onVehicle: (c) => toast(c.live
       ? `● LIVE ${c.kind === 'train' ? '🚊 METRORail' : '🚌 METRO route'} ${c.route || ''}${c.rname ? ' — ' + c.rname : ''}${c.est ? ' · position estimated from METRO arrival predictions' : ''}`
@@ -324,7 +325,7 @@ function initMap() {
   const lg = $('#legend'), setLg = (open) => { lg.classList.toggle('min', !open); $('#lgdToggle').setAttribute('aria-expanded', open); try { localStorage.setItem('lgdOpen', open ? '1' : '0'); } catch (e) {} };
   let lgOpen = true; try { lgOpen = localStorage.getItem('lgdOpen') !== '0'; } catch (e) {}
   setLg(lgOpen); $('#lgdToggle').onclick = () => setLg(lg.classList.contains('min'));
-  setScene(SCENE, true);
+  setScene(SCENE, true); applyView();
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
@@ -506,6 +507,40 @@ function toggleWalk(force) {
   const go = () => { if (!city.setWalkView(true)) { walkOn = false; $('#walkView').classList.remove('on'); locHelp('far', () => toggleWalk(true)); } else { $('#legend').classList.add('min'); toast('🚶 Walk view: the map turns with you'); } };
   if (USER && city?.user) go(); else { toast('Finding you…'); startLocate(go); }
 }
+// ---------- compact controls + show/hide ----------
+$('#moreBtn').onclick = () => { const m = $('#hudMore'), open = m.hidden; m.hidden = !open; $('#moreBtn').setAttribute('aria-expanded', open); $('#moreBtn').textContent = open ? '✕ Close' : '☰ More'; };
+const VIEW = (() => { try { return JSON.parse(localStorage.getItem('mapView') || '{}'); } catch (e) { return {}; } })();
+function applyView() {
+  if (city) city.hide = { ...VIEW.hide };
+  $('#v-map').classList.toggle('no-legend', !!VIEW.ui?.legend); $('#v-map').classList.toggle('no-zoom', !!VIEW.ui?.zoom);
+  document.querySelectorAll('#hideToggles input').forEach((i) => { i.checked = i.dataset.h ? !VIEW.hide?.[i.dataset.h] : !VIEW.ui?.[i.dataset.ui]; });
+  try { localStorage.setItem('mapView', JSON.stringify(VIEW)); } catch (e) {}
+}
+$('#hideToggles').onchange = (e) => { const i = e.target; if (i.dataset.h) (VIEW.hide = VIEW.hide || {})[i.dataset.h] = !i.checked; else (VIEW.ui = VIEW.ui || {})[i.dataset.ui] = !i.checked; applyView(); };
+$('#cleanMap').onclick = () => { const clean = !VIEW.clean; VIEW.clean = clean; VIEW.hide = clean ? { pinNames: true, signs: true, labels: true, people: true, traffic: true, trains: true, sky: true } : {}; VIEW.ui = clean ? { legend: true } : {}; $('#cleanMap').textContent = clean ? '↺ Show everything' : '✨ Clean map'; applyView(); toast(clean ? 'Clean map: just buildings and pins' : 'Showing everything'); };
+// ---------- first-person street view ----------
+let povCtl = null, lastNav = null;
+async function openStreetView(r) {
+  if (!city) return; if (povCtl) return;
+  const { openPOV, standFor } = await import('./pov.js');
+  let start = null, follow = false;
+  const sp = r ? city.spotForPlace(r.id) : null;
+  if (sp) start = standFor(city, sp);
+  else if (city.user?.inside) { const u = city.user, h = u.heading; start = { x: u.x, y: u.y, yaw: h != null ? (() => { const a = (h * Math.PI) / 180, N = city.northW, E = city.eastW; return Math.atan2(-(N[0] * Math.cos(a) + E[0] * Math.sin(a)), -(N[1] * Math.cos(a) + E[1] * Math.sin(a))); })() : 0 }; follow = true; }
+  else {   // stand at the street corner nearest the middle of the screen, looking up the avenue
+    const c = city.screenCenter(), A = city.avenues, C = city.cross;
+    const a = A.reduce((b, q) => (Math.abs(q.x - c.x) < Math.abs(b.x - c.x) ? q : b)), cr = C.reduce((b, q) => (Math.abs(q.y - c.y) < Math.abs(b.y - c.y) ? q : b));
+    start = { x: a.x + city.streetW * 0.55, y: cr.y + city.streetW * 1.6, yaw: 0 };
+  }
+  toast('Loading street view…'); document.body.classList.add('in-pov');
+  try {
+    povCtl = await openPOV(city, { start, follow,
+      onPick: (s) => { const places = s.places.filter((p) => city.sceneOk(p)); places.length === 1 ? openSheet(places[0].id) : listSheet(places, s.label); },
+      navText: () => (lastNav && !lastNav.arrived ? `${lastNav.next ? lastNav.next.icon + ' In ' + lastNav.toNext + ' m, ' + lastNav.next.text.charAt(0).toLowerCase() + lastNav.next.text.slice(1) : lastNav.cur.icon + ' ' + lastNav.cur.text} · ${lastNav.minutes} min` : lastNav?.arrived ? `🏁 You've arrived at ${lastNav.target.label}` : ''),
+      onClose: (p) => { povCtl = null; document.body.classList.remove('in-pov'); city.zoomTo(p.x, p.y, Math.max(city.v.s, 1.1)); } });
+  } catch (e) { console.warn(e); toast('Street view needs WebGL, which this browser has turned off'); povCtl = null; document.body.classList.remove('in-pov'); }
+}
+$('#povBtn').onclick = () => openStreetView(null); window._pov = openStreetView;
 $('#findMe').onclick = findMe; $('#walkView').onclick = () => toggleWalk();
 const milesFromDowntown = () => { if (!USER) return '?'; const dy = (USER.lat - 29.7575) * 110850, dx = (USER.lng + 95.364) * 96680; return (Math.hypot(dx, dy) / 1609).toFixed(1); };
 function walkTo(r) {

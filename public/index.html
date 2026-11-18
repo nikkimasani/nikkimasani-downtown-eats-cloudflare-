@@ -99,15 +99,35 @@
       <button data-s="night">🌙 Night</button>
     </div>
     <button class="pill locpill" id="findMe">📍 Find me</button>
-    <button class="pill" id="walkView">🚶 Walk view</button>
-    <div class="seg" id="layerSeg">
-      <button data-m="street" class="on">🏙️ Street</button>
-      <button data-m="both">⬍ Both</button>
-      <button data-m="tunnel" class="tun">🚇 Tunnels</button>
+    <button class="pill povpill" id="povBtn">🧍 Street view</button>
+    <button class="pill" id="moreBtn" aria-expanded="false">☰ More</button>
+    <div class="hud-more" id="hudMore" hidden>
+      <div class="hm-row">
+        <button class="pill" id="walkView">🚶 Walk view</button>
+        <button class="pill" id="mapFind">🔍 Find a corner</button>
+        <button class="pill" id="mapOpen">🟢 Open now</button>
+        <button class="pill" id="mapMatch">🎯 My filters</button>
+      </div>
+      <div class="hm-row">
+        <div class="seg" id="layerSeg">
+          <button data-m="street" class="on">🏙️ Street</button>
+          <button data-m="both">⬍ Both</button>
+          <button data-m="tunnel" class="tun">🚇 Tunnels</button>
+        </div>
+      </div>
+      <div class="hm-h">Show on the map <button class="hm-clean" id="cleanMap">✨ Clean map</button></div>
+      <div class="hm-toggles" id="hideToggles">
+        <label><input type="checkbox" data-h="pinNames" checked> Place names</label>
+        <label><input type="checkbox" data-h="signs" checked> Street signs</label>
+        <label><input type="checkbox" data-h="labels" checked> Building names</label>
+        <label><input type="checkbox" data-h="people" checked> People</label>
+        <label><input type="checkbox" data-h="traffic" checked> Cars &amp; buses</label>
+        <label><input type="checkbox" data-h="trains" checked> Trains</label>
+        <label><input type="checkbox" data-h="sky" checked> Clouds &amp; birds</label>
+        <label><input type="checkbox" data-ui="legend" checked> Key</label>
+        <label><input type="checkbox" data-ui="zoom" checked> Zoom buttons</label>
+      </div>
     </div>
-    <button class="pill" id="mapOpen">🟢 Open now</button>
-    <button class="pill" id="mapMatch">🎯 My filters</button>
-    <button class="pill" id="mapFind">🔍 Find a corner</button>
     <button class="pill livechip" id="liveChip" hidden>● LIVE</button>
   </div>
   <div class="findbox" id="findBox">
