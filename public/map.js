@@ -310,7 +310,9 @@ export class CityMap {
     if (SD) {
       const pl = (l) => l.map(([la, ln]) => proj(la, ln));
       this.geo = {
-        roads: SN.filter(([, k]) => /^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l, lanes]) => ({ k, n, pts: pl(l), w: k === 'motorway' || k === 'trunk' ? 0.62 + Math.min(4, lanes || 3) * 0.17 : 0.55 })),
+        roads: SN.filter(([, k]) => /^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l, lanes, br, layer]) => ({ k, n, pts: pl(l), w: k === 'motorway' || k === 'trunk' ? 0.62 + Math.min(4, lanes || 3) * 0.17 : 0.55, z: br || layer > 0 ? 0.7 * Math.max(1, Math.min(3, layer || 1)) : 0 })),
+        bridges: SN.filter(([, k, , , br]) => br && !/^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l]) => ({ n, pts: pl(l), w: k === 'pedestrian' ? 0.35 : 0.9 })),
+        paths: (SD.paths || []).map(([n, k, l, br]) => ({ n, k, pts: pl(l), br })),
         rivers: (SD.rivers || []).map(([n, l]) => ({ n, pts: pl(l), w: /buffalo/i.test(n) ? 2.2 : /white oak/i.test(n) ? 1.4 : 0.9 })),
         water: (SD.water || []).map(pl),
         parks: (SD.parks || []).map(([n, k, l]) => ({ n, k, pts: pl(l) })).filter((p) => p.pts.length > 2),
@@ -1120,7 +1122,8 @@ export class CityMap {
       return P;
     };
     const blockOf = (x, y) => { const [i, j] = this.cellIdx(x, y); return { x0: i > 0 ? A[i - 1].x + sw + side : -1e9, x1: i < A.length ? A[i].x - sw - side : 1e9, y0: j > 0 ? C[j - 1].y + sw + side : -1e9, y1: j < C.length ? C[j].y - sw - side : 1e9 }; };
-    for (const [ring, hM, minM, type, name, colour] of list) {
+    const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
+    for (const [ring, hM, minM, type, name, colour, material, roofShape, roofColour, roofH] of list) {
       let pts = ring.slice(0, -1).map(([la, ln]) => this.proj(la, ln)); if (pts.length < 3) continue;
       { // keep the part in whichever block holds most of the footprint (the fitted street grid can be a few metres off the real streets)
         const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length;
@@ -1138,8 +1141,16 @@ export class CityMap {
       const h = Math.max(0.35, hM / 10), z0 = (minM || 0) / 10, k = hash(cx.toFixed(1) + cy.toFixed(1));
       const glass = hM >= 85 && !/house|terrace/.test(type);
       let c = /^#[0-9a-f]{6}$/i.test(colour || '') ? colour : glass ? GLASS[Math.floor(k * GLASS.length)] : hM >= 25 ? CONCRETE[Math.floor(k * CONCRETE.length)] : LOW[Math.floor(k * LOW.length)];
+      const mat = String(material || '').toLowerCase().split(';')[0];
+      if (!/^#[0-9a-f]{6}$/i.test(colour || '') && MAT[mat]) c = MAT[mat][Math.floor(k * MAT[mat].length)];
+      const isGlass = glass || mat === 'glass' || /glass/.test(mat);
+      if (mat === 'glass' && !glass) c = GLASS[Math.floor(k * GLASS.length)];
       if (type === 'parking') c = '#b9bcc2';
-      const o = { pts, bb, h, z0, c, glass, name, type, cx, cy };
+      const o = { pts, bb, h, z0, c, glass: isGlass, name, type, cx, cy };
+      if (/^#[0-9a-f]{6}$/i.test(roofColour || '')) o.roofC = roofColour; else if (/^(red|green|grey|gray|black|white|brown|blue)$/i.test(roofColour || '')) o.roofC = { red: '#a5463a', green: '#4f7a5a', grey: '#8a8f96', gray: '#8a8f96', black: '#3a3d42', white: '#eceae4', brown: '#7a5a44', blue: '#4a6c9a' }[roofColour.toLowerCase()];
+      const rs = String(roofShape || '').toLowerCase();
+      if (/^(pyramidal|hipped|gabled|dome|onion|round|half-hipped|skillion)$/.test(rs)) { const span = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0); o.roof = rs; o.rh = roofH ? roofH / 10 : rs === 'dome' || rs === 'onion' || rs === 'round' ? span * 0.45 : rs === 'skillion' ? span * 0.15 : span * 0.32; }
+      if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
       this.osm.push(o);
     }
@@ -1198,6 +1209,7 @@ export class CityMap {
       }
     }
     poly(ctx, P.map((p) => v.p(p[0], p[1], z1)), N ? lighten(col, 0.08) : lighten(col, 0.12), 'rgba(255,255,255,.2)');
+    if (o.roof) this.drawRoof(o, N);
     if (o.pool && v.s > 0.3) {   // rooftop pool deck
       const cx = o.cx, cy = o.cy, s2 = Math.min(o.bb.x1 - o.bb.x0, o.bb.y1 - o.bb.y0) * 0.22;
       poly(ctx, [v.p(cx - s2, cy - s2 * 0.6, z1 + 0.01), v.p(cx + s2, cy - s2 * 0.6, z1 + 0.01), v.p(cx + s2, cy + s2 * 0.6, z1 + 0.01), v.p(cx - s2, cy + s2 * 0.6, z1 + 0.01)], N ? '#1d4f77' : '#4dabf7');
@@ -1206,6 +1218,26 @@ export class CityMap {
     ctx.globalAlpha = 1;
   }
 
+  // pitched, pyramid and domed roofs where OpenStreetMap records them
+  drawRoof(o, N) {
+    const ctx = this.ctx, v = this.v, P = o.pts, z1 = o.z0 + o.h, rh = o.rh, base = N ? darken(o.roofC || darken(o.c, 0.25), 0.45) : (o.roofC || darken(o.c, 0.25));
+    const face = (pts, nx, ny) => { const [, r] = v.vis(nx, ny); poly(ctx, pts.map((q) => v.p(q[0], q[1], q[2])), darken(base, 0.06 + 0.1 * (1 - (r + 1.41) / 2.82))); };
+    if (o.roof === 'dome' || o.roof === 'onion' || o.roof === 'round') {
+      const rings = 6; for (let k = 0; k < rings; k++) { const t0 = k / rings, t1 = (k + 1) / rings, s0 = Math.cos(t0 * Math.PI / 2), s1 = Math.cos(t1 * Math.PI / 2), h0 = Math.sin(t0 * Math.PI / 2) * rh, h1 = Math.sin(t1 * Math.PI / 2) * rh;
+        poly(ctx, P.map((p) => v.p(o.cx + (p[0] - o.cx) * s0, o.cy + (p[1] - o.cy) * s0, z1 + h0)), lighten(base, k * 0.05)); poly(ctx, P.map((p) => v.p(o.cx + (p[0] - o.cx) * s1, o.cy + (p[1] - o.cy) * s1, z1 + h1)), lighten(base, (k + 1) * 0.05)); }
+      return;
+    }
+    if (o.roof === 'gabled' && P.length === 4) {   // ridge along the long side
+      const e = [0, 1, 2, 3].map((i) => Math.hypot(P[(i + 1) % 4][0] - P[i][0], P[(i + 1) % 4][1] - P[i][1])), s = e[0] + e[2] < e[1] + e[3] ? 0 : 1;
+      const m1 = lerp2(P[s], P[s + 1], 0.5), m2 = lerp2(P[s + 2], P[(s + 3) % 4], 0.5), R1 = [...m1, z1 + rh], R2 = [...m2, z1 + rh];
+      const fs = [[[...P[s + 1], z1], [...P[s + 2], z1], R2, R1], [[...P[(s + 3) % 4], z1], [...P[s], z1], R1, R2], [[...P[s], z1], [...P[s + 1], z1], R1], [[...P[s + 2], z1], [...P[(s + 3) % 4], z1], R2]];
+      fs.map((f) => ({ f, d: v.depth(f.reduce((a, q) => a + q[0], 0) / f.length, f.reduce((a, q) => a + q[1], 0) / f.length) })).sort((a, b) => a.d - b.d).forEach(({ f }) => { const mx = f.reduce((a, q) => a + q[0], 0) / f.length - o.cx, my = f.reduce((a, q) => a + q[1], 0) / f.length - o.cy; face(f, mx, my); });
+      return;
+    }
+    // pyramidal / hipped / anything else: every wall slopes up to an apex
+    const ap = [o.cx, o.cy, z1 + rh], fs = P.map((a, i) => { const b = P[(i + 1) % P.length]; return { f: [[...a, z1], [...b, z1], ap], d: v.depth((a[0] + b[0] + o.cx) / 3, (a[1] + b[1] + o.cy) / 3), nx: (a[1] + b[1]) / 2 - o.cy, ny: -((a[0] + b[0]) / 2 - o.cx) }; });
+    fs.sort((a, b) => a.d - b.d).forEach(({ f }) => { const mx = (f[0][0] + f[1][0]) / 2 - o.cx, my = (f[0][1] + f[1][1]) / 2 - o.cy; face(f, mx, my); });
+  }
   buildTunnels() {
     const T = this.spots.filter((s) => s.tunnel);
     this.tunnelSpots = T; this.tunnelEdges = []; this.tunnelAdj = T.map(() => []);
@@ -1743,11 +1775,23 @@ export class CityMap {
     for (const w of G.water) { path(w); ctx.closePath(); ctx.fillStyle = N ? '#1c3a57' : '#7fbbd9'; ctx.fill(); }
     for (const r of G.rivers) { path(r.pts); ctx.strokeStyle = N ? '#1c3a57' : '#7fbbd9'; ctx.lineWidth = strokeW(r.w); ctx.stroke(); }
     if (v.s > 0.25) for (const r of G.rivers.filter((x) => /buffalo/i.test(x.n))) { ctx.strokeStyle = N ? 'rgba(165,216,255,.35)' : 'rgba(255,255,255,.7)'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.setLineDash([3 * v.s + 2, 14 * v.s + 6]); ctx.lineDashOffset = -now / 60; path(r.pts); ctx.stroke(); ctx.setLineDash([]); }
-    // freeways and ramps, as mapped
+    // trails along the bayous and through the parks
+    if (v.s > 0.35) { ctx.strokeStyle = N ? 'rgba(214,196,160,.45)' : '#d9c9a5'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); for (const p of G.paths || []) { path(p.pts); ctx.stroke(); } }
+    // street bridges over the bayou: deck with white railings
+    for (const b of G.bridges || []) { path(b.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#c9ccd1'; ctx.lineWidth = strokeW(b.w) + 3; ctx.stroke(); path(b.pts); ctx.strokeStyle = N ? '#2b303c' : '#a3a9b2'; ctx.lineWidth = strokeW(b.w); ctx.stroke(); }
+    // freeways and ramps, as mapped — bridges and flyovers lifted on piers, with their shadow underneath
     const road = N ? '#2b303c' : '#b7bcc4', edge = N ? '#1b1f29' : '#9aa1aa';
-    for (const g of G.roads) { path(g.pts); ctx.strokeStyle = edge; ctx.lineWidth = strokeW(g.w) + 2; ctx.stroke(); }
-    for (const g of G.roads) { path(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.w); ctx.stroke(); }
-    if (v.s > 0.5) { ctx.strokeStyle = N ? 'rgba(255,214,120,.35)' : 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.setLineDash([5, 7]); for (const g of G.roads) if (g.k === 'motorway') { path(g.pts); ctx.stroke(); } ctx.setLineDash([]); }
+    const pathZ = (pts, z) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1], z)) : ctx.moveTo(...v.p(p[0], p[1], z)))); };
+    const ground = G.roads.filter((g) => !g.z), raised = G.roads.filter((g) => g.z).sort((a, b) => a.z - b.z);
+    for (const g of ground) { path(g.pts); ctx.strokeStyle = edge; ctx.lineWidth = strokeW(g.w) + 2; ctx.stroke(); }
+    for (const g of ground) { path(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.w); ctx.stroke(); }
+    for (const g of raised) { path(g.pts); ctx.strokeStyle = 'rgba(0,0,0,.13)'; ctx.lineWidth = strokeW(g.w) + 4; ctx.stroke(); }
+    for (const g of raised) {
+      if (v.s > 0.3) { ctx.strokeStyle = N ? '#3d4250' : '#c3c7cc'; ctx.lineWidth = Math.max(2, v.s * 4); ctx.beginPath(); let acc = 0; for (let i = 1; i < g.pts.length; i++) { const a = g.pts[i - 1], b = g.pts[i], L = Math.hypot(b[0] - a[0], b[1] - a[1]); for (let t = (3 - acc) / (L || 1); t < 1; t += 3 / (L || 1)) { const q = lerp2(a, b, t); ctx.moveTo(...v.p(q[0], q[1], 0)); ctx.lineTo(...v.p(q[0], q[1], g.z)); } acc = (acc + L) % 3; } ctx.stroke(); }
+      pathZ(g.pts, g.z - 0.12); ctx.strokeStyle = N ? '#161a22' : '#8d939c'; ctx.lineWidth = strokeW(g.w) + 2; ctx.stroke();
+      pathZ(g.pts, g.z); ctx.strokeStyle = edge; ctx.lineWidth = strokeW(g.w) + 2; ctx.stroke(); pathZ(g.pts, g.z); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.w); ctx.stroke();
+    }
+    if (v.s > 0.5) { ctx.strokeStyle = N ? 'rgba(255,214,120,.35)' : 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.setLineDash([5, 7]); for (const g of G.roads) if (g.k === 'motorway') { pathZ(g.pts, g.z); ctx.stroke(); } ctx.setLineDash([]); }
     ctx.restore(); ctx.lineCap = 'butt';
   }
   drawBayouAndFreeways(N, now = performance.now()) {

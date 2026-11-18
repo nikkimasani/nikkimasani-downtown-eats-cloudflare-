@@ -78,7 +78,14 @@ export async function openPOV(city, opts = {}) {
     const add = (parts, colr) => { if (!parts.length) return; const mm = new T.Mesh(keep(merge(parts)), keep(new T.MeshLambertMaterial({ color: colr }))); parts.forEach((g) => g.dispose()); scene.add(mm); };
     add(G.rivers.flatMap((r) => ribbon(r.pts, r.w * 2.6, 0.01)), night ? '#1f3a29' : '#8fc275');
     add(G.rivers.flatMap((r) => ribbon(r.pts, r.w, 0.04)), night ? '#1c3a57' : '#5d9ec4');
-    add(G.roads.flatMap((r) => ribbon(r.pts, r.w, 0.03)), night ? '#2f333c' : '#6b7079');
+    add(G.roads.filter((r) => !r.z).flatMap((r) => ribbon(r.pts, r.w, 0.03)), night ? '#2f333c' : '#6b7079');
+    const raised = G.roads.filter((r) => r.z); add(raised.flatMap((r) => ribbon(r.pts, r.w, r.z * S)), night ? '#3a3e48' : '#9ca2aa');
+    { const piers = []; for (const r of raised) { let acc = 0; for (let k = 1; k < r.pts.length; k++) { const [ax, ay] = r.pts[k - 1], [bx, by] = r.pts[k], L = Math.hypot(bx - ax, by - ay); for (let t = (3.2 - acc) / (L || 1); t < 1; t += 3.2 / (L || 1)) piers.push([(ax + (bx - ax) * t) * S, (ay + (by - ay) * t) * S, r.z * S]); acc = (acc + L) % 3.2; } }
+      if (piers.length) { const pm = new T.InstancedMesh(keep(new T.BoxGeometry(1.4, 1, 2.2)), keep(new T.MeshLambertMaterial({ color: night ? '#4a4e58' : '#c4c7cc' })), piers.length); piers.forEach(([x, z, h], i) => { M.compose(V.set(x, h / 2, z), Q.identity(), SC.set(1, h, 1)); pm.setMatrixAt(i, M); }); scene.add(pm); } }
+    add((G.paths || []).flatMap((pa) => ribbon(pa.pts, 0.28, 0.05)), night ? '#6e6553' : '#d9c9a5');
+    add((G.bridges || []).flatMap((b) => [...ribbon(b.pts.map(([x, y]) => [x, y]), b.w, 0.2)]), night ? '#454a55' : '#a7adb5');
+    { const rails = []; for (const b of G.bridges || []) for (let k = 1; k < b.pts.length; k++) { const [ax, ay] = b.pts[k - 1], [bx, by] = b.pts[k], L = Math.hypot(bx - ax, by - ay); if (L < 0.2) continue; const nx = -(by - ay) / L, ny = (bx - ax) / L; for (const sd of [-1, 1]) { const g = new T.BoxGeometry(0.25, 1.1, L * S).toNonIndexed(); g.rotateY(Math.atan2(bx - ax, by - ay)); g.translate(((ax + bx) / 2 + nx * sd * b.w / 2) * S, 0.75, ((ay + by) / 2 + ny * sd * b.w / 2) * S); rails.push(g); } }
+      add(rails, night ? '#8a8f99' : '#eef0f2'); }
     const parkParts = []; for (const pk of G.parks) { try { const sh = new T.Shape(pk.pts.map(([x, y]) => new T.Vector2(x * S, -y * S))); const g = new T.ShapeGeometry(sh); g.rotateX(-Math.PI / 2); g.translate(0, 0.17, 0); parkParts.push(g.toNonIndexed()); g.dispose(); } catch (e) {} }
     add(parkParts.filter((g, i) => G.parks[i]?.k !== 'plaza'), night ? '#24452f' : '#7fb865'); }
 
@@ -108,7 +115,20 @@ export async function openPOV(city, opts = {}) {
         g2.setAttribute('uv', new T.BufferAttribute(new Float32Array([0, 0, u, 0, u, 1, 0, 0, u, 1, 0, 1]), 2)); g2.computeVertexNormals(); shopParts.push(g2); } }
   };
   const solids = [];   // for walking collisions, in map units
-  for (const o of city.osm || []) { pushBuilding(o.pts, o.h, o.z0 || 0, o.c, o.glass || o.h >= 8.5, o.h >= 0.6 && !/parking|church|garage|standin/.test(o.type || '')); if (o.h >= 0.3 && !(o.z0 > 0.3)) solids.push({ bb: o.bb, pts: o.pts }); }
+  const roofGeo = (o) => {   // pitched / pyramid / dome roofs, coloured
+    const z1 = ((o.z0 || 0) + o.h) * S, rh = o.rh * S, P = o.pts, cx = o.cx * S, cz = o.cy * S, pos = [];
+    const tri = (a, b, c) => pos.push(...a, ...b, ...c);
+    if (o.roof === 'dome' || o.roof === 'onion' || o.roof === 'round') { const rings = 8; for (let k = 0; k < rings; k++) { const s0 = Math.cos((k / rings) * Math.PI / 2), s1 = Math.cos(((k + 1) / rings) * Math.PI / 2), h0 = Math.sin((k / rings) * Math.PI / 2) * rh, h1 = Math.sin(((k + 1) / rings) * Math.PI / 2) * rh;
+        for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], A0 = [cx + (a[0] * S - cx) * s0, z1 + h0, cz + (a[1] * S - cz) * s0], B0 = [cx + (b[0] * S - cx) * s0, z1 + h0, cz + (b[1] * S - cz) * s0], A1 = [cx + (a[0] * S - cx) * s1, z1 + h1, cz + (a[1] * S - cz) * s1], B1 = [cx + (b[0] * S - cx) * s1, z1 + h1, cz + (b[1] * S - cz) * s1]; tri(A0, B0, B1); tri(A0, B1, A1); } } }
+    else if (o.roof === 'gabled' && P.length === 4) { const e = [0, 1, 2, 3].map((i) => Math.hypot(P[(i + 1) % 4][0] - P[i][0], P[(i + 1) % 4][1] - P[i][1])), s = e[0] + e[2] < e[1] + e[3] ? 0 : 1, Q = P.map((q) => [q[0] * S, z1, q[1] * S]);
+      const mid = (a, b) => [(a[0] + b[0]) / 2, z1 + rh, (a[2] + b[2]) / 2], R1 = mid(Q[s], Q[s + 1]), R2 = mid(Q[s + 2], Q[(s + 3) % 4]);
+      tri(Q[s + 1], Q[s + 2], R2); tri(Q[s + 1], R2, R1); tri(Q[(s + 3) % 4], Q[s], R1); tri(Q[(s + 3) % 4], R1, R2); tri(Q[s], Q[s + 1], R1); tri(Q[s + 2], Q[(s + 3) % 4], R2); }
+    else { const ap = [cx, z1 + rh, cz]; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; tri([a[0] * S, z1, a[1] * S], [b[0] * S, z1, b[1] * S], ap); } }
+    const g = new T.BufferGeometry(); g.setAttribute('position', new T.BufferAttribute(new Float32Array(pos), 3)); g.computeVertexNormals();
+    const c = new T.Color(o.roofC || '#7d6a5c'), n = pos.length / 3, cols = new Float32Array(n * 3); for (let k = 0; k < n; k++) { cols[k * 3] = c.r; cols[k * 3 + 1] = c.g; cols[k * 3 + 2] = c.b; } g.setAttribute('color', new T.BufferAttribute(cols, 3));
+    g.setAttribute('uv', new T.BufferAttribute(new Float32Array(n * 2), 2)); return g;
+  };
+  for (const o of city.osm || []) { pushBuilding(o.pts, o.h, o.z0 || 0, o.c, o.glass || o.h >= 8.5, o.h >= 0.6 && !/parking|church|garage|standin/.test(o.type || '')); if (o.roof && o.rh > 0) roofParts.push(roofGeo(o)); if (o.h >= 0.3 && !(o.z0 > 0.3)) solids.push({ bb: o.bb, pts: o.pts }); }
   for (const l of city.landmarks || []) { const p = [[l.x, l.y], [l.x + l.w, l.y], [l.x + l.w, l.y + l.d], [l.x, l.y + l.d]]; pushBuilding(p, l.h || 2, 0, l.kind === 'aquarium' ? '#5c9fd6' : '#b9a58c'); solids.push({ bb: { x0: l.x, x1: l.x + l.w, y0: l.y, y1: l.y + l.d }, pts: p }); }
   for (const a of city.areas || []) if (['grb', 'arena', 'ballpark'].includes(a.kind)) { const r = a.r, p = [[r.x0, r.y0], [r.x1, r.y0], [r.x1, r.y1], [r.x0, r.y1]]; pushBuilding(p, a.kind === 'grb' ? 3.2 : a.kind === 'arena' ? 4 : 5, 0, a.kind === 'grb' ? '#d9dee3' : a.kind === 'arena' ? '#7b8794' : '#c8b9a2'); solids.push({ bb: { x0: r.x0, x1: r.x1, y0: r.y0, y1: r.y1 }, pts: p }); }
   const blocked = (x, y) => solids.some((o) => x > o.bb.x0 - 0.05 && x < o.bb.x1 + 0.05 && y > o.bb.y0 - 0.05 && y < o.bb.y1 + 0.05 && inPoly(x, y, o.pts));
