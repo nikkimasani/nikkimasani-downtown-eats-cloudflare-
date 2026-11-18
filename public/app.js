@@ -237,36 +237,55 @@ let sheetFrom = null;
 function openSheet(id, from = null) {
   sheetFrom = from;
   const r = DATA[id]; if (!r) return; const L = links(r), o = openLabel(r), hh = hhFor(r);
+  const N = navLinks(r), ext = (u, label, icon) => `<a class="ds-link" href="${esc(u)}" target="_blank" rel="noopener"><span>${icon}</span>${label}<i>›</i></a>`;
+  const tel = r.phone ? r.phone.replace(/[^\d+]/g, '') : '';
   $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="sBack">‹ ${from ? 'Back to list' : 'Back'}</button><button class="close" id="cls">×</button></div>
-  <h2>${esc(r.name)}</h2>
-  <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.venue ? ' · ' + esc(r.venue) : ''}</div>
-  ${r.aliases?.length ? `<div class="meta">Also called ${r.aliases.map(esc).join(' · ')}</div>` : ''}
-  <div class="tags">${statusTags(r)}</div>
-  <p style="margin:10px 0 4px">📍 ${esc(r.address)}${r.tunnel ? `<br>🚇 Underground — ${esc(r.tunnel)} (tunnel shops are mostly weekday daytime)` : '<br>🏙️ Street level'}</p>
-  ${r.phone ? `<p style="margin:4px 0">📞 <a href="tel:${esc(r.phone.replace(/[^\d+]/g, ''))}">${esc(r.phone)}</a></p>` : ''}
-  <div class="info"><b>Hours ${r.corrected ? '(from the restaurant)' : '(official listing)'}</b>${esc(r.hours || 'Not listed')}${o.known ? `<div class="meta" style="margin-top:4px">${esc(o.label)} right now</div>` : ''}</div>
-  ${hh ? `<div class="info hh"><b>🍹 Happy hour & specials</b><div><strong>${esc(hh.when)}</strong></div><div style="margin-top:4px">${esc(hh.deals)}</div><div class="meta" style="margin-top:6px">Source: <a href="${esc(hh.source)}" target="_blank" rel="noopener">${esc(new URL(hh.source).hostname.replace('www.', ''))}</a> · ${esc(hh.confidence)} · checked ${esc(HH.checked)}</div></div>`
-    : r.meals.includes('Happy Hour') ? `<div class="info hh"><b>🍹 Happy hour</b>Listed as offering happy hour — times and prices not verified yet. <a href="${L.specials}" target="_blank" rel="noopener">Look up today's deals →</a></div>` : ''}
-  ${r.note ? `<p style="margin:8px 0">${esc(r.note)}</p>` : ''}
-  ${r.tryit ? `<p class="meta">Try: ${esc(r.tryit)}</p>` : ''}
-  <div class="tags">${r.cuisines.map((c) => `<span class="tag">${esc(c)}</span>`).join('')}${r.meals.map((m) => `<span class="tag">${esc(m)}</span>`).join('')}</div>
-  <div class="links">
-    ${r.website ? `<a class="p" href="${esc(r.website)}" target="_blank" rel="noopener">🌐 Website</a>` : `<a class="p" href="${L.maps}" target="_blank" rel="noopener">🗺️ Directions</a>`}
-    <a class="p" href="${esc(L.menu)}" target="_blank" rel="noopener">📋 Menu</a>
-    ${r.website ? `<a href="${L.maps}" target="_blank" rel="noopener">🗺️ Directions</a>` : ''}
-    <a href="${L.specials}" target="_blank" rel="noopener">🏷️ Today's specials</a>
-    <a href="${esc(L.ig)}" target="_blank" rel="noopener">📸 Instagram</a>
-    ${r.facebook ? `<a href="${esc(r.facebook)}" target="_blank" rel="noopener">👍 Facebook</a>` : `<a href="${L.reviews}" target="_blank" rel="noopener">⭐ Reviews</a>`}
-    ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">🏙️ Downtown listing</a>` : ''}
-    <a href="#" id="sMap">🎮 Show on map</a>
+  <div class="ds-head">
+    <div class="ds-emoji">${styleFor(r).emoji}</div>
+    <div><h2>${esc(r.name)}</h2>
+    <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.venue ? ' · ' + esc(r.venue) : ''}</div>
+    ${r.aliases?.length ? `<div class="meta">Also called ${r.aliases.map(esc).join(' · ')}</div>` : ''}</div>
   </div>
-  <div class="row" style="margin-bottom:10px"><button class="btn" id="sNav">🧭 Walk me there</button><button class="btn ghost" id="sPov">🧍 Street view</button><a class="btn ghost" href="${navLinks(r).apple}" target="_blank" rel="noopener"> Apple Maps</a><a class="btn ghost" href="${navLinks(r).google}" target="_blank" rel="noopener">Google Maps</a></div>
-  <div class="row"><button class="btn ghost" id="sFav">${favs.has(r.name) ? '♥ Favorited' : '♡ Favorite'}</button>
-  <button class="btn ghost" id="sGo">✅ I'm going${visits[r.name] ? ` (${visits[r.name]}×)` : ''}</button>
-  <button class="btn ghost" id="sDay">🗓️ Add to today</button></div>
+  <div class="tags">${statusTags(r)}</div>
+
+  <div class="ds-actions">
+    <button class="ds-act main" id="sNav"><span>🧭</span>Walk there</button>
+    ${tel ? `<a class="ds-act" href="tel:${esc(tel)}"><span>📞</span>Call</a>` : r.website ? `<a class="ds-act" href="${esc(r.website)}" target="_blank" rel="noopener"><span>🌐</span>Website</a>` : `<a class="ds-act" href="${N.apple}" target="_blank" rel="noopener"><span>🗺️</span>Maps</a>`}
+    <a class="ds-act" href="${esc(L.menu)}" target="_blank" rel="noopener"><span>📋</span>Menu</a>
+    <button class="ds-act" id="sPov"><span>🧍</span>Street view</button>
+  </div>
+
+  <div class="ds-card">
+    <div class="ds-row"><span>📍</span><div>${esc(r.address.replace(', Houston, TX', ''))}<div class="meta">${r.tunnel ? `🚇 Underground · ${esc(r.tunnel)} — tunnel shops are mostly weekday daytime` : 'Street level'}</div></div><a href="#" id="sMap" class="ds-mini">Map</a></div>
+    <div class="ds-row"><span>🕒</span><div>${o.known ? `<b class="${o.open ? 'ok' : 'no'}">${esc(o.label)}</b>` : '<b>Hours</b>'}<div class="meta">${esc(r.hours || 'Not listed')}${r.corrected ? ' · from the restaurant' : ''}</div></div></div>
+    ${r.phone ? `<div class="ds-row"><span>📞</span><div><a href="tel:${esc(tel)}">${esc(r.phone)}</a></div></div>` : ''}
+    ${r.website ? `<div class="ds-row"><span>🌐</span><div><a href="${esc(r.website)}" target="_blank" rel="noopener">${esc(r.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '').slice(0, 38))}</a></div></div>` : ''}
+  </div>
+
+  ${hh ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div><b>${esc(hh.when)}</b><div style="margin-top:4px">${esc(hh.deals)}</div><div class="meta" style="margin-top:6px"><a href="${esc(hh.source)}" target="_blank" rel="noopener">${esc(new URL(hh.source).hostname.replace('www.', ''))}</a> · ${hh.confidence === 'verify' ? 'double-check before you go' : esc(hh.confidence)} · checked ${esc(HH.checked)}</div></div>`
+    : r.meals.includes('Happy Hour') ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div>Listed as offering happy hour — times and prices aren't verified yet. <a href="${L.specials}" target="_blank" rel="noopener">Look up today's deals</a></div>` : ''}
+
+  ${r.note || r.tryit ? `<div class="ds-card"><div class="ds-cap">About</div>${r.note ? `<div>${esc(r.note)}</div>` : ''}${r.tryit ? `<div class="meta" style="margin-top:6px"><b>Try:</b> ${esc(r.tryit)}</div>` : ''}
+    <div class="tags" style="margin-top:8px">${[...r.cuisines, ...r.meals].map((c) => `<span class="tag">${esc(c)}</span>`).join('')}</div></div>` : ''}
+
+  <div class="ds-quick">
+    <button class="ds-chip" id="sFav">${favs.has(r.name) ? '♥ Saved' : '♡ Save'}</button>
+    <button class="ds-chip" id="sGo">✅ I'm going${visits[r.name] ? ` · ${visits[r.name]}×` : ''}</button>
+    <button class="ds-chip" id="sDay">🗓️ Add to today</button>
+  </div>
   <button class="btn" id="sAsk" style="margin-top:10px;width:100%;display:none">✨ What should I order here?</button>
   <div class="ai h" id="sAi"></div>
-  <p class="disclaim">${r.extraSource ? `Not in the Downtown Houston directory — added from <a href="${esc(r.extraSource)}" target="_blank" rel="noopener">${esc(new URL(r.extraSource).hostname)}</a>. ` : ''}Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's notes. Menus and specials change — use the links for the latest.</p>`;
+
+  <details class="ds-more"><summary>More links</summary>
+    ${ext(N.apple, 'Directions in Apple Maps', '')}
+    ${ext(N.google, 'Directions in Google Maps', '🗺️')}
+    ${ext(L.specials, "Today's specials", '🏷️')}
+    ${ext(L.ig, 'Instagram', '📸')}
+    ${r.facebook ? ext(r.facebook, 'Facebook', '👍') : ''}
+    ${ext(L.reviews, 'Reviews', '⭐')}
+    ${r.url ? ext(r.url, 'Downtown Houston listing', '🏙️') : ''}
+  </details>
+  <p class="disclaim">${r.extraSource ? `Not in the Downtown Houston directory — added from <a href="${esc(r.extraSource)}" target="_blank" rel="noopener">${esc(new URL(r.extraSource).hostname)}</a>. ` : ''}Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's.</p>`;
   $('#sheet').classList.add('on');
   $('#cls').onclick = closeSheet;
   $('#sBack').onclick = () => (from ? listSheet(from.places, from.title, from.walk) : closeSheet());
@@ -466,6 +485,44 @@ $('#nightSort').onchange = (e) => { nightSort = e.target.value; if (nightSort ==
 $('#nightMap').onclick = () => { show('map'); setScene('night'); };
 document.addEventListener('click', (e) => { const w = e.target.closest('[data-walk]'); if (w) walkTo(DATA[+w.dataset.walk]); const o = e.target.closest('.hhcard[data-open], .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
 
+// ---------- Coffee: cafés, espresso bars, tea & boba ----------
+const isCoffee = (r) => /coffee|caf[eé]|espresso|tea\b|boba|roast/i.test(r.type || '') || /coffee|espresso|roaster|starbucks|\bboba\b|\btea\b|kopi|prelude|tenfold|blackwater|boomtown|day 6|slow drip|fifth vessel|three keys/i.test(r.name);
+const COFFEE_F = [
+  { k: 'open', l: '🟢 Open now', f: (r) => isOpen(r) === true },
+  { k: 'local', l: '🏠 Local shops', f: (r) => !/starbucks|corner bakery|einstein|dunkin|panera/i.test(r.name) },
+  { k: 'chain', l: '⭐ Starbucks & chains', f: (r) => /starbucks|corner bakery|einstein|dunkin|panera/i.test(r.name) },
+  { k: 'tea', l: '🧋 Tea & boba', f: (r) => /tea|boba/i.test(r.name + ' ' + r.type) },
+  { k: 'bakery', l: '🥐 Pastries & bakery', f: (r) => /bak|pastr|croissant|bagel|donut/i.test(r.name + ' ' + r.type + ' ' + (r.tryit || '')) },
+  { k: 'tunnel', l: '🚇 In the tunnels', f: (r) => !!r.tunnel },
+  { k: 'street', l: '🏙️ Street level', f: (r) => !r.tunnel },
+];
+let coffeeF = new Set(), coffeeSort = 'now';
+function renderCoffee() {
+  const all = DATA.filter(isCoffee);
+  $('#coffeeChips').innerHTML = COFFEE_F.map((f) => `<button class="chip ${coffeeF.has(f.k) ? 'on' : ''}" data-cf="${f.k}">${f.l}</button>`).join('');
+  const list = all.filter((r) => [...coffeeF].every((k) => COFFEE_F.find((x) => x.k === k).f(r)));
+  const by = { now: (a, b) => (isOpen(b) === true) - (isOpen(a) === true) || (walkMinsTo(a) ?? 99) - (walkMinsTo(b) ?? 99) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
+  list.sort(by[coffeeSort] || by.now);
+  const open = all.filter((r) => isOpen(r) === true).length;
+  $('#coffeeSub').textContent = `${all.length} coffee shops, cafés & tea spots · ${open} open now · ${all.filter((r) => r.tunnel).length} in the tunnels`;
+  $('#coffeeList').innerHTML = list.map((r) => { const o = openLabel(r), w = walkMinsTo(r); return `<div class="card bar">
+    <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
+    <h3>${styleFor(r).emoji} ${esc(r.name)}</h3>
+    <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.venue ? ' · ' + esc(r.venue) : ''}</div>
+    <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${r.tunnel ? '<span class="tag">🚇 Tunnel</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
+    ${r.note ? `<div class="meta" style="margin-top:6px">${esc(r.note)}</div>` : ''}
+    <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`; }).join('') || '<div class="empty">No coffee spots match all of those. Try removing a filter.</div>';
+  $('#coffeeCount').textContent = `${list.length} spot${list.length === 1 ? '' : 's'}`;
+}
+$('#coffeeChips').onclick = (e) => { const b = e.target.closest('[data-cf]'); if (!b) return; const k = b.dataset.cf; coffeeF.has(k) ? coffeeF.delete(k) : coffeeF.add(k); renderCoffee(); };
+$('#coffeeSort').onchange = (e) => { coffeeSort = e.target.value; if (coffeeSort === 'near' && !USER) startLocate(() => renderCoffee()); renderCoffee(); };
+$('#coffeeMap').onclick = () => {
+  show('map'); setScene('day', true); const ids = DATA.filter(isCoffee); city?.setHighlight(new Set(ids.map((r) => r.id)));
+  const bar = $('#mapFound'); bar.innerHTML = `<div><b>☕ Coffee shops</b><div class="meta">${ids.filter((r) => !r.tunnel).length} on the street · ${ids.filter((r) => r.tunnel).length} in the tunnels (switch to Tunnels in ☰ More)</div></div><button class="btn ghost" id="fX">Show all</button>`;
+  bar.classList.add('on'); $('#fX').onclick = () => { bar.classList.remove('on'); city.setHighlight(mapOpen ? new Set(DATA.filter((r) => isOpen(r)).map((r) => r.id)) : null); };
+};
+document.addEventListener('click', (e) => { const o = e.target.closest('#coffeeList .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
+
 // ---------- you are here + walking navigation ----------
 let watchId = null, compass = null;
 const DEMO = { lat: 29.75935, lng: -95.36345, acc: 8, heading: null, demo: true };   // Main Street Square
@@ -497,7 +554,7 @@ function startLocate(cb) {
     USER = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy, heading: compass ?? (pos.coords.heading ?? null) };
     city?.setUser(USER); $('#zloc').classList.add('on'); $('#findMe').classList.add('on');
     if (first) { first = false; cb?.(); }
-    if ($('#v-night').classList.contains('on')) renderNight();
+    if ($('#v-night').classList.contains('on')) renderNight(); if ($('#v-coffee').classList.contains('on')) renderCoffee();
   }, (err) => { watchId = null; $('#zloc').classList.remove('on'); $('#findMe').classList.remove('on'); locHelp(err.code === 1 ? 'denied' : 'error', cb); }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 20000 });
   return true;
 }
@@ -599,7 +656,7 @@ function show(v) {
   document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v));
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
-  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight();
+  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee();
   if (v === 'map') { initMap(); city.resize(); }
   if (v !== 'map') window.scrollTo(0, 0);
   try { history.replaceState(null, '', '#' + v); } catch (e) {}
@@ -655,7 +712,7 @@ async function aboutPlace(r) {
       const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
       if (fix) { Object.assign(o, fix); if (fix.hours) o.corrected = fix.source; o.aliases = fix.aliases || []; o.extraSource = fix.notInDirectory ? fix.source : null; }
       const cats = (p.official && p.official.cats) || {};
-      return { ...p, id: i, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
+      return { ...p, id: i, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
     DATA.forEach((r) => {
       const barish = /\b(bar|lounge|pub|nightclub|club|saloon|tavern|nightlife|speakeasy)\b/i.test(r.type || '');
@@ -664,12 +721,12 @@ async function aboutPlace(r) {
       r.night = r.bar && (barish || barName || !food);            // night map: bars, lounges, clubs
       r.day = !(r.night && !food);                     // day map: anywhere that serves meals
     });
-    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); }
+    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); window._openSheet = (id) => openSheet(id); }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
   renderPick();
-  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night'].includes(h)) show(h);
+  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee'].includes(h)) show(h);
   setupAsk();
 })();
 

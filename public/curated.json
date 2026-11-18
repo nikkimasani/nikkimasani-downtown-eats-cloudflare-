@@ -1,232 +1,4998 @@
 [
-{"id":0,"name":"1600 Bar + Grille","address":"1600 Lamar St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast"],"price":3,"vibes":["client","drinks"],"type":"American","note":"Hilton Americas restaurant near the GRB \u2014 reliable hotel American with a bar.","tryit":"Burgers, salads, breakfast buffet"},
-{"id":1,"name":"40 Below","address":"520 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Bar"],"meals":["Late Night"],"price":2,"vibes":["drinks","date"],"type":"Bar","note":"Subterranean cocktail lounge below Texas Ave \u2014 more drinks than dinner.","tryit":"Cocktails"},
-{"id":2,"name":"Adair Downtown","address":"1000 Louisiana St, Houston, TX","tunnel":null,"cuisines":["American","Bakery & Dessert","Coffee & Tea"],"meals":["Breakfast","Fast Casual","Full Service","Happy Hour","Lunch"],"price":1,"vibes":["caffeine","quick","sweet"],"type":"American","note":"Coffee bar and kitchen with grab-and-go breakfast and lunch.","tryit":"Coffee, breakfast tacos, sandwiches"},
-{"id":3,"name":"Aloha Poke Co","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":[],"price":2,"vibes":["healthy","quick"],"type":"Asian","note":"Build-your-own poke bowls in the GreenStreet area.","tryit":"Poke bowl"},
-{"id":4,"name":"Andes Cafe","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["International","Mexican & Latin"],"meals":["Brunch","Dinner","Fast Casual","Food Hall","Full Service","Lunch"],"price":2,"vibes":["adventurous","date"],"type":"Latin","note":"Ecuadorian/South American cooking from chef David Guerrero \u2014 ceviches, empanadas, arepas.","tryit":"Ceviche, empanadas, lomo saltado"},
-{"id":5,"name":"Artistry","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["American","Deli"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":2,"vibes":["quick"],"type":"American","note":"Sandwiches and small plates inside a food hall.","tryit":"Sandwiches"},
-{"id":6,"name":"Avenida Houston","address":"1001 Avenida De Las Americas, Houston, TX","tunnel":null,"cuisines":["Food & Events"],"meals":[],"price":2,"vibes":["group"],"type":"Food & Events","note":"The plaza in front of the convention center lined with restaurants (Pappadeaux, Grotto, Saltgrass and more).","tryit":"Browse the strip"},
-{"id":7,"name":"Ballpark Cafe at The Westin Houston Downtown","address":"1520 Texas Ave, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Brunch","Dinner","Full Service","Lunch"],"price":2,"vibes":["sports","comfort"],"type":"American","note":"Baseball-themed hotel diner across from Daikin Park.","tryit":"Burgers, all-day breakfast"},
-{"id":8,"name":"Barnaby's Cafe at Market Square","address":"801 Congress St, Houston, TX","tunnel":null,"cuisines":["American","Bakery & Dessert","Cajun & Southern"],"meals":["Brunch","Dinner","Full Service","Lunch","Patio","Pet Friendly"],"price":2,"vibes":["comfort","veg","group"],"type":"American","note":"Houston-favorite neighborhood diner with huge portions and a dog-friendly patio on Market Square.","tryit":"Burgers, salads, chicken-fried steak, dessert"},
-{"id":9,"name":"Bayou & Bottle","address":"1300 Lamar St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Brunch","Dinner","Full Service","Happy Hour","Late Night","Lunch"],"price":3,"vibes":["drinks","client"],"type":"American","note":"Four Seasons bourbon bar with elevated bar food.","tryit":"Bourbon flights, burger"},
-{"id":10,"name":"Benihana","address":"1318 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Japanese & Sushi"],"meals":["Dinner","Full Service","Happy Hour","Late Night","Lunch"],"price":3,"vibes":["group","date"],"type":"Japanese","note":"Teppanyaki theater \u2014 chefs cook at the table. Good for groups and celebrations.","tryit":"Hibachi chicken/steak combos, fried rice"},
-{"id":11,"name":"Best Bites Tours","address":"700 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Food Tour"],"meals":[],"price":3,"vibes":["adventurous","group"],"type":"Food Tour","note":"Guided downtown food tours with tastings at several stops.","tryit":"Book a tour"},
-{"id":12,"name":"Biggio's Sports Bar","address":"1777 Walker St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Full Service","Happy Hour","Lunch","Patio"],"price":2,"vibes":["sports","drinks","group"],"type":"American","note":"Marriott Marquis sports bar named for Craig Biggio \u2014 big screens and game-day crowds.","tryit":"Wings, burgers, nachos"},
-{"id":13,"name":"Birraporetti's","address":"500 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Italian"],"meals":["Dinner","Happy Hour","Late Night","Lunch"],"price":2,"vibes":["comfort","sports","drinks"],"type":"Italian","note":"Old-school Italian-American pub near the theaters \u2014 handy pre-show.","tryit":"Pizza, pasta, garlic rolls"},
-{"id":14,"name":"Birria Los Primos","address":"1010 Prairie St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Dinner","Fast Casual","Food Hall","Late Night","Lunch"],"price":1,"vibes":["spicy","comfort","quick"],"type":"Mexican","note":"Birria tacos with consomm\u00e9, inside Underground Hall.","tryit":"Quesabirria + consomm\u00e9"},
-{"id":15,"name":"The Bistro","address":"916 Dallas St, Houston, TX","tunnel":null,"cuisines":["American","Coffee & Tea"],"meals":["Breakfast","Dinner","Fast Casual","Lunch"],"price":2,"vibes":["quick","caffeine"],"type":"American","note":"Caf\u00e9 for breakfast and lunch.","tryit":"Sandwiches, coffee"},
-{"id":16,"name":"Boomtown Coffee","address":"800 Capitol St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":["Food Hall"],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Houston-roasted coffee shop with a tunnel location too.","tryit":"Latte, cold brew"},
-{"id":17,"name":"Brasserie Du Parc","address":"1440 Lamar St, Houston, TX","tunnel":null,"cuisines":["French"],"meals":["Dinner","Full Service","Lunch"],"price":3,"vibes":["date","client"],"type":"French","note":"Parisian-style brasserie across from Discovery Green.","tryit":"Steak frites, French onion soup, croque monsieur"},
-{"id":18,"name":"Bubble Boba","address":"909 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert","Coffee & Tea"],"meals":["Breakfast","Brunch","Lunch","Patio"],"price":1,"vibes":["sweet"],"type":"Boba","note":"Bubble tea and snacks.","tryit":"Milk tea"},
-{"id":19,"name":"Bullritos","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["Fast Food","Mexican & Latin"],"meals":["Lunch"],"price":1,"vibes":["quick","group"],"type":"Mexican","note":"Build-your-own burritos and bowls.","tryit":"Burrito bowl"},
-{"id":20,"name":"Bun Slut","address":"1010 Prairie St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Fast Casual","Food Hall","Late Night","Lunch"],"price":2,"vibes":["comfort","adventurous"],"type":"American","note":"Over-the-top burgers and loaded buns inside Underground Hall.","tryit":"Signature burger"},
-{"id":21,"name":"Bungalow","address":"909 Texas Ave, Houston, TX","tunnel":null,"cuisines":["American","Seafood","Steakhouse"],"meals":["Dinner","Full Service","Happy Hour","Late Night"],"price":3,"vibes":["drinks","date"],"type":"Seafood","note":"Steak, seafood and cocktails \u2014 relocated in Oct 2026 from 405 Main St to The Rice building at 909 Texas Ave.","tryit":"Seafood plates, cocktails"},
-{"id":22,"name":"Cellar 7","address":"610 Main St, Houston, TX","tunnel":null,"cuisines":["American","Seafood"],"meals":["Brunch","Dinner","Full Service","Happy Hour","Lunch"],"price":3,"vibes":["date","drinks"],"type":"American","note":"Wine bar and restaurant in the District7/Le M\u00e9ridien area.","tryit":"Wine flights, small plates"},
-{"id":23,"name":"Chick-Fil-A","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","comfort"],"type":"Fast Food","note":"Chicken sandwiches \u2014 closed Sundays.","tryit":"Spicy chicken sandwich"},
-{"id":24,"name":"China Garden","address":"1602 Leeland St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":["Dinner","Full Service","Lunch"],"price":2,"vibes":["comfort","group"],"type":"Chinese","note":"Decades-old downtown Chinese institution known for its egg rolls.","tryit":"Egg rolls, honey garlic chicken"},
-{"id":25,"name":"Chipotle","address":"909 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Fast Food","Mexican & Latin"],"meals":["Dinner","Fast Casual","Lunch"],"price":1,"vibes":["quick","healthy"],"type":"Mexican","note":"Burrito and bowl chain.","tryit":"Bowl"},
-{"id":26,"name":"ChopnBlok","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["International"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":2,"vibes":["adventurous","spicy"],"type":"West African","note":"West African flavors from chef Ope Amosu in Post HTX.","tryit":"Jollof rice bowl, suya"},
-{"id":27,"name":"Ciccio's Pasta","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["International","Italian"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":2,"vibes":["comfort"],"type":"Italian","note":"Fresh pasta counter at Post HTX.","tryit":"Cacio e pepe, rag\u00f9"},
-{"id":28,"name":"Clandestina","address":"1008 Prairie St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":[],"price":2,"vibes":["drinks","date"],"type":"Mexican","note":"Hidden mezcal-and-taco bar off Prairie.","tryit":"Mezcal, tacos"},
-{"id":29,"name":"The Clock - Steak & Lounge","address":"908 Congress St, Houston, TX","tunnel":null,"cuisines":["International","Steakhouse"],"meals":["Happy Hour"],"price":3,"vibes":["drinks","date","upscale"],"type":"Steakhouse","note":"Steak and lounge spot near Market Square.","tryit":"Steaks, cocktails"},
-{"id":30,"name":"Common Grounds Uncommon Coffee","address":"1401 McKinney St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee shop near the convention district.","tryit":"Espresso drinks"},
-{"id":31,"name":"Cooking Girl","address":"414 Travis St, Houston, TX","tunnel":null,"cuisines":["Japanese & Sushi"],"meals":[],"price":2,"vibes":["spicy","adventurous","group"],"type":"Chinese","note":"Sichuan/Hunan cooking \u2014 bring friends and share.","tryit":"Dry-pot dishes, mapo tofu, cumin lamb"},
-{"id":32,"name":"Corner Bakery Cafe","address":"1000 Main St, Houston, TX","tunnel":null,"cuisines":["American","Bakery & Dessert","Coffee & Tea","Deli"],"meals":["Breakfast","Brunch","Fast Casual","Full Service","Lunch","Patio","Pet Friendly"],"price":1,"vibes":["quick","veg"],"type":"Bakery Caf\u00e9","note":"Bakery caf\u00e9 chain for breakfast and soups/sandwiches.","tryit":"Breakfast panini, soups"},
-{"id":33,"name":"Cueva","address":"1777 Walker St, Houston, TX","tunnel":null,"cuisines":["Mediterranean"],"meals":[],"price":2,"vibes":["drinks","date"],"type":"Mediterranean","note":"Spanish/Mediterranean tapas in the Marriott Marquis.","tryit":"Tapas, paella"},
-{"id":34,"name":"Cultivated F+B","address":"701 Texas Ave, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Dinner","Full Service","Late Night"],"price":3,"vibes":["date","drinks"],"type":"American","note":"Hotel Alessandra's restaurant \u2014 seasonal, refined American.","tryit":"Seasonal plates"},
-{"id":35,"name":"Day 6 Coffee Co.","address":"910 Prairie St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert","Coffee & Tea"],"meals":["Breakfast","Fast Casual","Lunch"],"price":1,"vibes":["caffeine","sweet"],"type":"Coffee","note":"Coffee and pastries.","tryit":"Latte, pastry"},
-{"id":36,"name":"Diana American Grill","address":"800 Bagby St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Full Service","Lunch"],"price":2,"vibes":["client"],"type":"American","note":"Hotel restaurant near Bagby.","tryit":"American plates"},
-{"id":37,"name":"The District7 Restaurant","address":"610 Main St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":[],"price":2,"vibes":["drinks"],"type":"American","note":"Restaurant in the District7 complex on Main.","tryit":"Grill plates"},
-{"id":38,"name":"DistrictMarket","address":"610 Main St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Brunch","Dinner","Happy Hour","Lunch"],"price":2,"vibes":["quick","drinks"],"type":"American","note":"Market-style caf\u00e9 and bar on Main.","tryit":"Breakfast, sandwiches"},
-{"id":39,"name":"Dive Lounge","address":"410 Bagby St, Houston, TX","tunnel":null,"cuisines":["Bar"],"meals":["Fast Casual","Happy Hour"],"price":2,"vibes":["drinks"],"type":"Bar","note":"Bar with bites near Bagby.","tryit":"Bar food"},
-{"id":40,"name":"Domino's Pizza","address":"975 McKinney St, Houston, TX","tunnel":null,"cuisines":["Pizza"],"meals":["Dinner","Lunch"],"price":1,"vibes":["quick"],"type":"Pizza","note":"Pizza delivery chain.","tryit":"Pizza"},
-{"id":41,"name":"Doozo Dumplings & Noodles","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":["Fast Casual","Lunch"],"price":2,"vibes":["comfort","quick"],"type":"Asian","note":"Dumplings and noodle bowls \u2014 popular lunch spot.","tryit":"Pork dumplings, beef noodle soup"},
-{"id":42,"name":"Drunken Pho","address":"409 Travis St, Houston, TX","tunnel":null,"cuisines":["International"],"meals":["Dinner","Fast Casual","Lunch"],"price":2,"vibes":["comfort"],"type":"Vietnamese","note":"Pho and Vietnamese favorites.","tryit":"Pho, banh mi"},
-{"id":43,"name":"Edgar's Hermano","address":"1700 Smith St, Houston, TX","tunnel":null,"cuisines":["Fast Food","Mexican & Latin"],"meals":["Breakfast","Dinner","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Tacos and Mexican quick bites.","tryit":"Breakfast tacos"},
-{"id":44,"name":"Edible Arrangements","address":"225 Main St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":[],"price":2,"vibes":["sweet"],"type":"Dessert","note":"Fruit arrangements and dipped fruit \u2014 gifts more than a meal.","tryit":"Chocolate-dipped strawberries"},
-{"id":45,"name":"Eighteen Twenty Lounge","address":"1820 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bar"],"meals":["Happy Hour","Late Night"],"price":2,"vibes":["drinks"],"type":"Bar","note":"Lounge in EaDo by the stadium.","tryit":"Cocktails"},
-{"id":46,"name":"Einstein Bros Bagels","address":"1200 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","caffeine"],"type":"Bakery Caf\u00e9","note":"Bagel chain.","tryit":"Bagel sandwiches"},
-{"id":47,"name":"El Taco Rico","address":"1818 Hamilton St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Breakfast","Dinner","Late Night","Lunch"],"price":1,"vibes":["quick","spicy"],"type":"Mexican","note":"Taqueria open late.","tryit":"Street tacos"},
-{"id":48,"name":"El Tiempo Cantina","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":[],"price":2,"vibes":["group","drinks"],"type":"Tex-Mex","note":"Houston Tex-Mex family (Laurenzo's) \u2014 fajitas and big margaritas.","tryit":"Fajitas, margaritas"},
-{"id":49,"name":"Elotex Cup","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["International","Mexican & Latin"],"meals":["Fast Casual","Food Hall"],"price":1,"vibes":["quick","spicy"],"type":"Mexican","note":"Elote (Mexican street corn) in a cup and snacks.","tryit":"Elote cup"},
-{"id":50,"name":"Encore Cafe at Jones Hall","address":"615 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Italian"],"meals":["Full Service"],"price":2,"vibes":["date"],"type":"Caf\u00e9","note":"Pre-show caf\u00e9 inside Jones Hall.","tryit":"Pre-show bites"},
-{"id":51,"name":"Fabian's Latin Flavors","address":"301 Main St, Houston, TX","tunnel":null,"cuisines":["International","Mexican & Latin"],"meals":["Brunch","Dinner","Happy Hour","Patio"],"price":2,"vibes":["drinks","group"],"type":"Latin","note":"Latin caf\u00e9/bar on Main with a patio and coffee by day.","tryit":"Empanadas, cafecito, cocktails"},
-{"id":52,"name":"Federal American Grill","address":"1212 McKinney St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Brunch","Dinner","Full Service","Happy Hour","Lunch","Patio"],"price":3,"vibes":["client","drinks"],"type":"American","note":"Upscale casual American grill with a bar crowd.","tryit":"Burgers, steaks, brunch"},
-{"id":53,"name":"Fifth Vessel Coffee Co.","address":"104 Main St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee shop on north Main.","tryit":"Espresso drinks"},
-{"id":54,"name":"FireNoodz","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["spicy","quick"],"type":"Asian","note":"Fiery noodle bowls in a food hall.","tryit":"Spicy noodles"},
-{"id":55,"name":"Flower & Cream","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":["Food Hall"],"price":1,"vibes":["sweet"],"type":"Dessert","note":"Ice cream shop at Post HTX.","tryit":"Ice cream"},
-{"id":56,"name":"Flying Saucer","address":"705 Main St, Houston, TX","tunnel":null,"cuisines":["American","Pub Fare"],"meals":["Dinner","Lunch"],"price":2,"vibes":["drinks","group"],"type":"Pub","note":"Beer hall with a huge tap list.","tryit":"Beer flights, pretzels"},
-{"id":57,"name":"Folk Thai Kitchen","address":"914 Main St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":["Dinner","Fast Casual","Lunch"],"price":2,"vibes":["spicy"],"type":"Thai","note":"Thai kitchen on Main.","tryit":"Pad see ew, curries"},
-{"id":58,"name":"Frank's Pizzeria","address":"417 Travis St, Houston, TX","tunnel":null,"cuisines":["Fast Food","Italian","Pizza"],"meals":["Dinner","Fast Casual","Lunch"],"price":1,"vibes":["quick","comfort"],"type":"Pizza","note":"NY-style slices; a late-night downtown staple.","tryit":"Slice, garlic knots"},
-{"id":59,"name":"GELU Italian Ice","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":["Food Hall"],"price":1,"vibes":["sweet"],"type":"Dessert","note":"Italian ice and custard.","tryit":"Gelati"},
-{"id":60,"name":"Grotto Ristorante","address":"1001 Avenida De Las Americas, Houston, TX","tunnel":null,"cuisines":["International","Italian","Pizza"],"meals":["Dinner","Full Service","Happy Hour"],"price":3,"vibes":["group","date"],"type":"Italian","note":"Landry's Italian on Avenida.","tryit":"Pizza, pasta"},
-{"id":61,"name":"Grove Market & Provisions","address":"1600 McKinney St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Fast Casual","Lunch","Patio","Pet Friendly"],"price":1,"vibes":["quick","healthy"],"type":"American","note":"Grab-and-go market at Discovery Green.","tryit":"Sandwiches, salads"},
-{"id":62,"name":"The Grove","address":"1611 Lamar St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Full Service","Happy Hour","Lunch","Patio","Pet Friendly"],"price":3,"vibes":["date","client","drinks"],"type":"American","note":"Glassy restaurant overlooking Discovery Green with a park-side patio.","tryit":"Seasonal American, rooftop drinks"},
-{"id":63,"name":"Guadalajara","address":"1201 San Jacinto St, Houston, TX","tunnel":null,"cuisines":["Tex-Mex"],"meals":[],"price":2,"vibes":["group"],"type":"Tex-Mex","note":"Houston Tex-Mex chain.","tryit":"Enchiladas, fajitas"},
-{"id":64,"name":"Guard & Grace","address":"500 Dallas St, Houston, TX","tunnel":null,"cuisines":["Steakhouse"],"meals":["Dinner","Full Service","Lunch"],"price":4,"vibes":["upscale","client","date"],"type":"Steakhouse","note":"Modern steakhouse with a dramatic dining room.","tryit":"Filet flight, oak-fired steaks"},
-{"id":65,"name":"Gulf & Prairie","address":"1200 Louisiana St, Houston, TX","tunnel":null,"cuisines":["American","Seafood","Steakhouse"],"meals":["Breakfast","Brunch","Dinner","Full Service","Happy Hour","Lunch"],"price":3,"vibes":["client"],"type":"Seafood & Steak","note":"Hotel restaurant (Marriott) focused on Gulf seafood and Texas beef.","tryit":"Gulf fish, steak"},
-{"id":66,"name":"Hearsay Market Square","address":"218 Travis St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Full Service","Happy Hour","Late Night","Lunch"],"price":2,"vibes":["drinks","date"],"type":"American","note":"Gastro-lounge in a historic building on Market Square.","tryit":"Brunch, cocktails"},
-{"id":67,"name":"Hearsay on the Green","address":"1515 Dallas St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Brunch","Dinner","Full Service","Happy Hour","Lunch"],"price":2,"vibes":["drinks","group"],"type":"American","note":"Hearsay's Discovery Green location.","tryit":"Brunch, cocktails"},
-{"id":68,"name":"House of Blues","address":"1204 Caroline St, Houston, TX","tunnel":null,"cuisines":["American","Pub Fare"],"meals":[],"price":2,"vibes":["music","group"],"type":"Southern","note":"Music venue with a restaurant \u2014 catch a show.","tryit":"Gumbo, burgers"},
-{"id":69,"name":"Hull & Oak at Hotel Laura","address":"1070 Dallas St, Houston, TX","tunnel":null,"cuisines":["American","Cajun & Southern"],"meals":["Breakfast","Brunch","Happy Hour","Lunch"],"price":3,"vibes":["date","drinks"],"type":"Southern","note":"Hotel Laura's restaurant and bar.","tryit":"Seasonal southern plates"},
-{"id":70,"name":"ICE ICE BOBA","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["sweet"],"type":"Boba","note":"Bubble tea at Post HTX.","tryit":"Boba tea"},
-{"id":71,"name":"Irma's Original","address":"22 N Chenevert St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Breakfast","Dinner","Full Service","Lunch","Patio"],"price":2,"vibes":["comfort","client"],"type":"Mexican","note":"Legendary home-style Mexican spot; no fixed menu \u2014 Irma's family tells you what's cooking.","tryit":"Daily specials, lemonade"},
-{"id":72,"name":"Irma's Southwest","address":"1475 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Dinner","Full Service","Lunch"],"price":2,"vibes":["group","drinks"],"type":"Mexican","note":"Irma's larger sibling near the stadium.","tryit":"Enchiladas, margaritas"},
-{"id":73,"name":"Island Grill","address":"1201 Louisiana St, Houston, TX","tunnel":null,"cuisines":["American","Juice & Smoothies","Mediterranean","Pizza"],"meals":["Breakfast","Dinner","Fast Casual","Lunch"],"price":1,"vibes":["healthy","veg"],"type":"Mediterranean","note":"Mediterranean-leaning grill with smoothies.","tryit":"Wraps, pizza, smoothies"},
-{"id":74,"name":"Jason's Deli","address":"901 McKinney St, Houston, TX","tunnel":null,"cuisines":["American","Bakery & Dessert","Coffee & Tea","Deli","Fast Food"],"meals":["Brunch","Fast Casual","Lunch"],"price":1,"vibes":["quick","healthy"],"type":"Deli","note":"Deli chain with a salad bar.","tryit":"Salad bar, sandwiches"},
-{"id":75,"name":"Jimmy John's","address":"820 Main St, Houston, TX","tunnel":null,"cuisines":["Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Fast sub sandwiches.","tryit":"Subs"},
-{"id":76,"name":"Johnny Good Burger","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":[],"price":1,"vibes":["comfort"],"type":"Burgers","note":"Burgers at Post HTX.","tryit":"Burger"},
-{"id":77,"name":"Joystix","address":"1820 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bar"],"meals":["Patio"],"price":2,"vibes":["drinks","group"],"type":"Bar","note":"Arcade bar \u2014 games and drinks.","tryit":"Arcade games"},
-{"id":78,"name":"Kokoro","address":"409 Travis St, Houston, TX","tunnel":null,"cuisines":["International","Japanese & Sushi"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":2,"vibes":["adventurous"],"type":"Japanese","note":"Japanese snacks and bowls.","tryit":"Japanese bowls"},
-{"id":79,"name":"Kulture","address":"701 Avenida De Las Americas, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Brunch","Dinner","Fast Casual","Happy Hour","Late Night","Lunch"],"price":2,"vibes":["comfort","drinks","group"],"type":"Southern","note":"Soul food and Black-diaspora cooking from Marcus Davis.","tryit":"Fried chicken, mac & cheese"},
-{"id":80,"name":"La Calle","address":"909 Franklin St, Houston, TX","tunnel":null,"cuisines":["International","Mexican & Latin"],"meals":["Dinner","Fast Casual","Happy Hour","Late Night","Lunch"],"price":1,"vibes":["spicy","quick","drinks"],"type":"Mexican","note":"Mexico City-style street tacos with a late-night bar.","tryit":"Tacos al pastor"},
-{"id":81,"name":"La Diabla Patio Bar","address":"300 Main St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Patio"],"price":2,"vibes":["drinks"],"type":"Bar","note":"Patio bar on Main.","tryit":"Cocktails"},
-{"id":82,"name":"La Fisheria","address":"213 Milam St, Houston, TX","tunnel":null,"cuisines":["International","Mexican & Latin","Seafood"],"meals":["Dinner","Full Service","Lunch"],"price":3,"vibes":["date","adventurous"],"type":"Seafood","note":"Mexican coastal seafood from chef Aquiles Ch\u00e1vez.","tryit":"Ceviche, aguachile"},
-{"id":83,"name":"La Palapa","address":"1110 Preston St, Houston, TX","tunnel":null,"cuisines":["Fast Food","International","Mexican & Latin"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Taco truck near the convention center.","tryit":"Breakfast tacos"},
-{"id":84,"name":"Layne's Chicken Fingers","address":"609 Main St, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Fast Casual"],"price":1,"vibes":["comfort","quick"],"type":"Fast Food","note":"Chicken fingers and Texas toast.","tryit":"Chicken fingers"},
-{"id":85,"name":"Lea Jane's Hot Chicken","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["American","Cajun & Southern"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["spicy","comfort"],"type":"Southern","note":"Nashville hot chicken at Post HTX.","tryit":"Hot chicken sandwich"},
-{"id":86,"name":"Leaf & Grain","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["healthy","quick","veg"],"type":"Salads","note":"Salad and grain bowls.","tryit":"Grain bowl"},
-{"id":87,"name":"Line & Lariat","address":"220 Main St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Full Service","Happy Hour","Lunch"],"price":3,"vibes":["date","client"],"type":"American","note":"Restaurant in the historic Hotel Icon lobby.","tryit":"Seasonal American"},
-{"id":88,"name":"Little Dipper","address":"304 Main St, Houston, TX","tunnel":null,"cuisines":["Bar"],"meals":["Patio"],"price":2,"vibes":["drinks"],"type":"Bar","note":"Main Street bar with a patio.","tryit":"Cocktails"},
-{"id":89,"name":"Lobby Bar @ Hilton Americas","address":"1600 Lamar St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Full Service"],"price":2,"vibes":["drinks","client"],"type":"Bar","note":"Hilton Americas lobby bar.","tryit":"Cocktails"},
-{"id":90,"name":"Lone Star Saloon","address":"1900 Travis St, Houston, TX","tunnel":null,"cuisines":["Pub Fare"],"meals":[],"price":1,"vibes":["drinks"],"type":"Bar","note":"Classic Texas dive bar.","tryit":"Beer"},
-{"id":91,"name":"Lone Star Taco","address":"1001 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Fast Food","Mexican & Latin"],"meals":["Breakfast","Dinner","Late Night","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Tacos near Texas Ave.","tryit":"Tacos"},
-{"id":92,"name":"Loy Loy Dim Sum","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Asian","International"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":2,"vibes":["comfort"],"type":"Chinese","note":"Dim sum counter at Post HTX.","tryit":"Dumplings, bao"},
-{"id":93,"name":"Luv 'Em Leches","address":"1010 Prairie St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":["Food Hall","Late Night"],"price":1,"vibes":["sweet"],"type":"Dessert","note":"Tres leches desserts.","tryit":"Tres leches"},
-{"id":94,"name":"Lyric Market","address":"411 Smith St, Houston, TX","tunnel":null,"cuisines":["Food Hall"],"meals":["Food Hall"],"price":2,"vibes":["group"],"type":"Food Hall","note":"Lyric Centre food hall area.","tryit":"Browse"},
-{"id":95,"name":"Mademoiselle Louise Bakery","address":"1725 Main St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert","Coffee & Tea"],"meals":[],"price":1,"vibes":["sweet","caffeine"],"type":"Bakery","note":"French-style bakery in Midtown edge.","tryit":"Croissants, pastries"},
-{"id":96,"name":"Main Kitchen & 806 Lounge","address":"806 Main St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Dinner","Full Service"],"price":3,"vibes":["client","date"],"type":"American","note":"JW Marriott restaurant and lounge.","tryit":"American plates"},
-{"id":97,"name":"Mamajuana Cafe","address":"909 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Dinner","Late Night"],"price":2,"vibes":["drinks","group","spicy"],"type":"Latin","note":"Latin/Dominican-style restaurant and lounge.","tryit":"Mofongo"},
-{"id":98,"name":"McCormick & Schmick's","address":"1201 Fannin St, Houston, TX","tunnel":null,"cuisines":["American","Seafood","Steakhouse"],"meals":["Dinner","Full Service","Happy Hour","Lunch","Patio","Pet Friendly"],"price":3,"vibes":["client"],"type":"Seafood","note":"Seafood chain with patio and happy hour.","tryit":"Fish, oysters"},
-{"id":99,"name":"Mendocino Farms","address":"609 Main St, Houston, TX","tunnel":null,"cuisines":["American","Deli"],"meals":["Dinner","Fast Casual","Lunch"],"price":2,"vibes":["healthy","veg","quick"],"type":"Deli","note":"Elevated sandwiches and salads.","tryit":"Sandwich + salad combos"},
-{"id":100,"name":"Mendocino Farms","address":"1200 Smith St, Houston, TX","tunnel":null,"cuisines":["American","Deli"],"meals":["Dinner","Fast Casual","Lunch"],"price":2,"vibes":["healthy","veg","quick"],"type":"Deli","note":"Elevated sandwiches and salads.","tryit":"Sandwich + salad combos"},
-{"id":101,"name":"MKT BAR","address":"1001 Austin St, Houston, TX","tunnel":null,"cuisines":["International"],"meals":["Brunch","Dinner","Full Service","Happy Hour","Lunch"],"price":2,"vibes":["drinks","quick"],"type":"International","note":"Bar inside Phoenicia Specialty Foods.","tryit":"Flatbreads, wine"},
-{"id":102,"name":"The Moonshiners Southern Table + Bar","address":"1000 Prairie St, Houston, TX","tunnel":null,"cuisines":["American","Cajun & Southern"],"meals":["Full Service","Happy Hour","Late Night","Lunch","Patio"],"price":2,"vibes":["comfort","drinks","group"],"type":"Southern","note":"Southern comfort food and whiskey near Main.","tryit":"Chicken & waffles"},
-{"id":103,"name":"Morton's The Steakhouse","address":"1001 McKinney St, Houston, TX","tunnel":null,"cuisines":["Steakhouse"],"meals":["Dinner","Full Service"],"price":4,"vibes":["upscale","client"],"type":"Steakhouse","note":"Classic steakhouse chain.","tryit":"Steaks"},
-{"id":104,"name":"Murphy's Deli","address":"601 Jefferson St, Houston, TX","tunnel":null,"cuisines":["American","Deli","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Houston deli chain.","tryit":"Sandwiches"},
-{"id":105,"name":"Murphy's Deli","address":"811 Main St, Houston, TX","tunnel":null,"cuisines":["American","Deli","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Houston deli chain.","tryit":"Sandwiches"},
-{"id":106,"name":"The Nash","address":"1111 Rusk St, Houston, TX","tunnel":null,"cuisines":["International"],"meals":["Dinner","Full Service","Happy Hour","Lunch"],"price":3,"vibes":["date","drinks"],"type":"American","note":"Restaurant and bar on Rusk St.","tryit":"Seasonal plates"},
-{"id":107,"name":"Nyam Nyam","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":["Dinner","Food Hall","Lunch"],"price":2,"vibes":["adventurous"],"type":"Asian","note":"Asian street food in a food hall.","tryit":"Rice bowls"},
-{"id":108,"name":"Oasis","address":"411 Smith St, Houston, TX","tunnel":null,"cuisines":["Juice & Smoothies"],"meals":["Breakfast","Dinner","Food Hall","Lunch"],"price":1,"vibes":["healthy","veg"],"type":"Juice & Bowls","note":"Bowls and juices.","tryit":"Smoothie bowls"},
-{"id":109,"name":"Orange Taco","address":"1221 McKinney St, Houston, TX","tunnel":null,"cuisines":["American","Asian","Mexican & Latin"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","healthy"],"type":"Asian-Mex","note":"Asian-inspired tacos and bowls.","tryit":"Korean tacos"},
-{"id":110,"name":"Osso & Kristalla","address":"1515 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Italian"],"meals":["Brunch","Dinner","Happy Hour","Lunch","Patio"],"price":3,"vibes":["date","group"],"type":"Italian","note":"Italian trattoria and pizzeria near Discovery Green.","tryit":"Pizza, pasta, gelato"},
-{"id":111,"name":"Otto's BBQ","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["BBQ"],"meals":["Breakfast","Fast Casual","Lunch"],"price":1,"vibes":["comfort"],"type":"BBQ","note":"Houston BBQ and burger institution.","tryit":"Brisket, burgers"},
-{"id":112,"name":"The Palm","address":"1201 Fannin St, Houston, TX","tunnel":null,"cuisines":["American","Seafood","Steakhouse"],"meals":["Dinner","Full Service","Happy Hour","Lunch"],"price":4,"vibes":["upscale","client"],"type":"Steakhouse","note":"Classic steak and lobster house.","tryit":"Lobster, steak"},
-{"id":113,"name":"Papalo Taqueria","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":[],"price":1,"vibes":["quick","spicy"],"type":"Mexican","note":"Tacos in Finn Hall.","tryit":"Tacos"},
-{"id":114,"name":"Pappadeaux","address":"1001 Avenida De Las Americas, Houston, TX","tunnel":null,"cuisines":["Cajun & Southern","Seafood"],"meals":["Dinner","Full Service","Patio"],"price":3,"vibes":["group","comfort"],"type":"Cajun","note":"Cajun seafood (Pappas).","tryit":"Fried catfish, crawfish \u00e9touff\u00e9e"},
-{"id":115,"name":"Pappas BBQ","address":"1217 Pierce St, Houston, TX","tunnel":null,"cuisines":["BBQ"],"meals":["Dinner","Full Service","Lunch","Patio","Pet Friendly"],"price":2,"vibes":["comfort"],"type":"BBQ","note":"Pappas barbecue.","tryit":"Brisket plate"},
-{"id":116,"name":"Pappas Bros. Steakhouse","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["Steakhouse"],"meals":["Dinner","Full Service"],"price":4,"vibes":["upscale","client","date"],"type":"Steakhouse","note":"Top-tier steakhouse with a huge wine list.","tryit":"Dry-aged steak"},
-{"id":117,"name":"Pappasito's","address":"1600 Lamar St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Dinner","Full Service","Late Night","Lunch","Patio","Pet Friendly"],"price":2,"vibes":["group","drinks"],"type":"Tex-Mex","note":"Pappas Tex-Mex \u2014 big fajitas and margaritas.","tryit":"Fajitas"},
-{"id":118,"name":"Part & Parcel","address":"1700 Smith St, Houston, TX","tunnel":null,"cuisines":["Pub Fare"],"meals":[],"price":2,"vibes":["drinks"],"type":"Pub","note":"Bar with pub fare.","tryit":"Pub fare"},
-{"id":119,"name":"Perbacco","address":"700 Milam St, Houston, TX","tunnel":null,"cuisines":["Italian"],"meals":["Dinner","Full Service","Lunch"],"price":2,"vibes":["client"],"type":"Italian","note":"Long-running downtown Italian lunch spot.","tryit":"Pasta"},
-{"id":120,"name":"Petite Lucie","address":"301 Milam St, Houston, TX","tunnel":null,"cuisines":["French"],"meals":[],"price":2,"vibes":["date"],"type":"French","note":"Small French caf\u00e9/bakery.","tryit":"Pastries"},
-{"id":121,"name":"Phoenicia Specialty Foods","address":"1001 Austin St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea","International"],"meals":["Fast Casual","Patio"],"price":1,"vibes":["quick","healthy","veg"],"type":"Mediterranean","note":"Mediterranean grocery with hot food and bakery.","tryit":"Shawarma, pastries"},
-{"id":122,"name":"Pizza Zquare","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["Italian","Pizza"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["quick"],"type":"Pizza","note":"Pizza in a food hall.","tryit":"Pizza"},
-{"id":123,"name":"Poke Fresh","address":"507 Dallas St, Houston, TX","tunnel":null,"cuisines":["Fast Food","Japanese & Sushi","Seafood"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["healthy","quick"],"type":"Japanese","note":"Poke bowls.","tryit":"Poke"},
-{"id":124,"name":"Post HTX","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Food Hall"],"meals":["Food Hall"],"price":2,"vibes":["group"],"type":"Food Hall","note":"Huge food hall in the old post office with a rooftop park.","tryit":"Browse"},
-{"id":125,"name":"Potbelly Sandwich Shop","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Toasted sandwich chain.","tryit":"Toasted sandwich"},
-{"id":126,"name":"Potente","address":"1515 Texas Ave, Houston, TX","tunnel":null,"cuisines":["Italian"],"meals":["Dinner","Lunch"],"price":4,"vibes":["upscale","date"],"type":"Italian","note":"Upscale Italian near the stadium.","tryit":"Pasta, steak"},
-{"id":127,"name":"Prelude Coffee & Tea","address":"609 Main St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee and tea.","tryit":"Tea latte"},
-{"id":128,"name":"Proper - A Burger Spot","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Dinner","Food Hall","Lunch"],"price":1,"vibes":["comfort"],"type":"Burgers","note":"Burgers in Finn Hall.","tryit":"Smash burger"},
-{"id":129,"name":"Real Agave","address":"1100 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Dinner","Full Service","Lunch"],"price":2,"vibes":["drinks"],"type":"Mexican","note":"Mexican restaurant and tequila bar.","tryit":"Tacos, tequila"},
-{"id":130,"name":"Return To Sender","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bar"],"meals":["Food Hall"],"price":2,"vibes":["drinks"],"type":"Bar","note":"Bar inside Post HTX.","tryit":"Cocktails"},
-{"id":131,"name":"Roma's Pizza","address":"233 Main St, Houston, TX","tunnel":null,"cuisines":["Italian","Pizza"],"meals":["Dinner","Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"Pizza","note":"Pizza by the slice on Main.","tryit":"Slice"},
-{"id":132,"name":"Rosalie Italian Soul","address":"400 Dallas St, Houston, TX","tunnel":null,"cuisines":["Italian","Pizza"],"meals":["Brunch","Dinner","Full Service","Lunch"],"price":3,"vibes":["date","comfort"],"type":"Italian","note":"Red-sauce Italian at the C. Baldwin hotel.","tryit":"Lasagna, meatballs"},
-{"id":133,"name":"Salata","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["healthy","quick","veg"],"type":"Salads","note":"Salad bar chain.","tryit":"Salad"},
-{"id":134,"name":"Saltgrass Steak House","address":"1001 Avenida De Las Americas, Houston, TX","tunnel":null,"cuisines":["Steakhouse"],"meals":["Dinner","Full Service","Happy Hour","Patio","Pet Friendly"],"price":2,"vibes":["group","comfort"],"type":"Steakhouse","note":"Texas steakhouse chain.","tryit":"Steak, rolls"},
-{"id":135,"name":"Sapporo Japanese Sushi & Bar","address":"801 Congress St, Houston, TX","tunnel":null,"cuisines":["Asian","Japanese & Sushi"],"meals":["Dinner","Full Service","Lunch"],"price":2,"vibes":["date"],"type":"Japanese","note":"Sushi and Japanese.","tryit":"Sushi rolls"},
-{"id":136,"name":"Shake Shack","address":"702 Main St, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Dinner","Fast Casual","Lunch"],"price":1,"vibes":["comfort","quick"],"type":"Burgers","note":"Burger chain.","tryit":"ShackBurger"},
-{"id":137,"name":"Shakkar Bakery","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":[],"price":1,"vibes":["sweet"],"type":"Bakery","note":"Bakery at Post HTX.","tryit":"Pastries"},
-{"id":138,"name":"Shay McElroy's Pub","address":"909 Texas Ave, Houston, TX","tunnel":null,"cuisines":["American","Pub Fare"],"meals":["Happy Hour","Late Night","Patio"],"price":1,"vibes":["drinks","sports"],"type":"Pub","note":"Irish pub on Texas Ave.","tryit":"Pints"},
-{"id":139,"name":"Sire Spirits Social Club","address":"1510 Polk St, Houston, TX","tunnel":null,"cuisines":["Lounge"],"meals":["Full Service"],"price":3,"vibes":["drinks","date"],"type":"Lounge","note":"Upscale social club and lounge.","tryit":"Cocktails"},
-{"id":140,"name":"Slow Drip TX","address":"1625 Main St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee bar.","tryit":"Cold brew"},
-{"id":141,"name":"Soy Pinoy","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Asian","International"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":2,"vibes":["adventurous"],"type":"Filipino","note":"Filipino comfort food at Post HTX.","tryit":"Adobo, lumpia"},
-{"id":142,"name":"Space City Birria Tacos & More","address":"415 Milam St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Dinner","Fast Casual","Lunch"],"price":1,"vibes":["spicy","comfort"],"type":"Mexican","note":"Birria tacos.","tryit":"Quesabirria"},
-{"id":143,"name":"Spindletop","address":"1200 Louisiana St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":[],"price":4,"vibes":["date","upscale"],"type":"American","note":"Revolving restaurant atop the Hyatt Regency.","tryit":"Seafood with skyline views"},
-{"id":144,"name":"Stack Burger","address":"703 St Joseph Pkwy, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["comfort"],"type":"Burgers","note":"Burger shop.","tryit":"Burger"},
-{"id":145,"name":"Starbucks","address":"1600 Lamar St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine","quick"],"type":"Coffee","note":"Coffee chain.","tryit":"Coffee"},
-{"id":146,"name":"Starbucks","address":"914 Dallas St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine","quick"],"type":"Coffee","note":"Coffee chain.","tryit":"Coffee"},
-{"id":147,"name":"Starbucks","address":"1100 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine","quick"],"type":"Coffee","note":"Coffee chain.","tryit":"Coffee"},
-{"id":148,"name":"Starbucks","address":"723 Main St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine","quick"],"type":"Coffee","note":"Coffee chain.","tryit":"Coffee"},
-{"id":149,"name":"Sweetgreen","address":"820 Main St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Fast Casual","Lunch"],"price":2,"vibes":["healthy","veg","quick"],"type":"Salads","note":"Salad bowls.","tryit":"Harvest bowl"},
-{"id":150,"name":"The Sylvie","address":"845 Texas Ave, Houston, TX","tunnel":null,"cuisines":["French"],"meals":["Breakfast","Dinner","Lunch"],"price":3,"vibes":["date"],"type":"French","note":"French-inspired caf\u00e9/restaurant.","tryit":"French plates"},
-{"id":151,"name":"Table 7 Bistro","address":"720 Fannin St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Brunch","Dinner","Full Service","Lunch"],"price":2,"vibes":["client"],"type":"American","note":"Bistro on Fannin.","tryit":"Bistro plates"},
-{"id":152,"name":"Taco Fuego","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["International","Mexican & Latin"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["spicy","quick"],"type":"Mexican","note":"Tacos at Post HTX.","tryit":"Tacos"},
-{"id":153,"name":"Taste Bar & Kitchen","address":"420 Main St, Houston, TX","tunnel":null,"cuisines":["American","Cajun & Southern"],"meals":["Brunch","Dinner","Full Service","Late Night","Lunch"],"price":2,"vibes":["comfort","drinks"],"type":"Southern","note":"Southern kitchen and bar on Main.","tryit":"Southern plates"},
-{"id":154,"name":"Tavern By Hearsay","address":"737 Preston St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Happy Hour","Late Night","Lunch"],"price":2,"vibes":["drinks"],"type":"American","note":"Bar and grill near Market Square.","tryit":"Bar food"},
-{"id":155,"name":"Tenfold Coffee Company","address":"1550 Lamar St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":[],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee shop near Discovery Green.","tryit":"Espresso drinks"},
-{"id":156,"name":"Thai Cafe","address":"917 Franklin St, Houston, TX","tunnel":null,"cuisines":["Asian","International"],"meals":["Dinner","Fast Casual","Full Service","Late Night","Lunch"],"price":1,"vibes":["spicy"],"type":"Thai","note":"Thai caf\u00e9 open late.","tryit":"Pad thai"},
-{"id":157,"name":"Thai Kun","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Asian","International"],"meals":["Dinner","Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["spicy","adventurous"],"type":"Thai","note":"Street-style Thai at Post HTX.","tryit":"Khao man gai"},
-{"id":158,"name":"The Finn","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["Food Hall"],"meals":["Food Hall"],"price":2,"vibes":["group"],"type":"Food Hall","note":"Finn Hall food hall in the JPMorgan Chase building.","tryit":"Browse"},
-{"id":159,"name":"The Paleta Bar","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":[],"price":1,"vibes":["sweet"],"type":"Dessert","note":"Mexican-style popsicles.","tryit":"Paletas"},
-{"id":160,"name":"Theodore Rex","address":"1302 Nance St, Houston, TX","tunnel":null,"cuisines":["American","International"],"meals":["Dinner","Full Service","Happy Hour"],"price":4,"vibes":["date","adventurous"],"type":"American","note":"Chef Justin Yu's celebrated small restaurant.","tryit":"Tasting-style plates"},
-{"id":161,"name":"Three Keys Coffee Bar","address":"712 Main St, Houston, TX","tunnel":null,"cuisines":["Coffee & Tea"],"meals":["Food Hall"],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee in Finn Hall.","tryit":"Coffee"},
-{"id":162,"name":"Thrive Juices","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["Juice & Smoothies"],"meals":["Food Hall"],"price":1,"vibes":["healthy","veg"],"type":"Juice","note":"Cold-pressed juice.","tryit":"Juice"},
-{"id":163,"name":"Toro Toro","address":"1300 Lamar St, Houston, TX","tunnel":null,"cuisines":["American","Seafood","Steakhouse"],"meals":["Breakfast","Dinner","Full Service","Lunch"],"price":3,"vibes":["date","group","drinks"],"type":"Latin Steakhouse","note":"Pan-Latin steakhouse at the Four Seasons.","tryit":"Churrasco, ceviche"},
-{"id":164,"name":"Tout Suite","address":"1515 Fannin St, Houston, TX","tunnel":null,"cuisines":["Bakery & Dessert"],"meals":["Breakfast","Brunch","Dinner","Fast Casual","Lunch","Patio","Pet Friendly"],"price":1,"vibes":["caffeine","sweet","veg"],"type":"Bakery Caf\u00e9","note":"Bakery caf\u00e9 near Discovery Green with a dog-friendly vibe.","tryit":"Macarons, breakfast"},
-{"id":165,"name":"Treebeards","address":"1117 Louisiana St, Houston, TX","tunnel":null,"cuisines":["Cajun & Southern"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["comfort","quick"],"type":"Cajun","note":"Cajun cafeteria lunch staple.","tryit":"Red beans & rice, gumbo"},
-{"id":166,"name":"Twisted Grilled Cheese","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":[],"price":1,"vibes":["comfort"],"type":"American","note":"Grilled cheese sandwiches.","tryit":"Grilled cheese"},
-{"id":167,"name":"Underground Hall","address":"1010 Prairie St, Houston, TX","tunnel":null,"cuisines":["Food Hall"],"meals":["Food Hall","Late Night"],"price":2,"vibes":["group","drinks"],"type":"Food Hall","note":"Food hall on Prairie with Wokker, Birria Los Primos and more.","tryit":"Browse"},
-{"id":168,"name":"Vic & Anthony's","address":"1510 Texas Ave, Houston, TX","tunnel":null,"cuisines":["American","Seafood","Steakhouse"],"meals":["Dinner","Full Service","Lunch"],"price":4,"vibes":["upscale","client"],"type":"Steakhouse","note":"Steakhouse across from the stadium.","tryit":"Steak"},
-{"id":169,"name":"Walker Street Kitchen","address":"1777 Walker St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Brunch","Dinner","Full Service"],"price":2,"vibes":["client"],"type":"American","note":"Marriott Marquis restaurant.","tryit":"American plates"},
-{"id":170,"name":"Wimpy's Hamburgers","address":"632 Polk St, Houston, TX","tunnel":null,"cuisines":["American","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["comfort","quick"],"type":"Burgers","note":"No-frills burger joint.","tryit":"Burger"},
-{"id":171,"name":"Wok & Roll","address":"1200 McKinney St, Houston, TX","tunnel":null,"cuisines":["Asian","Fast Food","Japanese & Sushi"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"Asian","note":"Chinese/Japanese.","tryit":"Fried rice"},
-{"id":172,"name":"Wokker","address":"1010 Prairie St, Houston, TX","tunnel":null,"cuisines":["Asian"],"meals":["Fast Casual","Food Hall","Late Night","Lunch"],"price":1,"vibes":["spicy","quick"],"type":"Asian","note":"Wok-fired noodles in Underground Hall.","tryit":"Noodles"},
-{"id":173,"name":"Xochi","address":"1777 Walker St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":["Brunch","Dinner","Full Service","Happy Hour","Lunch"],"price":3,"vibes":["adventurous","date","client"],"type":"Mexican","note":"Hugo Ortega's Oaxacan restaurant \u2014 moles and masa.","tryit":"Mole, tlayudas, chocolate desserts"},
-{"id":174,"name":"Yoyo's Hot Dog","address":"401 Franklin St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":[],"price":1,"vibes":["comfort","quick"],"type":"Hot Dogs","note":"Bacon-wrapped hot dogs.","tryit":"Bacon-wrapped dog"},
-{"id":175,"name":"Zaranda","address":"1550 Lamar St, Houston, TX","tunnel":null,"cuisines":["Mexican & Latin"],"meals":[],"price":3,"vibes":["date","adventurous"],"type":"Mexican","note":"Hugo Ortega's regional Mexican.","tryit":"Regional Mexican plates"},
-{"id":176,"name":"Zero Sandwich","address":"507 Dallas St, Houston, TX","tunnel":null,"cuisines":["American","Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Sandwich shop.","tryit":"Sandwich"},
-{"id":177,"name":"Zero's Sandwich Shop","address":"1110 Lamar St, Houston, TX","tunnel":null,"cuisines":["American","Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Sandwich shop.","tryit":"Sandwich"},
-{"id":178,"name":"Zutro Restaurant & Bar","address":"1121 Walker St, Houston, TX","tunnel":null,"cuisines":["American"],"meals":["Breakfast","Brunch","Dinner","Full Service","Happy Hour"],"price":2,"vibes":["drinks"],"type":"American","note":"Restaurant and bar.","tryit":"American plates"},
-{"id":179,"name":"Zydeco Louisiana Diner","address":"1119 Pease St, Houston, TX","tunnel":null,"cuisines":["Cajun & Southern"],"meals":["Full Service","Lunch"],"price":1,"vibes":["comfort"],"type":"Cajun","note":"Cajun lunch diner.","tryit":"Gumbo, po' boys"},
-{"id":180,"name":"Addict Tea Cafe","address":"1001 Fannin St, Houston, TX","tunnel":"Lamar Tunnel","cuisines":["Coffee & Tea","Juice & Smoothies"],"meals":["Lunch"],"price":1,"vibes":["sweet","caffeine"],"type":"Boba","note":"Tea and boba in the tunnel.","tryit":"Milk tea"},
-{"id":181,"name":"API Kitchen Southern Food","address":"914 Main St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["American","Cajun & Southern","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["comfort"],"type":"Southern","note":"Southern plate lunch in the tunnel.","tryit":"Fried chicken"},
-{"id":182,"name":"Baoz Dumplings + Boba","address":"1001 Fannin St, Houston, TX","tunnel":"Lamar Tunnel","cuisines":["Asian","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Asian","note":"Dumplings and boba.","tryit":"Bao"},
-{"id":183,"name":"Blackwater Coffee Roasters","address":"1001 Fannin St, Houston, TX","tunnel":"Lamar Tunnel","cuisines":["Coffee & Tea"],"meals":["Lunch"],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee in the tunnel.","tryit":"Coffee"},
-{"id":184,"name":"Bodard Express","address":"711 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["Asian","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Vietnamese","note":"Vietnamese quick lunch.","tryit":"Banh mi, vermicelli"},
-{"id":185,"name":"Brown Bag Deli","address":"600 Travis St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["American","Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Sandwiches.","tryit":"Sandwich"},
-{"id":186,"name":"Bullritos","address":"919 Milam St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["Fast Food","Mexican & Latin"],"meals":["Lunch"],"price":1,"vibes":["quick","group"],"type":"Mexican","note":"Build-your-own burritos and bowls.","tryit":"Burrito bowl"},
-{"id":187,"name":"Cassidy Mesquite Chicken","address":"930 Main St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["American","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"American","note":"Mesquite chicken plates.","tryit":"Chicken plate"},
-{"id":188,"name":"Charlies BBQ & Hamburgers","address":"1001 Fannin St, Houston, TX","tunnel":"Lamar Tunnel","cuisines":["American","BBQ","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","comfort"],"type":"BBQ","note":"BBQ and burgers.","tryit":"Burger"},
-{"id":189,"name":"Chick-fil-A","address":"711 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["American","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","comfort"],"type":"Fast Food","note":"Chicken sandwiches \u2014 closed Sundays.","tryit":"Spicy chicken sandwich"},
-{"id":190,"name":"China Ocean","address":"815 Walker St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Asian"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Chinese & Hibachi","note":"Tunnel counter also known as Hibachi Grill / California Live Grill \u2014 Chinese plates plus made-to-order hibachi and stir-fry.","tryit":"Hibachi chicken or steak, fried rice"},
-{"id":191,"name":"Cupcake and A Smile","address":"815 Walker St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Bakery & Dessert"],"meals":["Lunch"],"price":1,"vibes":["sweet"],"type":"Bakery","note":"Cupcakes.","tryit":"Cupcake"},
-{"id":192,"name":"Deli Deluxe","address":"1001 McKinney St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Fast Food","Indian"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","spicy"],"type":"Indian","note":"Indian and deli plates.","tryit":"Curry plate"},
-{"id":193,"name":"District 7 Grill","address":"1001 Louisiana St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["American"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"American","note":"Grill lunch.","tryit":"Grill plate"},
-{"id":194,"name":"El Regio Mexican Grill","address":"1000 Main St, Houston, TX","tunnel":"W. Walker Tunnel","cuisines":["Mexican & Latin"],"meals":["Breakfast","Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Mexican grill.","tryit":"Tacos"},
-{"id":195,"name":"Farro","address":"800 Capitol St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["American"],"meals":["Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["healthy"],"type":"Bowls","note":"Grain bowls.","tryit":"Bowl"},
-{"id":196,"name":"Flip n Patties","address":"800 Capitol St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Asian"],"meals":["Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["adventurous"],"type":"Filipino","note":"Filipino lunch.","tryit":"Lumpia"},
-{"id":197,"name":"Kim's Cafe","address":"910 Louisiana St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["American","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"American","note":"Caf\u00e9 lunch.","tryit":"Lunch plate"},
-{"id":198,"name":"Kolache Factory","address":"811 Louisiana St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["Bakery & Dessert","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Bakery","note":"Kolaches.","tryit":"Kolaches"},
-{"id":199,"name":"Kopi Cowboy Coffee","address":"1000 Main St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["Coffee & Tea"],"meals":["Lunch"],"price":1,"vibes":["caffeine"],"type":"Coffee","note":"Coffee in the tunnel.","tryit":"Coffee"},
-{"id":200,"name":"La Taquiza","address":"800 Capitol St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Mexican & Latin"],"meals":["Breakfast","Brunch","Dinner","Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Tacos.","tryit":"Tacos"},
-{"id":201,"name":"Lennys Grill & Subs","address":"1001 Fannin St, Houston, TX","tunnel":"Lamar Tunnel","cuisines":["Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Subs and grill.","tryit":"Cheesesteak"},
-{"id":202,"name":"Luchi & Joey's","address":"914 Main St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["Fast Food","Mexican & Latin"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Tex-Mex lunch.","tryit":"Tacos"},
-{"id":203,"name":"Maggie Rita's","address":"600 Travis St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Mexican & Latin"],"meals":["Breakfast","Fast Casual","Full Service","Lunch"],"price":2,"vibes":["group","drinks"],"type":"Tex-Mex","note":"Tex-Mex restaurant.","tryit":"Enchiladas"},
-{"id":204,"name":"Mayuri Express","address":"930 Main St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Fast Food","Indian"],"meals":["Lunch"],"price":1,"vibes":["spicy"],"type":"Indian","note":"Indian lunch.","tryit":"Curry"},
-{"id":205,"name":"Mediterranean Grill House","address":"808 Travis St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Mediterranean"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["healthy"],"type":"Mediterranean","note":"Mediterranean plates.","tryit":"Shawarma"},
-{"id":206,"name":"Michael's Cookie Jar","address":"711 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["Bakery & Dessert"],"meals":["Lunch"],"price":1,"vibes":["sweet"],"type":"Bakery","note":"Cookies.","tryit":"Cookies"},
-{"id":207,"name":"Mona","address":"800 Capitol St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Italian"],"meals":["Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["quick"],"type":"Italian","note":"Italian lunch.","tryit":"Pasta"},
-{"id":208,"name":"Murphy's Deli","address":"700 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["American","Deli","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Houston deli chain.","tryit":"Sandwiches"},
-{"id":209,"name":"Otto's","address":"600 Travis St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["American","BBQ"],"meals":["Breakfast","Fast Casual","Lunch"],"price":1,"vibes":["comfort"],"type":"BBQ","note":"Otto's tunnel location.","tryit":"Brisket"},
-{"id":210,"name":"Pastabilities","address":"815 Walker St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["American","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick"],"type":"Italian","note":"Pasta and sandwiches.","tryit":"Pasta"},
-{"id":211,"name":"Potbelly","address":"1000 Main St, Houston, TX","tunnel":"W. Walker Tunnel","cuisines":["American","Deli"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Toasted sandwich chain.","tryit":"Toasted sandwich"},
-{"id":212,"name":"Schlotzsky's","address":"815 Walker St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["American","Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Sandwich chain.","tryit":"The Original"},
-{"id":213,"name":"Seaside Poke","address":"800 Capitol St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Asian"],"meals":["Fast Casual","Food Hall","Lunch"],"price":1,"vibes":["healthy"],"type":"Poke","note":"Poke bowls.","tryit":"Poke"},
-{"id":214,"name":"Shipley's Do-nuts","address":"1001 McKinney St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Bakery & Dessert","Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["sweet"],"type":"Bakery","note":"Houston donut classic.","tryit":"Glazed donut"},
-{"id":215,"name":"Silver Lining","address":"800 Capitol St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Bar"],"meals":["Food Hall","Happy Hour","Lunch"],"price":2,"vibes":["drinks"],"type":"Bar","note":"Bar in the tunnel area.","tryit":"Drinks"},
-{"id":216,"name":"Smoothie Factory","address":"815 Walker St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Fast Food","Juice & Smoothies"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["healthy"],"type":"Juice","note":"Smoothies.","tryit":"Smoothie"},
-{"id":217,"name":"Smoothie King","address":"815 Walker St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["Fast Food","Juice & Smoothies"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["healthy"],"type":"Juice","note":"Smoothies.","tryit":"Smoothie"},
-{"id":218,"name":"Star Chef","address":"930 Main St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Asian","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Chinese","note":"Chinese lunch.","tryit":"Lunch special"},
-{"id":219,"name":"Starbucks","address":"600 Travis St, Houston, TX","tunnel":"N. Travis Tunnel","cuisines":["Coffee & Tea"],"meals":["Lunch"],"price":1,"vibes":["caffeine","quick"],"type":"Coffee","note":"Coffee chain.","tryit":"Coffee"},
-{"id":220,"name":"Sultan Pepper","address":"1000 Main St, Houston, TX","tunnel":"W. Walker Tunnel","cuisines":["Mediterranean"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["healthy"],"type":"Mediterranean","note":"Mediterranean.","tryit":"Gyro"},
-{"id":221,"name":"Tacos a Go Go","address":"910 Louisiana St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["Mexican & Latin"],"meals":["Breakfast","Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"Mexican","note":"Tacos.","tryit":"Breakfast tacos"},
-{"id":222,"name":"Taka Sushi","address":"930 Main St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Asian","Japanese & Sushi"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Japanese","note":"Sushi lunch.","tryit":"Rolls"},
-{"id":223,"name":"Top Taste Asian","address":"930 Main St, Houston, TX","tunnel":"E. McKinney Tunnel","cuisines":["Asian","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Asian","note":"Asian lunch.","tryit":"Lunch plate"},
-{"id":224,"name":"Treebeards","address":"1100 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["Cajun & Southern"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["comfort","quick"],"type":"Cajun","note":"Cajun cafeteria lunch staple.","tryit":"Red beans & rice, gumbo"},
-{"id":225,"name":"Uncle Sharkii Poke Bar HTX","address":"711 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["Fast Food","International"],"meals":["Lunch"],"price":1,"vibes":["healthy"],"type":"Poke","note":"Poke bowls.","tryit":"Poke"},
-{"id":226,"name":"Village Real Pit Barbeque","address":"815 Walker St, Houston, TX","tunnel":"Downtown Tunnel Loop","cuisines":["BBQ"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["comfort"],"type":"BBQ","note":"BBQ.","tryit":"Brisket"},
-{"id":227,"name":"Which Wich","address":"711 Louisiana St, Houston, TX","tunnel":"N. Louisiana Tunnel","cuisines":["American","Deli","Fast Food"],"meals":["Lunch"],"price":1,"vibes":["quick"],"type":"Deli","note":"Sandwich chain.","tryit":"Wich"},
-{"id":228,"name":"Wok and Roll","address":"1000 Main St, Houston, TX","tunnel":"W. Walker Tunnel","cuisines":["Asian","Fast Food","Japanese & Sushi"],"meals":["Fast Casual","Lunch"],"price":1,"vibes":["quick"],"type":"Asian","note":"Chinese/Japanese.","tryit":"Fried rice"},
-{"id":229,"name":"Whataburger","address":"1000 Main St, Houston, TX","tunnel":"W. Walker Tunnel","cuisines":["Fast Food"],"meals":["Breakfast","Lunch"],"price":1,"vibes":["quick","comfort"],"type":"Burgers","note":"Texas burger chain with a counter in the W. Walker tunnel under 1000 Main.","tryit":"Whataburger, honey butter chicken biscuit"}
+ {
+  "id": 0,
+  "name": "1600 Bar + Grille",
+  "address": "1600 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast"
+  ],
+  "price": 3,
+  "vibes": [
+   "client",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Hilton Americas restaurant near the GRB — reliable hotel American with a bar.",
+  "tryit": "Burgers, salads, breakfast buffet"
+ },
+ {
+  "id": 1,
+  "name": "40 Below",
+  "address": "520 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "date"
+  ],
+  "type": "Bar",
+  "note": "Subterranean cocktail lounge below Texas Ave — more drinks than dinner.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 2,
+  "name": "Adair Downtown",
+  "address": "1000 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Bakery & Dessert",
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "quick",
+   "sweet"
+  ],
+  "type": "American",
+  "note": "Coffee bar and kitchen with grab-and-go breakfast and lunch.",
+  "tryit": "Coffee, breakfast tacos, sandwiches"
+ },
+ {
+  "id": 3,
+  "name": "Aloha Poke Co",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "healthy",
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Build-your-own poke bowls in the GreenStreet area.",
+  "tryit": "Poke bowl"
+ },
+ {
+  "id": 4,
+  "name": "Andes Cafe",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "adventurous",
+   "date"
+  ],
+  "type": "Latin",
+  "note": "Ecuadorian/South American cooking from chef David Guerrero — ceviches, empanadas, arepas.",
+  "tryit": "Ceviche, empanadas, lomo saltado"
+ },
+ {
+  "id": 5,
+  "name": "Artistry",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "quick"
+  ],
+  "type": "American",
+  "note": "Sandwiches and small plates inside a food hall.",
+  "tryit": "Sandwiches"
+ },
+ {
+  "id": 6,
+  "name": "Avenida Houston",
+  "address": "1001 Avenida De Las Americas, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food & Events"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Food & Events",
+  "note": "The plaza in front of the convention center lined with restaurants (Pappadeaux, Grotto, Saltgrass and more).",
+  "tryit": "Browse the strip"
+ },
+ {
+  "id": 7,
+  "name": "Ballpark Cafe at The Westin Houston Downtown",
+  "address": "1520 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "sports",
+   "comfort"
+  ],
+  "type": "American",
+  "note": "Baseball-themed hotel diner across from Daikin Park.",
+  "tryit": "Burgers, all-day breakfast"
+ },
+ {
+  "id": 8,
+  "name": "Barnaby's Cafe at Market Square",
+  "address": "801 Congress St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Bakery & Dessert",
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "veg",
+   "group"
+  ],
+  "type": "American",
+  "note": "Houston-favorite neighborhood diner with huge portions and a dog-friendly patio on Market Square.",
+  "tryit": "Burgers, salads, chicken-fried steak, dessert"
+ },
+ {
+  "id": 9,
+  "name": "Bayou & Bottle",
+  "address": "1300 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "drinks",
+   "client"
+  ],
+  "type": "American",
+  "note": "Four Seasons bourbon bar with elevated bar food.",
+  "tryit": "Bourbon flights, burger"
+ },
+ {
+  "id": 10,
+  "name": "Benihana",
+  "address": "1318 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese & Sushi"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "group",
+   "date"
+  ],
+  "type": "Japanese",
+  "note": "Teppanyaki theater — chefs cook at the table. Good for groups and celebrations.",
+  "tryit": "Hibachi chicken/steak combos, fried rice"
+ },
+ {
+  "id": 11,
+  "name": "Best Bites Tours",
+  "address": "700 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food Tour"
+  ],
+  "meals": [],
+  "price": 3,
+  "vibes": [
+   "adventurous",
+   "group"
+  ],
+  "type": "Food Tour",
+  "note": "Guided downtown food tours with tastings at several stops.",
+  "tryit": "Book a tour"
+ },
+ {
+  "id": 12,
+  "name": "Biggio's Sports Bar",
+  "address": "1777 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch",
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "sports",
+   "drinks",
+   "group"
+  ],
+  "type": "American",
+  "note": "Marriott Marquis sports bar named for Craig Biggio — big screens and game-day crowds.",
+  "tryit": "Wings, burgers, nachos"
+ },
+ {
+  "id": 13,
+  "name": "Birraporetti's",
+  "address": "500 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Dinner",
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "sports",
+   "drinks"
+  ],
+  "type": "Italian",
+  "note": "Old-school Italian-American pub near the theaters — handy pre-show.",
+  "tryit": "Pizza, pasta, garlic rolls"
+ },
+ {
+  "id": 14,
+  "name": "Birria Los Primos",
+  "address": "1010 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "comfort",
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Birria tacos with consommé, inside Underground Hall.",
+  "tryit": "Quesabirria + consommé"
+ },
+ {
+  "id": 15,
+  "name": "The Bistro",
+  "address": "916 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "quick",
+   "caffeine"
+  ],
+  "type": "American",
+  "note": "Café for breakfast and lunch.",
+  "tryit": "Sandwiches, coffee"
+ },
+ {
+  "id": 16,
+  "name": "Boomtown Coffee",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Houston-roasted coffee shop with a tunnel location too.",
+  "tryit": "Latte, cold brew"
+ },
+ {
+  "id": 17,
+  "name": "Brasserie Du Parc",
+  "address": "1440 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "French"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "client"
+  ],
+  "type": "French",
+  "note": "Parisian-style brasserie across from Discovery Green.",
+  "tryit": "Steak frites, French onion soup, croque monsieur"
+ },
+ {
+  "id": 18,
+  "name": "Bubble Boba",
+  "address": "909 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert",
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Lunch",
+   "Patio"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Boba",
+  "note": "Bubble tea and snacks.",
+  "tryit": "Milk tea"
+ },
+ {
+  "id": 19,
+  "name": "Bullritos",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "group"
+  ],
+  "type": "Mexican",
+  "note": "Build-your-own burritos and bowls.",
+  "tryit": "Burrito bowl"
+ },
+ {
+  "id": 20,
+  "name": "Bun Slut",
+  "address": "1010 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "adventurous"
+  ],
+  "type": "American",
+  "note": "Over-the-top burgers and loaded buns inside Underground Hall.",
+  "tryit": "Signature burger"
+ },
+ {
+  "id": 21,
+  "name": "Bungalow",
+  "address": "909 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 3,
+  "vibes": [
+   "drinks",
+   "date"
+  ],
+  "type": "Seafood",
+  "note": "Steak, seafood and cocktails — relocated in Oct 2026 from 405 Main St to The Rice building at 909 Texas Ave.",
+  "tryit": "Seafood plates, cocktails"
+ },
+ {
+  "id": 22,
+  "name": "Cellar 7",
+  "address": "610 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Wine bar and restaurant in the District7/Le Méridien area.",
+  "tryit": "Wine flights, small plates"
+ },
+ {
+  "id": 23,
+  "name": "Chick-Fil-A",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "comfort"
+  ],
+  "type": "Fast Food",
+  "note": "Chicken sandwiches — closed Sundays.",
+  "tryit": "Spicy chicken sandwich"
+ },
+ {
+  "id": 24,
+  "name": "China Garden",
+  "address": "1602 Leeland St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "group"
+  ],
+  "type": "Chinese",
+  "note": "Decades-old downtown Chinese institution known for its egg rolls.",
+  "tryit": "Egg rolls, honey garlic chicken"
+ },
+ {
+  "id": 25,
+  "name": "Chipotle",
+  "address": "909 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "healthy"
+  ],
+  "type": "Mexican",
+  "note": "Burrito and bowl chain.",
+  "tryit": "Bowl"
+ },
+ {
+  "id": 26,
+  "name": "ChopnBlok",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "adventurous",
+   "spicy"
+  ],
+  "type": "West African",
+  "note": "West African flavors from chef Ope Amosu in Post HTX.",
+  "tryit": "Jollof rice bowl, suya"
+ },
+ {
+  "id": 27,
+  "name": "Ciccio's Pasta",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Italian"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Italian",
+  "note": "Fresh pasta counter at Post HTX.",
+  "tryit": "Cacio e pepe, ragù"
+ },
+ {
+  "id": 28,
+  "name": "Clandestina",
+  "address": "1008 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "date"
+  ],
+  "type": "Mexican",
+  "note": "Hidden mezcal-and-taco bar off Prairie.",
+  "tryit": "Mezcal, tacos"
+ },
+ {
+  "id": 29,
+  "name": "The Clock - Steak & Lounge",
+  "address": "908 Congress St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Happy Hour"
+  ],
+  "price": 3,
+  "vibes": [
+   "drinks",
+   "date",
+   "upscale"
+  ],
+  "type": "Steakhouse",
+  "note": "Steak and lounge spot near Market Square.",
+  "tryit": "Steaks, cocktails"
+ },
+ {
+  "id": 30,
+  "name": "Common Grounds Uncommon Coffee",
+  "address": "1401 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee shop near the convention district.",
+  "tryit": "Espresso drinks"
+ },
+ {
+  "id": 31,
+  "name": "Cooking Girl",
+  "address": "414 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese & Sushi"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "spicy",
+   "adventurous",
+   "group"
+  ],
+  "type": "Chinese",
+  "note": "Sichuan/Hunan cooking — bring friends and share.",
+  "tryit": "Dry-pot dishes, mapo tofu, cumin lamb"
+ },
+ {
+  "id": 32,
+  "name": "Corner Bakery Cafe",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Bakery & Dessert",
+   "Coffee & Tea",
+   "Deli"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Fast Casual",
+   "Full Service",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "veg"
+  ],
+  "type": "Bakery Café",
+  "note": "Bakery café chain for breakfast and soups/sandwiches.",
+  "tryit": "Breakfast panini, soups"
+ },
+ {
+  "id": 33,
+  "name": "Cueva",
+  "address": "1777 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mediterranean"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "date"
+  ],
+  "type": "Mediterranean",
+  "note": "Spanish/Mediterranean tapas in the Marriott Marquis.",
+  "tryit": "Tapas, paella"
+ },
+ {
+  "id": 34,
+  "name": "Cultivated F+B",
+  "address": "701 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Full Service",
+   "Late Night"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Hotel Alessandra's restaurant — seasonal, refined American.",
+  "tryit": "Seasonal plates"
+ },
+ {
+  "id": 35,
+  "name": "Day 6 Coffee Co.",
+  "address": "910 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert",
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "sweet"
+  ],
+  "type": "Coffee",
+  "note": "Coffee and pastries.",
+  "tryit": "Latte, pastry"
+ },
+ {
+  "id": 36,
+  "name": "Diana American Grill",
+  "address": "800 Bagby St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "client"
+  ],
+  "type": "American",
+  "note": "Hotel restaurant near Bagby.",
+  "tryit": "American plates"
+ },
+ {
+  "id": 37,
+  "name": "The District7 Restaurant",
+  "address": "610 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Restaurant in the District7 complex on Main.",
+  "tryit": "Grill plates"
+ },
+ {
+  "id": 38,
+  "name": "DistrictMarket",
+  "address": "610 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "quick",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Market-style café and bar on Main.",
+  "tryit": "Breakfast, sandwiches"
+ },
+ {
+  "id": 39,
+  "name": "Dive Lounge",
+  "address": "410 Bagby St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Bar with bites near Bagby.",
+  "tryit": "Bar food"
+ },
+ {
+  "id": 40,
+  "name": "Domino's Pizza",
+  "address": "975 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Pizza"
+  ],
+  "meals": [
+   "Dinner",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Pizza",
+  "note": "Pizza delivery chain.",
+  "tryit": "Pizza"
+ },
+ {
+  "id": 41,
+  "name": "Doozo Dumplings & Noodles",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Dumplings and noodle bowls — popular lunch spot.",
+  "tryit": "Pork dumplings, beef noodle soup"
+ },
+ {
+  "id": 42,
+  "name": "Drunken Pho",
+  "address": "409 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Vietnamese",
+  "note": "Pho and Vietnamese favorites.",
+  "tryit": "Pho, banh mi"
+ },
+ {
+  "id": 43,
+  "name": "Edgar's Hermano",
+  "address": "1700 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Tacos and Mexican quick bites.",
+  "tryit": "Breakfast tacos"
+ },
+ {
+  "id": 44,
+  "name": "Edible Arrangements",
+  "address": "225 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Dessert",
+  "note": "Fruit arrangements and dipped fruit — gifts more than a meal.",
+  "tryit": "Chocolate-dipped strawberries"
+ },
+ {
+  "id": 45,
+  "name": "Eighteen Twenty Lounge",
+  "address": "1820 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Lounge in EaDo by the stadium.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 46,
+  "name": "Einstein Bros Bagels",
+  "address": "1200 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "caffeine"
+  ],
+  "type": "Bakery Café",
+  "note": "Bagel chain.",
+  "tryit": "Bagel sandwiches"
+ },
+ {
+  "id": 47,
+  "name": "El Taco Rico",
+  "address": "1818 Hamilton St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "spicy"
+  ],
+  "type": "Mexican",
+  "note": "Taqueria open late.",
+  "tryit": "Street tacos"
+ },
+ {
+  "id": 48,
+  "name": "El Tiempo Cantina",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "group",
+   "drinks"
+  ],
+  "type": "Tex-Mex",
+  "note": "Houston Tex-Mex family (Laurenzo's) — fajitas and big margaritas.",
+  "tryit": "Fajitas, margaritas"
+ },
+ {
+  "id": 49,
+  "name": "Elotex Cup",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Food Hall"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "spicy"
+  ],
+  "type": "Mexican",
+  "note": "Elote (Mexican street corn) in a cup and snacks.",
+  "tryit": "Elote cup"
+ },
+ {
+  "id": 50,
+  "name": "Encore Cafe at Jones Hall",
+  "address": "615 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Full Service"
+  ],
+  "price": 2,
+  "vibes": [
+   "date"
+  ],
+  "type": "Café",
+  "note": "Pre-show café inside Jones Hall.",
+  "tryit": "Pre-show bites"
+ },
+ {
+  "id": 51,
+  "name": "Fabian's Latin Flavors",
+  "address": "301 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Happy Hour",
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "group"
+  ],
+  "type": "Latin",
+  "note": "Latin café/bar on Main with a patio and coffee by day.",
+  "tryit": "Empanadas, cafecito, cocktails"
+ },
+ {
+  "id": 52,
+  "name": "Federal American Grill",
+  "address": "1212 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch",
+   "Patio"
+  ],
+  "price": 3,
+  "vibes": [
+   "client",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Upscale casual American grill with a bar crowd.",
+  "tryit": "Burgers, steaks, brunch"
+ },
+ {
+  "id": 53,
+  "name": "Fifth Vessel Coffee Co.",
+  "address": "104 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee shop on north Main.",
+  "tryit": "Espresso drinks"
+ },
+ {
+  "id": 54,
+  "name": "FireNoodz",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Fiery noodle bowls in a food hall.",
+  "tryit": "Spicy noodles"
+ },
+ {
+  "id": 55,
+  "name": "Flower & Cream",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Dessert",
+  "note": "Ice cream shop at Post HTX.",
+  "tryit": "Ice cream"
+ },
+ {
+  "id": 56,
+  "name": "Flying Saucer",
+  "address": "705 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Pub Fare"
+  ],
+  "meals": [
+   "Dinner",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "group"
+  ],
+  "type": "Pub",
+  "note": "Beer hall with a huge tap list.",
+  "tryit": "Beer flights, pretzels"
+ },
+ {
+  "id": 57,
+  "name": "Folk Thai Kitchen",
+  "address": "914 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "spicy"
+  ],
+  "type": "Thai",
+  "note": "Thai kitchen on Main.",
+  "tryit": "Pad see ew, curries"
+ },
+ {
+  "id": 58,
+  "name": "Frank's Pizzeria",
+  "address": "417 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "comfort"
+  ],
+  "type": "Pizza",
+  "note": "NY-style slices; a late-night downtown staple.",
+  "tryit": "Slice, garlic knots"
+ },
+ {
+  "id": 59,
+  "name": "GELU Italian Ice",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Dessert",
+  "note": "Italian ice and custard.",
+  "tryit": "Gelati"
+ },
+ {
+  "id": 60,
+  "name": "Grotto Ristorante",
+  "address": "1001 Avenida De Las Americas, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour"
+  ],
+  "price": 3,
+  "vibes": [
+   "group",
+   "date"
+  ],
+  "type": "Italian",
+  "note": "Landry's Italian on Avenida.",
+  "tryit": "Pizza, pasta"
+ },
+ {
+  "id": 61,
+  "name": "Grove Market & Provisions",
+  "address": "1600 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "healthy"
+  ],
+  "type": "American",
+  "note": "Grab-and-go market at Discovery Green.",
+  "tryit": "Sandwiches, salads"
+ },
+ {
+  "id": 62,
+  "name": "The Grove",
+  "address": "1611 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "client",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Glassy restaurant overlooking Discovery Green with a park-side patio.",
+  "tryit": "Seasonal American, rooftop drinks"
+ },
+ {
+  "id": 63,
+  "name": "Guadalajara",
+  "address": "1201 San Jacinto St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Tex-Mex",
+  "note": "Houston Tex-Mex chain.",
+  "tryit": "Enchiladas, fajitas"
+ },
+ {
+  "id": 64,
+  "name": "Guard & Grace",
+  "address": "500 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 4,
+  "vibes": [
+   "upscale",
+   "client",
+   "date"
+  ],
+  "type": "Steakhouse",
+  "note": "Modern steakhouse with a dramatic dining room.",
+  "tryit": "Filet flight, oak-fired steaks"
+ },
+ {
+  "id": 65,
+  "name": "Gulf & Prairie",
+  "address": "1200 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "client"
+  ],
+  "type": "Seafood & Steak",
+  "note": "Hotel restaurant (Marriott) focused on Gulf seafood and Texas beef.",
+  "tryit": "Gulf fish, steak"
+ },
+ {
+  "id": 66,
+  "name": "Hearsay Market Square",
+  "address": "218 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "date"
+  ],
+  "type": "American",
+  "note": "Gastro-lounge in a historic building on Market Square.",
+  "tryit": "Brunch, cocktails"
+ },
+ {
+  "id": 67,
+  "name": "Hearsay on the Green",
+  "address": "1515 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "group"
+  ],
+  "type": "American",
+  "note": "Hearsay's Discovery Green location.",
+  "tryit": "Brunch, cocktails"
+ },
+ {
+  "id": 68,
+  "name": "House of Blues",
+  "address": "1204 Caroline St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Pub Fare"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "music",
+   "group"
+  ],
+  "type": "Southern",
+  "note": "Music venue with a restaurant — catch a show.",
+  "tryit": "Gumbo, burgers"
+ },
+ {
+  "id": 69,
+  "name": "Hull & Oak at Hotel Laura",
+  "address": "1070 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "drinks"
+  ],
+  "type": "Southern",
+  "note": "Hotel Laura's restaurant and bar.",
+  "tryit": "Seasonal southern plates"
+ },
+ {
+  "id": 70,
+  "name": "ICE ICE BOBA",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Boba",
+  "note": "Bubble tea at Post HTX.",
+  "tryit": "Boba tea"
+ },
+ {
+  "id": 71,
+  "name": "Irma's Original",
+  "address": "22 N Chenevert St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Full Service",
+   "Lunch",
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "client"
+  ],
+  "type": "Mexican",
+  "note": "Legendary home-style Mexican spot; no fixed menu — Irma's family tells you what's cooking.",
+  "tryit": "Daily specials, lemonade"
+ },
+ {
+  "id": 72,
+  "name": "Irma's Southwest",
+  "address": "1475 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "drinks"
+  ],
+  "type": "Mexican",
+  "note": "Irma's larger sibling near the stadium.",
+  "tryit": "Enchiladas, margaritas"
+ },
+ {
+  "id": 73,
+  "name": "Island Grill",
+  "address": "1201 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Juice & Smoothies",
+   "Mediterranean",
+   "Pizza"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy",
+   "veg"
+  ],
+  "type": "Mediterranean",
+  "note": "Mediterranean-leaning grill with smoothies.",
+  "tryit": "Wraps, pizza, smoothies"
+ },
+ {
+  "id": 74,
+  "name": "Jason's Deli",
+  "address": "901 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Bakery & Dessert",
+   "Coffee & Tea",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Brunch",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "healthy"
+  ],
+  "type": "Deli",
+  "note": "Deli chain with a salad bar.",
+  "tryit": "Salad bar, sandwiches"
+ },
+ {
+  "id": 75,
+  "name": "Jimmy John's",
+  "address": "820 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Fast sub sandwiches.",
+  "tryit": "Subs"
+ },
+ {
+  "id": 76,
+  "name": "Johnny Good Burger",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Burgers",
+  "note": "Burgers at Post HTX.",
+  "tryit": "Burger"
+ },
+ {
+  "id": 77,
+  "name": "Joystix",
+  "address": "1820 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "group"
+  ],
+  "type": "Bar",
+  "note": "Arcade bar — games and drinks.",
+  "tryit": "Arcade games"
+ },
+ {
+  "id": 78,
+  "name": "Kokoro",
+  "address": "409 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Japanese & Sushi"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "adventurous"
+  ],
+  "type": "Japanese",
+  "note": "Japanese snacks and bowls.",
+  "tryit": "Japanese bowls"
+ },
+ {
+  "id": 79,
+  "name": "Kulture",
+  "address": "701 Avenida De Las Americas, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Fast Casual",
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "drinks",
+   "group"
+  ],
+  "type": "Southern",
+  "note": "Soul food and Black-diaspora cooking from Marcus Davis.",
+  "tryit": "Fried chicken, mac & cheese"
+ },
+ {
+  "id": 80,
+  "name": "La Calle",
+  "address": "909 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "quick",
+   "drinks"
+  ],
+  "type": "Mexican",
+  "note": "Mexico City-style street tacos with a late-night bar.",
+  "tryit": "Tacos al pastor"
+ },
+ {
+  "id": 81,
+  "name": "La Diabla Patio Bar",
+  "address": "300 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Patio bar on Main.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 82,
+  "name": "La Fisheria",
+  "address": "213 Milam St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Mexican & Latin",
+   "Seafood"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "adventurous"
+  ],
+  "type": "Seafood",
+  "note": "Mexican coastal seafood from chef Aquiles Chávez.",
+  "tryit": "Ceviche, aguachile"
+ },
+ {
+  "id": 83,
+  "name": "La Palapa",
+  "address": "1110 Preston St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "International",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Taco truck near the convention center.",
+  "tryit": "Breakfast tacos"
+ },
+ {
+  "id": 84,
+  "name": "Layne's Chicken Fingers",
+  "address": "609 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Fast Casual"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Fast Food",
+  "note": "Chicken fingers and Texas toast.",
+  "tryit": "Chicken fingers"
+ },
+ {
+  "id": 85,
+  "name": "Lea Jane's Hot Chicken",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "comfort"
+  ],
+  "type": "Southern",
+  "note": "Nashville hot chicken at Post HTX.",
+  "tryit": "Hot chicken sandwich"
+ },
+ {
+  "id": 86,
+  "name": "Leaf & Grain",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy",
+   "quick",
+   "veg"
+  ],
+  "type": "Salads",
+  "note": "Salad and grain bowls.",
+  "tryit": "Grain bowl"
+ },
+ {
+  "id": 87,
+  "name": "Line & Lariat",
+  "address": "220 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "client"
+  ],
+  "type": "American",
+  "note": "Restaurant in the historic Hotel Icon lobby.",
+  "tryit": "Seasonal American"
+ },
+ {
+  "id": 88,
+  "name": "Little Dipper",
+  "address": "304 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Main Street bar with a patio.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 89,
+  "name": "Lobby Bar @ Hilton Americas",
+  "address": "1600 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "client"
+  ],
+  "type": "Bar",
+  "note": "Hilton Americas lobby bar.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 90,
+  "name": "Lone Star Saloon",
+  "address": "1900 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Pub Fare"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Classic Texas dive bar.",
+  "tryit": "Beer"
+ },
+ {
+  "id": 91,
+  "name": "Lone Star Taco",
+  "address": "1001 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Tacos near Texas Ave.",
+  "tryit": "Tacos"
+ },
+ {
+  "id": 92,
+  "name": "Loy Loy Dim Sum",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian",
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Chinese",
+  "note": "Dim sum counter at Post HTX.",
+  "tryit": "Dumplings, bao"
+ },
+ {
+  "id": 93,
+  "name": "Luv 'Em Leches",
+  "address": "1010 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [
+   "Food Hall",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Dessert",
+  "note": "Tres leches desserts.",
+  "tryit": "Tres leches"
+ },
+ {
+  "id": 94,
+  "name": "Lyric Market",
+  "address": "411 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food Hall"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Food Hall",
+  "note": "Lyric Centre food hall area.",
+  "tryit": "Browse"
+ },
+ {
+  "id": 95,
+  "name": "Mademoiselle Louise Bakery",
+  "address": "1725 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert",
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "sweet",
+   "caffeine"
+  ],
+  "type": "Bakery",
+  "note": "French-style bakery in Midtown edge.",
+  "tryit": "Croissants, pastries"
+ },
+ {
+  "id": 96,
+  "name": "Main Kitchen & 806 Lounge",
+  "address": "806 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Full Service"
+  ],
+  "price": 3,
+  "vibes": [
+   "client",
+   "date"
+  ],
+  "type": "American",
+  "note": "JW Marriott restaurant and lounge.",
+  "tryit": "American plates"
+ },
+ {
+  "id": 97,
+  "name": "Mamajuana Cafe",
+  "address": "909 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "group",
+   "spicy"
+  ],
+  "type": "Latin",
+  "note": "Latin/Dominican-style restaurant and lounge.",
+  "tryit": "Mofongo"
+ },
+ {
+  "id": 98,
+  "name": "McCormick & Schmick's",
+  "address": "1201 Fannin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 3,
+  "vibes": [
+   "client"
+  ],
+  "type": "Seafood",
+  "note": "Seafood chain with patio and happy hour.",
+  "tryit": "Fish, oysters"
+ },
+ {
+  "id": 99,
+  "name": "Mendocino Farms",
+  "address": "609 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "healthy",
+   "veg",
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Elevated sandwiches and salads.",
+  "tryit": "Sandwich + salad combos"
+ },
+ {
+  "id": 100,
+  "name": "Mendocino Farms",
+  "address": "1200 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "healthy",
+   "veg",
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Elevated sandwiches and salads.",
+  "tryit": "Sandwich + salad combos"
+ },
+ {
+  "id": 101,
+  "name": "MKT BAR",
+  "address": "1001 Austin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "quick"
+  ],
+  "type": "International",
+  "note": "Bar inside Phoenicia Specialty Foods.",
+  "tryit": "Flatbreads, wine"
+ },
+ {
+  "id": 102,
+  "name": "The Moonshiners Southern Table + Bar",
+  "address": "1000 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Full Service",
+   "Happy Hour",
+   "Late Night",
+   "Lunch",
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "drinks",
+   "group"
+  ],
+  "type": "Southern",
+  "note": "Southern comfort food and whiskey near Main.",
+  "tryit": "Chicken & waffles"
+ },
+ {
+  "id": 103,
+  "name": "Morton's The Steakhouse",
+  "address": "1001 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service"
+  ],
+  "price": 4,
+  "vibes": [
+   "upscale",
+   "client"
+  ],
+  "type": "Steakhouse",
+  "note": "Classic steakhouse chain.",
+  "tryit": "Steaks"
+ },
+ {
+  "id": 104,
+  "name": "Murphy's Deli",
+  "address": "601 Jefferson St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Houston deli chain.",
+  "tryit": "Sandwiches"
+ },
+ {
+  "id": 105,
+  "name": "Murphy's Deli",
+  "address": "811 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Houston deli chain.",
+  "tryit": "Sandwiches"
+ },
+ {
+  "id": 106,
+  "name": "The Nash",
+  "address": "1111 Rusk St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Restaurant and bar on Rusk St.",
+  "tryit": "Seasonal plates"
+ },
+ {
+  "id": 107,
+  "name": "Nyam Nyam",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Dinner",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "adventurous"
+  ],
+  "type": "Asian",
+  "note": "Asian street food in a food hall.",
+  "tryit": "Rice bowls"
+ },
+ {
+  "id": 108,
+  "name": "Oasis",
+  "address": "411 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Juice & Smoothies"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy",
+   "veg"
+  ],
+  "type": "Juice & Bowls",
+  "note": "Bowls and juices.",
+  "tryit": "Smoothie bowls"
+ },
+ {
+  "id": 109,
+  "name": "Orange Taco",
+  "address": "1221 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Asian",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "healthy"
+  ],
+  "type": "Asian-Mex",
+  "note": "Asian-inspired tacos and bowls.",
+  "tryit": "Korean tacos"
+ },
+ {
+  "id": 110,
+  "name": "Osso & Kristalla",
+  "address": "1515 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Happy Hour",
+   "Lunch",
+   "Patio"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "group"
+  ],
+  "type": "Italian",
+  "note": "Italian trattoria and pizzeria near Discovery Green.",
+  "tryit": "Pizza, pasta, gelato"
+ },
+ {
+  "id": 111,
+  "name": "Otto's BBQ",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "BBQ",
+  "note": "Houston BBQ and burger institution.",
+  "tryit": "Brisket, burgers"
+ },
+ {
+  "id": 112,
+  "name": "The Palm",
+  "address": "1201 Fannin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 4,
+  "vibes": [
+   "upscale",
+   "client"
+  ],
+  "type": "Steakhouse",
+  "note": "Classic steak and lobster house.",
+  "tryit": "Lobster, steak"
+ },
+ {
+  "id": 113,
+  "name": "Papalo Taqueria",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "spicy"
+  ],
+  "type": "Mexican",
+  "note": "Tacos in Finn Hall.",
+  "tryit": "Tacos"
+ },
+ {
+  "id": 114,
+  "name": "Pappadeaux",
+  "address": "1001 Avenida De Las Americas, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun & Southern",
+   "Seafood"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Patio"
+  ],
+  "price": 3,
+  "vibes": [
+   "group",
+   "comfort"
+  ],
+  "type": "Cajun",
+  "note": "Cajun seafood (Pappas).",
+  "tryit": "Fried catfish, crawfish étouffée"
+ },
+ {
+  "id": 115,
+  "name": "Pappas BBQ",
+  "address": "1217 Pierce St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "BBQ",
+  "note": "Pappas barbecue.",
+  "tryit": "Brisket plate"
+ },
+ {
+  "id": 116,
+  "name": "Pappas Bros. Steakhouse",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service"
+  ],
+  "price": 4,
+  "vibes": [
+   "upscale",
+   "client",
+   "date"
+  ],
+  "type": "Steakhouse",
+  "note": "Top-tier steakhouse with a huge wine list.",
+  "tryit": "Dry-aged steak"
+ },
+ {
+  "id": 117,
+  "name": "Pappasito's",
+  "address": "1600 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Late Night",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "drinks"
+  ],
+  "type": "Tex-Mex",
+  "note": "Pappas Tex-Mex — big fajitas and margaritas.",
+  "tryit": "Fajitas"
+ },
+ {
+  "id": 118,
+  "name": "Part & Parcel",
+  "address": "1700 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Pub Fare"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Pub",
+  "note": "Bar with pub fare.",
+  "tryit": "Pub fare"
+ },
+ {
+  "id": 119,
+  "name": "Perbacco",
+  "address": "700 Milam St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "client"
+  ],
+  "type": "Italian",
+  "note": "Long-running downtown Italian lunch spot.",
+  "tryit": "Pasta"
+ },
+ {
+  "id": 120,
+  "name": "Petite Lucie",
+  "address": "301 Milam St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "French"
+  ],
+  "meals": [],
+  "price": 2,
+  "vibes": [
+   "date"
+  ],
+  "type": "French",
+  "note": "Small French café/bakery.",
+  "tryit": "Pastries"
+ },
+ {
+  "id": 121,
+  "name": "Phoenicia Specialty Foods",
+  "address": "1001 Austin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea",
+   "International"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Patio"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "healthy",
+   "veg"
+  ],
+  "type": "Mediterranean",
+  "note": "Mediterranean grocery with hot food and bakery.",
+  "tryit": "Shawarma, pastries"
+ },
+ {
+  "id": 122,
+  "name": "Pizza Zquare",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Pizza",
+  "note": "Pizza in a food hall.",
+  "tryit": "Pizza"
+ },
+ {
+  "id": 123,
+  "name": "Poke Fresh",
+  "address": "507 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Fast Food",
+   "Japanese & Sushi",
+   "Seafood"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy",
+   "quick"
+  ],
+  "type": "Japanese",
+  "note": "Poke bowls.",
+  "tryit": "Poke"
+ },
+ {
+  "id": 124,
+  "name": "Post HTX",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food Hall"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Food Hall",
+  "note": "Huge food hall in the old post office with a rooftop park.",
+  "tryit": "Browse"
+ },
+ {
+  "id": 125,
+  "name": "Potbelly Sandwich Shop",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Toasted sandwich chain.",
+  "tryit": "Toasted sandwich"
+ },
+ {
+  "id": 126,
+  "name": "Potente",
+  "address": "1515 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Dinner",
+   "Lunch"
+  ],
+  "price": 4,
+  "vibes": [
+   "upscale",
+   "date"
+  ],
+  "type": "Italian",
+  "note": "Upscale Italian near the stadium.",
+  "tryit": "Pasta, steak"
+ },
+ {
+  "id": 127,
+  "name": "Prelude Coffee & Tea",
+  "address": "609 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee and tea.",
+  "tryit": "Tea latte"
+ },
+ {
+  "id": 128,
+  "name": "Proper - A Burger Spot",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Burgers",
+  "note": "Burgers in Finn Hall.",
+  "tryit": "Smash burger"
+ },
+ {
+  "id": 129,
+  "name": "Real Agave",
+  "address": "1100 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Mexican",
+  "note": "Mexican restaurant and tequila bar.",
+  "tryit": "Tacos, tequila"
+ },
+ {
+  "id": 130,
+  "name": "Return To Sender",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Bar inside Post HTX.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 131,
+  "name": "Roma's Pizza",
+  "address": "233 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Pizza",
+  "note": "Pizza by the slice on Main.",
+  "tryit": "Slice"
+ },
+ {
+  "id": 132,
+  "name": "Rosalie Italian Soul",
+  "address": "400 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "comfort"
+  ],
+  "type": "Italian",
+  "note": "Red-sauce Italian at the C. Baldwin hotel.",
+  "tryit": "Lasagna, meatballs"
+ },
+ {
+  "id": 133,
+  "name": "Salata",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy",
+   "quick",
+   "veg"
+  ],
+  "type": "Salads",
+  "note": "Salad bar chain.",
+  "tryit": "Salad"
+ },
+ {
+  "id": 134,
+  "name": "Saltgrass Steak House",
+  "address": "1001 Avenida De Las Americas, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "comfort"
+  ],
+  "type": "Steakhouse",
+  "note": "Texas steakhouse chain.",
+  "tryit": "Steak, rolls"
+ },
+ {
+  "id": 135,
+  "name": "Sapporo Japanese Sushi & Bar",
+  "address": "801 Congress St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian",
+   "Japanese & Sushi"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "date"
+  ],
+  "type": "Japanese",
+  "note": "Sushi and Japanese.",
+  "tryit": "Sushi rolls"
+ },
+ {
+  "id": 136,
+  "name": "Shake Shack",
+  "address": "702 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Burgers",
+  "note": "Burger chain.",
+  "tryit": "ShackBurger"
+ },
+ {
+  "id": 137,
+  "name": "Shakkar Bakery",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Bakery",
+  "note": "Bakery at Post HTX.",
+  "tryit": "Pastries"
+ },
+ {
+  "id": 138,
+  "name": "Shay McElroy's Pub",
+  "address": "909 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Pub Fare"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night",
+   "Patio"
+  ],
+  "price": 1,
+  "vibes": [
+   "drinks",
+   "sports"
+  ],
+  "type": "Pub",
+  "note": "Irish pub on Texas Ave.",
+  "tryit": "Pints"
+ },
+ {
+  "id": 139,
+  "name": "Sire Spirits Social Club",
+  "address": "1510 Polk St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lounge"
+  ],
+  "meals": [
+   "Full Service"
+  ],
+  "price": 3,
+  "vibes": [
+   "drinks",
+   "date"
+  ],
+  "type": "Lounge",
+  "note": "Upscale social club and lounge.",
+  "tryit": "Cocktails"
+ },
+ {
+  "id": 140,
+  "name": "Slow Drip TX",
+  "address": "1625 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee bar.",
+  "tryit": "Cold brew"
+ },
+ {
+  "id": 141,
+  "name": "Soy Pinoy",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian",
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "adventurous"
+  ],
+  "type": "Filipino",
+  "note": "Filipino comfort food at Post HTX.",
+  "tryit": "Adobo, lumpia"
+ },
+ {
+  "id": 142,
+  "name": "Space City Birria Tacos & More",
+  "address": "415 Milam St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "comfort"
+  ],
+  "type": "Mexican",
+  "note": "Birria tacos.",
+  "tryit": "Quesabirria"
+ },
+ {
+  "id": 143,
+  "name": "Spindletop",
+  "address": "1200 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [],
+  "price": 4,
+  "vibes": [
+   "date",
+   "upscale"
+  ],
+  "type": "American",
+  "note": "Revolving restaurant atop the Hyatt Regency.",
+  "tryit": "Seafood with skyline views"
+ },
+ {
+  "id": 144,
+  "name": "Stack Burger",
+  "address": "703 St Joseph Pkwy, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Burgers",
+  "note": "Burger shop.",
+  "tryit": "Burger"
+ },
+ {
+  "id": 145,
+  "name": "Starbucks",
+  "address": "1600 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "quick"
+  ],
+  "type": "Coffee",
+  "note": "Coffee chain.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 146,
+  "name": "Starbucks",
+  "address": "914 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "quick"
+  ],
+  "type": "Coffee",
+  "note": "Coffee chain.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 147,
+  "name": "Starbucks",
+  "address": "1100 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "quick"
+  ],
+  "type": "Coffee",
+  "note": "Coffee chain.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 148,
+  "name": "Starbucks",
+  "address": "723 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "quick"
+  ],
+  "type": "Coffee",
+  "note": "Coffee chain.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 149,
+  "name": "Sweetgreen",
+  "address": "820 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "healthy",
+   "veg",
+   "quick"
+  ],
+  "type": "Salads",
+  "note": "Salad bowls.",
+  "tryit": "Harvest bowl"
+ },
+ {
+  "id": 150,
+  "name": "The Sylvie",
+  "address": "845 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "French"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date"
+  ],
+  "type": "French",
+  "note": "French-inspired café/restaurant.",
+  "tryit": "French plates"
+ },
+ {
+  "id": 151,
+  "name": "Table 7 Bistro",
+  "address": "720 Fannin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "client"
+  ],
+  "type": "American",
+  "note": "Bistro on Fannin.",
+  "tryit": "Bistro plates"
+ },
+ {
+  "id": 152,
+  "name": "Taco Fuego",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "International",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Tacos at Post HTX.",
+  "tryit": "Tacos"
+ },
+ {
+  "id": 153,
+  "name": "Taste Bar & Kitchen",
+  "address": "420 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "drinks"
+  ],
+  "type": "Southern",
+  "note": "Southern kitchen and bar on Main.",
+  "tryit": "Southern plates"
+ },
+ {
+  "id": 154,
+  "name": "Tavern By Hearsay",
+  "address": "737 Preston St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Bar and grill near Market Square.",
+  "tryit": "Bar food"
+ },
+ {
+  "id": 155,
+  "name": "Tenfold Coffee Company",
+  "address": "1550 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee shop near Discovery Green.",
+  "tryit": "Espresso drinks"
+ },
+ {
+  "id": 156,
+  "name": "Thai Cafe",
+  "address": "917 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian",
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Full Service",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy"
+  ],
+  "type": "Thai",
+  "note": "Thai café open late.",
+  "tryit": "Pad thai"
+ },
+ {
+  "id": 157,
+  "name": "Thai Kun",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian",
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "adventurous"
+  ],
+  "type": "Thai",
+  "note": "Street-style Thai at Post HTX.",
+  "tryit": "Khao man gai"
+ },
+ {
+  "id": 158,
+  "name": "The Finn",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food Hall"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Food Hall",
+  "note": "Finn Hall food hall in the JPMorgan Chase building.",
+  "tryit": "Browse"
+ },
+ {
+  "id": 159,
+  "name": "The Paleta Bar",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Dessert",
+  "note": "Mexican-style popsicles.",
+  "tryit": "Paletas"
+ },
+ {
+  "id": 160,
+  "name": "Theodore Rex",
+  "address": "1302 Nance St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "International"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Happy Hour"
+  ],
+  "price": 4,
+  "vibes": [
+   "date",
+   "adventurous"
+  ],
+  "type": "American",
+  "note": "Chef Justin Yu's celebrated small restaurant.",
+  "tryit": "Tasting-style plates"
+ },
+ {
+  "id": 161,
+  "name": "Three Keys Coffee Bar",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee in Finn Hall.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 162,
+  "name": "Thrive Juices",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Juice & Smoothies"
+  ],
+  "meals": [
+   "Food Hall"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy",
+   "veg"
+  ],
+  "type": "Juice",
+  "note": "Cold-pressed juice.",
+  "tryit": "Juice"
+ },
+ {
+  "id": 163,
+  "name": "Toro Toro",
+  "address": "1300 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Breakfast",
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "group",
+   "drinks"
+  ],
+  "type": "Latin Steakhouse",
+  "note": "Pan-Latin steakhouse at the Four Seasons.",
+  "tryit": "Churrasco, ceviche"
+ },
+ {
+  "id": 164,
+  "name": "Tout Suite",
+  "address": "1515 Fannin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Fast Casual",
+   "Lunch",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "sweet",
+   "veg"
+  ],
+  "type": "Bakery Café",
+  "note": "Bakery café near Discovery Green with a dog-friendly vibe.",
+  "tryit": "Macarons, breakfast"
+ },
+ {
+  "id": 165,
+  "name": "Treebeards",
+  "address": "1117 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Cajun",
+  "note": "Cajun cafeteria lunch staple.",
+  "tryit": "Red beans & rice, gumbo"
+ },
+ {
+  "id": 166,
+  "name": "Twisted Grilled Cheese",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "American",
+  "note": "Grilled cheese sandwiches.",
+  "tryit": "Grilled cheese"
+ },
+ {
+  "id": 167,
+  "name": "Underground Hall",
+  "address": "1010 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food Hall"
+  ],
+  "meals": [
+   "Food Hall",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "drinks"
+  ],
+  "type": "Food Hall",
+  "note": "Food hall on Prairie with Wokker, Birria Los Primos and more.",
+  "tryit": "Browse"
+ },
+ {
+  "id": 168,
+  "name": "Vic & Anthony's",
+  "address": "1510 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Seafood",
+   "Steakhouse"
+  ],
+  "meals": [
+   "Dinner",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 4,
+  "vibes": [
+   "upscale",
+   "client"
+  ],
+  "type": "Steakhouse",
+  "note": "Steakhouse across from the stadium.",
+  "tryit": "Steak"
+ },
+ {
+  "id": 169,
+  "name": "Walker Street Kitchen",
+  "address": "1777 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Full Service"
+  ],
+  "price": 2,
+  "vibes": [
+   "client"
+  ],
+  "type": "American",
+  "note": "Marriott Marquis restaurant.",
+  "tryit": "American plates"
+ },
+ {
+  "id": 170,
+  "name": "Wimpy's Hamburgers",
+  "address": "632 Polk St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Burgers",
+  "note": "No-frills burger joint.",
+  "tryit": "Burger"
+ },
+ {
+  "id": 171,
+  "name": "Wok & Roll",
+  "address": "1200 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian",
+   "Fast Food",
+   "Japanese & Sushi"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Chinese/Japanese.",
+  "tryit": "Fried rice"
+ },
+ {
+  "id": 172,
+  "name": "Wokker",
+  "address": "1010 Prairie St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Food Hall",
+   "Late Night",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy",
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Wok-fired noodles in Underground Hall.",
+  "tryit": "Noodles"
+ },
+ {
+  "id": 173,
+  "name": "Xochi",
+  "address": "1777 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 3,
+  "vibes": [
+   "adventurous",
+   "date",
+   "client"
+  ],
+  "type": "Mexican",
+  "note": "Hugo Ortega's Oaxacan restaurant — moles and masa.",
+  "tryit": "Mole, tlayudas, chocolate desserts"
+ },
+ {
+  "id": 174,
+  "name": "Yoyo's Hot Dog",
+  "address": "401 Franklin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Hot Dogs",
+  "note": "Bacon-wrapped hot dogs.",
+  "tryit": "Bacon-wrapped dog"
+ },
+ {
+  "id": 175,
+  "name": "Zaranda",
+  "address": "1550 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [],
+  "price": 3,
+  "vibes": [
+   "date",
+   "adventurous"
+  ],
+  "type": "Mexican",
+  "note": "Hugo Ortega's regional Mexican.",
+  "tryit": "Regional Mexican plates"
+ },
+ {
+  "id": 176,
+  "name": "Zero Sandwich",
+  "address": "507 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Sandwich shop.",
+  "tryit": "Sandwich"
+ },
+ {
+  "id": 177,
+  "name": "Zero's Sandwich Shop",
+  "address": "1110 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Sandwich shop.",
+  "tryit": "Sandwich"
+ },
+ {
+  "id": 178,
+  "name": "Zutro Restaurant & Bar",
+  "address": "1121 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Full Service",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "American",
+  "note": "Restaurant and bar.",
+  "tryit": "American plates"
+ },
+ {
+  "id": 179,
+  "name": "Zydeco Louisiana Diner",
+  "address": "1119 Pease St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Cajun",
+  "note": "Cajun lunch diner.",
+  "tryit": "Gumbo, po' boys"
+ },
+ {
+  "id": 180,
+  "name": "Addict Tea Cafe",
+  "address": "1001 Fannin St, Houston, TX",
+  "tunnel": "Lamar Tunnel",
+  "cuisines": [
+   "Coffee & Tea",
+   "Juice & Smoothies"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet",
+   "caffeine"
+  ],
+  "type": "Boba",
+  "note": "Tea and boba in the tunnel.",
+  "tryit": "Milk tea"
+ },
+ {
+  "id": 181,
+  "name": "API Kitchen Southern Food",
+  "address": "914 Main St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "American",
+   "Cajun & Southern",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "Southern",
+  "note": "Southern plate lunch in the tunnel.",
+  "tryit": "Fried chicken"
+ },
+ {
+  "id": 182,
+  "name": "Baoz Dumplings + Boba",
+  "address": "1001 Fannin St, Houston, TX",
+  "tunnel": "Lamar Tunnel",
+  "cuisines": [
+   "Asian",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Dumplings and boba.",
+  "tryit": "Bao"
+ },
+ {
+  "id": 183,
+  "name": "Blackwater Coffee Roasters",
+  "address": "1001 Fannin St, Houston, TX",
+  "tunnel": "Lamar Tunnel",
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee in the tunnel.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 184,
+  "name": "Bodard Express",
+  "address": "711 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "Asian",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Vietnamese",
+  "note": "Vietnamese quick lunch.",
+  "tryit": "Banh mi, vermicelli"
+ },
+ {
+  "id": 185,
+  "name": "Brown Bag Deli",
+  "address": "600 Travis St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Sandwiches.",
+  "tryit": "Sandwich"
+ },
+ {
+  "id": 186,
+  "name": "Bullritos",
+  "address": "919 Milam St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "Fast Food",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "group"
+  ],
+  "type": "Mexican",
+  "note": "Build-your-own burritos and bowls.",
+  "tryit": "Burrito bowl"
+ },
+ {
+  "id": 187,
+  "name": "Cassidy Mesquite Chicken",
+  "address": "930 Main St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "American",
+  "note": "Mesquite chicken plates.",
+  "tryit": "Chicken plate"
+ },
+ {
+  "id": 188,
+  "name": "Charlies BBQ & Hamburgers",
+  "address": "1001 Fannin St, Houston, TX",
+  "tunnel": "Lamar Tunnel",
+  "cuisines": [
+   "American",
+   "BBQ",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "comfort"
+  ],
+  "type": "BBQ",
+  "note": "BBQ and burgers.",
+  "tryit": "Burger"
+ },
+ {
+  "id": 189,
+  "name": "Chick-fil-A",
+  "address": "711 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "comfort"
+  ],
+  "type": "Fast Food",
+  "note": "Chicken sandwiches — closed Sundays.",
+  "tryit": "Spicy chicken sandwich"
+ },
+ {
+  "id": 190,
+  "name": "China Ocean",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Chinese & Hibachi",
+  "note": "Tunnel counter also known as Hibachi Grill / California Live Grill — Chinese plates plus made-to-order hibachi and stir-fry.",
+  "tryit": "Hibachi chicken or steak, fried rice"
+ },
+ {
+  "id": 191,
+  "name": "Cupcake and A Smile",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Bakery",
+  "note": "Cupcakes.",
+  "tryit": "Cupcake"
+ },
+ {
+  "id": 192,
+  "name": "Deli Deluxe",
+  "address": "1001 McKinney St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Fast Food",
+   "Indian"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "spicy"
+  ],
+  "type": "Indian",
+  "note": "Indian and deli plates.",
+  "tryit": "Curry plate"
+ },
+ {
+  "id": 193,
+  "name": "District 7 Grill",
+  "address": "1001 Louisiana St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "American",
+  "note": "Grill lunch.",
+  "tryit": "Grill plate"
+ },
+ {
+  "id": 194,
+  "name": "El Regio Mexican Grill",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": "W. Walker Tunnel",
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Mexican grill.",
+  "tryit": "Tacos"
+ },
+ {
+  "id": 195,
+  "name": "Farro",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Bowls",
+  "note": "Grain bowls.",
+  "tryit": "Bowl"
+ },
+ {
+  "id": 196,
+  "name": "Flip n Patties",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "adventurous"
+  ],
+  "type": "Filipino",
+  "note": "Filipino lunch.",
+  "tryit": "Lumpia"
+ },
+ {
+  "id": 197,
+  "name": "Kim's Cafe",
+  "address": "910 Louisiana St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "American",
+  "note": "Café lunch.",
+  "tryit": "Lunch plate"
+ },
+ {
+  "id": 198,
+  "name": "Kolache Factory",
+  "address": "811 Louisiana St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "Bakery & Dessert",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Bakery",
+  "note": "Kolaches.",
+  "tryit": "Kolaches"
+ },
+ {
+  "id": 199,
+  "name": "Kopi Cowboy Coffee",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine"
+  ],
+  "type": "Coffee",
+  "note": "Coffee in the tunnel.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 200,
+  "name": "La Taquiza",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Brunch",
+   "Dinner",
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Tacos.",
+  "tryit": "Tacos"
+ },
+ {
+  "id": 201,
+  "name": "Lennys Grill & Subs",
+  "address": "1001 Fannin St, Houston, TX",
+  "tunnel": "Lamar Tunnel",
+  "cuisines": [
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Subs and grill.",
+  "tryit": "Cheesesteak"
+ },
+ {
+  "id": 202,
+  "name": "Luchi & Joey's",
+  "address": "914 Main St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "Fast Food",
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Tex-Mex lunch.",
+  "tryit": "Tacos"
+ },
+ {
+  "id": 203,
+  "name": "Maggie Rita's",
+  "address": "600 Travis St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Full Service",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "drinks"
+  ],
+  "type": "Tex-Mex",
+  "note": "Tex-Mex restaurant.",
+  "tryit": "Enchiladas"
+ },
+ {
+  "id": 204,
+  "name": "Mayuri Express",
+  "address": "930 Main St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Fast Food",
+   "Indian"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "spicy"
+  ],
+  "type": "Indian",
+  "note": "Indian lunch.",
+  "tryit": "Curry"
+ },
+ {
+  "id": 205,
+  "name": "Mediterranean Grill House",
+  "address": "808 Travis St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Mediterranean"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Mediterranean",
+  "note": "Mediterranean plates.",
+  "tryit": "Shawarma"
+ },
+ {
+  "id": 206,
+  "name": "Michael's Cookie Jar",
+  "address": "711 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "Bakery & Dessert"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Bakery",
+  "note": "Cookies.",
+  "tryit": "Cookies"
+ },
+ {
+  "id": 207,
+  "name": "Mona",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Italian",
+  "note": "Italian lunch.",
+  "tryit": "Pasta"
+ },
+ {
+  "id": 208,
+  "name": "Murphy's Deli",
+  "address": "700 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Houston deli chain.",
+  "tryit": "Sandwiches"
+ },
+ {
+  "id": 209,
+  "name": "Otto's",
+  "address": "600 Travis St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "American",
+   "BBQ"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "BBQ",
+  "note": "Otto's tunnel location.",
+  "tryit": "Brisket"
+ },
+ {
+  "id": 210,
+  "name": "Pastabilities",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "American",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Italian",
+  "note": "Pasta and sandwiches.",
+  "tryit": "Pasta"
+ },
+ {
+  "id": 211,
+  "name": "Potbelly",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": "W. Walker Tunnel",
+  "cuisines": [
+   "American",
+   "Deli"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Toasted sandwich chain.",
+  "tryit": "Toasted sandwich"
+ },
+ {
+  "id": 212,
+  "name": "Schlotzsky's",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Sandwich chain.",
+  "tryit": "The Original"
+ },
+ {
+  "id": 213,
+  "name": "Seaside Poke",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Asian"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Food Hall",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Poke",
+  "note": "Poke bowls.",
+  "tryit": "Poke"
+ },
+ {
+  "id": 214,
+  "name": "Shipley's Do-nuts",
+  "address": "1001 McKinney St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Bakery & Dessert",
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "sweet"
+  ],
+  "type": "Bakery",
+  "note": "Houston donut classic.",
+  "tryit": "Glazed donut"
+ },
+ {
+  "id": 215,
+  "name": "Silver Lining",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Food Hall",
+   "Happy Hour",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks"
+  ],
+  "type": "Bar",
+  "note": "Bar in the tunnel area.",
+  "tryit": "Drinks"
+ },
+ {
+  "id": 216,
+  "name": "Smoothie Factory",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Fast Food",
+   "Juice & Smoothies"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Juice",
+  "note": "Smoothies.",
+  "tryit": "Smoothie"
+ },
+ {
+  "id": 217,
+  "name": "Smoothie King",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "Fast Food",
+   "Juice & Smoothies"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Juice",
+  "note": "Smoothies.",
+  "tryit": "Smoothie"
+ },
+ {
+  "id": 218,
+  "name": "Star Chef",
+  "address": "930 Main St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Asian",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Chinese",
+  "note": "Chinese lunch.",
+  "tryit": "Lunch special"
+ },
+ {
+  "id": 219,
+  "name": "Starbucks",
+  "address": "600 Travis St, Houston, TX",
+  "tunnel": "N. Travis Tunnel",
+  "cuisines": [
+   "Coffee & Tea"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "caffeine",
+   "quick"
+  ],
+  "type": "Coffee",
+  "note": "Coffee chain.",
+  "tryit": "Coffee"
+ },
+ {
+  "id": 220,
+  "name": "Sultan Pepper",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": "W. Walker Tunnel",
+  "cuisines": [
+   "Mediterranean"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Mediterranean",
+  "note": "Mediterranean.",
+  "tryit": "Gyro"
+ },
+ {
+  "id": 221,
+  "name": "Tacos a Go Go",
+  "address": "910 Louisiana St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "Mexican & Latin"
+  ],
+  "meals": [
+   "Breakfast",
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Mexican",
+  "note": "Tacos.",
+  "tryit": "Breakfast tacos"
+ },
+ {
+  "id": 222,
+  "name": "Taka Sushi",
+  "address": "930 Main St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Asian",
+   "Japanese & Sushi"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Japanese",
+  "note": "Sushi lunch.",
+  "tryit": "Rolls"
+ },
+ {
+  "id": 223,
+  "name": "Top Taste Asian",
+  "address": "930 Main St, Houston, TX",
+  "tunnel": "E. McKinney Tunnel",
+  "cuisines": [
+   "Asian",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Asian lunch.",
+  "tryit": "Lunch plate"
+ },
+ {
+  "id": 224,
+  "name": "Treebeards",
+  "address": "1100 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "Cajun & Southern"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick"
+  ],
+  "type": "Cajun",
+  "note": "Cajun cafeteria lunch staple.",
+  "tryit": "Red beans & rice, gumbo"
+ },
+ {
+  "id": 225,
+  "name": "Uncle Sharkii Poke Bar HTX",
+  "address": "711 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "Fast Food",
+   "International"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "healthy"
+  ],
+  "type": "Poke",
+  "note": "Poke bowls.",
+  "tryit": "Poke"
+ },
+ {
+  "id": 226,
+  "name": "Village Real Pit Barbeque",
+  "address": "815 Walker St, Houston, TX",
+  "tunnel": "Downtown Tunnel Loop",
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort"
+  ],
+  "type": "BBQ",
+  "note": "BBQ.",
+  "tryit": "Brisket"
+ },
+ {
+  "id": 227,
+  "name": "Which Wich",
+  "address": "711 Louisiana St, Houston, TX",
+  "tunnel": "N. Louisiana Tunnel",
+  "cuisines": [
+   "American",
+   "Deli",
+   "Fast Food"
+  ],
+  "meals": [
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Deli",
+  "note": "Sandwich chain.",
+  "tryit": "Wich"
+ },
+ {
+  "id": 228,
+  "name": "Wok and Roll",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": "W. Walker Tunnel",
+  "cuisines": [
+   "Asian",
+   "Fast Food",
+   "Japanese & Sushi"
+  ],
+  "meals": [
+   "Fast Casual",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Asian",
+  "note": "Chinese/Japanese.",
+  "tryit": "Fried rice"
+ },
+ {
+  "id": 229,
+  "name": "Whataburger",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": "W. Walker Tunnel",
+  "cuisines": [
+   "Fast Food"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "comfort"
+  ],
+  "type": "Burgers",
+  "note": "Texas burger chain with a counter in the W. Walker tunnel under 1000 Main.",
+  "tryit": "Whataburger, honey butter chicken biscuit"
+ },
+ {
+  "id": 230,
+  "name": "Guadalajara del Centro",
+  "address": "1201 San Jacinto St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "business"
+  ],
+  "type": "Tex-Mex",
+  "note": "Tex-Mex at GreenStreet — a lunch spot for the office crowd and a pre-game stop before Toyota Center events.",
+  "tryit": "Fajitas, enchiladas"
+ },
+ {
+  "id": 231,
+  "name": "Tom's Watch Bar",
+  "address": "1201 Caroline St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Bar"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "sports",
+   "group",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Big sports bar at GreenStreet with walls of TVs, steps from Toyota Center.",
+  "tryit": "Wings, burgers"
+ }
 ]

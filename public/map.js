@@ -299,18 +299,25 @@ export class CityMap {
     this.streetW = Math.min(this.blockW, this.blockD) * 0.078;   // ~15 m curb to curb; sidewalks run to the building line
 
     // --- spots (restaurants grouped by building) ---
+    // food halls, malls and hotels with several places (The Highlight, GreenStreet, POST…) become one pin
+    const venueOf = (p) => { const v = p.official?.venue || p.venue; return v && !/^(suite|unit|#|\()/i.test(v.trim()) ? v.replace(/ Houston$/, '').trim() : null; };
+    const addrKey = (p) => (p.address || '').toLowerCase().replace(/,.*$/, '').replace(/\b(street|st)\b\.?/g, 'st').trim();
+    const byAddr = {}; for (const p of pts) { const v = venueOf(p); if (v && !p.tunnel) byAddr[addrKey(p)] = v; }
+    const venueOf0 = venueOf; const venueOfA = (p) => venueOf0(p) || (!p.tunnel && byAddr[addrKey(p)]) || null;
+    const vCount = {}; for (const p of pts) { const v = venueOfA(p); if (v && !p.tunnel) vCount[v] = (vCount[v] || 0) + 1; }
     const groups = new Map();
     for (const p of pts) {
-      const [x, y] = proj(p.lat, p.lng);
-      const key = (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);
-      if (!groups.has(key)) groups.set(key, { x, y, tunnel: !!p.tunnel, places: [] });
-      groups.get(key).places.push(p);
+      const [x, y] = proj(p.lat, p.lng), v = venueOfA(p);
+      const key = v && !p.tunnel && vCount[v] > 1 ? 'V' + v : (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);
+      if (!groups.has(key)) groups.set(key, { x: 0, y: 0, tunnel: !!p.tunnel, places: [], venue: key[0] === 'V' ? v : null });
+      const g = groups.get(key); g.places.push(p); g.x += (x - g.x) / g.places.length; g.y += (y - g.y) / g.places.length;
     }
     this.spots = [...groups.values()];
     this.snapSpots();
     for (const s of this.spots) {
       s.style = styleFor(s.places[0]);
-      s.label = s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
+      s.label = s.venue ? s.venue : s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
+      if (s.venue) s.style = { ...s.style, emoji: /hotel|marriott|seasons|meridien|hyatt|embassy|laura|icon|rice|whitehall/i.test(s.venue) ? '🏨' : '🏬', color: '#7048e8' };
       s.cell = this.cellOf(s.x, s.y);
     }
     const A = this.avenues, C = this.cross;

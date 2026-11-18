@@ -71,6 +71,19 @@
   <p class="disclaim">Bars come from the Downtown Houston "Bars + Nightlife", "Happy Hour" and "Late Night" lists, refreshed daily. Happy hour deals are checked by hand and change often — tap through to confirm.</p>
 </section>
 
+<section class="view" id="v-coffee">
+  <h2>Coffee downtown ☕</h2>
+  <p class="sub" id="coffeeSub"></p>
+  <div class="chips" id="coffeeChips"></div>
+  <div class="row" style="margin-top:10px;align-items:center">
+    <select class="chip" id="coffeeSort"><option value="now">Open first</option><option value="near">Closest to me</option><option value="az">A–Z</option></select>
+    <button class="chip" id="coffeeMap">🗺️ Coffee on the map</button>
+    <span class="count" id="coffeeCount" style="margin:0 0 0 auto"></span>
+  </div>
+  <div class="grid" id="coffeeList" style="margin-top:10px"></div>
+  <p class="disclaim">From the Downtown Houston directory, refreshed daily. Tunnel cafés usually keep weekday office hours.</p>
+</section>
+
 <section class="view" id="v-browse">
   <h2>All downtown spots</h2>
   <input class="search" id="q" placeholder="Search name, cuisine, dish, street, tunnel…">
@@ -154,6 +167,7 @@
   <button data-v="map"><span>🗺️</span>Map</button>
   <button data-v="ask" id="askTab"><span>✨</span>Ask</button>
   <button data-v="night"><span>🌙</span>Night</button>
+  <button data-v="coffee"><span>☕</span>Coffee</button>
   <button data-v="week"><span>🗓️</span>Week</button>
   <button data-v="browse"><span>📖</span>Browse</button>
 </nav>
