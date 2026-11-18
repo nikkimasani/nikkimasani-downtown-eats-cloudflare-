@@ -1122,8 +1122,10 @@ export class CityMap {
       return P;
     };
     const blockOf = (x, y) => { const [i, j] = this.cellIdx(x, y); return { x0: i > 0 ? A[i - 1].x + sw + side : -1e9, x1: i < A.length ? A[i].x - sw - side : 1e9, y0: j > 0 ? C[j - 1].y + sw + side : -1e9, y1: j < C.length ? C[j].y - sw - side : 1e9 }; };
+    // hand-built tops for towers whose crowns OpenStreetMap doesn't describe: [scale of footprint, share of height, colour]
+    const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
     const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
-    for (const [ring, hM, minM, type, name, colour, material, roofShape, roofColour, roofH] of list) {
+    for (const [ring, hM, minM, type, name, colour, material, roofShape, roofColour, roofH, roofDir] of list) {
       let pts = ring.slice(0, -1).map(([la, ln]) => this.proj(la, ln)); if (pts.length < 3) continue;
       { // keep the part in whichever block holds most of the footprint (the fitted street grid can be a few metres off the real streets)
         const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length;
@@ -1138,7 +1140,7 @@ export class CityMap {
       const cx = xs.reduce((a, b) => a + b, 0) / xs.length, cy = ys.reduce((a, b) => a + b, 0) / ys.length;
       if (type === 'lot') { this.osmLots.push({ pts, bb }); continue; }
       if (skip.some((r) => cx > r.x0 && cx < r.x1 && cy > r.y0 && cy < r.y1)) continue;
-      const h = Math.max(0.35, hM / 10), z0 = (minM || 0) / 10, k = hash(cx.toFixed(1) + cy.toFixed(1));
+      const z0 = (minM || 0) / 10, h = Math.max(0.35, hM / 10 - z0), k = hash(cx.toFixed(1) + cy.toFixed(1));
       const glass = hM >= 85 && !/house|terrace/.test(type);
       let c = /^#[0-9a-f]{6}$/i.test(colour || '') ? colour : glass ? GLASS[Math.floor(k * GLASS.length)] : hM >= 25 ? CONCRETE[Math.floor(k * CONCRETE.length)] : LOW[Math.floor(k * LOW.length)];
       const mat = String(material || '').toLowerCase().split(';')[0];
@@ -1149,11 +1151,29 @@ export class CityMap {
       const o = { pts, bb, h, z0, c, glass: isGlass, name, type, cx, cy };
       if (/^#[0-9a-f]{6}$/i.test(roofColour || '')) o.roofC = roofColour; else if (/^(red|green|grey|gray|black|white|brown|blue)$/i.test(roofColour || '')) o.roofC = { red: '#a5463a', green: '#4f7a5a', grey: '#8a8f96', gray: '#8a8f96', black: '#3a3d42', white: '#eceae4', brown: '#7a5a44', blue: '#4a6c9a' }[roofColour.toLowerCase()];
       const rs = String(roofShape || '').toLowerCase();
-      if (/^(pyramidal|hipped|gabled|dome|onion|round|half-hipped|skillion)$/.test(rs)) { const span = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0); o.roof = rs; o.rh = roofH ? roofH / 10 : rs === 'dome' || rs === 'onion' || rs === 'round' ? span * 0.45 : rs === 'skillion' ? span * 0.15 : span * 0.32; }
+      if (/^(pyramidal|hipped|gabled|dome|onion|round|half-hipped|skillion)$/.test(rs)) {
+        const span = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0); o.roof = rs;
+        // OpenStreetMap's height already includes the roof, so the walls stop where the roof begins
+        if (roofH && roofH / 10 < h * 0.9) { o.rh = roofH / 10; o.h = h - o.rh; } else o.rh = Math.min(h * 0.5, rs === 'dome' || rs === 'onion' || rs === 'round' ? span * 0.45 : rs === 'skillion' ? span * 0.15 : span * 0.32);
+        // drop corner points that lie on a straight wall (left by clipping), so a box is four corners again
+        const sp = pts.filter((p, i) => { const a = pts[(i + pts.length - 1) % pts.length], b = pts[(i + 1) % pts.length]; const cr = (p[0] - a[0]) * (b[1] - p[1]) - (p[1] - a[1]) * (b[0] - p[0]); return Math.abs(cr) > 0.02 * Math.hypot(p[0] - a[0], p[1] - a[1]) * Math.hypot(b[0] - p[0], b[1] - p[1]); });
+        o.rp = sp.length >= 3 ? sp : pts;
+        if (rs === 'gabled' && o.rp.length !== 4) o.roof = 'hipped';
+        if (rs === 'skillion') {   // single slope: downhill toward roof:direction, else away from the longest wall
+          let d = null; const deg = { N: 0, NNE: 22.5, NE: 45, ENE: 67.5, E: 90, ESE: 112.5, SE: 135, SSE: 157.5, S: 180, SSW: 202.5, SW: 225, WSW: 247.5, W: 270, WNW: 292.5, NW: 315, NNW: 337.5 }[String(roofDir || '').toUpperCase()] ?? parseFloat(roofDir);
+          if (Number.isFinite(deg)) { const [la, ln] = ring[0], t = deg * Math.PI / 180, a0 = this.proj(la, ln), a1 = this.proj(la + Math.cos(t) * 1e-4, ln + Math.sin(t) * 1e-4 / Math.cos(la * Math.PI / 180)); const L = Math.hypot(a1[0] - a0[0], a1[1] - a0[1]); if (L) d = [(a1[0] - a0[0]) / L, (a1[1] - a0[1]) / L]; }
+          if (!d) { let bi = 0, bl = 0; const P = o.rp; P.forEach((a, i) => { const b = P[(i + 1) % P.length], l = Math.hypot(b[0] - a[0], b[1] - a[1]); if (l > bl) { bl = l; bi = i; } }); const a = P[bi], b = P[(bi + 1) % P.length]; d = [-(b[1] - a[1]) / bl, (b[0] - a[0]) / bl]; if ((cx - a[0]) * d[0] + (cy - a[1]) * d[1] < 0) d = [-d[0], -d[1]]; }
+          const ts = o.rp.map((p) => p[0] * d[0] + p[1] * d[1]), t0 = Math.min(...ts), t1 = Math.max(...ts); o.rz = ts.map((t) => o.rh * (t1 - t) / ((t1 - t0) || 1));
+        }
+      }
       if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
       this.osm.push(o);
+      const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
+        for (const [s, f, cc] of cr) { const q = pts.map((p) => [cx + (p[0] - cx) * s, cy + (p[1] - cy) * s]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]); this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: f * h, z0: top, c: cc || o.c, glass: o.glass, name: '', type: 'crown', cx, cy }); top += f * h; } }
     }
+    // drop upper parts left floating because the tower under them isn't mapped
+    this.osm = this.osm.filter((o) => !(o.z0 > 0.5) || o.type === 'crown' || this.osm.some((u) => u !== o && u.z0 < o.z0 && u.z0 + u.h >= o.z0 - 0.6 && inPoly(o.cx, o.cy, u.pts)));
     if (this.osm.length < 50) { this.osm = null; this.osmLots = []; this.landmarks = this.allLandmarks; return false; }   // bad download: fall back to the drawn city
     // a few blocks OpenStreetMap hasn't mapped yet, drawn by hand (fractions run west→east and north→south across the block)
     const FILL = [
@@ -1220,11 +1240,17 @@ export class CityMap {
 
   // pitched, pyramid and domed roofs where OpenStreetMap records them
   drawRoof(o, N) {
-    const ctx = this.ctx, v = this.v, P = o.pts, z1 = o.z0 + o.h, rh = o.rh, base = N ? darken(o.roofC || darken(o.c, 0.25), 0.45) : (o.roofC || darken(o.c, 0.25));
+    const ctx = this.ctx, v = this.v, P = o.rp || o.pts, z1 = o.z0 + o.h, rh = o.rh, base = N ? darken(o.roofC || darken(o.c, 0.25), 0.45) : (o.roofC || darken(o.c, 0.25));
     const face = (pts, nx, ny) => { const [, r] = v.vis(nx, ny); poly(ctx, pts.map((q) => v.p(q[0], q[1], q[2])), darken(base, 0.06 + 0.1 * (1 - (r + 1.41) / 2.82))); };
     if (o.roof === 'dome' || o.roof === 'onion' || o.roof === 'round') {
       const rings = 6; for (let k = 0; k < rings; k++) { const t0 = k / rings, t1 = (k + 1) / rings, s0 = Math.cos(t0 * Math.PI / 2), s1 = Math.cos(t1 * Math.PI / 2), h0 = Math.sin(t0 * Math.PI / 2) * rh, h1 = Math.sin(t1 * Math.PI / 2) * rh;
         poly(ctx, P.map((p) => v.p(o.cx + (p[0] - o.cx) * s0, o.cy + (p[1] - o.cy) * s0, z1 + h0)), lighten(base, k * 0.05)); poly(ctx, P.map((p) => v.p(o.cx + (p[0] - o.cx) * s1, o.cy + (p[1] - o.cy) * s1, z1 + h1)), lighten(base, (k + 1) * 0.05)); }
+      return;
+    }
+    if (o.roof === 'skillion' && o.rz) {   // one sloping plane, with the wedge of wall under its high side
+      const Z = o.rz; P.map((a, i) => { const j = (i + 1) % P.length, b = P[j]; return { f: [[...a, z1], [...b, z1], [...b, z1 + Z[j]], [...a, z1 + Z[i]]], d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2), mx: (a[0] + b[0]) / 2 - o.cx, my: (a[1] + b[1]) / 2 - o.cy, z: Z[i] + Z[j] }; })
+        .filter((e) => e.z > 0.01).sort((a, b) => a.d - b.d).forEach((e) => { const [, rr] = v.vis(e.mx, e.my); poly(ctx, e.f.map((q) => v.p(q[0], q[1], q[2])), darken(N ? darken(o.c, 0.45) : o.c, 0.08 + 0.12 * (1 - (rr + 1.41) / 2.82))); });
+      poly(ctx, P.map((p, i) => v.p(p[0], p[1], z1 + Z[i])), lighten(o.roofC || o.c, N ? 0 : 0.14), 'rgba(255,255,255,.25)');
       return;
     }
     if (o.roof === 'gabled' && P.length === 4) {   // ridge along the long side

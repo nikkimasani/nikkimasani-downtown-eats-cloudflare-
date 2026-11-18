@@ -116,16 +116,19 @@ export async function openPOV(city, opts = {}) {
   };
   const solids = [];   // for walking collisions, in map units
   const roofGeo = (o) => {   // pitched / pyramid / dome roofs, coloured
-    const z1 = ((o.z0 || 0) + o.h) * S, rh = o.rh * S, P = o.pts, cx = o.cx * S, cz = o.cy * S, pos = [];
+    const z1 = ((o.z0 || 0) + o.h) * S, rh = o.rh * S, P = o.rp || o.pts, cx = o.cx * S, cz = o.cy * S, pos = [];
     const tri = (a, b, c) => pos.push(...a, ...b, ...c);
-    if (o.roof === 'dome' || o.roof === 'onion' || o.roof === 'round') { const rings = 8; for (let k = 0; k < rings; k++) { const s0 = Math.cos((k / rings) * Math.PI / 2), s1 = Math.cos(((k + 1) / rings) * Math.PI / 2), h0 = Math.sin((k / rings) * Math.PI / 2) * rh, h1 = Math.sin(((k + 1) / rings) * Math.PI / 2) * rh;
+    if (o.roof === 'skillion' && o.rz) { const Z = o.rz.map((z) => z1 + z * S), W = P.map((q, i) => [q[0] * S, Z[i], q[1] * S]);
+      for (let i = 1; i < P.length - 1; i++) tri(W[0], W[i], W[i + 1]);
+      for (let i = 0; i < P.length; i++) { const j = (i + 1) % P.length, a = [P[i][0] * S, z1, P[i][1] * S], b = [P[j][0] * S, z1, P[j][1] * S]; tri(a, b, W[j]); tri(a, W[j], W[i]); } }
+    else if (o.roof === 'dome' || o.roof === 'onion' || o.roof === 'round') { const rings = 8; for (let k = 0; k < rings; k++) { const s0 = Math.cos((k / rings) * Math.PI / 2), s1 = Math.cos(((k + 1) / rings) * Math.PI / 2), h0 = Math.sin((k / rings) * Math.PI / 2) * rh, h1 = Math.sin(((k + 1) / rings) * Math.PI / 2) * rh;
         for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], A0 = [cx + (a[0] * S - cx) * s0, z1 + h0, cz + (a[1] * S - cz) * s0], B0 = [cx + (b[0] * S - cx) * s0, z1 + h0, cz + (b[1] * S - cz) * s0], A1 = [cx + (a[0] * S - cx) * s1, z1 + h1, cz + (a[1] * S - cz) * s1], B1 = [cx + (b[0] * S - cx) * s1, z1 + h1, cz + (b[1] * S - cz) * s1]; tri(A0, B0, B1); tri(A0, B1, A1); } } }
     else if (o.roof === 'gabled' && P.length === 4) { const e = [0, 1, 2, 3].map((i) => Math.hypot(P[(i + 1) % 4][0] - P[i][0], P[(i + 1) % 4][1] - P[i][1])), s = e[0] + e[2] < e[1] + e[3] ? 0 : 1, Q = P.map((q) => [q[0] * S, z1, q[1] * S]);
       const mid = (a, b) => [(a[0] + b[0]) / 2, z1 + rh, (a[2] + b[2]) / 2], R1 = mid(Q[s], Q[s + 1]), R2 = mid(Q[s + 2], Q[(s + 3) % 4]);
       tri(Q[s + 1], Q[s + 2], R2); tri(Q[s + 1], R2, R1); tri(Q[(s + 3) % 4], Q[s], R1); tri(Q[(s + 3) % 4], R1, R2); tri(Q[s], Q[s + 1], R1); tri(Q[s + 2], Q[(s + 3) % 4], R2); }
     else { const ap = [cx, z1 + rh, cz]; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; tri([a[0] * S, z1, a[1] * S], [b[0] * S, z1, b[1] * S], ap); } }
     const g = new T.BufferGeometry(); g.setAttribute('position', new T.BufferAttribute(new Float32Array(pos), 3)); g.computeVertexNormals();
-    const c = new T.Color(o.roofC || '#7d6a5c'), n = pos.length / 3, cols = new Float32Array(n * 3); for (let k = 0; k < n; k++) { cols[k * 3] = c.r; cols[k * 3 + 1] = c.g; cols[k * 3 + 2] = c.b; } g.setAttribute('color', new T.BufferAttribute(cols, 3));
+    const c = new T.Color(o.roofC || (o.roof === 'skillion' ? o.c : '#7d6a5c')), n = pos.length / 3, cols = new Float32Array(n * 3); for (let k = 0; k < n; k++) { cols[k * 3] = c.r; cols[k * 3 + 1] = c.g; cols[k * 3 + 2] = c.b; } g.setAttribute('color', new T.BufferAttribute(cols, 3));
     g.setAttribute('uv', new T.BufferAttribute(new Float32Array(n * 2), 2)); return g;
   };
   for (const o of city.osm || []) { pushBuilding(o.pts, o.h, o.z0 || 0, o.c, o.glass || o.h >= 8.5, o.h >= 0.6 && !/parking|church|garage|standin/.test(o.type || '')); if (o.roof && o.rh > 0) roofParts.push(roofGeo(o)); if (o.h >= 0.3 && !(o.z0 > 0.3)) solids.push({ bb: o.bb, pts: o.pts }); }

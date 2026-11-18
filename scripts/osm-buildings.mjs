@@ -42,7 +42,7 @@ for (const el of data.elements) {
     const parking = t.amenity === 'parking' && !t.building;
     const levels = num(t['building:levels']), h = num(t.height) ?? (levels != null ? levels * 3.6 + 2 : null);
     items.push({ part: !!t['building:part'], parking, name: t.name || null, h, minH: num(t.min_height) ?? (num(t['building:min_level']) != null ? num(t['building:min_level']) * 3.6 : 0),
-      type: t.building || t['building:part'] || (parking ? 'parking' : 'yes'), colour: t['building:colour'] || null, roof: t['roof:colour'] || null, material: t['building:material'] || null, shape: t['roof:shape'] || null, rh: num(t['roof:height']), ring, a });
+      type: t.building || t['building:part'] || (parking ? 'parking' : 'yes'), colour: t['building:colour'] || null, roof: t['roof:colour'] || null, material: t['building:material'] || null, shape: t['roof:shape'] || null, rh: num(t['roof:height']), dir: t['roof:direction'] || null, ring, a });
   }
 }
 // where a building is drawn in parts (podium + tower), draw the parts instead of the outline
@@ -52,7 +52,7 @@ for (const it of items) {
   if (!it.part && !it.parking && parts.some((p) => p.h && inside(centroid(p.ring), it.ring))) continue;
   const h = it.h ?? (it.parking ? 0 : it.type === 'parking' ? 14 : it.a > 4000 ? 16 : 11);
   const r = simplify(it.ring, it.a > 2000 ? 1.5 : 0.8).map(([la, ln]) => [+la.toFixed(6), +ln.toFixed(6)]);
-  out.push([r, Math.round(h * 10) / 10, Math.round(it.minH * 10) / 10, it.parking ? 'lot' : it.type, it.name, it.colour, it.material, it.shape, it.roof, it.rh]);
+  out.push([r, Math.round(h * 10) / 10, Math.round(it.minH * 10) / 10, it.parking ? 'lot' : it.type, it.name, it.colour, it.material, it.shape, it.roof, it.rh, it.dir]);
 }
-fs.writeFileSync('public/buildings.json', JSON.stringify({ updated: new Date().toISOString(), source: 'OpenStreetMap contributors (ODbL)', fields: ['ring[lat,lng]', 'heightM', 'minHeightM', 'type', 'name', 'colour', 'material', 'roofShape', 'roofColour', 'roofHeightM'], b: out }));
+fs.writeFileSync('public/buildings.json', JSON.stringify({ updated: new Date().toISOString(), source: 'OpenStreetMap contributors (ODbL)', fields: ['ring[lat,lng]', 'heightM', 'minHeightM', 'type', 'name', 'colour', 'material', 'roofShape', 'roofColour', 'roofHeightM', 'roofDirection'], b: out }));
 console.log('buildings', out.length, '· with real height', items.filter((i) => i.h).length, '· parts', parts.length);
