@@ -1240,8 +1240,15 @@ export class CityMap {
         for (let z = z0 + 0.36; z < z1 - 0.1; z += 0.36) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); }
         ctx.stroke();
       }
-      if (N && !o.glass && o.h > 1.2 && v.s > 0.3) for (let i = 0; i < Math.min(10, w.L * o.h * 0.6); i++) {
-        const r = hash(w.a[0] + ',' + w.a[1] + ',' + i); if (r < 0.55) continue; const t = 0.1 + hash(i + ':' + w.b[0]) * 0.8, t2 = Math.min(1, t + 0.18 / w.L), zz = z0 + 0.3 + r * (o.h - 0.6), q1 = lerp2(w.a, w.b, t), q2 = lerp2(w.a, w.b, t2);
+      const lit = this._dusk || 0;
+      if (lit > 0.12 && o.glass && o.h > 2 && v.s > 0.3) {   // whole lit floors on glass towers
+        const step = o.h > 15 ? 0.84 : 0.42, nf = Math.floor((o.h - 0.3) / step); ctx.globalAlpha = alpha * Math.min(1, lit * 1.4);
+        for (let f = 0; f < nf; f++) { const r = hash(o.cx + ':' + f + ':' + w.a[0]); if (r > 0.18 + lit * 0.32) continue; const zz = z0 + 0.15 + f * step, t = r * 0.5, t2 = Math.min(1, t + 0.25 + hash(f + 'w' + w.b[1]) * 0.5), q1 = lerp2(w.a, w.b, t), q2 = lerp2(w.a, w.b, t2);
+          poly(ctx, [v.p(...q1, zz), v.p(...q2, zz), v.p(...q2, zz + step * 0.55), v.p(...q1, zz + step * 0.55)], 'rgba(255,214,140,.6)'); }
+        ctx.globalAlpha = alpha;
+      }
+      if (lit > 0.12 && !o.glass && o.h > 1.2 && v.s > 0.3) for (let i = 0; i < Math.min(10, w.L * o.h * 0.6); i++) {
+        const r = hash(w.a[0] + ',' + w.a[1] + ',' + i); if (r < 1 - 0.45 * Math.min(1, lit * 1.3)) continue; const t = 0.1 + hash(i + ':' + w.b[0]) * 0.8, t2 = Math.min(1, t + 0.18 / w.L), zz = z0 + 0.3 + r * (o.h - 0.6), q1 = lerp2(w.a, w.b, t), q2 = lerp2(w.a, w.b, t2);
         poly(ctx, [v.p(...q1, zz), v.p(...q2, zz), v.p(...q2, zz + 0.16), v.p(...q1, zz + 0.16)], 'rgba(255,212,120,.85)');
       }
     }
@@ -1589,6 +1596,14 @@ export class CityMap {
   }
   u() { return Math.min(1.1, Math.max(0.5, this.v.s * 1.1)); }
   pinLift() { return 16 * Math.min(1.2, Math.max(0.8, this.v.s)); }
+  // [top of sky, horizon] for the time of day: pale blue by day, violet-to-orange at sunset, navy at night
+  skyColors(night, warm) {
+    const day = ['#bcd4ee', '#e6eef6'], sunset = ['#7a6fb3', '#f6a55c'], dusk = ['#3b3f7a', '#c77a6b'], nite = ['#0c1024', '#27305a'];
+    if (night >= 0.85) return nite;
+    if (night > 0.2) { const t = (night - 0.2) / 0.65; return [mixC(dusk[0], nite[0], t), mixC(dusk[1], nite[1], t)]; }
+    const s = Math.min(1, Math.max(0, (warm - 0.25) / 0.6)), base = night > 0 ? [mixC(sunset[0], dusk[0], night / 0.2), mixC(sunset[1], dusk[1], night / 0.2)] : sunset;
+    return [mixC(day[0], base[0], s), mixC(day[1], base[1], s)];
+  }
   warmAmount(d = new Date()) {   // 0..1, peaks around sunset
     if (this.themeNight === true) return 0; if (this.themeNight === false) return 0.22; const h = d.getHours() + d.getMinutes() / 60;
     return Math.max(0, 1 - Math.abs(h - 17.9) / 1.6) * 0.9 + Math.max(0, 1 - Math.abs(h - 7.3) / 1.0) * 0.5; }
@@ -1627,6 +1642,8 @@ export class CityMap {
   draw(now) {
     const ctx = this.ctx, v = this.v, B = this.bounds, night = this.nightAmount(), mode = this.mode, lod = this.lod(), N = night > 0.5;
     ctx.fillStyle = mode === 'tunnel' ? '#121624' : N ? '#1d2338' : '#e9eef3'; ctx.fillRect(0, 0, this.W, this.H);
+    this._dusk = night; const sky = mode === 'tunnel' ? null : this.skyColors(night, this._warm || 0);
+    if (sky) { const g = ctx.createLinearGradient(0, 0, 0, this.H); g.addColorStop(0, sky[0]); g.addColorStop(0.45, sky[1]); g.addColorStop(1, N ? '#1d2338' : '#e9eef3'); ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, this.H); }
     if (mode === 'tunnel') { this.drawGhostGrid(); this.drawTunnels(now); this.drawMarkers(true); this.drawPickBeacon(now); return; }
 
     const walk = N ? '#3a4152' : '#eef0f2', road = N ? '#20242f' : '#a3a9b2';
@@ -1699,6 +1716,11 @@ export class CityMap {
     TAKEN = null;
     this.drawMark(now);
     if (night > 0) { ctx.fillStyle = `rgba(14,18,48,${0.1 * night})`; ctx.fillRect(0, 0, this.W, this.H); }
+    if (sky && !this.hide.sky) {   // distant sky over the far edge of the city, and a warm wash at golden hour
+      const hz = this.H * 0.34, g = ctx.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, sky[0]); g.addColorStop(0.55, sky[1] + 'aa'); g.addColorStop(1, sky[1] + '00');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, hz);
+      const wm = (this._warm || 0) * (1 - night); if (wm > 0.25) { ctx.fillStyle = `rgba(255,150,70,${(wm - 0.25) * 0.14})`; ctx.fillRect(0, 0, this.W, this.H); }
+    }
     this.drawPickBeacon(now);
   }
 
