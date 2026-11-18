@@ -1207,7 +1207,7 @@ export class CityMap {
     if (!(v.s < 0.3 && o.h < 1.5)) for (let i = 0; i < n; i++) {
       const a = P[i], b = P[(i + 1) % n], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 0.05) continue;
       const nx = dy / L, ny = -dx / L, [f, r] = v.vis(nx, ny); if (f <= 0.001) continue;
-      walls.push({ a, b, L, sun: Math.max(0, r / Math.SQRT2), shade: 0.135 + 0.065 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
+      walls.push({ a, b, L, sun: Math.max(0, -r / Math.SQRT2), shade: 0.125 + 0.105 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
     }
     walls.sort((p, q) => p.d - q.d);
     const fancy = v.s >= 0.3 && o.h > 1.2, warm = this._warm || 0;
@@ -1235,10 +1235,16 @@ export class CityMap {
         ctx.strokeStyle = N ? 'rgba(255,214,140,.35)' : 'rgba(255,255,255,.25)'; ctx.lineWidth = 1; ctx.beginPath();
         const nv = Math.max(2, Math.round(w.L / 0.5)); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], z0 + 0.3)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.1)); }
         ctx.stroke();
-      } else if (o.h > 1 && v.s > 0.45) {   // floors
-        ctx.strokeStyle = N ? 'rgba(255,214,140,.3)' : 'rgba(0,0,0,.08)'; ctx.lineWidth = 1; ctx.beginPath();
-        for (let z = z0 + 0.36; z < z1 - 0.1; z += 0.36) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); }
-        ctx.stroke();
+      } else if (o.h > 1 && v.s > 0.45) {
+        const pa = v.p(w.a[0], w.a[1], z0), pb = v.p(w.b[0], w.b[1], z0), sl = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]);
+        if (/parking|garage/.test(o.type || '')) {   // open garage decks: dark slots between the slabs
+          ctx.strokeStyle = N ? 'rgba(0,0,0,.45)' : 'rgba(40,44,52,.38)'; ctx.lineWidth = Math.max(1, 0.2 * ZU * v.s); ctx.beginPath();
+          for (let z = z0 + 0.2; z < z1 - 0.1; z += 0.34) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
+        } else if (sl > 12) {   // punched windows: one dashed band per floor
+          const cols = Math.max(2, Math.round(w.L / 0.3)), seg = sl / cols; ctx.setLineDash([seg * 0.55, seg * 0.45]); ctx.lineDashOffset = -seg * 0.22;
+          ctx.strokeStyle = N ? 'rgba(20,24,40,.55)' : mixC(darken(col, 0.45), '#33465e', 0.55) + 'b0'; ctx.lineWidth = Math.max(1, 0.15 * ZU * v.s); ctx.beginPath();
+          for (let z = z0 + 0.42; z < z1 - 0.12; z += 0.36) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset = 0;
+        }
       }
       const lit = this._dusk || 0;
       if (lit > 0.12 && o.glass && o.h > 2 && v.s > 0.3) {   // whole lit floors on glass towers
@@ -1256,7 +1262,8 @@ export class CityMap {
       ctx.strokeStyle = N ? 'rgba(255,255,255,.06)' : 'rgba(255,255,255,.28)'; ctx.lineWidth = 1; ctx.beginPath();
       for (const w of walls) { ctx.moveTo(...v.p(w.a[0], w.a[1], z0)); ctx.lineTo(...v.p(w.a[0], w.a[1], z1)); ctx.lineTo(...v.p(w.b[0], w.b[1], z1)); } ctx.stroke();
     }
-    poly(ctx, P.map((p) => v.p(p[0], p[1], z1)), N ? lighten(col, 0.08) : lighten(col, 0.12), 'rgba(255,255,255,.2)');
+    const rk = hash(o.cx * 7 + ':' + o.cy * 3), roofTone = o.roofC || (o.type === 'crown' ? lighten(col, 0.12) : o.glass ? (rk < 0.5 ? '#7d858e' : '#959ca4') : rk < 0.4 ? '#c9cbcc' : rk < 0.75 ? '#dfe0dd' : '#a9adb1');
+    poly(ctx, P.map((p) => v.p(p[0], p[1], z1)), N ? darken(mixC(roofTone, col, 0.25), 0.5) : mixC(roofTone, col, o.type === 'crown' ? 0 : 0.18), 'rgba(255,255,255,.2)');
     if (!o.roof && !o.pool && o.h > 2.5 && v.s > 0.3 && o.type !== 'lot' && o.type !== 'parking') {
       const sx = o.bb.x1 - o.bb.x0, sy = o.bb.y1 - o.bb.y0, k = hash(o.cx + ':' + o.cy);
       if (sx > 1 && sy > 1) {   // parapet line, then a rooftop mechanical penthouse
@@ -1646,7 +1653,7 @@ export class CityMap {
     if (sky) { const g = ctx.createLinearGradient(0, 0, 0, this.H); g.addColorStop(0, sky[0]); g.addColorStop(0.45, sky[1]); g.addColorStop(1, N ? '#1d2338' : '#e9eef3'); ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, this.H); }
     if (mode === 'tunnel') { this.drawGhostGrid(); this.drawTunnels(now); this.drawMarkers(true); this.drawPickBeacon(now); return; }
 
-    const walk = N ? '#3a4152' : '#eef0f2', road = N ? '#20242f' : '#a3a9b2';
+    const walk = N ? '#3a4152' : '#e9e7e2', road = N ? '#20242f' : '#959ba3', inner = N ? '#343a4a' : '#dedbd4';
     for (const f of sides(v, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0)) poly(ctx, [v.p(...f.a), v.p(...f.b), v.p(...f.b, -0.8), v.p(...f.a, -0.8)], darken(N ? '#20253a' : '#d0d5db', f.shade));
     poly(ctx, [v.p(B.x0, B.y0), v.p(B.x1, B.y0), v.p(B.x1, B.y1), v.p(B.x0, B.y1)], N ? '#2c3244' : '#dde2e7');
     this.drawBayouAndFreeways(N, now);
@@ -1655,7 +1662,8 @@ export class CityMap {
     poly(ctx, [v.p(ax0, cy0), v.p(ax1, cy0), v.p(ax1, cy1), v.p(ax0, cy1)], road);
     for (let i = 0; i < A.length - 1; i++) for (let j = 0; j < C.length - 1; j++) {
       const x0 = A[i].x + sw, x1 = A[i + 1].x - sw, y0 = C[j].y + sw, y1 = C[j + 1].y - sw;
-      poly(ctx, [v.p(x0, y0), v.p(x1, y0), v.p(x1, y1), v.p(x0, y1)], walk);
+      poly(ctx, [v.p(x0, y0), v.p(x1, y0), v.p(x1, y1), v.p(x0, y1)], walk, N ? null : 'rgba(60,64,72,.22)');   // sidewalk, curb edge
+      const ins = 0.28; if (x1 - x0 > 1 && y1 - y0 > 1) poly(ctx, [v.p(x0 + ins, y0 + ins), v.p(x1 - ins, y0 + ins), v.p(x1 - ins, y1 - ins), v.p(x0 + ins, y1 - ins)], inner);
     }
     if (v.s > 0.45) {
       ctx.strokeStyle = N ? 'rgba(255,214,120,.3)' : 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; ctx.setLineDash([6, 8]);
@@ -1680,6 +1688,12 @@ export class CityMap {
     for (const o of this.osm || []) { const [sx, sy] = v.p(o.cx, o.cy), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20, up = (o.z0 + o.h) * ZU * v.s; if (sx < -r || sx > this.W + r || sy + r < 0 || sy - up - r > this.H) continue; items.push({ k: this.osmDepth(o), o }); }
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
     if (!this.hide.people) for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
+    if (!this._stTrees) { const T = [], sw = this.streetW, A = this.avenues, C = this.cross, mapped = this.geo?.trees || [];
+      const near = (x, y) => mapped.some(([a, b]) => Math.abs(a - x) < 1.2 && Math.abs(b - y) < 1.2);
+      for (const a of A) for (const sd of [-1, 1]) for (let j = 0; j < C.length - 1; j++) for (let y = C[j].y + sw + 1; y < C[j + 1].y - sw - 0.6; y += 2.4) { const x = a.x + sd * (sw + 0.16); if (hash(x + '|' + y) < 0.42 && !near(x, y)) T.push([x, y]); }
+      for (const c of C) for (const sd of [-1, 1]) for (let i = 0; i < A.length - 1; i++) for (let x = A[i].x + sw + 1; x < A[i + 1].x - sw - 0.6; x += 2.4) { const y = c.y + sd * (sw + 0.16); if (hash(x + '~' + y) < 0.42 && !near(x, y)) T.push([x, y]); }
+      this._stTrees = T.filter(([x, y]) => !(this.osm || []).some((o) => x > o.bb.x0 && x < o.bb.x1 && y > o.bb.y0 && y < o.bb.y1 && ptIn(x, y, o.pts))); }
+    if (v.s > 0.5) for (const [x, y] of this._stTrees) { const [sx, sy] = v.p(x, y); if (sx < -30 || sx > this.W + 30 || sy < -10 || sy > this.H + 60) continue; items.push({ k: v.depth(x, y) + 0.4, tr: [x, y] }); }
     if (this.geo?.trees && v.s > 0.4) for (const [x, y] of this.geo.trees) { const [sx, sy] = v.p(x, y); if (sx < -30 || sx > this.W + 30 || sy < -10 || sy > this.H + 60) continue; items.push({ k: v.depth(x, y) + 0.4, tr: [x, y] }); }
     const live = !!this.liveData, liveRail = live && (this.liveCars || []).some((c) => c.kind === 'train') || this.liveRailSeen;
     if (!liveRail && !this.hide.trains) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
@@ -1702,6 +1716,11 @@ export class CityMap {
       else if (it.tr) this.drawStreetTree(it.tr[0], it.tr[1], N, ghost);
       else this.drawNpc(it.n, now, 0);
     }
+    if (sky && !this.hide.sky) {   // distant sky over the far edge of the city, and a warm wash at golden hour (under pins and labels)
+      const hz = this.H * 0.24, g = ctx.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, sky[0] + 'e0'); g.addColorStop(0.5, sky[1] + '70'); g.addColorStop(1, sky[1] + '00');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, hz);
+      const wm = (this._warm || 0) * (1 - night); if (wm > 0.25) { ctx.fillStyle = `rgba(255,150,70,${(wm - 0.25) * 0.1})`; ctx.fillRect(0, 0, this.W, this.H); }
+    }
     if (!this.hide.sky) { this.drawBeacons(now, N); this.drawClouds(now, N); }
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
     this.drawRailOverlay();
@@ -1716,11 +1735,6 @@ export class CityMap {
     TAKEN = null;
     this.drawMark(now);
     if (night > 0) { ctx.fillStyle = `rgba(14,18,48,${0.1 * night})`; ctx.fillRect(0, 0, this.W, this.H); }
-    if (sky && !this.hide.sky) {   // distant sky over the far edge of the city, and a warm wash at golden hour
-      const hz = this.H * 0.34, g = ctx.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, sky[0]); g.addColorStop(0.55, sky[1] + 'aa'); g.addColorStop(1, sky[1] + '00');
-      ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, hz);
-      const wm = (this._warm || 0) * (1 - night); if (wm > 0.25) { ctx.fillStyle = `rgba(255,150,70,${(wm - 0.25) * 0.14})`; ctx.fillRect(0, 0, this.W, this.H); }
-    }
     this.drawPickBeacon(now);
   }
 
