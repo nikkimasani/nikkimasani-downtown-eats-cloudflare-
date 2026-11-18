@@ -78,6 +78,52 @@
       "source": "https://lgbtq.visithoustontexas.com/listings/moxy-houston-downtown/32029/",
       "checked": "2026-11-17",
       "notInDirectory": true
+    },
+    "HiFi at The Finn": {
+      "lat": 29.758677,
+      "lng": -95.363809,
+      "street": "712 Main St",
+      "venue": "The Finn",
+      "source": "https://whatnow.com/?p=352528",
+      "checked": "2026-11-17",
+      "notInDirectory": true,
+      "hours": "Wed–Sat evenings — check before you go"
+    },
+    "Dozier's BBQ": {
+      "lat": 29.758677,
+      "lng": -95.363809,
+      "street": "712 Main St",
+      "venue": "The Finn",
+      "source": "https://whatnow.com/?p=352528",
+      "checked": "2026-11-17",
+      "notInDirectory": true
+    },
+    "Hot Peckers": {
+      "lat": 29.758677,
+      "lng": -95.363809,
+      "street": "712 Main St",
+      "venue": "The Finn",
+      "source": "https://whatnow.com/?p=352528",
+      "checked": "2026-11-17",
+      "notInDirectory": true
+    },
+    "Samurai Noodle": {
+      "lat": 29.7633,
+      "lng": -95.36479,
+      "street": "411 Smith St",
+      "venue": "Lyric Market",
+      "source": "https://www.pressreader.com/usa/houston-chronicle-sunday/20231210/282557317987125",
+      "checked": "2026-11-17",
+      "notInDirectory": true
+    },
+    "Lyric Bar": {
+      "lat": 29.7633,
+      "lng": -95.36479,
+      "street": "411 Smith St",
+      "venue": "Lyric Market",
+      "source": "https://www.pressreader.com/usa/houston-chronicle-sunday/20231210/282557317987125",
+      "checked": "2026-11-17",
+      "notInDirectory": true
     }
   }
 }

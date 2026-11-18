@@ -43,14 +43,21 @@ export async function openPOV(city, opts = {}) {
   const keep = (x) => { disposables.push(x); return x; };
 
   const night = city.nightAmount() > 0.5;
-  const sky = new T.Color(night ? '#0f1730' : '#b9d7ef');
-  scene.background = sky; scene.fog = new T.Fog(sky, 180, night ? 900 : 1500);
-  scene.add(new T.HemisphereLight(night ? '#6b7bb5' : '#eaf4ff', night ? '#1b1d24' : '#8a8172', night ? 0.9 : 1.6));
+  const sky = new T.Color(night ? '#18213f' : '#c9e1f2');
+  { const sc = document.createElement('canvas'); sc.width = 1024; sc.height = 512; const sg = sc.getContext('2d'), gr = sg.createLinearGradient(0, 0, 0, 512);
+    if (night) { gr.addColorStop(0, '#05081a'); gr.addColorStop(0.42, '#141c3a'); gr.addColorStop(0.5, '#2a2f52'); gr.addColorStop(1, '#141824'); } else { gr.addColorStop(0, '#5d9fd8'); gr.addColorStop(0.45, '#a9cfee'); gr.addColorStop(0.5, '#e4eef5'); gr.addColorStop(1, '#cfd6dc'); }
+    sg.fillStyle = gr; sg.fillRect(0, 0, 1024, 512);
+    if (night) { sg.fillStyle = '#fff'; for (let i = 0; i < 260; i++) { const x = hash(i + 's') * 1024, y = hash(i + 't') * 230; sg.globalAlpha = 0.3 + hash(i + 'a') * 0.7; sg.fillRect(x, y, 1.6, 1.6); } sg.globalAlpha = 1; sg.fillStyle = '#f6f1d9'; sg.beginPath(); sg.arc(760, 90, 14, 0, 7); sg.fill(); }
+    else { sg.fillStyle = 'rgba(255,255,255,.75)'; for (let i = 0; i < 14; i++) { const x = hash(i + 'c') * 1024, y = 60 + hash(i + 'd') * 140, w = 60 + hash(i + 'e') * 120; sg.beginPath(); sg.ellipse(x, y, w, w * 0.22, 0, 0, 7); sg.fill(); } }
+    const st = keep(new T.CanvasTexture(sc)); st.mapping = T.EquirectangularReflectionMapping; st.colorSpace = T.SRGBColorSpace; scene.background = st; }
+  scene.fog = new T.Fog(sky, 220, night ? 1000 : 1700);
+  scene.add(new T.HemisphereLight(night ? '#8090c8' : '#eaf4ff', night ? '#2a2c34' : '#8a8172', night ? 1.35 : 1.6));
   const sun = new T.DirectionalLight(night ? '#9fb0ff' : '#fff2d8', night ? 0.35 : 1.8); sun.position.set(-300, 500, -200); scene.add(sun);
 
   const B = city.bounds, A = city.avenues, C = city.cross, sw = city.streetW;
+  const M = new T.Matrix4(), Q = new T.Quaternion(), V = new T.Vector3(), SC = new T.Vector3(), col = new T.Color(), up = new T.Vector3(0, 1, 0);
   // ground + blocks (sidewalks raised a curb's height) + parks
-  const ground = new T.Mesh(keep(new T.PlaneGeometry((B.x1 - B.x0 + 60) * S, (B.y1 - B.y0 + 60) * S)), keep(new T.MeshLambertMaterial({ color: night ? '#24272f' : '#5a5f68' })));
+  const ground = new T.Mesh(keep(new T.PlaneGeometry((B.x1 - B.x0 + 60) * S, (B.y1 - B.y0 + 60) * S)), keep(new T.MeshLambertMaterial({ color: night ? '#2f333c' : '#5a5f68' })));
   ground.rotation.x = -Math.PI / 2; ground.position.set(((B.x0 + B.x1) / 2) * S, 0, ((B.y0 + B.y1) / 2) * S); scene.add(ground);
   const slabs = [], parks = [];
   for (let i = 0; i <= A.length; i++) for (let j = 0; j <= C.length; j++) {
@@ -59,7 +66,7 @@ export async function openPOV(city, opts = {}) {
   }
   for (const a of city.areas || []) if (a.kind === 'park' || a.kind === 'plaza') parks.push([a.r.x0, a.r.y0, a.r.x1, a.r.y1, a.kind]);
   const slabGeo = (rects, h, y = 0) => { const pos = []; for (const [x0, y0, x1, y1] of rects) { const g = new T.BoxGeometry((x1 - x0) * S, h, (y1 - y0) * S).toNonIndexed(); g.translate(((x0 + x1) / 2) * S, y + h / 2, ((y0 + y1) / 2) * S); pos.push(g); } return merge(pos); };
-  scene.add(new T.Mesh(keep(slabGeo(slabs, 0.15)), keep(new T.MeshLambertMaterial({ color: night ? '#3a3c42' : '#c9c5bc' }))));
+  scene.add(new T.Mesh(keep(slabGeo(slabs, 0.15)), keep(new T.MeshLambertMaterial({ color: night ? '#4a4c53' : '#c9c5bc' }))));
   if (parks.length) scene.add(new T.Mesh(keep(slabGeo(parks, 0.1, 0.15)), keep(new T.MeshLambertMaterial({ color: night ? '#1f3a26' : '#6fae5a' }))));
   // lane markings
   { const pts = []; const dash = (ax, ay, bx, by) => { const L = Math.hypot(bx - ax, by - ay), n = Math.floor(L / 0.9); for (let k = 0; k < n; k += 2) { const t0 = k / n, t1 = (k + 1) / n; pts.push(new T.Vector3((ax + (bx - ax) * t0) * S, 0.03, (ay + (by - ay) * t0) * S), new T.Vector3((ax + (bx - ax) * t1) * S, 0.03, (ay + (by - ay) * t1) * S)); } };
@@ -86,6 +93,7 @@ export async function openPOV(city, opts = {}) {
   for (const o of city.osm || []) { pushBuilding(o.pts, o.h, o.z0 || 0, o.c); if (o.h >= 0.3 && !(o.z0 > 0.3)) solids.push({ bb: o.bb, pts: o.pts }); }
   for (const l of city.landmarks || []) { const p = [[l.x, l.y], [l.x + l.w, l.y], [l.x + l.w, l.y + l.d], [l.x, l.y + l.d]]; pushBuilding(p, l.h || 2, 0, l.kind === 'aquarium' ? '#5c9fd6' : '#b9a58c'); solids.push({ bb: { x0: l.x, x1: l.x + l.w, y0: l.y, y1: l.y + l.d }, pts: p }); }
   for (const a of city.areas || []) if (['grb', 'arena', 'ballpark'].includes(a.kind)) { const r = a.r, p = [[r.x0, r.y0], [r.x1, r.y0], [r.x1, r.y1], [r.x0, r.y1]]; pushBuilding(p, a.kind === 'grb' ? 3.2 : a.kind === 'arena' ? 4 : 5, 0, a.kind === 'grb' ? '#d9dee3' : a.kind === 'arena' ? '#7b8794' : '#c8b9a2'); solids.push({ bb: { x0: r.x0, x1: r.x1, y0: r.y0, y1: r.y1 }, pts: p }); }
+  const blocked = (x, y) => solids.some((o) => x > o.bb.x0 - 0.05 && x < o.bb.x1 + 0.05 && y > o.bb.y0 - 0.05 && y < o.bb.y1 + 0.05 && inPoly(x, y, o.pts));
   const walls = new T.Mesh(keep(merge(wallParts)), keep(new T.MeshLambertMaterial({ vertexColors: true, map: winTex(false), emissive: night ? '#ffcf7a' : '#000', emissiveMap: night ? winTex(true) : null, emissiveIntensity: night ? 1.1 : 0 })));
   const roofs = new T.Mesh(keep(merge(roofParts)), keep(new T.MeshLambertMaterial({ vertexColors: true })));
   scene.add(walls, roofs); wallParts.forEach((g) => g.dispose()); roofParts.forEach((g) => g.dispose());
@@ -97,7 +105,6 @@ export async function openPOV(city, opts = {}) {
   const vehicles = new T.InstancedMesh(keep(new T.BoxGeometry(1, 1, 1)), keep(new T.MeshLambertMaterial()), MAXV);
   const glassBand = new T.InstancedMesh(keep(new T.BoxGeometry(1, 1, 1)), keep(new T.MeshLambertMaterial({ color: night ? '#ffe39a' : '#2f3b4a', emissive: night ? '#7a5a1a' : '#000' })), MAXV);
   for (const m of [bodies, heads, vehicles, glassBand]) { m.instanceMatrix.setUsage(T.DynamicDrawUsage); m.frustumCulled = false; scene.add(m); }
-  const M = new T.Matrix4(), Q = new T.Quaternion(), V = new T.Vector3(), SC = new T.Vector3(), col = new T.Color(), up = new T.Vector3(0, 1, 0);
   const REAL = { waymo: [4.9, 2.0, 1.6, '#f1f3f5'], bus: [12, 2.6, 3.2, '#3b6fb6'], train: [30, 2.65, 3.6, '#e9ecef'] };
 
   // pins (AR-style: visible through walls, nearest ones only) and corner signs
@@ -111,14 +118,40 @@ export async function openPOV(city, opts = {}) {
     const st = s.style || {}, mat = keep(new T.SpriteMaterial({ map: labelTex(s.label, st.emoji || '📍', city.scene === 'night' ? 'rgba(95,61,196,.92)' : 'rgba(232,89,12,.92)'), depthTest: false, transparent: true }));
     const sp = new T.Sprite(mat); sp.scale.set(12, 3, 1); sp.position.set(s.x * S, 9 + (s.bldg ? Math.min(6, s.bldg.h * 2) : 0), s.y * S); sp.renderOrder = 10; sp.userData.spot = s; sp.visible = false; scene.add(sp); pins.push(sp);
   }
-  const signs = [], poleGeo = keep(new T.CylinderGeometry(0.06, 0.06, 3, 6)), poleMat = keep(new T.MeshLambertMaterial({ color: '#3d4148' }));
+  // street furniture: blade signs on every corner, streetlights, crosswalks and street trees
+  const signs = [];
+  const nameTex = {}; const texFor = (n) => nameTex[n] || (nameTex[n] = (() => { const c2 = document.createElement('canvas'); c2.width = 512; c2.height = 96; const g = c2.getContext('2d'); g.fillStyle = '#1e6b3a'; rr(g, 2, 2, 508, 92, 10); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 4; rr(g, 8, 8, 496, 80, 8); g.stroke();
+    g.fillStyle = '#fff'; g.font = '700 50px system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(/ (St|Ave|Pkwy|Blvd)$/.test(n) ? n : n + ' St', 256, 51); const t = keep(new T.CanvasTexture(c2)); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; return t; })());
+  const bladeGeo = keep(new T.PlaneGeometry(1.9, 0.36)), poleGeo = keep(new T.CylinderGeometry(0.05, 0.06, 3.9, 6)), poleMat = keep(new T.MeshLambertMaterial({ color: '#33373e' }));
+  const blade = (name, x, z, rotY, y) => { const m = keep(new T.MeshBasicMaterial({ map: texFor(name), side: T.FrontSide })), g = new T.Group(); const f = new T.Mesh(bladeGeo, m), b = new T.Mesh(bladeGeo, m); b.rotation.y = Math.PI; g.add(f, b); g.position.set(x, y, z); g.rotation.y = rotY; return g; };
   for (const a of A) for (const c of C) {
-    const c2 = document.createElement('canvas'); c2.width = 256; c2.height = 64; const g = c2.getContext('2d'); g.fillStyle = '#1e6b3a'; rr(g, 2, 2, 252, 60, 8); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 3; rr(g, 6, 6, 244, 52, 6); g.stroke();
-    g.fillStyle = '#fff'; g.font = '700 26px system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(`${a.n} / ${c.n}`, 128, 33);
-    const t = keep(new T.CanvasTexture(c2)); t.colorSpace = T.SRGBColorSpace; const sp = new T.Sprite(keep(new T.SpriteMaterial({ map: t }))); sp.scale.set(4.4, 1.1, 1);
-    sp.position.set((a.x + sw + 0.15) * S, 3.6, (c.y + sw + 0.15) * S); sp.visible = false; scene.add(sp); signs.push(sp);
-    const pole = new T.Mesh(poleGeo, poleMat); pole.position.set((a.x + sw + 0.15) * S, 1.5, (c.y + sw + 0.15) * S); scene.add(pole);
+    const px = (a.x + sw + 0.15) * S, pz = (c.y + sw + 0.15) * S, g = new T.Group();
+    const pole = new T.Mesh(poleGeo, poleMat); pole.position.set(px, 1.95, pz); g.add(pole);
+    g.add(blade(a.n, px - 0.95 * 0, pz - 0.95, Math.PI / 2, 3.55));   // parallel to the avenue
+    g.add(blade(c.n, px - 0.95, pz, 0, 3.15));                          // parallel to the cross street
+    g.visible = false; g.userData.x = px / S; g.userData.y = pz / S; scene.add(g); signs.push(g);
   }
+  const corners = []; for (const a of A) for (const c of C) for (const [sx, sy] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) corners.push([a.x + sx * (sw + 0.3), c.y + sy * (sw + 0.3)]);
+  // streetlights on every corner (heads glow after dark)
+  { const n = corners.length, poles = new T.InstancedMesh(keep(new T.CylinderGeometry(0.07, 0.09, 7, 6)), poleMat, n), heads = new T.InstancedMesh(keep(new T.BoxGeometry(0.9, 0.18, 0.35)), keep(new T.MeshLambertMaterial({ color: night ? '#fff3c4' : '#dfe3e8', emissive: night ? '#ffd27a' : '#000', emissiveIntensity: night ? 1.4 : 0 })), n);
+    corners.forEach(([x, y], i) => { M.makeTranslation(x * S, 3.5, y * S); poles.setMatrixAt(i, M); M.makeTranslation(x * S, 7, y * S); heads.setMatrixAt(i, M); });
+    scene.add(poles, heads);
+    if (night) { const gc = document.createElement('canvas'); gc.width = gc.height = 128; const gg = gc.getContext('2d'), gr = gg.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,214,140,.55)'); gr.addColorStop(1, 'rgba(255,214,140,0)'); gg.fillStyle = gr; gg.fillRect(0, 0, 128, 128);
+      const glow = new T.InstancedMesh(keep(new T.PlaneGeometry(14, 14)), keep(new T.MeshBasicMaterial({ map: keep(new T.CanvasTexture(gc)), transparent: true, depthWrite: false, blending: T.AdditiveBlending })), n);
+      corners.forEach(([x, y], i) => { Q.setFromAxisAngle(new T.Vector3(1, 0, 0), -Math.PI / 2); M.compose(V.set(x * S, 0.18, y * S), Q, SC.set(1, 1, 1)); glow.setMatrixAt(i, M); }); scene.add(glow); } }
+  // zebra crosswalks at every intersection
+  { const bars = []; for (const a of A) for (const c of C) { const L = sw * 2 * S; for (let k = -2; k <= 2; k++) { const o = k * 1.2; bars.push([a.x * S + o, (c.y - sw - 0.35) * S, 0], [a.x * S + o, (c.y + sw + 0.35) * S, 0], [(a.x - sw - 0.35) * S, c.y * S + o, 1], [(a.x + sw + 0.35) * S, c.y * S + o, 1]); } }
+    const cw = new T.InstancedMesh(keep(new T.BoxGeometry(0.6, 0.02, 3)), keep(new T.MeshLambertMaterial({ color: night ? '#8d8f94' : '#f1f3f5' })), bars.length);
+    bars.forEach(([x, z, rot], i) => { Q.setFromAxisAngle(up, rot ? Math.PI / 2 : 0); M.compose(V.set(x, 0.03, z), Q, SC.set(1, 1, 1)); cw.setMatrixAt(i, M); }); scene.add(cw); }
+  // street trees along the sidewalks, wherever there's room
+  { const pts = [], step = 2.6, off = sw + 0.28;
+    const nearCross = (v, arr, key) => arr.some((q) => Math.abs(q[key] - v) < sw + 0.9);
+    for (const a of A) for (const side of [-1, 1]) for (let y = C[0].y; y < C[C.length - 1].y; y += step) { const x = a.x + side * off; if (!nearCross(y, C, 'y') && !blocked(x, y) && hash(x.toFixed(1) + y.toFixed(1)) > 0.3) pts.push([x, y]); }
+    for (const c of C) for (const side of [-1, 1]) for (let x = A[0].x; x < A[A.length - 1].x; x += step) { const y = c.y + side * off; if (!nearCross(x, A, 'x') && !blocked(x, y) && hash(x.toFixed(1) + y.toFixed(1)) > 0.3) pts.push([x, y]); }
+    const trunks = new T.InstancedMesh(keep(new T.CylinderGeometry(0.12, 0.16, 2.4, 6)), keep(new T.MeshLambertMaterial({ color: '#5c4433' })), pts.length);
+    const crowns = new T.InstancedMesh(keep(new T.IcosahedronGeometry(1.6, 0)), keep(new T.MeshLambertMaterial({ color: night ? '#3c6b4a' : '#4f8a3c', flatShading: true })), pts.length);
+    pts.forEach(([x, y], i) => { const k = 0.8 + hash(y.toFixed(2) + x.toFixed(2)) * 0.5; M.makeTranslation(x * S, 1.35, y * S); trunks.setMatrixAt(i, M); M.compose(V.set(x * S, 3.3 * k, y * S), Q.identity(), SC.set(k, k * 1.15, k)); crowns.setMatrixAt(i, M); crowns.setColorAt(i, col.set(night ? ['#3c6b4a', '#42744f', '#365f43'][i % 3] : ['#4f8a3c', '#5d9945', '#457a35'][i % 3])); });
+    scene.add(trunks, crowns); }
   // walking route, when navigation is on
   let routeMesh = null, routeBuilt = null;
   const routeMat = keep(new T.MeshBasicMaterial({ color: '#1c7ed6', transparent: true, opacity: 0.85 }));
@@ -133,7 +166,6 @@ export async function openPOV(city, opts = {}) {
   // ---- the walker ----
   const me = { x: opts.start?.x ?? city.v.cx, y: opts.start?.y ?? city.v.cy, yaw: opts.start?.yaw ?? 0, pitch: opts.start?.pitch ?? 0.02 };
   let follow = !!opts.follow && !!city.user?.inside, showPins = true, showLife = !(city.hide?.people && city.hide?.traffic);
-  const blocked = (x, y) => solids.some((o) => x > o.bb.x0 - 0.05 && x < o.bb.x1 + 0.05 && y > o.bb.y0 - 0.05 && y < o.bb.y1 + 0.05 && inPoly(x, y, o.pts));
   if (blocked(me.x, me.y)) { for (let r = 0.3; r < 6 && blocked(me.x, me.y); r += 0.3) for (let a = 0; a < 6.28; a += 0.5) if (!blocked(me.x + Math.cos(a) * r, me.y + Math.sin(a) * r)) { me.x += Math.cos(a) * r; me.y += Math.sin(a) * r; break; } }
   const fb = $('[data-a=follow]'); const setFollow = (f) => { follow = f && !!city.user?.inside; fb.classList.toggle('on', follow); fb.textContent = follow ? '📍 Following you' : '📍 Follow me'; };
   fb.hidden = !city.user?.inside; setFollow(follow);
@@ -173,7 +205,7 @@ export async function openPOV(city, opts = {}) {
     // pins & signs: nearest only
     const near = pins.map((p) => [p, Math.hypot(p.position.x / S - me.x, p.position.z / S - me.y)]).filter(([, d]) => d < 30).sort((a, b) => a[1] - b[1]).slice(0, 18);
     for (const p of pins) p.visible = false; if (showPins) for (const [p, d] of near) { p.visible = true; const k = Math.max(0.85, Math.min(1.8, d / 8)); p.scale.set(12 * k, 3 * k, 1); }
-    for (const sg of signs) sg.visible = Math.hypot(sg.position.x / S - me.x, sg.position.z / S - me.y) < 14;
+    for (const sg of signs) sg.visible = Math.hypot(sg.userData.x - me.x, sg.userData.y - me.y) < 22;
     // people
     let np = 0;
     if (showLife) for (const n of city.npcs) { if (n.under || n.inside > 0 || np >= MAXP) continue; const bob = Math.abs(Math.sin((n.phase || 0) * 2)) * 0.05;

@@ -5039,5 +5039,113 @@
   "type": "Hotel Bar",
   "note": "The Moxy Houston Downtown's lobby bar on Bar Row — check-in doubles as the bar, with driftwood tables and a mechanical bull.",
   "tryit": "Signature cocktail (hotel guests get one at check-in)"
+ },
+ {
+  "id": 234,
+  "name": "HiFi at The Finn",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar",
+   "Cocktails"
+  ],
+  "meals": [
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "Listening Bar",
+  "note": "Tokyo-style vinyl listening lounge on The Finn's mezzanine, with cocktails and resident DJs.",
+  "tryit": "Tokyo Mule"
+ },
+ {
+  "id": 235,
+  "name": "Dozier's BBQ",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "BBQ",
+  "note": "Texas barbecue counter inside The Finn food hall.",
+  "tryit": "Brisket, sausage"
+ },
+ {
+  "id": 236,
+  "name": "Hot Peckers",
+  "address": "712 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Chicken",
+   "American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 1,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "Hot Chicken",
+  "note": "Hot chicken counter inside The Finn food hall.",
+  "tryit": "Hot chicken sandwich"
+ },
+ {
+  "id": 237,
+  "name": "Samurai Noodle",
+  "address": "411 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese",
+   "Ramen"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "Ramen",
+  "note": "Seattle ramen shop's downtown counter inside Lyric Market.",
+  "tryit": "Tonkotsu ramen"
+ },
+ {
+  "id": 238,
+  "name": "Lyric Bar",
+  "address": "411 Smith St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar",
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual",
+   "group"
+  ],
+  "type": "Bar",
+  "note": "The anchor bar at Lyric Market, with house cocktails and weekday happy hour.",
+  "tryit": "House cocktails"
  }
 ]

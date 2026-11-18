@@ -300,7 +300,7 @@ export class CityMap {
 
     // --- spots (restaurants grouped by building) ---
     // food halls, malls and hotels with several places (The Highlight, GreenStreet, POST…) become one pin
-    const venueOf = (p) => { const v = p.official?.venue || p.venue; return v && !/^(suite|unit|#|\()/i.test(v.trim()) ? v.replace(/ Houston$/, '').trim() : null; };
+    const venueOf = (p) => { let v = p.official?.venue || p.venue; if (!v || /^(suite|unit|#|\()/i.test(v.trim())) return null; v = v.replace(/ Houston$/, '').trim(); return /^(finn hall|the finn)$/i.test(v) ? 'The Finn' : v; };
     const addrKey = (p) => (p.address || '').toLowerCase().replace(/,.*$/, '').replace(/\b(street|st)\b\.?/g, 'st').trim();
     const byAddr = {}; for (const p of pts) { const v = venueOf(p); if (v && !p.tunnel) byAddr[addrKey(p)] = v; }
     const venueOf0 = venueOf; const venueOfA = (p) => venueOf0(p) || (!p.tunnel && byAddr[addrKey(p)]) || null;
@@ -1074,7 +1074,12 @@ export class CityMap {
     const blockOf = (x, y) => { const [i, j] = this.cellIdx(x, y); return { x0: i > 0 ? A[i - 1].x + sw + side : -1e9, x1: i < A.length ? A[i].x - sw - side : 1e9, y0: j > 0 ? C[j - 1].y + sw + side : -1e9, y1: j < C.length ? C[j].y - sw - side : 1e9 }; };
     for (const [ring, hM, minM, type, name, colour] of list) {
       let pts = ring.slice(0, -1).map(([la, ln]) => this.proj(la, ln)); if (pts.length < 3) continue;
-      { const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length; pts = clip(pts, blockOf(mx, my)); if (pts.length < 3) continue; }
+      { // keep the part in whichever block holds most of the footprint (the fitted street grid can be a few metres off the real streets)
+        const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+        const areaOf = (Q) => { let s = 0; for (let i = 0; i < Q.length; i++) { const a = Q[i], b = Q[(i + 1) % Q.length]; s += a[0] * b[1] - b[0] * a[1]; } return Math.abs(s / 2); };
+        let best = null, ba = 0;
+        for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) { const r = blockOf(mx + dx * this.blockW * 0.5, my + dy * this.blockD * 0.5), q = clip(pts, r); if (q.length >= 3) { const a = areaOf(q); if (a > ba) { ba = a; best = q; } } }
+        if (!best || ba < 0.15) continue; pts = best; }
       let ar = 0; for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length]; ar += a[0] * b[1] - b[0] * a[1]; }
       if (ar < 0) pts.reverse();   // counter-clockwise, so each wall's outward side is known
       const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), bb = { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
@@ -1091,6 +1096,24 @@ export class CityMap {
       this.osm.push(o);
     }
     if (this.osm.length < 50) { this.osm = null; this.osmLots = []; this.landmarks = this.allLandmarks; return false; }   // bad download: fall back to the drawn city
+    // a few blocks OpenStreetMap hasn't mapped yet, drawn by hand (fractions run west→east and north→south across the block)
+    const FILL = [
+      { av: ['Travis', 'Main'], cr: ['Clay', 'Bell'], parts: [
+        { f: [0.5, 0.06, 0.94, 0.5], h: 2.4, c: '#d9ccb2', name: 'First Methodist Houston', type: 'church' },
+        { f: [0.72, 0.06, 0.94, 0.24], h: 5.2, c: '#d2c4a8', type: 'church' },
+        { f: [0.5, 0.56, 0.94, 0.94], h: 1.8, c: '#cbbd9f', type: 'yes' },
+        { f: [0.06, 0.06, 0.44, 0.94], h: 2.2, c: '#b9bcc2', type: 'parking' }] },
+    ];
+    const ai = (n) => A.findIndex((a) => a.n === n), ci = (n) => C.findIndex((c) => c.n === n);
+    for (const F of FILL) {
+      const i0 = ai(F.av[0]), i1 = ai(F.av[1]), j0 = ci(F.cr[0]), j1 = ci(F.cr[1]); if (i0 < 0 || i1 < 0 || j0 < 0 || j1 < 0) continue;
+      const x0 = Math.min(A[i0].x, A[i1].x) + sw + side, x1 = Math.max(A[i0].x, A[i1].x) - sw - side, y0 = Math.min(C[j0].y, C[j1].y) + sw + side, y1 = Math.max(C[j0].y, C[j1].y) - sw - side;
+      if (this.osm.some((o) => o.cx > x0 && o.cx < x1 && o.cy > y0 && o.cy < y1 && o.h > 0.9)) continue;   // mapped since — use the real thing
+      for (const p of F.parts) {
+        const [a, b, c, d] = p.f, px0 = x0 + (x1 - x0) * a, px1 = x0 + (x1 - x0) * c, py0 = y0 + (y1 - y0) * b, py1 = y0 + (y1 - y0) * d;
+        this.osm.push({ pts: [[px0, py0], [px1, py0], [px1, py1], [px0, py1]], bb: { x0: px0, x1: px1, y0: py0, y1: py1 }, h: p.h, z0: 0, c: p.c, glass: false, name: p.name || null, type: p.type, cx: (px0 + px1) / 2, cy: (py0 + py1) / 2 });
+      }
+    }
     this.osmNamed = this.osm.filter((o) => o.name && o.h >= 6).sort((a, b) => b.h - a.h);
     return true;
   }

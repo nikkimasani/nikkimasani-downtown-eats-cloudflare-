@@ -600,7 +600,7 @@ async function openStreetView(r) {
   else {   // stand at the street corner nearest the middle of the screen, looking up the avenue
     const c = city.screenCenter(), A = city.avenues, C = city.cross;
     const a = A.reduce((b, q) => (Math.abs(q.x - c.x) < Math.abs(b.x - c.x) ? q : b)), cr = C.reduce((b, q) => (Math.abs(q.y - c.y) < Math.abs(b.y - c.y) ? q : b));
-    start = { x: a.x + city.streetW * 0.55, y: cr.y + city.streetW * 1.6, yaw: 0 };
+    start = { x: a.x + city.streetW + 0.32, y: cr.y + city.streetW * 1.8, yaw: 0 };
   }
   toast('Loading street view…'); document.body.classList.add('in-pov');
   try {
@@ -721,7 +721,7 @@ async function aboutPlace(r) {
       r.night = r.bar && (barish || barName || !food);            // night map: bars, lounges, clubs
       r.day = !(r.night && !food);                     // day map: anywhere that serves meals
     });
-    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); window._openSheet = (id) => openSheet(id); }
+    { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); window._openSheet = (id) => openSheet(id); window._B = () => BUILDINGS; }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
