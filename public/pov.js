@@ -73,6 +73,15 @@ export async function openPOV(city, opts = {}) {
   { const pts = []; const dash = (ax, ay, bx, by) => { const L = Math.hypot(bx - ax, by - ay), n = Math.floor(L / 0.9); for (let k = 0; k < n; k += 2) { const t0 = k / n, t1 = (k + 1) / n; pts.push(new T.Vector3((ax + (bx - ax) * t0) * S, 0.03, (ay + (by - ay) * t0) * S), new T.Vector3((ax + (bx - ax) * t1) * S, 0.03, (ay + (by - ay) * t1) * S)); } };
     for (const a of A) dash(a.x, B.y0, a.x, B.y1); for (const c of C) dash(B.x0, c.y, B.x1, c.y);
     scene.add(new T.LineSegments(keep(new T.BufferGeometry().setFromPoints(pts)), keep(new T.LineBasicMaterial({ color: night ? '#9a8f5a' : '#f1f3f5' })))); }
+  // real geography from OpenStreetMap: freeways, bayous, parks and plazas
+  if (city.geo) { const G = city.geo, ribbon = (pts, w, y) => { const parts = []; for (let k = 1; k < pts.length; k++) { const [ax, ay] = pts[k - 1], [bx, by] = pts[k], L = Math.hypot(bx - ax, by - ay) * S; if (L < 0.3) continue; const g = new T.BoxGeometry(w * S, 0.06, L + w * S * 0.5).toNonIndexed(); g.rotateY(Math.atan2(bx - ax, by - ay)); g.translate(((ax + bx) / 2) * S, y, ((ay + by) / 2) * S); parts.push(g); } return parts; };
+    const add = (parts, colr) => { if (!parts.length) return; const mm = new T.Mesh(keep(merge(parts)), keep(new T.MeshLambertMaterial({ color: colr }))); parts.forEach((g) => g.dispose()); scene.add(mm); };
+    add(G.rivers.flatMap((r) => ribbon(r.pts, r.w * 2.6, 0.01)), night ? '#1f3a29' : '#8fc275');
+    add(G.rivers.flatMap((r) => ribbon(r.pts, r.w, 0.04)), night ? '#1c3a57' : '#5d9ec4');
+    add(G.roads.flatMap((r) => ribbon(r.pts, r.w, 0.03)), night ? '#2f333c' : '#6b7079');
+    const parkParts = []; for (const pk of G.parks) { try { const sh = new T.Shape(pk.pts.map(([x, y]) => new T.Vector2(x * S, -y * S))); const g = new T.ShapeGeometry(sh); g.rotateX(-Math.PI / 2); g.translate(0, 0.17, 0); parkParts.push(g.toNonIndexed()); g.dispose(); } catch (e) {} }
+    add(parkParts.filter((g, i) => G.parks[i]?.k !== 'plaza'), night ? '#24452f' : '#7fb865'); }
+
   // METRORail track beds
   { const R = city.rail; if (R) { const beds = [[R.x - 0.55, R.y0, R.x + 0.55, R.y1]]; if (R.xW != null) for (const y of [R.capY, R.ruskY]) beds.push([R.xW, y - 0.3, R.xE, y + 0.3]);
     scene.add(new T.Mesh(keep(slabGeo(beds, 0.08, 0.01)), keep(new T.MeshLambertMaterial({ color: night ? '#2c2a2a' : '#7c7470' })))); } }

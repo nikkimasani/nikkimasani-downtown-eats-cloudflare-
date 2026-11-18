@@ -324,6 +324,7 @@ function initMap() {
   city = new CityMap($('#city'), DATA, {
     stops: metroStatic && metroStatic.stops,
     buildings: BUILDINGS,   // real footprints and heights from OpenStreetMap
+    streets: STREETS,       // real street centrelines, parks, water, rail and trees
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (all, spot) => { const places = all.filter((p) => city.sceneOk(p)); return places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label); },
     onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
@@ -353,7 +354,7 @@ function initMap() {
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
 
 // ---------- live METRO buses and trains (when the site's METRO_API_KEY is set) ----------
-let metroStatic = null, metroLast = null, BUILDINGS = null;
+let metroStatic = null, metroLast = null, BUILDINGS = null, STREETS = null;
 async function pollMetro() {
   if (!city || document.hidden) return;
   try {
@@ -754,8 +755,8 @@ async function aboutPlace(r) {
 // ---------- boot ----------
 (async () => {
   try {
-    const [pj, hj, oj, ms, bj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
-    metroStatic = ms; BUILDINGS = bj;
+    const [pj, hj, oj, ms, bj, sj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('streets.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
+    metroStatic = ms; BUILDINGS = bj; STREETS = sj;
     META = { refreshed: pj.refreshed }; HH = hj;
     DATA = pj.places.map((p, i) => {
       const o = { ...(p.official || {}) };

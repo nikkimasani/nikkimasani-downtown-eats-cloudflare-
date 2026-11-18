@@ -271,6 +271,11 @@ export class CityMap {
     const pts = places.filter((p) => p.lat && p.lng);
     const lat0 = 29.7575, lng0 = -95.364;
     let vx = (MAIN_B[1] - MAIN_A[1]) * M_LNG, vy = (MAIN_B[0] - MAIN_A[0]) * M_LAT; const L = Math.hypot(vx, vy); vx /= L; vy /= L;
+    // real street centrelines (OpenStreetMap): take the grid's true heading from the avenues themselves
+    const SN = this.opts.streets?.streets || [], skey = (t) => norm(String(t).replace(/^(north|south|east|west|n|s|e|w)\.?\s+/i, '').replace(/\s+(street|st|avenue|ave|boulevard|blvd|parkway|pkwy)\.?$/i, ''));
+    const AVN = new Set(AVENUES.map(norm)), CSN = new Set(CROSS.map(norm)), core = (p) => p[0] > 29.7485 && p[0] < 29.7665 && p[1] > -95.3735 && p[1] < -95.3545;
+    { let sx = 0, sy = 0; for (const [nm, , pl] of SN) { if (!AVN.has(skey(nm))) continue; for (let i = 1; i < pl.length; i++) { const a = pl[i - 1], b = pl[i]; if (!core(a) || !core(b)) continue; let dx = (b[1] - a[1]) * M_LNG, dy = (b[0] - a[0]) * M_LAT; const l = Math.hypot(dx, dy); if (l < 8) continue; if (dx * vx + dy * vy < 0) { dx = -dx; dy = -dy; } sx += dx; sy += dy; } }
+      const l = Math.hypot(sx, sy); if (l > 200) { const nx = sx / l, ny = sy / l; if (Math.abs(nx * vx + ny * vy) > 0.97) { vx = nx; vy = ny; this.osmHeading = true; } } }
     const ux = -vy, uy = vx;
     const proj = (lat, lng) => { const ex = (lng - lng0) * M_LNG, ny = (lat - lat0) * M_LAT; return [(ex * ux + ny * uy) / 10, (ex * vx + ny * vy) / 10]; };
 
@@ -298,6 +303,20 @@ export class CityMap {
       this.avenues = AVENUES.map((n, k) => ({ n, x: -70 + k * 10 })); this.cross = CROSS.map((n, k) => ({ n, y: -90 + k * 10 })); this.blockW = this.blockD = 10;
     }
     this.alignToStops(proj);
+    this.alignToOSM(proj, SN, skey);
+    this.proj = proj;
+    // real geography to draw: bayous, freeways, parks and street trees
+    const SD = this.opts.streets;
+    if (SD) {
+      const pl = (l) => l.map(([la, ln]) => proj(la, ln));
+      this.geo = {
+        roads: SN.filter(([, k]) => /^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l, lanes]) => ({ k, n, pts: pl(l), w: k === 'motorway' || k === 'trunk' ? 0.62 + Math.min(4, lanes || 3) * 0.17 : 0.55 })),
+        rivers: (SD.rivers || []).map(([n, l]) => ({ n, pts: pl(l), w: /buffalo/i.test(n) ? 2.2 : /white oak/i.test(n) ? 1.4 : 0.9 })),
+        water: (SD.water || []).map(pl),
+        parks: (SD.parks || []).map(([n, k, l]) => ({ n, k, pts: pl(l) })).filter((p) => p.pts.length > 2),
+        trees: (SD.trees || []).map(([la, ln]) => proj(la, ln)),
+      };
+    }
     this.avenues.sort((a, b) => a.x - b.x); this.cross.sort((a, b) => a.y - b.y);
     this.avX = Object.fromEntries(this.avenues.map((a) => [a.n, a.x])); this.csY = Object.fromEntries(this.cross.map((c) => [c.n, c.y]));
     this.streetW = Math.min(this.blockW, this.blockD) * 0.078;   // ~15 m curb to curb; sidewalks run to the building line
@@ -337,6 +356,31 @@ export class CityMap {
 
   // METRO publishes the exact location of every bus stop, named by corner ("Fannin St @ Texas Ave").
   // Each corner tells us where two streets cross, so use them to put every street exactly where it is.
+  // Put every grid street exactly on its real centreline: median position of that street's OpenStreetMap segments
+  alignToOSM(proj, SN, skey) {
+    if (!SN.length) return;
+    const xs = {}, ys = {}, y0 = this.cross[0].y - 4, y1 = this.cross[this.cross.length - 1].y + 4, x0 = this.avenues[0].x - 4, x1 = this.avenues[this.avenues.length - 1].x + 4;
+    const AV = new Map(AVENUES.map((n) => [norm(n), n])), CS = new Map(CROSS.map((n) => [norm(n), n]));
+    for (const [nm, kind, pl] of SN) {
+      const k = skey(nm), av = AV.get(k), cs = CS.get(k); if (!av && !cs) continue;
+      const P = pl.map(([la, ln]) => proj(la, ln));
+      for (let i = 1; i < P.length; i++) { const [ax, ay] = P[i - 1], [bx, by] = P[i], dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy); if (L < 0.4) continue;
+        for (let t = 0; t <= 1; t += 0.25) { const x = ax + dx * t, y = ay + dy * t;
+          if (av && Math.abs(dy) > Math.abs(dx) * 3 && y > y0 && y < y1) (xs[av] = xs[av] || []).push(x);
+          if (cs && Math.abs(dx) > Math.abs(dy) * 3 && x > x0 && x < x1) (ys[cs] = ys[cs] || []).push(y); } }
+    }
+    let moved = 0;
+    for (const a of this.avenues) if (xs[a.n]?.length >= 6) { const nx = median(xs[a.n]); moved = Math.max(moved, Math.abs(nx - a.x)); a.x = nx; }
+    for (const c of this.cross) if (ys[c.n]?.length >= 6) { const ny = median(ys[c.n]); moved = Math.max(moved, Math.abs(ny - c.y)); c.y = ny; }
+    // keep the order sane (a bad match must never fold the grid)
+    const okOrder = (l, p) => l.every((s, k) => k === 0 || s[p] > l[k - 1][p] + 3);
+    if (!okOrder(this.avenues, 'x') || !okOrder(this.cross, 'y')) { console.warn('OSM street alignment rejected'); return; }
+    const gaps = (l, p) => l.slice(1).map((s, k) => Math.abs(s[p] - l[k][p]));
+    this.blockW = median(gaps(this.avenues, 'x')); this.blockD = median(gaps(this.cross, 'y'));
+    this.avX = Object.fromEntries(this.avenues.map((a) => [a.n, a.x])); this.csY = Object.fromEntries(this.cross.map((c) => [c.n, c.y]));
+    if (this.avenues[0].num != null) { this.fitX = lsq(this.avenues.map((a) => [a.num, a.x])); this.fitY = lsq(this.cross.map((c) => [c.num, c.y])); }
+    this.alignedToOSM = { moved: +moved.toFixed(2), av: Object.keys(xs).length, cs: Object.keys(ys).length };
+  }
   alignToStops(proj) {
     const stops = this.opts.stops; if (!stops) return;
     const key = (t) => norm(t.replace(/^(n|s|e|w)\.?\s+/i, '').replace(/\s+(st|street|ave|avenue|blvd|pkwy)\.?$/i, ''));
@@ -1528,6 +1572,7 @@ export class CityMap {
     for (const o of this.osm || []) { const [sx, sy] = v.p(o.cx, o.cy), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20, up = (o.z0 + o.h) * ZU * v.s; if (sx < -r || sx > this.W + r || sy + r < 0 || sy - up - r > this.H) continue; items.push({ k: this.osmDepth(o), o }); }
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
     if (!this.hide.people) for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
+    if (this.geo?.trees && v.s > 0.4) for (const [x, y] of this.geo.trees) { const [sx, sy] = v.p(x, y); if (sx < -30 || sx > this.W + 30 || sy < -10 || sy > this.H + 60) continue; items.push({ k: v.depth(x, y) + 0.4, tr: [x, y] }); }
     const live = !!this.liveData, liveRail = live && (this.liveCars || []).some((c) => c.kind === 'train') || this.liveRailSeen;
     if (!liveRail && !this.hide.trains) for (const t of this.trains || []) { const b = this.trainBox(t); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), t }); }
     for (const c of [...(this.cars || []).filter((c) => !live || c.kind !== 'bus'), ...(this.liveCars || [])]) { if (c.kind === 'train' ? this.hide.trains : this.hide.traffic) continue; const b = this.carBox(c); items.push({ k: v.boxDepth(b.x, b.y, b.w, b.d), c }); }
@@ -1546,6 +1591,7 @@ export class CityMap {
       else if (it.o) this.drawOsm(it.o, N, ghost);
       else if (it.t) this.drawTrain(it.t, N, ghost);
       else if (it.c) this.drawCar(it.c, N, ghost, now);
+      else if (it.tr) this.drawStreetTree(it.tr[0], it.tr[1], N, ghost);
       else this.drawNpc(it.n, now, 0);
     }
     if (!this.hide.sky) { this.drawBeacons(now, N); this.drawClouds(now, N); }
@@ -1677,7 +1723,35 @@ export class CityMap {
     ctx.globalAlpha = 1;
   }
 
+  drawStreetTree(x, y, N, ghost) {
+    const ctx = this.ctx, v = this.v, [bx, by] = v.p(x, y), [, ty] = v.p(x, y, 0.95), r = Math.max(2.5, 0.42 * TW * v.s * 0.5), k = hash(x.toFixed(2) + y.toFixed(2));
+    ctx.globalAlpha = ghost; ctx.strokeStyle = N ? '#2b2218' : '#7a5a3c'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx, ty); ctx.stroke();
+    const g = ctx.createRadialGradient(bx - r * 0.3, ty - r * 0.4, r * 0.2, bx, ty - r * 0.2, r * 1.1);
+    const c0 = N ? '#3b6b4a' : ['#79b85a', '#6aa84f', '#86c06a'][Math.floor(k * 3)], c1 = N ? '#1d3a28' : '#3f7a34';
+    g.addColorStop(0, c0); g.addColorStop(1, c1); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(bx, ty - r * 0.25, r, r * 0.92, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+  }
+  drawGeo(N, now) {
+    const ctx = this.ctx, v = this.v, B = this.bounds, G = this.geo;
+    ctx.save(); ctx.beginPath(); const c = [v.p(B.x0, B.y0), v.p(B.x1, B.y0), v.p(B.x1, B.y1), v.p(B.x0, B.y1)]; ctx.moveTo(...c[0]); for (const q of c.slice(1)) ctx.lineTo(...q); ctx.closePath(); ctx.clip();
+    const path = (pts) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1])) : ctx.moveTo(...v.p(p[0], p[1])))); };
+    const strokeW = (w) => Math.max(1, w * TW * v.s * 0.72);
+    ctx.lineCap = ctx.lineJoin = 'round';
+    // parks & plazas
+    for (const p of G.parks) { path(p.pts); ctx.closePath(); ctx.fillStyle = p.k === 'plaza' ? (N ? '#3a3f4f' : '#e6e1d6') : (N ? '#243d2c' : '#b9dc9f'); ctx.fill(); }
+    // bayous: green banks, then water
+    for (const r of G.rivers) { path(r.pts); ctx.strokeStyle = N ? '#1f3a29' : '#a8d08d'; ctx.lineWidth = strokeW(r.w * 2.6); ctx.stroke(); }
+    for (const w of G.water) { path(w); ctx.closePath(); ctx.fillStyle = N ? '#1c3a57' : '#7fbbd9'; ctx.fill(); }
+    for (const r of G.rivers) { path(r.pts); ctx.strokeStyle = N ? '#1c3a57' : '#7fbbd9'; ctx.lineWidth = strokeW(r.w); ctx.stroke(); }
+    if (v.s > 0.25) for (const r of G.rivers.filter((x) => /buffalo/i.test(x.n))) { ctx.strokeStyle = N ? 'rgba(165,216,255,.35)' : 'rgba(255,255,255,.7)'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.setLineDash([3 * v.s + 2, 14 * v.s + 6]); ctx.lineDashOffset = -now / 60; path(r.pts); ctx.stroke(); ctx.setLineDash([]); }
+    // freeways and ramps, as mapped
+    const road = N ? '#2b303c' : '#b7bcc4', edge = N ? '#1b1f29' : '#9aa1aa';
+    for (const g of G.roads) { path(g.pts); ctx.strokeStyle = edge; ctx.lineWidth = strokeW(g.w) + 2; ctx.stroke(); }
+    for (const g of G.roads) { path(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.w); ctx.stroke(); }
+    if (v.s > 0.5) { ctx.strokeStyle = N ? 'rgba(255,214,120,.35)' : 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.setLineDash([5, 7]); for (const g of G.roads) if (g.k === 'motorway') { path(g.pts); ctx.stroke(); } ctx.setLineDash([]); }
+    ctx.restore(); ctx.lineCap = 'butt';
+  }
   drawBayouAndFreeways(N, now = performance.now()) {
+    if (this.geo) return this.drawGeo(N, now);
     const ctx = this.ctx, v = this.v, B = this.bounds, A = this.avenues, C = this.cross;
     const yb = C[0].y - this.blockD * 1.4, pts = [];
     for (let x = B.x0; x <= B.x1; x += 2) pts.push([x, yb + Math.sin(x / 9) * 2 + Math.sin(x / 23) * 1.3]);
