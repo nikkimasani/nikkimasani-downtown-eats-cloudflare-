@@ -325,7 +325,7 @@ function initMap() {
   const lg = $('#legend'), setLg = (open) => { lg.classList.toggle('min', !open); $('#lgdToggle').setAttribute('aria-expanded', open); try { localStorage.setItem('lgdOpen', open ? '1' : '0'); } catch (e) {} };
   let lgOpen = true; try { lgOpen = localStorage.getItem('lgdOpen') !== '0'; } catch (e) {}
   setLg(lgOpen); $('#lgdToggle').onclick = () => setLg(lg.classList.contains('min'));
-  setScene(SCENE, true); applyView();
+  setScene(SCENE, true); applyView(); applyLight();
   renderPick();
 }
 document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => city.setMode(b.dataset.m)));
@@ -417,7 +417,7 @@ function renderLegend() {
   if ($('#lgStreet')) { $('#lgStreet').textContent = `${SCENE === 'night' ? 'Bars' : 'Street'} (${L.length - t})`; $('#lgTun').textContent = `Tunnels (${t})`; }
 }
 function setScene(sc, quiet) {
-  SCENE = sc; city?.setScene(sc);
+  SCENE = sc; city?.setScene(sc); applyLight();
   document.querySelectorAll('#sceneSeg button').forEach((b) => b.classList.toggle('on', b.dataset.s === sc));
   $('#v-map').classList.toggle('nightscene', sc === 'night');
   renderLegend();
@@ -516,6 +516,11 @@ function toggleWalk(force) {
 }
 // ---------- compact controls + show/hide ----------
 $('#moreBtn').onclick = () => { const m = $('#hudMore'), open = m.hidden; m.hidden = !open; $('#moreBtn').setAttribute('aria-expanded', open); $('#moreBtn').textContent = open ? '✕ Close' : '☰ More'; };
+function applyLight() {   // live: sun and dark follow the clock; otherwise Day = daylight, Night = night
+  let live = false; try { live = !!VIEW.liveLight; } catch (e) {}
+  if (city) city.themeNight = live ? null : SCENE === 'night';
+  const i = document.querySelector('#liveLight'); if (i) i.checked = live;
+}
 const VIEW = (() => { try { return JSON.parse(localStorage.getItem('mapView') || '{}'); } catch (e) { return {}; } })();
 function applyView() {
   if (city) city.hide = { ...VIEW.hide };
@@ -523,7 +528,8 @@ function applyView() {
   document.querySelectorAll('#hideToggles input').forEach((i) => { i.checked = i.dataset.h ? !VIEW.hide?.[i.dataset.h] : !VIEW.ui?.[i.dataset.ui]; });
   try { localStorage.setItem('mapView', JSON.stringify(VIEW)); } catch (e) {}
 }
-$('#hideToggles').onchange = (e) => { const i = e.target; if (i.dataset.h) (VIEW.hide = VIEW.hide || {})[i.dataset.h] = !i.checked; else (VIEW.ui = VIEW.ui || {})[i.dataset.ui] = !i.checked; applyView(); };
+$('#liveLight').onchange = (e) => { VIEW.liveLight = e.target.checked; applyLight(); applyView(); toast(VIEW.liveLight ? '🕒 Light now follows the time of day' : SCENE === 'night' ? '🌙 Always night lighting' : '☀️ Always daylight'); };
+$('#hideToggles').onchange = (e) => { const i = e.target; if (!i.dataset.h && !i.dataset.ui) return; if (i.dataset.h) (VIEW.hide = VIEW.hide || {})[i.dataset.h] = !i.checked; else (VIEW.ui = VIEW.ui || {})[i.dataset.ui] = !i.checked; applyView(); };
 $('#cleanMap').onclick = () => { const clean = !VIEW.clean; VIEW.clean = clean; VIEW.hide = clean ? { pinNames: true, signs: true, labels: true, people: true, traffic: true, trains: true, sky: true } : {}; VIEW.ui = clean ? { legend: true } : {}; $('#cleanMap').textContent = clean ? '↺ Show everything' : '✨ Clean map'; applyView(); toast(clean ? 'Clean map: just buildings and pins' : 'Showing everything'); };
 // ---------- first-person street view ----------
 let povCtl = null, lastNav = null;

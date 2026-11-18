@@ -242,3 +242,8 @@ header{position:relative}
 .pov-nav{position:absolute;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 64px);background:rgba(28,126,214,.95);color:#fff;border-radius:16px;padding:12px 14px;font:700 15px Inter,system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.3)}
 body.in-pov .sheet{z-index:60}
 body.in-pov .toast{z-index:61}
+
+.hm-live{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font:700 14px Inter,system-ui,sans-serif;color:#343a40;background:#f8f9fa;border-radius:12px;padding:9px 10px}
+.hm-live input{width:18px;height:18px;accent-color:#e8590c}
+.hm-live span{flex-basis:100%;font-weight:500;font-size:12.5px;color:#868e96;padding-left:26px}
+@media (prefers-color-scheme:dark){.hm-live{background:#2c241f;color:#f6ece2}}
