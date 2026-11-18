@@ -230,6 +230,19 @@ function pinSprite(color, emoji, r, ring) {
   g.font = `${Math.round(r * 1.05)}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(emoji, m, m + 1);
   SPRITES.set(k, c); return c;
 }
+// every label claims its box on screen; a later label that would overlap one already drawn is skipped
+let TAKEN = null;
+function fits(x0, y0, x1, y1, force) {
+  if (!TAKEN) return true;
+  if (!force) for (const t of TAKEN) if (x0 < t[2] && x1 > t[0] && y0 < t[3] && y1 > t[1]) return false;
+  TAKEN.push([x0, y0, x1, y1]); return true;
+}
+function pillFit(ctx, x, y, text, size, bg, fg) {
+  ctx.font = `600 ${size}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+  const w = ctx.measureText(text).width + size * 0.9, h = size * 1.55;
+  if (!fits(x - w / 2 - 2, y - h / 2 - 1, x + w / 2 + 2, y + h / 2 + 1)) return false;
+  pill(ctx, x, y, text, size, bg, fg); return true;
+}
 function pill(ctx, x, y, text, size, bg, fg = '#212529') {
   ctx.font = `600 ${size}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
   const w = ctx.measureText(text).width + size * 0.9, h = size * 1.55;
@@ -943,11 +956,12 @@ export class CityMap {
   drawStreetlights(N) {
     if (!N || this.mode === 'tunnel') return; const ctx = this.ctx, v = this.v, sw = this.streetW;
     if (!this._glow) { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 1, 32, 32, 32); gr.addColorStop(0, 'rgba(255,214,140,.7)'); gr.addColorStop(1, 'rgba(255,214,140,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); this._glow = c; }
-    ctx.globalCompositeOperation = 'lighter'; const r = Math.max(6, 22 * v.s);
+    const fade = Math.max(0, Math.min(1, (v.s - 0.3) / 0.5)); if (fade <= 0.02) return;
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.75 * fade; const r = Math.max(6, 16 * v.s);
     for (const a of this.avenues) for (const c of this.cross) for (const [ox, oy] of [[sw + 0.4, sw + 0.4], [-sw - 0.4, -sw - 0.4]]) {
       const [x, y] = v.p(a.x + ox, c.y + oy); if (x < -r || x > this.W + r || y < -r || y > this.H + r) continue; ctx.drawImage(this._glow, x - r, y - r / 2, r * 2, r);
     }
-    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
   }
   drawBeacons(now, N) {   // red aviation lights blink on the tallest towers
     const ctx = this.ctx, v = this.v, on = (now % 1600) < 260; if (!on || this.mode === 'tunnel') return;
@@ -999,9 +1013,10 @@ export class CityMap {
     const covered = (wx, wy) => this.landmarks.some((l) => l.kind === 'post' && wx > l.x && wx < l.x + l.w && wy > l.y && wy < l.y + l.d);
     const sign = (x, y, text, ang, major, num) => {
       if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
-      ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
       ctx.font = `700 ${size}px system-ui, -apple-system, sans-serif`;
       const label = num ? `${text}  ·  ${num}` : text, w = ctx.measureText(label).width + size * 1.1, h = size * 1.55;
+      { const c = Math.abs(Math.cos(ang)), s2 = Math.abs(Math.sin(ang)), bw = (w * c + h * s2) * 0.42, bh = (w * s2 + h * c) * 0.42; if (!fits(x - bw, y - bh, x + bw, y + bh)) return; }
+      ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
       ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2 + 1, -h / 2 + 2, w, h, 4) : ctx.rect(-w / 2 + 1, -h / 2 + 2, w, h); ctx.fill();
       ctx.fillStyle = major ? '#1b6e3f' : '#2b7a4b'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.3;
       ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2, -h / 2, w, h, 4) : ctx.rect(-w / 2, -h / 2, w, h); ctx.fill(); ctx.stroke();
@@ -1021,7 +1036,7 @@ export class CityMap {
       for (const a of A) for (const c of C) {
         const [x, y] = v.p(a.x - this.streetW - 0.6, c.y - this.streetW - 0.6, 2.2); if (x < -60 || x > this.W + 60 || y < -20 || y > this.H + 20) continue;
         const [bx, by] = v.p(a.x - this.streetW - 0.6, c.y - this.streetW - 0.6); ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(x, y + 8); ctx.stroke();
-        const t = `${a.n} / ${c.n}`, w = ctx.measureText(t).width + 8; ctx.fillStyle = '#1b6e3f'; ctx.fillRect(x - w / 2, y - 7, w, 14); ctx.fillStyle = '#fff'; ctx.fillText(t, x, y + 0.5);
+        const t = `${a.n} / ${c.n}`, w = ctx.measureText(t).width + 8; if (!fits(x - w / 2, y - 8, x + w / 2, y + 8)) continue; ctx.fillStyle = '#1b6e3f'; ctx.fillRect(x - w / 2, y - 7, w, 14); ctx.fillStyle = '#fff'; ctx.fillText(t, x, y + 0.5);
       }
     }
   }
@@ -1363,7 +1378,7 @@ export class CityMap {
   tunnelZ() { return this.mode === 'tunnel' ? 0 : -3; }
   // Day map = food spots; Night map = bars, lounges and clubs only
   sceneOk(p) { return this.scene === 'night' ? !!p.night : p.day !== false; }
-  setScene(sc) { this.scene = sc; this.themeNight = sc === 'night' ? true : null; this.pinCache?.clear?.(); }
+  setScene(sc) { this.scene = sc; this.themeNight = sc === 'night'; this.pinCache?.clear?.(); }
   visibleSpots(under) { return this.spots.filter((s) => s.tunnel === under && s.places.some((p) => this.sceneOk(p)) && (!this.highlight || s.places.some((p) => this.highlight.has(p.id)))); }
   clusters(under) {
     const m = new Map(), k = this.clusterSpan();
@@ -1503,11 +1518,13 @@ export class CityMap {
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
     this.drawRailOverlay();
     if (!this.hide.sky) this.drawBirds(now, N);
-    if (!this.hide.signs) this.drawStreetSigns(N);
+    TAKEN = (this.reserved || []).map((r) => [...r]);   // map controls count as taken, so labels don't hide under them
     this.drawRoute(now);
     this.drawMarkers(false);
+    if (!this.hide.signs) this.drawStreetSigns(N);
     this.drawUser(now);
     if (!this.hide.labels) this.drawLabels(N);
+    TAKEN = null;
     this.drawMark(now);
     if (night > 0) { ctx.fillStyle = `rgba(14,18,48,${0.1 * night})`; ctx.fillRect(0, 0, this.W, this.H); }
     this.drawPickBeacon(now);
@@ -1682,14 +1699,19 @@ export class CityMap {
       }
       return;
     }
-    const lift = this.pinLift();
-    for (const s of this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y))) {
+    const lift = this.pinLift(), list = this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y)), lbl = new Set();
+    if (TAKEN && !under) {
+      const rr = lod === 'label' ? 12 : 10;
+      for (const s of list) { const [x, y] = v.p(s.x, s.y, z); fits(x - rr, y - lift - rr, x + rr, y - lift + rr, true); }
+      for (let k = list.length - 1; k >= 0; k--) { const s = list[k]; if (!((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s)) continue; const [x, y] = v.p(s.x, s.y, z), t = s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label; ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(t).width + 10, yy = y - lift - rr - 12; if (this.hover?.spot === s || this.pick != null && s.places.some((p) => p.id === this.pick) ? fits(x - w / 2, yy - 9, x + w / 2, yy + 9, true) : fits(x - w / 2 - 2, yy - 10, x + w / 2 + 2, yy + 10)) lbl.add(s); }
+    }
+    for (const s of list) {
       const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
       ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r); ctx.stroke();
       ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
-      if ((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) pill(ctx, x, y - lift - r - 12, s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529');
+      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || under || lbl.has(s))) pill(ctx, x, y - lift - r - 12, s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529');
     }
   }
 
@@ -1706,14 +1728,14 @@ export class CityMap {
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.font = `700 ${Math.round(Math.min(13, 9 + v.s * 4))}px system-ui, sans-serif`; ctx.fillStyle = N ? 'rgba(255,255,255,.8)' : 'rgba(33,37,41,.85)';
     const all = v.s > 0.5;
-    for (const a of A) if (all || MAJOR.has(a.n)) { const [x, y] = v.p(a.x, C[0].y - 1.6); ctx.fillText(a.n, x, y); }
-    for (const c of C) if (all || MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 2.4, c.y); ctx.fillText(c.n, x, y); }
-    for (const f of this.freewayLabels || []) { const [x, y] = v.p(f.x, f.y); pill(ctx, x, y, f.t, 10, f.water ? 'rgba(25,113,194,.85)' : 'rgba(33,37,41,.75)', '#fff'); }
+    for (const a of A) if (all || MAJOR.has(a.n)) { const [x, y] = v.p(a.x, C[0].y - 1.6), w = ctx.measureText(a.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(a.n, x, y); }
+    for (const c of C) if (all || MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 2.4, c.y), w = ctx.measureText(c.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(c.n, x, y); }
+    for (const f of this.freewayLabels || []) { const [x, y] = v.p(f.x, f.y); pillFit(ctx, x, y, f.t, 10, f.water ? 'rgba(25,113,194,.85)' : 'rgba(33,37,41,.75)', '#fff'); }
     if (v.s > 0.3) {
-      for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7); pill(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
-      for (const st of this.rail?.stations || []) { const [x, y] = v.p(st.x + (st.line === 'red' ? 0.6 : 0), st.y, 1.6); pill(ctx, x, y, '🚊 ' + st.n, 10, st.line === 'red' ? 'rgba(224,49,49,.92)' : 'rgba(47,158,68,.92)', '#fff'); }
-      if (v.s > 0.42) { const lim = v.s > 0.8 ? 60 : 14; for (const o of (this.osmNamed || []).slice(0, lim)) { const [x, y] = v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (x > -60 && x < this.W + 60 && y > -20 && y < this.H + 20) pill(ctx, x, y, o.name, 10, 'rgba(255,255,255,.88)', '#343a40'); } }
-      if (v.s > 0.42) for (const l of this.landmarks) { const [x, y] = v.p(l.x + l.w / 2, l.y + l.d / 2, l.h + 1.5); pill(ctx, x, y, l.n, 10, 'rgba(255,255,255,.88)', '#343a40'); }
+      for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7); pillFit(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
+      for (const st of this.rail?.stations || []) { const [x, y] = v.p(st.x + (st.line === 'red' ? 0.6 : 0), st.y, 1.6); pillFit(ctx, x, y, '🚊 ' + st.n, 10, st.line === 'red' ? 'rgba(224,49,49,.92)' : 'rgba(47,158,68,.92)', '#fff'); }
+      if (v.s > 0.42) { const lim = v.s > 0.8 ? 60 : 14; for (const o of (this.osmNamed || []).slice(0, lim)) { const [x, y] = v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (x > -60 && x < this.W + 60 && y > -20 && y < this.H + 20) pillFit(ctx, x, y, o.name, 10, 'rgba(255,255,255,.88)', '#343a40'); } }
+      if (v.s > 0.42) for (const l of this.landmarks) { const [x, y] = v.p(l.x + l.w / 2, l.y + l.d / 2, l.h + 1.5); pillFit(ctx, x, y, l.n, 10, 'rgba(255,255,255,.88)', '#343a40'); }
     }
   }
 

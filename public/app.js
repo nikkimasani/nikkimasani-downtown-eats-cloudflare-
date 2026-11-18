@@ -392,8 +392,15 @@ function placeUnderHud() {
   const hud = document.querySelector('#v-map .hud'); if (!hud) return; const b = hud.getBoundingClientRect(), top = b.bottom - hud.parentElement.getBoundingClientRect().top + 8;
   const np = $('#navPanel'), nh = np.classList.contains('on') ? np.offsetHeight + 8 : 0;
   np.style.top = top + 'px'; $('#mapBack').style.top = top + nh + 'px';
+  reserveControls();
 }
-window.addEventListener('resize', placeUnderHud); { const ro = new ResizeObserver(placeUnderHud); ro.observe(document.querySelector('#v-map .hud')); ro.observe($('#navPanel')); }
+function reserveControls() {   // tell the map where the floating controls are so street and building labels avoid them
+  if (!city) return; const c = $('#city').getBoundingClientRect();
+  city.reserved = ['#v-map .hud', '#mapBack', '#legend', '#v-map .zoombox', '#navPanel', '#mapFound']
+    .map((q) => document.querySelector(q)).filter((el) => el && el.offsetParent && getComputedStyle(el).display !== 'none' && !el.hidden)
+    .map((el) => { const r = el.getBoundingClientRect(); return [r.left - c.left, r.top - c.top, r.right - c.left, r.bottom - c.top]; }).filter((r) => r[2] - r[0] > 2);
+}
+window.addEventListener('resize', placeUnderHud); { const ro = new ResizeObserver(placeUnderHud); for (const q of ['#v-map .hud', '#navPanel', '#legend', '#v-map .zoombox', '#mapBack', '#mapFound']) { const el = document.querySelector(q); if (el) ro.observe(el); } new MutationObserver(reserveControls).observe($('#v-map'), { subtree: true, attributes: true, attributeFilter: ['class', 'hidden', 'style'] }); }
 $('#zcomp').onclick = () => city?.spin(0);
 $('#zrot').onclick = () => city?.spin(city.v.r + Math.PI / 2);
 $('#zin').onclick = () => city.zoom(1.4); $('#zout').onclick = () => city.zoom(1 / 1.4); $('#zfit').onclick = () => { city.anim = null; city.fitAll = !city.fitAll; city.fit(); };
