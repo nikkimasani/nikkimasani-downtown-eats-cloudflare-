@@ -868,8 +868,30 @@ export class CityMap {
     return this.nav;
   }
   stopNav() { this.nav = null; this.follow = false; this.opts.onNav?.(null); }
+  tunnelsOpen(d = new Date()) { const day = d.getDay(), h = d.getHours() + d.getMinutes() / 60; return day >= 1 && day <= 5 && h >= 6.5 && h < 18; }   // weekday business hours
+  // when it's raining or hot (and the tunnels are open), go underground at the nearest street entrance and come up close to the destination
+  tunnelPlan(u, t) {
+    if (!this.preferTunnel || !this.tunnelsOpen() || !this.doors?.length || (this.tunnelSpots || []).length < 2) return null;
+    const md = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y), door = this.doors.reduce((p, q) => (md(u, q) < md(u, p) ? q : p));
+    const T = this.tunnelSpots, near = (p) => T.reduce((bi, s, i) => (md(p, s) < md(p, T[bi]) ? i : bi), 0), a = near(door), b = near(t);
+    if (md(u, door) > md(u, t) * 0.7 || md(T[b], t) > 4 || a === b && md(door, t) < 3) return null;   // only worth it if the entrance is on the way and the tunnel reaches the destination
+    const prev = new Map([[a, -1]]), q = [a]; while (q.length) { const i = q.shift(); if (i === b) break; for (const j of this.tunnelAdj[i]) if (!prev.has(j)) { prev.set(j, i); q.push(j); } }
+    if (!prev.has(b)) return null; const chain = []; for (let i = b; i !== -1; i = prev.get(i)) chain.unshift([T[i].x, T[i].y]);
+    return { door, under: [[door.x, door.y], ...chain, [t.x, t.y]] };
+  }
   buildRoute() {
-    const n = this.nav, u = this.user, t = n.target;
+    const n = this.nav, u = this.user, t = n.target, tp = this.tunnelPlan(u, t);
+    if (tp) {   // street to the tunnel entrance, then the underground leg
+      let pts = [[u.x, u.y], ...this.routeStreet({ x: u.x, y: u.y }, { x: tp.door.x, y: tp.door.y })]; pts = pts.filter((q, i) => !i || Math.hypot(q[0] - pts[i - 1][0], q[1] - pts[i - 1][1]) > 0.05);
+      const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+      const ul = Math.min(tp.under.reduce((s, q, i) => (i ? s + Math.abs(q[0] - tp.under[i - 1][0]) + Math.abs(q[1] - tp.under[i - 1][1]) : 0), 0), (Math.abs(tp.door.x - t.x) + Math.abs(tp.door.y - t.y)) * 1.3);   // the drawn tunnel line is a guide, so don't overstate the distance
+      const steps = this.routeSteps(pts, cum, { ...t, label: tp.door.n, tunnel: false }).filter((s) => !s.end);
+      steps.push({ at: cum[cum.length - 1], icon: '⬇️', text: `Go down at ${tp.door.n} — ${tp.door.note.toLowerCase()}`, len: 0 });
+      steps.push({ at: cum[cum.length - 1] + 0.01, icon: '🚇', text: `Follow the tunnel signs toward ${t.label || 'your destination'} (roughly ${Math.round(ul) * 10} m underground)`, len: Math.round(ul * 10) });
+      steps.push({ at: cum[cum.length - 1] + 0.02, icon: '🏁', text: `${t.label || 'Destination'}${t.tunnel ? ' is on the tunnel level' : ' — take the escalator up to the street'}`, len: 0, end: true });
+      n.pts = pts; n.cum = cum; n.total = cum[cum.length - 1] + ul; n.steps = steps; n.under = tp.under; n.builtAt = performance.now(); return;
+    }
+    n.under = null;
     let pts = [[u.x, u.y], ...this.routeStreet({ x: u.x, y: u.y }, { x: t.x, y: t.y })];
     pts = pts.filter((q, i) => !i || Math.hypot(q[0] - pts[i - 1][0], q[1] - pts[i - 1][1]) > 0.05);
     const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
@@ -936,6 +958,7 @@ export class CityMap {
     path(); ctx.strokeStyle = '#1c7ed6'; ctx.lineWidth = Math.max(4.5, v.s * 7); ctx.stroke();
     path(); ctx.setLineDash([2, 12]); ctx.lineDashOffset = -now / 35; ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = Math.max(2, v.s * 3); ctx.stroke(); ctx.setLineDash([]);
     ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
+    if (n.under) { const U = n.under.map((q) => v.p(q[0], q[1], 0.05)); ctx.beginPath(); U.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.setLineDash([8, 8]); ctx.lineDashOffset = -now / 40; ctx.strokeStyle = '#12b886'; ctx.lineWidth = Math.max(3.5, v.s * 6); ctx.stroke(); ctx.setLineDash([]); }   // the underground leg, dashed green
     const t = n.target, [fx, fy] = v.p(t.x, t.y, 0.05), [, ft] = v.p(t.x, t.y, 2.2);   // destination flag
     ctx.strokeStyle = '#212529'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx, ft); ctx.stroke();
     poly(ctx, [[fx, ft], [fx + 16, ft + 6], [fx, ft + 12]], '#e03131', '#fff', 1.5); ellipse(ctx, fx, fy, 5, 2.5, 'rgba(0,0,0,.25)');
@@ -1801,6 +1824,12 @@ export class CityMap {
       const wm = (this._warm || 0) * (1 - night); if (wm > 0.25) { ctx.fillStyle = `rgba(255,150,70,${(wm - 0.25) * 0.1})`; ctx.fillRect(0, 0, this.W, this.H); }
     }
     if (!this.hide.sky) { this.drawBeacons(now, N); this.drawClouds(now, N); }
+    const W0 = this.weather; if (W0 && (W0.rain > 0.1 || W0.code >= 51) && !this.hide.sky) {   // it's raining downtown: grey it down and draw falling rain
+      ctx.fillStyle = N ? 'rgba(10,14,28,.18)' : 'rgba(70,84,104,.16)'; ctx.fillRect(0, 0, this.W, this.H);
+      if (!this._rain) this._rain = Array.from({ length: 140 }, (_, i) => [hash(i + 'rx'), hash(i + 'ry'), 0.6 + hash(i + 'rs') * 0.8]);
+      ctx.strokeStyle = N ? 'rgba(170,190,220,.35)' : 'rgba(255,255,255,.55)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (const [rx, ry, sp] of this._rain) { const x = (rx * this.W + now * 0.05 * sp) % this.W, y = (ry * this.H + now * 0.6 * sp) % this.H; ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 11 * sp); } ctx.stroke();
+    }
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
     this.drawRailOverlay();
     this.drawDoors(N);

@@ -376,3 +376,20 @@ header{position:relative}
 .card{transition:transform .15s ease,box-shadow .15s ease}.card.tap:active{transform:scale(.985)}
 :root[data-theme=dark] .ds-warn{background:#3a2a14;color:#ffc078}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .ds-warn{background:#3a2a14;color:#ffc078}}
+.review-card{border-color:#f0b35a;background:color-mix(in srgb,#ffc078 12%,var(--card))}.review-card h3{font-size:15px}
+
+.spendask{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 84px);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:flex;flex-wrap:wrap;gap:6px;align-items:center;z-index:60;transform:translateY(20px);opacity:0;transition:.25s}
+.spendask.on{transform:none;opacity:1}.spendask span{width:100%;font-weight:600;font-size:14px}
+.card.month h3{font-size:15px;margin:0 0 4px}.officerow{margin-top:10px;font-size:13px;color:var(--muted)}.linkbtn{border:0;background:none;color:var(--accent);font-weight:700;padding:0}
+.card.poll h3{margin:0 0 4px}.pollopt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px;margin-top:8px}
+.pollopt .ctile{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--tc) 16%,transparent)}.pollopt em{display:block;font-style:normal;font-size:12.5px;color:var(--muted)}
+
+.hallplan{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;padding:10px;border-radius:16px;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--line) 50%,transparent) 0 6px,transparent 6px 12px);border:1px dashed var(--line);margin-top:8px}
+.stall{position:relative;border:1px solid var(--line);border-top:5px solid var(--tc);background:var(--card);border-radius:10px;padding:8px 6px;text-align:center;font-size:12px;line-height:1.2;box-shadow:var(--shadow)}
+.stall span{display:block;font-size:22px;margin-bottom:3px}.stall.open::after{content:'';position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#2fb344}.stall.shut{opacity:.6}
+
+.wrap{zoom:var(--zoom,1)}.textbtn{right:46px;font-weight:800;font-family:Fraunces,serif}
+header h1{padding-right:92px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+.meta{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

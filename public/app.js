@@ -5,6 +5,7 @@ const $ = (s) => document.querySelector(s);
 const store = { get(k, d) { try { const v = localStorage.getItem('dte_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('dte_' + k, JSON.stringify(v)); } catch (e) {} } };
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const $$ = (n) => '$'.repeat(n);
+const PRICE_TXT = { 1: 'under $15', 2: '$15–30', 3: '$30–60', 4: '$60+' };   // per person, food before drinks
 const q = encodeURIComponent;
 // app theme: follows the phone by default; the header button cycles Auto → Light → Dark
 const THEMES = ['auto', 'light', 'dark'], THEME_ICON = { auto: '🌓', light: '☀️', dark: '🌙' };
@@ -12,9 +13,13 @@ function applyTheme(t) { const h = document.documentElement; if (t === 'auto') d
   const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches); document.querySelector('meta[name=theme-color]')?.setAttribute('content', dark ? '#17120f' : '#d9481e'); }
 let THEME = (() => { try { return localStorage.getItem('theme') || 'auto'; } catch (e) { return 'auto'; } })(); applyTheme(THEME);
 document.addEventListener('click', (e) => { if (e.target.id !== 'themeBtn') return; THEME = THEMES[(THEMES.indexOf(THEME) + 1) % 3]; try { localStorage.setItem('theme', THEME); } catch (_) {} applyTheme(THEME); toast(THEME === 'auto' ? '🌓 Theme follows your phone' : THEME === 'dark' ? '🌙 Dark theme' : '☀️ Light theme'); });
+// bigger text for easier reading: the header "A" button steps 100% → 115% → 130%
+const ZOOMS = [1, 1.15, 1.3]; let ZOOM = +(store.get('zoom', 1)); const applyZoom = () => { document.documentElement.style.setProperty('--zoom', ZOOM); const b = document.querySelector('#textBtn'); if (b) b.setAttribute('aria-label', `Text size ${Math.round(ZOOM * 100)}%`); }; applyZoom();
+document.addEventListener('click', (e) => { if (e.target.id !== 'textBtn') return; ZOOM = ZOOMS[(ZOOMS.indexOf(ZOOM) + 1) % ZOOMS.length] || 1; store.set('zoom', ZOOM); applyZoom(); toast(`Text ${Math.round(ZOOM * 100)}%`); });
 const buzz = (p = 10) => { try { navigator.vibrate?.(p); } catch (e) {} };   // a light tap on phones that support it
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._); t._ = setTimeout(() => t.classList.remove('on'), 2200); };
 
+let HFIX = store.get('hoursFix', {}), GEO_P = Promise.resolve(), GEO_READY = false;
 let DATA = [], FOOD = [], HH = { spots: {} }, META = {}, HCHK = {}, EVENTS = [];
 const MOODS = [
   { k: 'quick', e: '⚡', l: 'Quick bite' }, { k: 'healthy', e: '🥗', l: 'Light & healthy' }, { k: 'comfort', e: '🍔', l: 'Comfort food' },
@@ -23,7 +28,7 @@ const MOODS = [
   { k: 'group', e: '👯', l: 'Group outing' }, { k: 'sweet', e: '🍰', l: 'Something sweet' }, { k: 'caffeine', e: '☕', l: 'Coffee fix' },
   { k: 'sports', e: '⚾', l: 'Game day' }, { k: 'veg', e: '🌱', l: 'Veg-friendly' }];
 const MEALS = ['Any', 'Breakfast', 'Brunch', 'Lunch', 'Dinner', 'Happy Hour', 'Late Night'];
-const BUDGET = [{ k: 0, l: 'Any' }, { k: 1, l: '$' }, { k: 2, l: '$$ or less' }, { k: 3, l: '$$$ or less' }];
+const BUDGET = [{ k: 0, l: 'Any' }, { k: 1, l: 'Under $15' }, { k: 2, l: 'Under $30' }, { k: 3, l: 'Under $60' }];
 const EXTRAS = [{ k: 'open', l: '🟢 Open now' }, { k: 'tunnel', l: '🚇 In the tunnels' }, { k: 'street', l: '🏙️ Street level' }, { k: 'Patio', l: '☀️ Patio' }, { k: 'Pet Friendly', l: '🐶 Pet friendly' }, { k: 'Food Hall', l: '🏛️ Food hall' }, { k: 'Full Service', l: '🍽️ Sit-down' }, { k: 'notfav', l: '🆕 Somewhere new' }];
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const st = { moods: new Set(store.get('moods', [])), meal: store.get('meal', 'Any'), budget: store.get('budget', 0), extras: new Set(store.get('extras', [])) };
@@ -41,8 +46,9 @@ const hhNow = (r, d = new Date()) => { const h = hhFor(r); if (!h) return null; 
   return { ...s, end, closesAt: end != null ? fmt(end) : null }; };
 const navLinks = (r) => { const dest = r.lat ? `${r.lat},${r.lng}` : encodeURIComponent(r.address); return { apple: `https://maps.apple.com/?daddr=${dest}&dirflg=w`, google: `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=walking` }; };
 let USER = null;   // { lat, lng, acc, heading }
+let OFFICE = store.get('office', null);   // { name, lat, lng } — walk times start here when your location is off
 function walkMinsTo(r) {   // along the street grid, ~80 m a minute
-  if (!USER || !r.lat) return null; const dy = (r.lat - USER.lat) * 110850, dx = (r.lng - USER.lng) * 96680, m = (Math.abs(dx) + Math.abs(dy)) * 0.95;
+  const U = USER || OFFICE; if (!U || !r.lat) return null; const dy = (r.lat - U.lat) * 110850, dx = (r.lng - U.lng) * 96680, m = (Math.abs(dx) + Math.abs(dy)) * 0.95;
   return m > 4000 ? null : Math.max(1, Math.round(m / 80));
 }
 const isOpen = (r, d) => { const s = openState(r.hours, d); return s.known ? s.open : (r.tunnel ? null : null); };
@@ -56,7 +62,13 @@ const links = (r) => ({
 });
 
 // ---------- filtering ----------
+// dietary needs stay on across visits; matched from what the listing says (a best guess, so check the menu)
+const DIETS = [{ k: 'veg', l: '🌱 Vegetarian', re: /vegetarian|veggie|vegan|plant/i }, { k: 'vegan', l: '🥦 Vegan', re: /vegan|plant-based/i }, { k: 'gf', l: '🌾 Gluten-free', re: /gluten/i }, { k: 'halal', l: '☪️ Halal', re: /halal/i }];
+let DIET = new Set(store.get('diet', []));
+const dietText = (r) => [r.type, r.note, r.tryit, ...(r.cuisines || []), ...(r.vibes || []), ...(r.meals || [])].join(' ');
+const dietOk = (r) => [...DIET].every((k) => { const d = DIETS.find((x) => x.k === k); return d && (d.re.test(dietText(r)) || (k === 'veg' && (r.vibes || []).includes('veg'))); });
 function matches(r, opt = {}) {
+  if (DIET.size && !dietOk(r)) return false;
   const meal = opt.meal ?? st.meal;
   if (meal !== 'Any') {
     if (meal === 'Happy Hour' && hhFor(r)) {/* verified happy hour counts */ }
@@ -104,17 +116,40 @@ function wxLine() {
 }
 async function loadWeather() {
   try { const j = await (await fetch('https://api.open-meteo.com/v1/forecast?latitude=29.76&longitude=-95.37&current=temperature_2m,precipitation,weather_code&temperature_unit=fahrenheit')).json();
-    WX = { temp: j.current.temperature_2m, rain: j.current.precipitation, code: j.current.weather_code }; renderPick(); } catch (e) {}
+    WX = { temp: j.current.temperature_2m, rain: j.current.precipitation, code: j.current.weather_code }; renderPick(); if (city) { city.preferTunnel = wxBad(); city.weather = WX; } } catch (e) {}
+}
+// what you've eaten lately: skip repeats, nudge toward what you haven't had in a while
+let LOG = store.get('log', []);   // [{ n: name, t: ms, c: cuisine type, $: spent }]
+const daysAgo = (t) => (Date.now() - t) / 864e5;
+const kind = (r) => (r.cuisines && r.cuisines[0]) || r.type || '';
+function historyFit(r) {
+  if (!LOG.length) return 0; let s = 0; const k = kind(r);
+  const last = LOG.filter((x) => x.n === r.name).map((x) => daysAgo(x.t)).sort((a, b) => a - b)[0];
+  if (last != null) s -= last < 3 ? 1.5 : last < 7 ? 0.6 : 0;
+  if (LOG.some((x) => x.c === k && daysAgo(x.t) < 4)) s -= 0.5;
+  if (k && k === missedKind()) s += 0.7;
+  const liked = LOG.filter((x) => x.c === k && daysAgo(x.t) < 90).length; s += Math.min(0.6, liked * 0.15);
+  return s;
+}
+let _missed = null;
+function missedKind() {   // a cuisine you eat regularly but haven't had for 2+ weeks
+  if (_missed !== null) return _missed; const by = {}; for (const x of LOG) if (x.c) (by[x.c] ||= []).push(daysAgo(x.t));
+  const c = Object.entries(by).filter(([, ds]) => ds.length >= 2 && Math.min(...ds) >= 14).sort((a, b) => b[1].length - a[1].length)[0]; return (_missed = c ? c[0] : '');
+}
+function historyLine() { const k = missedKind(); if (!k) return ''; const d = Math.round(Math.min(...LOG.filter((x) => x.c === k).map((x) => daysAgo(x.t))) / 7); return `💡 You haven't had ${k} in ${d} week${d > 1 ? 's' : ''} — those get a boost`; }
+function logVisit(r, spent) {
+  visits[r.name] = (visits[r.name] || 0) + 1; LOG.push({ n: r.name, t: Date.now(), c: kind(r), $: spent || null }); LOG = LOG.slice(-400); store.set('log', LOG); _missed = null; save();
+  buzz(12); toast('Logged — enjoy ' + r.name + '!'); askSpend(r);
 }
 function score(r) {
   let s = 0; for (const m of st.moods) if (r.vibes.includes(m)) s += 3;
   if (st.moods.has('upscale') && r.price >= 3) s += 1; if (st.moods.has('quick') && r.price <= 1) s += 1;
-  if (favs.has(r.name)) s += 1; if (isOpen(r)) s += 0.5; return s + timeFit(r) * 0.6 + weatherFit(r) * 0.6;
+  if (favs.has(r.name)) s += 1; if (isOpen(r)) s += 0.5; return Math.max(0.1, s + timeFit(r) * 0.6 + weatherFit(r) * 0.6 + historyFit(r) * 0.6);
 }
 function ranked(opt) {
   const list = FOOD.filter((r) => matches(r, opt));
   if (!st.moods.size) {   // no mood picked: open now first, then happy hour, favourites, closest
-    const k = (r) => (isOpen(r) === true ? 4 : isOpen(r) === false ? 0 : 2) + (hhNow(r) ? 1.5 : 0) + (favs.has(r.name) ? 1 : 0) - (walkMinsTo(r) ?? 8) / 40 + timeFit(r) + weatherFit(r);
+    const k = (r) => (isOpen(r) === true ? 4 : isOpen(r) === false ? 0 : 2) + (hhNow(r) ? 1.5 : 0) + (favs.has(r.name) ? 1 : 0) - (walkMinsTo(r) ?? 8) / 40 + timeFit(r) + weatherFit(r) + historyFit(r);
     return list.map((r) => [r, 1 + (isOpen(r) ? 0.5 : 0), k(r)]).sort((x, y) => y[2] - x[2] || x[0].name.localeCompare(y[0].name)).map(([r, s]) => [r, s]);
   }
   return list.map((r) => [r, score(r)]).filter((x) => x[1] >= 1).sort((a, b) => b[1] - a[1]);
@@ -151,9 +186,9 @@ function miniMap(r) {
 const cornerTxt = (r) => { const g = gridSpot(r); return g ? `${g.av} & ${g.cr}` : ''; };
 function card(r, hero, map) {
   return `<div class="card tap ${hero ? 'hero spin' : ''}" data-open="${r.id}">
-  <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
+  <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
   <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
-  <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div></div></div>
+  <div class="meta"><span class="price" title="${PRICE_TXT[r.price] || ''} per person">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div></div></div>
   ${map && miniMap(r) ? `<div class="locrow">${miniMap(r)}<div>${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}<div class="corner">📍 ${esc(cornerTxt(r))}${r.tunnel ? ' · 🚇 tunnel level' : ''}</div></div></div>` : r.note ? `<p class="note">${esc(r.note)}</p>` : ''}
   ${hero && r.tryit ? `<p class="try">Try: ${esc(r.tryit)}</p>` : ''}
   <div class="tags">${statusTags(r)}</div>
@@ -181,17 +216,20 @@ function renderPick() {
   $('#moods').innerHTML = MOODS.map((m) => `<button data-m="${m.k}" class="${st.moods.has(m.k) ? 'on' : ''}"><b>${m.e}</b>${m.l}</button>`).join('');
   chipRow($('#meal'), MEALS, (x) => x === st.meal, (x) => (st.meal = x));
   chipRow($('#budget'), BUDGET, (x) => x.k === st.budget, (x) => (st.budget = x.k));
+  $('#diet').innerHTML = DIETS.map((d) => `<button class="chip ${DIET.has(d.k) ? 'on' : ''}" data-diet="${d.k}">${d.l}</button>`).join('');
   chipRow($('#extras'), EXTRAS, (x) => st.extras.has(x.k), (x) => (st.extras.has(x.k) ? st.extras.delete(x.k) : st.extras.add(x.k)));
-  const ex = st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '';
+  const ex0 = DIET.size ? ` · ${[...DIET].map((k) => DIETS.find((d) => d.k === k).l.split(' ').pop()).join(', ')}` : '';
+  const ex = ex0 + (st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '');
   const bl = (BUDGET.find((b) => b.k === st.budget) || {}).l; $('#filtSum').textContent = `${st.meal === 'Any' ? 'Any time' : st.meal} · ${!bl || bl === 'Any' ? 'Any budget' : bl}${ex}`;
   const list = ranked();
   $('#matchCount').textContent = list.length ? `${list.length} spots match — best for right now first` : '';
-  $('#wxLine').textContent = [wxLine(), eventLine()].filter(Boolean).join('  ·  ');
+  $('#wxLine').textContent = [wxLine(), eventLine(), historyLine()].filter(Boolean).join('  ·  ');
   pickList = list; pickShown = 0;
   $('#matches').innerHTML = list.length ? '' : '<div class="empty">Nothing matches all of that. Try removing a filter or a mood.</div>';
   morePicks(30);
   if (city) city.setHighlight(mapMatch ? new Set(list.map(([r]) => r.id)) : null);
 }
+$('#diet').onclick = (e) => { const b = e.target.closest('[data-diet]'); if (!b) return; const k = b.dataset.diet; DIET.has(k) ? DIET.delete(k) : DIET.add(k); store.set('diet', [...DIET]); renderPick(); };
 $('#moods').onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; const k = b.dataset.m; st.moods.has(k) ? st.moods.delete(k) : st.moods.add(k); save(); renderPick(); };
 let lastPick = null;
 $('#pickBtn').onclick = () => {
@@ -199,11 +237,12 @@ $('#pickBtn').onclick = () => {
   const r = weightedPick(ranked(), new Set(lastPick ? [lastPick] : []));
   if (!r) { $('#pickOut').innerHTML = '<div class="empty">No matches — loosen a filter.</div>'; return; }
   lastPick = r.name;
-  $('#pickOut').innerHTML = card(r, true) + `<div class="row" style="margin-top:8px"><button class="btn ghost" id="again">🎲 Spin again</button><button class="btn ghost" id="seeMap">🗺️ Walk me there</button><button class="btn ghost" id="going">✅ I'm going</button><button class="btn ghost" id="sharePick">📤 Share</button></div>`;
+  $('#pickOut').innerHTML = card(r, true) + `<div class="row" style="margin-top:8px"><button class="btn ghost" id="again">🎲 Spin again</button><button class="btn ghost" id="seeMap">🗺️ Walk me there</button><button class="btn ghost" id="going">✅ I'm going</button><button class="btn ghost" id="sharePick">📤 Share</button><button class="btn ghost" id="calPick">📅 Calendar</button></div>`;
   $('#sharePick').onclick = () => sharePlace(r);
+  $('#calPick').onclick = () => { const d = nextSlot(); downloadIcs('downtown-eats.ics', [{ r, start: d, mins: st.meal === 'Happy Hour' ? 90 : 60 }]); };
   $('#again').onclick = () => $('#pickBtn').click();
   $('#seeMap').onclick = () => walkTo(r);
-  $('#going').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged — enjoy ' + r.name + '!'); };
+  $('#going').onclick = () => logVisit(r);
   city?.setPick(r.id);
 };
 
@@ -225,6 +264,8 @@ function groupPick() {
   lastPick = r.name; const happy = list.find((x) => x[0] === r)[2];
   $('#groupOut').innerHTML = card(r, true) + `<div class="meta" style="margin:6px 2px">${happy === group.length ? '✅ Matches everyone’s mood' : `Fits ${happy} of ${group.length} moods`} · within ${cap < 9 ? '$'.repeat(cap) : 'any'} budget</div><div class="row"><button class="btn ghost" id="gAgain">🎲 Another</button><button class="btn ghost" id="gShare">📤 Send to the group</button></div>`;
   $('#gAgain').onclick = groupPick; $('#gShare').onclick = () => sharePlace(r);
+  $('#groupOut').insertAdjacentHTML('beforeend', `<button class="btn ghost" id="gPoll" style="margin-top:8px">🗳️ Send a 3-way vote instead</button>`);
+  $('#gPoll').onclick = () => { const top = list.slice(0, 3).map(([x]) => x.name); shareText('Where should we eat?', 'Vote for where we eat:\n' + top.map((n, i) => `${i + 1}. ${n}`).join('\n'), appUrl() + '#poll=' + encodeURIComponent(top.join('|'))); };
 }
 $('#groupBtn').onclick = () => { $('#groupBox').classList.toggle('on'); renderGroup(); $('#groupOut').innerHTML = ''; };
 $('#groupBox').addEventListener('click', (e) => {
@@ -279,6 +320,8 @@ function renderBrowse() {
     const sug = didYouMean(t);
     $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
   } else $('#browse').innerHTML = list.map((r) => card(r, false, true)).join('') || '<div class="empty">No results.</div>';
+  const nflag = Object.keys(HCHK).length;
+  if (nflag && !t) $('#browse').insertAdjacentHTML('afterbegin', `<div class="card review-card"><h3>⚠️ ${nflag} place${nflag > 1 ? 's' : ''} list different hours on their own website</h3><div class="meta">Tap one to compare, then keep ours or switch to theirs.</div><div class="chips sm" style="margin-top:8px">${Object.keys(HCHK).map((n) => { const x = DATA.find((r) => r.name === n); return x ? `<button class="chip" data-review="${x.id}">${esc(n)}</button>` : ''; }).join('')}</div></div>`);
   const stq = t && parseStreetQuery(t);
   if (stq) $('#browse').insertAdjacentHTML('afterbegin', `<div class="card corner-card"${stq.kind === 'parallel' ? '' : ' data-corner="1"'}><h3>📍 ${esc(stq.label)}</h3><div class="meta">${stq.kind === 'parallel' ? 'Pick one street from each direction, like Main & Texas.' : 'Tap to see it on the map with every spot within a block'}</div></div>`);
   if (stq && !list.length) $('#bCount').textContent = 'Street search';
@@ -286,6 +329,7 @@ function renderBrowse() {
 }
 $('#q').oninput = (e) => { bq = e.target.value; renderBrowse(); };
 $('#browse').addEventListener('click', (e) => {
+  const rv = e.target.closest('[data-review]'); if (rv) { openSheet(+rv.dataset.review); return; }
   if (e.target.closest('[data-corner]')) { const q = parseStreetQuery(bq); show('map'); setTimeout(() => runFind({ st: q }), 60); return; }
   const b = e.target.closest('[data-sug]'); if (b) { $('#q').value = bq = b.dataset.sug; renderBrowse(); } });
 $('#toggleF').onclick = () => $('#filters').classList.toggle('on');
@@ -301,6 +345,7 @@ const dayDate = (i, slot) => { const d = new Date(); const diff = (i + 1) - d.ge
 function renderWeek() {
   chipRow($('#weekSlot'), ['Breakfast', 'Lunch', 'Dinner', 'Happy Hour'], (x) => x === week.slot, (x) => { week.slot = x; }, renderWeek);
   const today = new Date().getDay();
+  $('#monthBox').innerHTML = monthLine() + officeLine();
   $('#week').innerHTML = DAYS.map((d, i) => {
     const e = week.days[d] || {}; const r = DATA.find((x) => x.name === e.name && x.address === e.address);
     const o = r ? openState(r.hours, dayDate(i, week.slot)) : null;
@@ -329,6 +374,31 @@ $('#week').onclick = (e) => {
   if (s) { const d = s.dataset.swap; const used = new Set(Object.values(week.days).map((v) => v.name)); delete week.days[d]; planDay(d, used); save(); renderWeek(); }
   if (o) openSheet(+o.dataset.open);
 };
+// calendar: an .ics file your phone opens straight into Calendar, with the walk built in
+function nextSlot(slot = st.meal) { const d = new Date(), at = { Breakfast: 8, Brunch: 11, Lunch: 12, Dinner: 19, 'Happy Hour': 17, 'Late Night': 22 }[slot]; if (at == null) { d.setMinutes(Math.ceil(d.getMinutes() / 15) * 15 + 15, 0, 0); return d; } d.setHours(at, 0, 0, 0); if (d < new Date()) d.setDate(d.getDate() + 1); return d; }
+function downloadIcs(file, items) {
+  const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''), esc2 = (s) => String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+  const ev = items.map(({ r, start, mins }) => { const w = walkMinsTo(r), s = new Date(start.getTime() - (w || 0) * 60e3), e = new Date(start.getTime() + mins * 60e3);
+    return ['BEGIN:VEVENT', 'UID:' + start.getTime() + '-' + r.id + '@downtown-eats', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(s), 'DTEND:' + z(e), 'SUMMARY:' + esc2((w ? '🚶 ' : '') + r.name), 'LOCATION:' + esc2(r.address), 'DESCRIPTION:' + esc2((w ? `${w} min walk included. ` : '') + (hhFor(r) ? 'Happy hour: ' + hhFor(r).when + '. ' : '') + appUrl() + '#p=' + encodeURIComponent(r.name)), 'BEGIN:VALARM', 'TRIGGER:-PT10M', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc2('Head to ' + r.name), 'END:VALARM', 'END:VEVENT'].join('\r\n'); });
+  const blob = new Blob(['BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Downtown Eats//EN\r\n' + ev.join('\r\n') + '\r\nEND:VCALENDAR\r\n'], { type: 'text/calendar' });
+  const u = URL.createObjectURL(blob), aEl = document.createElement('a'); aEl.href = u; aEl.download = file; document.body.appendChild(aEl); aEl.click(); aEl.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); toast('📅 Calendar file ready — open it to add');
+}
+$('#calWeek').onclick = () => { const items = DAYS.map((d, i) => { const e = week.days[d], r = e && DATA.find((x) => x.name === e.name); return r ? { r, start: dayDate(i, week.slot), mins: 60 } : null; }).filter(Boolean); if (!items.length) { toast('Plan your week first'); return; } downloadIcs('downtown-week.ics', items); };
+// spend log: optional, private to this phone
+function askSpend(r) {
+  const box = document.createElement('div'); box.className = 'spendask'; box.innerHTML = `<span>💵 Roughly what did you spend?</span>${[10, 20, 35, 60, 100].map((v) => `<button class="chip" data-sp="${v}">$${v}</button>`).join('')}<button class="chip" data-sp="0">Skip</button>`;
+  document.body.appendChild(box); setTimeout(() => box.classList.add('on'), 20);
+  box.onclick = (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; const v = +b.dataset.sp; if (v) { LOG[LOG.length - 1].$ = v; store.set('log', LOG); toast('Saved'); } box.classList.remove('on'); setTimeout(() => box.remove(), 300); };
+  setTimeout(() => { if (box.isConnected) { box.classList.remove('on'); setTimeout(() => box.remove(), 300); } }, 12000);
+}
+function officeLine() { return `<div class="officerow">🏢 ${OFFICE ? `Walk times start from <b>${esc(OFFICE.name)}</b> when location is off · <button class="linkbtn" id="clearOffice">change</button>` : 'Set your office from any place’s details (“🏢 I work near here”) to get walk times without GPS.'}</div>`; }
+document.addEventListener('click', (e) => { if (e.target.id === 'clearOffice') { OFFICE = null; store.set('office', null); renderWeek(); toast('Office cleared'); } });
+function monthLine() {
+  const now = new Date(), m = LOG.filter((x) => { const d = new Date(x.t); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }); if (!m.length) return '';
+  const spent = m.reduce((s, x) => s + (x.$ || 0), 0), by = {}; for (const x of m) if (x.c) by[x.c] = (by[x.c] || 0) + 1; const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+  const places = {}; for (const x of m) places[x.n] = (places[x.n] || 0) + 1; const fav = Object.entries(places).sort((a, b) => b[1] - a[1])[0];
+  return `<div class="card month"><h3>📊 ${now.toLocaleString('en-US', { month: 'long' })} so far</h3><div class="meta">${m.length} meal${m.length > 1 ? 's' : ''} out${spent ? ` · about $${spent}` : ''}${top ? ` · mostly ${esc(top[0])}` : ''}${fav && fav[1] > 1 ? ` · ${esc(fav[0])} ×${fav[1]}` : ''}</div><div class="meta" style="margin-top:4px">Only on this phone. Log a visit with ✅ I'm going.</div></div>`;
+}
 // sharing: a link that opens straight to the place (or the plan) in the app
 const appUrl = () => location.origin + location.pathname;
 async function shareText(title, text, url) {
@@ -369,13 +439,13 @@ function openSheet(id, from = null) {
   </div>
 
   <div class="ds-card">
-    <div class="ds-row"><span>📍</span><div>${esc(r.address.replace(', Houston, TX', ''))}<div class="meta">${r.tunnel ? `🚇 Underground · ${esc(r.tunnel)} — tunnel shops are mostly weekday daytime` : 'Street level'}</div></div><a href="#" id="sMap" class="ds-mini">Map</a></div>
-    <div class="ds-row"><span>🕒</span><div>${o.known ? `<b class="${o.open ? 'ok' : 'no'}">${esc(o.label)}</b>` : '<b>Hours</b>'}<div class="meta">${esc(r.hours || 'Not listed')}${r.corrected ? ' · from the restaurant' : ''}</div>${HCHK[r.name] ? `<div class="ds-warn">⚠️ Their website lists different hours: ${esc(HCHK[r.name].site)} — <a href="${esc(HCHK[r.name].url)}" target="_blank" rel="noopener">check</a></div>` : ''}${r.movedTo ? `<div class="ds-warn">📦 Moved to ${esc(r.movedTo)}</div>` : ''}</div></div>
+    <div class="ds-row"><span>📍</span><div>${esc(r.address.replace(', Houston, TX', ''))}<div class="meta">${r.tunnel ? `🚇 Underground · ${esc(r.tunnel)} — tunnel shops are mostly weekday daytime` : 'Street level'}</div>${r.lat ? `<button class="linkbtn" data-office="${r.id}" style="font-size:12.5px;margin-top:3px">🏢 I work near here</button>` : ''}</div><a href="#" id="sMap" class="ds-mini">Map</a></div>
+    <div class="ds-row"><span>🕒</span><div>${o.known ? `<b class="${o.open ? 'ok' : 'no'}">${esc(o.label)}</b>` : '<b>Hours</b>'}<div class="meta">${esc(r.hours || 'Not listed')}${r.corrected ? ' · from the restaurant' : ''}</div>${HCHK[r.name] ? `<div class="ds-warn">⚠️ Their website lists different hours: ${esc(HCHK[r.name].site)} — <a href="${esc(HCHK[r.name].url)}" target="_blank" rel="noopener">check</a><div class="row" style="margin-top:6px"><button class="btn sm" data-hfix="${r.id}">Use website hours</button><button class="btn ghost sm" data-hkeep="${r.id}">Ours are right</button></div></div>` : ''}${r.movedTo ? `<div class="ds-warn">📦 Moved to ${esc(r.movedTo)}</div>` : ''}</div></div>
     ${r.phone ? `<div class="ds-row"><span>📞</span><div><a href="tel:${esc(tel)}">${esc(r.phone)}</a></div></div>` : ''}
     ${r.website ? `<div class="ds-row"><span>🌐</span><div><a href="${esc(r.website)}" target="_blank" rel="noopener">${esc(r.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '').slice(0, 38))}</a></div></div>` : ''}
   </div>
 
-  ${hh ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div><b>${esc(hh.when)}</b><div style="margin-top:4px">${esc(hh.deals)}</div><div class="meta" style="margin-top:6px"><a href="${esc(hh.source)}" target="_blank" rel="noopener">${esc(new URL(hh.source).hostname.replace('www.', ''))}</a> · ${hh.confidence === 'verify' ? 'double-check before you go' : esc(hh.confidence)} · checked ${esc(HH.checked)}</div></div>`
+  ${hh ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div><b>${esc(hh.when)}</b><div style="margin-top:4px">${esc(hh.deals)}</div>${!hhNow(r) && nextHH(r) ? `<button class="btn ghost sm" data-remind="${r.id}" style="margin-top:8px">🔔 Remind me before it starts (${esc(fmt(nextHH(r).m))})</button>` : ''}<div class="meta" style="margin-top:6px"><a href="${esc(hh.source)}" target="_blank" rel="noopener">${esc(new URL(hh.source).hostname.replace('www.', ''))}</a> · ${hh.confidence === 'verify' ? 'double-check before you go' : esc(hh.confidence)} · checked ${esc(HH.checked)}</div></div>`
     : r.meals.includes('Happy Hour') ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div>Listed as offering happy hour — times and prices aren't verified yet. <a href="${L.specials}" target="_blank" rel="noopener">Look up today's deals</a></div>` : ''}
 
   ${r.note || r.tryit ? `<div class="ds-card"><div class="ds-cap">About</div>${r.note ? `<div>${esc(r.note)}</div>` : ''}${r.tryit ? `<div class="meta" style="margin-top:6px"><b>Try:</b> ${esc(r.tryit)}</div>` : ''}
@@ -415,11 +485,33 @@ let listCtx = null;
 function listSheet(places, title, walk) {
   listCtx = { places, title, walk };
   $('#panel').innerHTML = `<div class="sheet-top"><button class="backbtn" id="lBack">‹ Back to map</button><button class="close" id="cls">×</button></div><h2>${esc(title)}</h2><p class="meta">${places.length} spots ${walk ? 'within about a block — closest first' : 'here' + (places[0].tunnel ? ' · underground' : '')}</p>
+  ${!walk && places.length >= 3 ? `<div class="hallplan" aria-label="Stalls inside">${places.map((r) => { const o = openLabel(r); return `<button class="stall ${o.known ? (o.open ? 'open' : 'shut') : ''}" data-open="${r.id}" style="--tc:${styleFor(r).color || '#888'}"><span>${styleFor(r).emoji}</span><b>${esc(r.name.replace(/ at .*$| @ .*$/, ''))}</b></button>`; }).join('')}</div><p class="meta" style="margin:6px 0 10px">Stalls inside — green dot means open now. Layout is a guide, not to scale.</p>` : ''}
   ${places.map((r) => { const o = openLabel(r); return `<div class="list-item" data-open="${r.id}"><div><b>${styleFor(r).emoji} ${esc(r.name)}</b><div class="meta">${$$(r.price)} · ${esc(r.type)}${walk ? ` · ${r.tunnel ? '🚇 tunnel · ' : ''}~${walk.get(r.id)} min walk` : ''}</div></div><span class="tag ${o.known ? (o.open ? 'open' : 'closed') : ''}">${esc(o.known ? (o.open ? 'Open' : 'Closed') : '—')}</span></div>`; }).join('')}`;
   $('#sheet').classList.add('on'); $('#cls').onclick = closeSheet; $('#lBack').onclick = closeSheet; $('#panel').scrollTop = 0;
 }
 function closeSheet() { $('#sheet').classList.remove('on'); }
-$('#sheet').onclick = (e) => { if (e.target.id === 'sheet') closeSheet(); const li = e.target.closest('.list-item'); if (li) openSheet(+li.dataset.open, listCtx); };
+// happy-hour reminders: a notification 15 minutes before it starts (while the app is open), plus a toast
+function nextHH(r, from = new Date()) {
+  const h = hhFor(r); if (!h) return null; const clean = h.when.replace(/[“”"][^“”"]*[“”"]/g, '').replace(/\(.*?\)/g, '');
+  for (let k = 5; k <= 12 * 60; k += 5) { const d = new Date(from.getTime() + k * 60e3); const s = openState(clean, d); if (s.known && s.open && !closedAllDay(r, d)) return { at: d, m: d.getHours() * 60 + d.getMinutes() }; }
+  return null;
+}
+const REMIND = new Map();
+async function remindHH(r) {
+  const n = nextHH(r); if (!n) return; const when = n.at.getTime() - 15 * 60e3, wait = Math.max(5e3, when - Date.now());
+  try { if ('Notification' in window && Notification.permission === 'default') await Notification.requestPermission(); } catch (e) {}
+  clearTimeout(REMIND.get(r.name)); REMIND.set(r.name, setTimeout(() => { const msg = `🍹 Happy hour at ${r.name} starts in 15 min`; toast(msg); buzz([10, 60, 10]); try { if (Notification.permission === 'granted') new Notification('Downtown Eats', { body: msg, icon: 'icon-192.png' }); } catch (e) {} }, wait));
+  toast(`🔔 I'll remind you at ${fmt(n.m - 15)} — keep the app open`);
+}
+function fixHours(r, useSite) {
+  if (useSite) { HFIX[r.name] = HCHK[r.name].site; r.hours = HFIX[r.name]; r.corrected = 'your fix'; } else HFIX[r.name] = HFIX[r.name] || r.hours;
+  delete HCHK[r.name]; store.set('hoursFix', HFIX); toast(useSite ? '✅ Updated to the website hours' : '👍 Kept — won’t ask again'); renderPick();
+}
+$('#sheet').onclick = (e) => {
+  const rm = e.target.closest('[data-remind]'); if (rm) { remindHH(DATA[+rm.dataset.remind]); return; }
+  const of = e.target.closest('[data-office]'); if (of) { const r = DATA[+of.dataset.office]; OFFICE = { name: r.venue || r.address.replace(', Houston, TX', ''), lat: r.lat, lng: r.lng }; store.set('office', OFFICE); toast('🏢 Walk times now start from ' + OFFICE.name); renderPick(); return; }
+  const hf = e.target.closest('[data-hfix]'), hk = e.target.closest('[data-hkeep]');
+  if (hf || hk) { const r = DATA[+(hf || hk).dataset[hf ? 'hfix' : 'hkeep']]; fixHours(r, !!hf); openSheet(r.id, sheetFrom); return; } if (e.target.id === 'sheet') closeSheet(); const li = e.target.closest('.list-item'); if (li) openSheet(+li.dataset.open, listCtx); };
 // sheet "Back" returns to the same list (with walking times if it came from a corner search)
 function toggleFav(r) { favs.has(r.name) ? favs.delete(r.name) : favs.add(r.name); save(); }
 document.addEventListener('click', (e) => {
@@ -451,6 +543,7 @@ function initMap() {
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to move · pinch or double-tap to zoom'; },
   });
   if (EVENTS.length) city.setEvents(EVENTS);
+  if (WX) { city.preferTunnel = wxBad(); city.weather = WX; }
   $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
   if (USER) city.setUser(USER);
   pollMetro(); setInterval(pollMetro, 20000);
@@ -632,7 +725,7 @@ function renderNight() {
 function barCard(r) {
   const o = openLabel(r), h = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
   return `<div class="card bar">
-  <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
+  <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
   <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
   <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div></div></div>
   <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
@@ -666,7 +759,7 @@ function renderCoffee() {
   const open = all.filter((r) => isOpen(r) === true).length;
   $('#coffeeSub').textContent = `${all.length} coffee shops, cafés & tea spots · ${open} open now · ${all.filter((r) => r.tunnel).length} in the tunnels`;
   $('#coffeeList').innerHTML = list.map((r) => { const o = openLabel(r), w = walkMinsTo(r); return `<div class="card bar">
-    <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
+    <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
     <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
     <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.venue ? ' · ' + esc(r.venue) : ''}</div></div></div>
     <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${r.tunnel ? '<span class="tag">🚇 Tunnel</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
@@ -821,6 +914,7 @@ function show(v) {
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
   if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee();
+  if (v === 'map' && !GEO_READY && !city) { GEO_P.then(() => { if ($('#v-map').classList.contains('on')) show('map'); }); return; }
   if (v === 'map') { initMap(); city.resize(); if (city._bgBuilt) { city._bgBuilt = false; city.anim = null; city.fit(); } }
   if (city) city.paused = v !== 'map';
   if (v !== 'map') window.scrollTo(0, 0);
@@ -868,10 +962,12 @@ async function aboutPlace(r) {
 // ---------- boot ----------
 (async () => {
   try {
-    const [pj, hj, oj, ms, bj, sj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('streets.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
-    metroStatic = ms; BUILDINGS = bj; STREETS = sj;
+    // the big map files (~900 KB) load alongside, but the lists don't wait for them
+    GEO_P = Promise.all([fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('streets.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]).then(([bj, sj]) => { BUILDINGS = bj; STREETS = sj; GEO_READY = true; });
+    const [pj, hj, oj, ms] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
+    metroStatic = ms;
     META = { refreshed: pj.refreshed }; HH = hj;
-    fetch('hours-check.json').then((r) => r.json()).then((j) => { HCHK = j.flags || {}; }).catch(() => {});
+    fetch('hours-check.json').then((r) => r.json()).then((j) => { HCHK = j.flags || {}; for (const n of Object.keys(HFIX)) delete HCHK[n]; if ($('#v-browse').classList.contains('on')) renderBrowse(); }).catch(() => {});
     fetch('events.json').then((r) => r.json()).then((j) => { EVENTS = j.events || []; city?.setEvents(EVENTS); renderPick(); }).catch(() => {});
     DATA = pj.places.map((p, i) => {
       const o = { ...(p.official || {}) };
@@ -881,7 +977,8 @@ async function aboutPlace(r) {
       const cats = (p.official && p.official.cats) || {};
       return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
-    DATA = DATA.filter((r) => r.status !== 'closed').map((r, i) => ({ ...r, id: i }));   // closed for good: drop, then renumber
+    DATA = DATA.filter((r) => r.status !== 'closed').map((r, i) => ({ ...r, id: i }));
+    for (const r of DATA) if (HFIX[r.name]) { r.hours = HFIX[r.name]; r.corrected = 'your fix'; }   // fixes you chose in the hours review   // closed for good: drop, then renumber
     DATA.forEach((r) => {
       const barish = /\b(bar|lounge|pub|nightclub|club|saloon|tavern|nightlife|speakeasy)\b/i.test(r.type || '');
       const food = (r.meals || []).some((x) => /breakfast|brunch|lunch|dinner|full service|fast casual/i.test(x));
@@ -895,6 +992,8 @@ async function aboutPlace(r) {
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee'].includes(h)) show(h);
+  if (h.startsWith('poll=')) { const opts = decodeURIComponent(h.slice(5)).split('|').map((n) => DATA.find((x) => x.name === n)).filter(Boolean); if (opts.length) { show('pick'); $('#pickOut').innerHTML = `<div class="card poll"><h3>🗳️ Where should we eat?</h3><div class="meta">Tap your vote — it opens your messages so you can send it back.</div>${opts.map((x) => `<button class="pollopt" data-vote="${x.id}">${tile(x)}<span><b>${esc(x.name)}</b><em>${$$(x.price)} · ${esc(x.type)} · ${esc(openLabel(x).label || '')}</em></span></button>`).join('')}</div>`; $('#pickOut').onclick = (e) => { const v = e.target.closest('[data-vote]'); if (v) { const x = DATA[+v.dataset.vote]; shareText('My vote', `I vote ${x.name} 👍`, appUrl() + '#p=' + encodeURIComponent(x.name)); } }; } }
+  if (h === 'surprise') { show('pick'); setTimeout(() => $('#pickBtn').click(), 300); }
   if (h.startsWith('p=')) { const r = DATA.find((x) => x.name === decodeURIComponent(h.slice(2))); if (r) openSheet(r.id); }
   if (h.startsWith('plan=')) { const [slot, ...names] = decodeURIComponent(h.slice(5)).split('|'); week.slot = slot || week.slot; DAYS.forEach((d, i) => { const r = DATA.find((x) => x.name === names[i]); if (r) week.days[d] = { name: r.name, address: r.address, lock: true }; }); save(); show('week'); toast('Plan loaded — 🔒 days are from the link'); }
   loadWeather();
@@ -902,7 +1001,7 @@ async function aboutPlace(r) {
   if ('serviceWorker' in navigator && location.protocol === 'https:' && !/claude|claudeusercontent/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
   // build the street model quietly so Explore cards can show where each place is
   const bg = () => { if (!city) { initMap(); if (!$('#v-map').classList.contains('on')) { city.paused = true; city._bgBuilt = true; } SPOTOF = null; if ($('#v-browse').classList.contains('on')) renderBrowse(); } };
-  (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 });
+  GEO_P.then(() => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 }));
 })();
 
 // keyboard: Esc closes a sheet, or steps the map back; +/- zoom the map

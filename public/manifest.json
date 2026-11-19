@@ -26,15 +26,16 @@
  "description": "Pick where to eat in downtown Houston",
  "shortcuts": [
   {
-   "name": "Pick for me",
-   "url": "./#pick"
+   "name": "Surprise me",
+   "short_name": "Surprise",
+   "url": "./#surprise"
   },
   {
    "name": "Map",
    "url": "./#map"
   },
   {
-   "name": "Happy hour now",
+   "name": "Bars & happy hour",
    "url": "./#night"
   }
  ]

@@ -21,6 +21,7 @@
 <div class="wrap">
 <header id="top">
   <button class="themebtn" id="themeBtn" aria-label="Theme">🌓</button>
+  <button class="themebtn textbtn" id="textBtn" aria-label="Text size">A</button>
   <h1>Downtown Eats 🍽️</h1>
   <p id="hdr">Loading downtown Houston spots…</p>
 </header>
@@ -33,6 +34,8 @@
     <div class="chips" id="meal"></div>
     <h3>Budget</h3>
     <div class="chips" id="budget"></div>
+    <h3>Diet <small class="meta">— stays on · best guess from listings</small></h3>
+    <div class="chips" id="diet"></div>
     <h3>Extras</h3>
     <div class="chips" id="extras"></div>
   </details>
@@ -66,10 +69,12 @@
   <p class="sub">Plans a varied pick for each weekday from your mood and filters, skipping places that are closed that day. 🔒 keeps a day, 🔄 swaps it.</p>
   <div class="chips" id="weekSlot" style="margin-bottom:10px"></div>
   <div class="week" id="week"></div>
+  <div id="monthBox" style="margin-top:14px"></div>
   <div class="row" style="margin-top:12px">
     <button class="btn" id="planBtn">🗓️ Plan my week</button>
     <button class="btn ghost" id="copyWeek">Copy plan</button>
     <button class="btn ghost" id="shareWeek">📤 Share</button>
+    <button class="btn ghost" id="calWeek">📅 Calendar</button>
   </div>
 </section>
 

@@ -179,6 +179,34 @@
       "source": "https://www.atly.com/location/Warren's-Inn",
       "confidence": "verify",
       "checked": "2026-11-18"
+    },
+    "Concrete Rose": {
+      "when": "Mon–Fri 5–7 PM",
+      "deals": "“Golden Hour”: half-off food and bottles of wine, $9 classic cocktails like palomas and negronis",
+      "source": "https://houston.culturemap.com/news/restaurants-bars/houston-happy-hours-summer-2026/",
+      "confidence": "news, Jul 2026",
+      "checked": "2026-11-18"
+    },
+    "La Carafe": {
+      "when": "Daily 4–7 PM",
+      "deals": "50¢ off all drinks at Houston's oldest bar (cash only, beer and wine)",
+      "source": "https://www.houstonpress.com/?p=297221",
+      "confidence": "verify",
+      "checked": "2026-11-18"
+    },
+    "Lone Star Saloon": {
+      "when": "Mon 1–7 PM · Tue–Fri 4–7 PM · Sun 2–7 PM",
+      "deals": "Cheap buckets and daily shot/cocktail specials",
+      "source": "https://www.houstonpress.com/?p=296697",
+      "confidence": "verify",
+      "checked": "2026-11-18"
+    },
+    "Saltgrass Steak House": {
+      "when": "Mon–Fri 3–7 PM",
+      "deals": "Bar menu food and drink specials (chain says times vary by location)",
+      "source": "https://www.saltgrass.com/faq",
+      "confidence": "verify",
+      "checked": "2026-11-18"
     }
   }
 }
