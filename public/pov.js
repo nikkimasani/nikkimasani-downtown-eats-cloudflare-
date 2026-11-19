@@ -354,7 +354,7 @@ export async function openPOV(city, opts = {}) {
     scene.fog = under ? scene.fog : show3d ? null : streetFog;
     $('[data-a=real]').classList.toggle('on', realOn); $('.pov-attr').hidden = !realOn || under;
   };
-  const align = () => {   // map Google's earth-centred tiles onto our street grid: same east/north/up, same scale, same centre
+  const align = () => { if (!tiles || !geo) return;   // map Google's earth-centred tiles onto our street grid: same east/north/up, same scale, same centre
     const E = tiles.ellipsoid, rad = Math.PI / 180, la = 29.7575, lo = -95.364, d = 0.001;
     geo.matrix.identity(); geo.updateMatrixWorld(true); tiles.group.updateMatrixWorld(true);
     const P = (lat, lng, h) => { const v = new T.Vector3(); E.getCartographicToPosition(lat * rad, lng * rad, h, v); return v.applyMatrix4(tiles.group.matrixWorld); };
@@ -384,15 +384,16 @@ export async function openPOV(city, opts = {}) {
       try {
         const R = await import('./vendor/tiles.module.js');
         tiles = new R.TilesRenderer();
-        tiles.registerPlugin(new R.GoogleCloudAuthPlugin({ apiToken: key, autoRefreshToken: true }));
+        if (key.provider === 'cesium') tiles.registerPlugin(new R.CesiumIonAuthPlugin({ apiToken: key.key, assetId: '2275207', autoRefreshToken: true }));   // Google's 3D city through a free Cesium ion account
+        else tiles.registerPlugin(new R.GoogleCloudAuthPlugin({ apiToken: key.key, autoRefreshToken: true }));
         tiles.registerPlugin(new R.GLTFExtensionsPlugin({ dracoLoader: new R.DRACOLoader().setDecoderPath(new URL('./vendor/draco/', import.meta.url).href) }));
         tiles.registerPlugin(new R.TileCompressionPlugin()); tiles.registerPlugin(new R.UnloadTilesPlugin());
         tiles.registerPlugin(new R.ReorientationPlugin({ lat: 29.7575 * Math.PI / 180, lon: -95.364 * Math.PI / 180, height: 0, recenter: true }));
         tiles.errorTarget = 12; tiles.setCamera(camera); tiles.setResolutionFromRenderer(camera, renderer);
         geo = new T.Group(); geo.matrixAutoUpdate = false; geo.add(tiles.group); scene.add(geo);
         tiles.addEventListener('load-root-tileset', () => setTimeout(align, 0));
-        tiles.addEventListener('tiles-load-end', () => { if (!realReady && baseA && tiles.group.children.length) { realReady = true; applyReal(); hint('Realistic 3D city from Google · 🛰️ to switch back', 4000); } });
-        let failed = false; tiles.addEventListener('load-error', (e) => { if (failed || realReady) return; failed = true; console.warn('3D tiles', e?.error || e); realOn = false; try { scene.remove(geo); tiles.dispose(); } catch {} tiles = null; geo = null; baseA = null; applyReal(); hint('Google refused the 3D city request — check the key has the Map Tiles API turned on, billing set up, and this website allowed.', 10000); });
+        tiles.addEventListener('tiles-load-end', () => { if (tiles && !realReady && baseA && tiles.group.children.length) { realReady = true; applyReal(); hint('Realistic 3D city from Google · 🛰️ to switch back', 4000); } });
+        let failed = false; tiles.addEventListener('load-error', (e) => { if (failed || realReady) return; failed = true; console.warn('3D tiles', e?.error || e); realOn = false; try { scene.remove(geo); tiles.dispose(); } catch {} tiles = null; geo = null; baseA = null; applyReal(); hint(key.provider === 'cesium' ? 'Cesium refused the 3D city request — check the token has Google Photorealistic 3D Tiles added in My Assets, and this website is allowed.' : 'Google refused the 3D city request — check the key has the Map Tiles API turned on, billing set up, and this website allowed.', 10000); });
       } catch (err) { console.warn(err); tiles = null; hint("Couldn't load the realistic view on this device.", 6000); return; }
     }
     realOn = on && !!tiles; applyReal();
