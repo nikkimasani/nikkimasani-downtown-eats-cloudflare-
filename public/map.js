@@ -90,6 +90,7 @@ const mix = (h, t, to = 255) => '#' + rgb(h).map((v) => Math.round(v + (to - v) 
 const lighten = (h, t) => mix(h, t, 255), darken = (h, t) => mix(h, t, 0);
 const mixC = (a, b, t) => { const A = rgb(a), B = rgb(b); return '#' + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, '0')).join(''); };
 const ptIn = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const a = P[i], b = P[j]; if ((a[1] > y) !== (b[1] > y) && x < ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]) + a[0]) c = !c; } return c; };
+const AWN = ['#b3392f', '#1f6f5c', '#2c3e70', '#b8862b', '#7b2d5b', '#2f5d8a', '#3d3d3d'];
 const hash = (s) => { let h = 2166136261; s = String(s); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
 const norm = (s) => s.toLowerCase().replace(/[^a-z]/g, '');
 
@@ -820,6 +821,7 @@ export class CityMap {
       // two pins in one building: fan them out a little, staying inside
       for (let k = 0; k < 6 && used.some(([ux, uy]) => Math.hypot(ux - x, uy - y) < 0.7); k++) { const a = k * 2.1, nx = x + Math.cos(a) * 0.8, ny = y + Math.sin(a) * 0.8; if (inPoly(nx, ny, o.pts)) { x = nx; y = ny; } }
       used.push([x, y]); s.x = x; s.y = y; s.cell = this.cellOf(x, y); s.bldg = o;
+      if (!s.places[0]?.tunnel) (o.shops ||= []).push({ pt: best.pt.slice(), c: AWN[Math.floor(hash(s.places[0].name + 'a') * AWN.length)] });
     }
   }
   // ---------- you are here + walking navigation ----------
@@ -984,7 +986,7 @@ export class CityMap {
       pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath();
     }
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) add(a.r.x0 + 0.6, a.r.y0 + 0.6, a.r.x1 - a.r.x0 - 1.2, a.r.y1 - a.r.y0 - 1.2, 3.8);
-    ctx.fillStyle = 'rgba(38,48,74,.17)'; ctx.fill('nonzero');
+    ctx.fillStyle = 'rgba(38,48,74,.15)'; ctx.fill('nonzero'); ctx.strokeStyle = 'rgba(38,48,74,.05)'; ctx.lineWidth = Math.max(2, 4 * v.s); ctx.lineJoin = 'round'; ctx.stroke();
   }
   drawClouds(now, N) {   // big soft cloud shadows drifting over the city
     if (N || this.mode === 'tunnel') return; const ctx = this.ctx, v = this.v, B = this.bounds;
@@ -1220,7 +1222,7 @@ export class CityMap {
     if (!(v.s < 0.3 && o.h < 1.5)) for (let i = 0; i < n; i++) {
       const a = P[i], b = P[(i + 1) % n], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 0.05) continue;
       const nx = dy / L, ny = -dx / L, [f, r] = v.vis(nx, ny); if (f <= 0.001) continue;
-      walls.push({ a, b, L, sun: Math.max(0, -r / Math.SQRT2), shade: 0.125 + 0.105 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
+      walls.push({ a, b, L, nx, ny, sun: Math.max(0, -r / Math.SQRT2), shade: 0.125 + 0.105 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
     }
     walls.sort((p, q) => p.d - q.d);
     const fancy = v.s >= 0.3 && o.h > 1.2, warm = this._warm || 0;
@@ -1257,6 +1259,20 @@ export class CityMap {
           const cols = Math.max(2, Math.round(w.L / 0.3)), seg = sl / cols; ctx.setLineDash([seg * 0.55, seg * 0.45]); ctx.lineDashOffset = -seg * 0.22;
           ctx.strokeStyle = N ? 'rgba(20,24,40,.55)' : mixC(darken(col, 0.45), '#33465e', 0.55) + 'b0'; ctx.lineWidth = Math.max(1, 0.15 * ZU * v.s); ctx.beginPath();
           for (let z = z0 + 0.42; z < z1 - 0.12; z += 0.36) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset = 0;
+        }
+      }
+      if (z0 < 0.05 && o.h > 0.8 && v.s > 0.45 && !/parking|garage|church|lot/.test(o.type || '')) {   // ground-floor storefronts
+        const sz = 0.42, q = [v.p(w.a[0], w.a[1], 0.03), v.p(w.b[0], w.b[1], 0.03), v.p(w.b[0], w.b[1], sz), v.p(w.a[0], w.a[1], sz)];
+        poly(ctx, q, N ? 'rgba(255,205,130,.6)' : '#4a6072');
+        ctx.strokeStyle = N ? 'rgba(120,80,30,.5)' : 'rgba(225,235,242,.55)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...q[3]); ctx.lineTo(...q[2]);   // lintel and mullions
+        if (v.s > 0.8) { const nm = Math.max(1, Math.round(w.L / 0.28)); for (let i = 1; i < nm; i++) { const p = lerp2(w.a, w.b, i / nm); ctx.moveTo(...v.p(p[0], p[1], 0.03)); ctx.lineTo(...v.p(p[0], p[1], sz)); } } ctx.stroke();
+        for (const sh of o.shops || []) {   // a coloured awning over each restaurant's door
+          const dx = w.b[0] - w.a[0], dy = w.b[1] - w.a[1], t = ((sh.pt[0] - w.a[0]) * dx + (sh.pt[1] - w.a[1]) * dy) / (w.L * w.L); if (t < -0.05 || t > 1.05) continue;
+          const px = w.a[0] + dx * t, py = w.a[1] + dy * t; if (Math.hypot(px - sh.pt[0], py - sh.pt[1]) > 1.1) continue;
+          const hw = Math.min(0.4, w.L / 2) / w.L, t0 = Math.max(0, Math.min(1, t) - hw), t1 = Math.min(1, Math.max(0, t) + hw), A0 = lerp2(w.a, w.b, t0), A1 = lerp2(w.a, w.b, t1), o2 = 0.13, ac = N ? darken(sh.c, 0.3) : sh.c;
+          const F0 = [A0[0] + w.nx * o2, A0[1] + w.ny * o2], F1 = [A1[0] + w.nx * o2, A1[1] + w.ny * o2];
+          poly(ctx, [v.p(A0[0], A0[1], 0.56), v.p(A1[0], A1[1], 0.56), v.p(...F1, 0.46), v.p(...F0, 0.46)], lighten(ac, 0.12));   // sloped canopy
+          poly(ctx, [v.p(...F0, 0.46), v.p(...F1, 0.46), v.p(...F1, 0.39), v.p(...F0, 0.39)], ac, 'rgba(0,0,0,.18)');   // front valance
         }
       }
       const lit = this._dusk || 0;

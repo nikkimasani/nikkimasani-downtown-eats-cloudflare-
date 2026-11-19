@@ -337,3 +337,8 @@ body.in-pov .toast{z-index:61}
   #v-map .hud .lbl{display:none}
   #v-map .hud .seg.scene button{padding:8px 10px;font-size:16px}
 }
+
+/* card header with a cuisine tile */
+.card .chead{display:flex;gap:12px;align-items:flex-start}
+.card .chead>div{min-width:0;flex:1}
+.card .ctile{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:color-mix(in srgb,var(--tc) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tc) 28%,transparent)}

@@ -74,7 +74,10 @@ function score(r) {
 }
 function ranked(opt) {
   const list = FOOD.filter((r) => matches(r, opt));
-  if (!st.moods.size) return list.map((r) => [r, 1 + (isOpen(r) ? 0.5 : 0)]);
+  if (!st.moods.size) {   // no mood picked: open now first, then happy hour, favourites, closest
+    const k = (r) => (isOpen(r) === true ? 4 : isOpen(r) === false ? 0 : 2) + (hhNow(r) ? 1.5 : 0) + (favs.has(r.name) ? 1 : 0) - (walkMinsTo(r) ?? 8) / 40;
+    return list.map((r) => [r, 1 + (isOpen(r) ? 0.5 : 0), k(r)]).sort((x, y) => y[2] - x[2] || x[0].name.localeCompare(y[0].name)).map(([r, s]) => [r, s]);
+  }
   return list.map((r) => [r, score(r)]).filter((x) => x[1] >= 1).sort((a, b) => b[1] - a[1]);
 }
 function weightedPick(list, avoid = new Set()) {
@@ -91,8 +94,8 @@ function statusTags(r) {
 function card(r, hero) {
   return `<div class="card tap ${hero ? 'hero spin' : ''}" data-open="${r.id}">
   <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
-  <h3>${esc(r.name)}</h3>
-  <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div>
+  <div class="chead"><span class="ctile" style="--tc:${styleFor(r).color || '#e8590c'}">${styleFor(r).emoji}</span><div><h3>${esc(r.name)}</h3>
+  <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div></div></div>
   ${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}
   ${hero && r.tryit ? `<p class="try">Try: ${esc(r.tryit)}</p>` : ''}
   <div class="tags">${statusTags(r)}</div>
