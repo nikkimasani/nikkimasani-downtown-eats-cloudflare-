@@ -1070,7 +1070,7 @@ async function aboutPlace(r) {
     for (const r of DATA) if (HFIX[r.name]) { r.hours = HFIX[r.name]; r.corrected = 'your fix'; }   // fixes you chose in the hours review   // closed for good: drop, then renumber
     DATA.forEach((r) => {
       const barish = /\b(bar|lounge|pub|nightclub|club|saloon|tavern|nightlife|speakeasy)\b/i.test(r.type || '');
-      const food = (r.meals || []).some((x) => /breakfast|brunch|lunch|dinner|full service|fast casual/i.test(x));
+      const food = (r.meals || []).some((x) => /breakfast|brunch|lunch|dinner|full service|fast casual/i.test(x)) || !(barish || /bars?\b|nightlife|brew/i.test(r.type || ''));   // a steakhouse or diner with no meal tags still serves food
       const barName = /\bbar\b|lounge|tavern|\bpub\b|saloon|moonshin|bottle|cellar|hearsay|speakeasy|club/i.test(r.name);
       r.night = r.bar && (barish || barName || !food);            // night map: bars, lounges, clubs
       r.day = !(r.night && !food);                     // day map: anywhere that serves meals
