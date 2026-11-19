@@ -91,12 +91,31 @@ function statusTags(r) {
   const o = openLabel(r), hh = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
   return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
 }
-function card(r, hero) {
+const tile = (r) => `<span class="ctile" style="--tc:${styleFor(r).color || '#e8590c'}">${styleFor(r).emoji}</span>`;
+// where a place sits on the street grid: nearest corner + a tiny block map (needs the city model, built in the background)
+let SPOTOF = null;
+function gridSpot(r) {
+  if (!city || !city.spots) return null; if (!SPOTOF) { SPOTOF = new Map(); for (const s of city.spots) for (const p of s.places) SPOTOF.set(p.id, s); }
+  const s = SPOTOF.get(r.id); if (!s) return null; const A = city.avenues, C = city.cross, [i, j] = city.cellIdx(s.x, s.y);
+  if (i < 1 || j < 1 || i >= A.length || j >= C.length) return null;
+  const fx = (s.x - A[i - 1].x) / (A[i].x - A[i - 1].x), fy = (s.y - C[j - 1].y) / (C[j].y - C[j - 1].y);
+  return { fx, fy, av: fx < 0.5 ? A[i - 1].n : A[i].n, cr: fy < 0.5 ? C[j - 1].n : C[j].n, avs: [A[i - 1].n, A[i].n], crs: [C[j - 1].n, C[j].n] };
+}
+function miniMap(r) {
+  const g = gridSpot(r); if (!g) return '';
+  const c = styleFor(r).color || '#e8590c', px = 14 + g.fx * 36, py = 14 + g.fy * 36;
+  return `<svg class="mini" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="12" fill="var(--mini-bg)"/>
+    <g fill="var(--mini-road)"><rect x="0" y="6" width="64" height="7"/><rect x="0" y="51" width="64" height="7"/><rect x="6" y="0" width="7" height="64"/><rect x="51" y="0" width="7" height="64"/></g>
+    <rect x="14" y="14" width="36" height="36" rx="3" fill="var(--mini-block)"/>${r.tunnel ? '<rect x="14" y="30" width="36" height="4" rx="2" fill="#20c997" opacity=".55"/>' : ''}
+    <circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6.5" fill="${c}" stroke="#fff" stroke-width="2.5"/></svg>`;
+}
+const cornerTxt = (r) => { const g = gridSpot(r); return g ? `${g.av} & ${g.cr}` : ''; };
+function card(r, hero, map) {
   return `<div class="card tap ${hero ? 'hero spin' : ''}" data-open="${r.id}">
   <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
-  <div class="chead"><span class="ctile" style="--tc:${styleFor(r).color || '#e8590c'}">${styleFor(r).emoji}</span><div><h3>${esc(r.name)}</h3>
+  <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
   <div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div></div></div>
-  ${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}
+  ${map && miniMap(r) ? `<div class="locrow">${miniMap(r)}<div>${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}<div class="corner">📍 ${esc(cornerTxt(r))}${r.tunnel ? ' · 🚇 tunnel level' : ''}</div></div></div>` : r.note ? `<p class="note">${esc(r.note)}</p>` : ''}
   ${hero && r.tryit ? `<p class="try">Try: ${esc(r.tryit)}</p>` : ''}
   <div class="tags">${statusTags(r)}</div>
   ${hero ? `<button class="open-btn" data-open="${r.id}">Details, hours & specials →</button>` : ''}</div>`;
@@ -186,7 +205,7 @@ function renderBrowse() {
   if (!list.length && t) {
     const sug = didYouMean(t);
     $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
-  } else $('#browse').innerHTML = list.map((r) => card(r)).join('') || '<div class="empty">No results.</div>';
+  } else $('#browse').innerHTML = list.map((r) => card(r, false, true)).join('') || '<div class="empty">No results.</div>';
   const stq = t && parseStreetQuery(t);
   if (stq) $('#browse').insertAdjacentHTML('afterbegin', `<div class="card corner-card"${stq.kind === 'parallel' ? '' : ' data-corner="1"'}><h3>📍 ${esc(stq.label)}</h3><div class="meta">${stq.kind === 'parallel' ? 'Pick one street from each direction, like Main & Texas.' : 'Tap to see it on the map with every spot within a block'}</div></div>`);
   if (stq && !list.length) $('#bCount').textContent = 'Street search';
@@ -213,7 +232,7 @@ function renderWeek() {
     const e = week.days[d] || {}; const r = DATA.find((x) => x.name === e.name && x.address === e.address);
     const o = r ? openState(r.hours, dayDate(i, week.slot)) : null;
     return `<div class="day" style="${today === i + 1 ? 'outline:2px solid var(--accent)' : ''}"><div class="d">${d}<small>${today === i + 1 ? 'Today' : ''}</small></div>
-    <div>${r ? `<div class="nm" data-open="${r.id}">${esc(r.name)}</div><div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.tunnel ? ' · 🚇' : ''}${o?.known && !o.open ? ' · ⚠️ may be closed' : ''}</div>` : '<div class="meta">Not planned</div>'}</div>
+    ${r ? tile(r) : '<span class="ctile empty">＋</span>'}<div>${r ? `<div class="nm" data-open="${r.id}">${esc(r.name)}</div><div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.tunnel ? ' · 🚇' : ''}${o?.known && !o.open ? ' · ⚠️ may be closed' : ''}</div>` : '<div class="meta">Not planned</div>'}</div>
     <div class="acts"><button class="icon ${e.lock ? 'on' : ''}" data-lock="${d}" title="Lock">🔒</button><button class="icon" data-swap="${d}" title="Swap">🔄</button></div></div>`;
   }).join('');
 }
@@ -529,8 +548,8 @@ function barCard(r) {
   const o = openLabel(r), h = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
   return `<div class="card bar">
   <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
-  <h3>${esc(r.name)}</h3>
-  <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div>
+  <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
+  <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div></div></div>
   <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
   ${h ? `<div class="hhbox ${hn ? 'on' : ''}"><b>🍹 ${hn ? 'Happy hour now' + (hn.closesAt ? ' · till ' + esc(hn.closesAt) : '') : esc(h.when)}</b><span>${esc(h.deals)}</span>${h.confidence === 'verify' ? '<em>Double-check before you go</em>' : ''}</div>`
       : r.hhListed ? `<div class="hhbox"><b>🍹 Listed for happy hour</b><span>Times and prices aren't published yet — check with the bar.</span></div>` : ''}
@@ -563,8 +582,8 @@ function renderCoffee() {
   $('#coffeeSub').textContent = `${all.length} coffee shops, cafés & tea spots · ${open} open now · ${all.filter((r) => r.tunnel).length} in the tunnels`;
   $('#coffeeList').innerHTML = list.map((r) => { const o = openLabel(r), w = walkMinsTo(r); return `<div class="card bar">
     <button class="fav" data-fav="${r.id}" title="Favorite">${favs.has(r.name) ? '♥' : '♡'}</button>
-    <h3>${styleFor(r).emoji} ${esc(r.name)}</h3>
-    <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.venue ? ' · ' + esc(r.venue) : ''}</div>
+    <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
+    <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.venue ? ' · ' + esc(r.venue) : ''}</div></div></div>
     <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${r.tunnel ? '<span class="tag">🚇 Tunnel</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
     ${r.note ? `<div class="meta" style="margin-top:6px">${esc(r.note)}</div>` : ''}
     <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`; }).join('') || '<div class="empty">No coffee spots match all of those. Try removing a filter.</div>';
@@ -717,7 +736,8 @@ function show(v) {
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
   if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee();
-  if (v === 'map') { initMap(); city.resize(); }
+  if (v === 'map') { initMap(); city.resize(); if (city._bgBuilt) { city._bgBuilt = false; city.anim = null; city.fit(); } }
+  if (city) city.paused = v !== 'map';
   if (v !== 'map') window.scrollTo(0, 0);
   try { history.replaceState(null, '', '#' + v); } catch (e) {}
 }
@@ -788,6 +808,9 @@ async function aboutPlace(r) {
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee'].includes(h)) show(h);
   setupAsk();
+  // build the street model quietly so Explore cards can show where each place is
+  const bg = () => { if (!city) { initMap(); if (!$('#v-map').classList.contains('on')) { city.paused = true; city._bgBuilt = true; } SPOTOF = null; if ($('#v-browse').classList.contains('on')) renderBrowse(); } };
+  (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 });
 })();
 
 // keyboard: Esc closes a sheet, or steps the map back; +/- zoom the map

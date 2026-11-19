@@ -54,7 +54,7 @@ h2{font-family:Fraunces,serif;font-size:20px;margin:22px 0 10px}
 .fgroup{margin:12px 0}.fgroup label.h{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
 .count{font-size:13px;color:var(--muted);margin:10px 0}
 .week{display:grid;gap:10px}
-.day{display:grid;grid-template-columns:62px 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+.day{display:grid;grid-template-columns:56px 38px 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
 .day .d{font-family:Fraunces,serif;font-weight:800;font-size:18px}
 .day .d small{display:block;font-family:Inter,system-ui;font-weight:500;font-size:11px;color:var(--muted)}
 .day .nm{font-weight:600;cursor:pointer}
@@ -342,3 +342,11 @@ body.in-pov .toast{z-index:61}
 .card .chead{display:flex;gap:12px;align-items:flex-start}
 .card .chead>div{min-width:0;flex:1}
 .card .ctile{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:color-mix(in srgb,var(--tc) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tc) 28%,transparent)}
+
+:root{--mini-bg:#e9e7e2;--mini-road:#c4c8ce;--mini-block:#f6f4ef}
+.card .locrow{display:flex;gap:12px;align-items:center;margin-top:8px}
+.card .locrow .note{margin:0 0 4px}
+.card .mini{flex:none;width:64px;height:64px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line)}
+.card .corner{font-size:12.5px;color:var(--muted);font-weight:600}
+.day .ctile.empty{color:var(--muted);background:transparent;box-shadow:inset 0 0 0 1.5px var(--line);font-size:18px}
+.day .ctile{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:20px;background:color-mix(in srgb,var(--tc,#888) 16%,transparent)}
