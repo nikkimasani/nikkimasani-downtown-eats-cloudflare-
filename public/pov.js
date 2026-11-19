@@ -9,7 +9,22 @@ const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i
 const hash = (s) => { let h = 2166136261; s = String(s); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
 
 // stand on the sidewalk across the street from a spot, looking at it
+// the wall of a place's own building nearest its real address, with the outward direction (toward the street)
+export function storefront(s, city) { return city?.storefront ? city.storefront(s) : null; }
 export function standFor(city, s) {
+  const f = storefront(s, city);
+  if (f) {   // across the street from the door, a little down the block, looking at it
+    const k = hash(s.label) > 0.5 ? 1 : -1, inP = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; };
+    const blocked = (x, y) => (city.osm || []).some((o) => (o.z0 || 0) < 0.3 && x > o.bb.x0 - 0.15 && x < o.bb.x1 + 0.15 && y > o.bb.y0 - 0.15 && y < o.bb.y1 + 0.15 && inP(x, y, o.pts));
+    if (f.st) {   // the opposite sidewalk of the address street, looking across at the door
+      const sd = Math.sign(f.st.v - (f.st.av ? f.x : f.y)) || 1, w = city.streetW + 0.35;
+      for (const along of [1.4 * k, -1.4 * k, 0]) { const x = f.st.av ? f.st.v + sd * w : f.x + f.tx * along, y = f.st.av ? f.y + f.ty * along : f.st.v + sd * w; if (!blocked(x, y)) return { x, y, yaw: Math.atan2(-(f.x - x), -(f.y - y)), pitch: 0.12 }; }
+    }
+    for (const back of [city.streetW * 2 + 1.1, city.streetW + 0.6, 0.6, 1.5]) for (const along of [1.6 * k, -1.6 * k, 3 * k, 0]) {   // across the street first, then this side's curb — wherever is open sidewalk
+      const x = f.x + f.nx * back + f.tx * along, y = f.y + f.ny * back + f.ty * along;
+      if (!blocked(x, y)) return { x, y, yaw: Math.atan2(-(f.x - x), -(f.y - y)), pitch: 0.12 };
+    }
+  }
   const A = city.avenues, C = city.cross, sw = city.streetW, [i, j] = city.cellIdx(s.x, s.y);
   const edges = [];
   if (i > 0) edges.push({ d: s.x - A[i - 1].x, at: [A[i - 1].x - sw - 0.35, s.y] });
@@ -155,7 +170,7 @@ export async function openPOV(city, opts = {}) {
   for (const m of [bodies, heads, vehicles, glassBand]) { m.instanceMatrix.setUsage(T.DynamicDrawUsage); m.frustumCulled = false; scene.add(m); }
   const REAL = { waymo: [4.9, 2.0, 1.6, '#f1f3f5'], bus: [12, 2.6, 3.2, '#3b6fb6'], train: [30, 2.65, 3.6, '#e03131'] };
 
-  // pins (AR-style: visible through walls, nearest ones only) and corner signs
+  // pins (on the sidewalk at each storefront, hidden behind buildings, nearest ones only) and corner signs
   const labelTex = (txt, emoji, bg) => { const c = document.createElement('canvas'), g = c.getContext('2d'); c.width = 512; c.height = 128; g.font = '700 40px system-ui, sans-serif'; const w = Math.min(500, g.measureText(txt).width + 120);
     g.fillStyle = 'rgba(0,0,0,0)'; g.fillRect(0, 0, 512, 128); g.fillStyle = bg; rr(g, (512 - w) / 2, 22, w, 84, 42); g.fill();
     g.font = '44px system-ui, sans-serif'; g.textBaseline = 'middle'; g.fillText(emoji, (512 - w) / 2 + 22, 66); g.font = '700 40px system-ui, sans-serif'; g.fillStyle = '#fff'; g.fillText(txt.length > 22 ? txt.slice(0, 21) + '…' : txt, (512 - w) / 2 + 92, 66);
@@ -166,7 +181,9 @@ export async function openPOV(city, opts = {}) {
       let fs = 64; g.font = `700 ${fs}px Georgia,serif`; while (g.measureText(name).width > 480 && fs > 26) { fs -= 4; g.font = `700 ${fs}px Georgia,serif`; } g.fillStyle = '#fff6e0'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(name, 256, 52); const t = keep(new T.CanvasTexture(c)); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; return t; };
     for (const o of city.osm || []) { if (!o.shops || (o.z0 || 0) > 0.05) continue; const P = o.pts;
       for (const sh of o.shops) { let best = null; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 0.3) continue; const t = Math.max(0.1, Math.min(0.9, ((sh.pt[0] - a[0]) * dx + (sh.pt[1] - a[1]) * dy) / (L * L))), px = a[0] + dx * t, py = a[1] + dy * t, d = Math.hypot(px - sh.pt[0], py - sh.pt[1]); if (!best || d < best.d) best = { d, px, py, dx: dx / L, dy: dy / L, L }; }
-        if (!best) continue; let nx = best.dy, ny = -best.dx; if ((o.cx - best.px) * nx + (o.cy - best.py) * ny > 0) { nx = -nx; ny = -ny; }
+        if (!best) continue;
+        { const used = (o._signAt ||= []), wu = Math.min(0.55, best.L * 0.8) + 0.12; let t0 = 0; for (let k = 1; k < 7 && used.some(([ux, uy]) => Math.hypot(ux - (best.px + best.dx * t0), uy - (best.py + best.dy * t0)) < wu); k++) t0 = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * wu; best.px += best.dx * t0; best.py += best.dy * t0; used.push([best.px, best.py]); }   // neighbours on one wall sit side by side, not on top of each other
+        let nx = best.dy, ny = -best.dx; if ((o.cx - best.px) * nx + (o.cy - best.py) * ny > 0) { nx = -nx; ny = -ny; }
         const X = best.px * S, Z = best.py * S, rot = Math.atan2(nx, ny), w = Math.min(5, best.L * S * 0.8);
         const g = new T.BoxGeometry(w, 0.12, 1.5).toNonIndexed(); g.rotateX(0.32); g.translate(0, 3.9, 0.75); g.rotateY(rot); g.translate(X, 0, Z); awn.push({ g, c: sh.c });
         if (ns++ < MAXS) { const sm = new T.Mesh(signGeo, keep(new T.MeshBasicMaterial({ map: signTex(sh.name, sh.c) }))); sm.scale.set(Math.min(6, w + 1), 1.3, 1); sm.position.set(X + nx * 0.06, 4.9, Z + ny * 0.06); sm.rotation.y = rot; scene.add(sm); } } }
@@ -176,7 +193,10 @@ export async function openPOV(city, opts = {}) {
   for (const s of city.spots) {
     if (s.tunnel || !s.places.some((p) => city.sceneOk(p))) continue;
     const st = s.style || {}, mat = keep(new T.SpriteMaterial({ map: labelTex(s.label, st.emoji || '📍', city.scene === 'night' ? 'rgba(95,61,196,.92)' : 'rgba(232,89,12,.92)'), depthTest: false, transparent: true }));
-    const sp = new T.Sprite(mat); sp.scale.set(12, 3, 1); sp.position.set(s.x * S, 9 + (s.bldg ? Math.min(6, s.bldg.h * 2) : 0), s.y * S); sp.renderOrder = 10; sp.userData.spot = s; sp.visible = false; scene.add(sp); pins.push(sp);
+    // stand the pin on the sidewalk in front of the place's own storefront (the wall nearest its real address), not in the middle of the block
+    let px = s.x, py = s.y; const f = storefront(s, city); if (f) { px = f.x + f.nx * 0.35; py = f.y + f.ny * 0.35; }
+    mat.depthTest = true;   // a building in the way hides it, like a real sign would be
+    const sp = new T.Sprite(mat); sp.scale.set(6, 1.5, 1); sp.position.set(px * S, 6.6, py * S); sp.renderOrder = 10; sp.userData.spot = s; sp.visible = false; scene.add(sp); pins.push(sp);
   }
   // street furniture: blade signs on every corner, streetlights, crosswalks and street trees
   const signs = [];
@@ -338,7 +358,7 @@ export async function openPOV(city, opts = {}) {
     // pins & signs: nearest only
     const near = pins.map((p) => [p, Math.hypot(p.position.x / S - me.x, p.position.z / S - me.y)]).filter(([, d]) => d < 30).sort((a, b) => a[1] - b[1]).slice(0, 18);
     for (const p of tunnelPins) { const d = Math.hypot(p.position.x / S - me.x, p.position.z / S - me.y); p.visible = under && showPins && d < 25; }
-    for (const p of pins) p.visible = false; if (showPins && !under) for (const [p, d] of near) { p.visible = true; const k = Math.max(0.85, Math.min(1.8, d / 8)); p.scale.set(12 * k, 3 * k, 1); }
+    for (const p of pins) p.visible = false; if (showPins && !under) for (const [p, d] of near) { p.visible = true; const k = Math.max(0.7, Math.min(1.6, d / 10)); p.scale.set(6 * k, 1.5 * k, 1); }
     for (const sg of signs) sg.visible = !under && Math.hypot(sg.userData.x - me.x, sg.userData.y - me.y) < 22;
     // people
     let np = 0;

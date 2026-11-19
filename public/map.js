@@ -874,7 +874,7 @@ export class CityMap {
       // two pins in one building: fan them out a little, staying inside
       for (let k = 0; k < 6 && used.some(([ux, uy]) => Math.hypot(ux - x, uy - y) < 0.7); k++) { const a = k * 2.1, nx = x + Math.cos(a) * 0.8, ny = y + Math.sin(a) * 0.8; if (inPoly(nx, ny, o.pts)) { x = nx; y = ny; } }
       used.push([x, y]); s.x = x; s.y = y; s.cell = this.cellOf(x, y); s.bldg = o;
-      if (!s.places[0]?.tunnel) (o.shops ||= []).push({ pt: best.pt.slice(), c: AWN[Math.floor(hash(s.places[0].name + 'a') * AWN.length)], name: s.places.length > 1 ? (s.places[0].venue || s.places[0].name) : s.places[0].name });
+      if (!s.places[0]?.tunnel) (o.shops ||= []).push({ pt: (() => { const f = this.storefront(s); return f ? [f.x, f.y] : best.pt.slice(); })(), c: AWN[Math.floor(hash(s.places[0].name + 'a') * AWN.length)], name: s.places.length > 1 ? (s.places[0].venue || s.places[0].name) : s.places[0].name });
     }
   }
   // ---------- you are here + walking navigation ----------
@@ -1038,6 +1038,23 @@ export class CityMap {
       drawPerson(ctx, x, y, uu, ME_LOOK, this._mePh, mv, '#2fdc5a', now, this._wxNow || '');
       if (!this.nav) pill(ctx, x, y - 58 * uu, u.demo ? 'You (demo)' : 'You', 11, 'rgba(28,126,214,.95)', '#fff');
     } else { circle(ctx, x, y, 9, '#fff'); circle(ctx, x, y, 6.5, '#1c7ed6'); }
+  }
+  // which wall of a place's building is its shopfront: the one facing the street in its address (listing coordinates often sit mid-block)
+  addrStreet(p) {
+    const m = /^\d+\s+([^,]+)/.exec(p?.address || ''); if (!m) return null; const k = (t) => t.toLowerCase().replace(/^(n|s|e|w)\.?\s+/, '').replace(/\s+(st|street|ave|avenue|blvd|pkwy|parkway|dr)\.?$/, '').replace(/[^a-z]/g, '');
+    const want = k(m[1]); const a = this.avenues.find((q) => k(q.n) === want); if (a) return { av: true, v: a.x }; const c = this.cross.find((q) => k(q.n) === want); return c ? { av: false, v: c.y } : null;
+  }
+  storefront(s) {
+    const B = s.bldg, rx = s.ox ?? s.x, ry = s.oy ?? s.y; if (!(B?.pts?.length > 2)) return null;
+    const P = B.pts, E = [];
+    for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 0.2) continue; let nx = dy / L, ny = -dx / L; const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; if ((B.cx - mx) * nx + (B.cy - my) * ny > 0) { nx = -nx; ny = -ny; } E.push({ a, dx: dx / L, dy: dy / L, L, nx, ny, mx, my }); }
+    const on = (e, t0 = 0) => { const t = Math.max(t0 * e.L, Math.min((1 - t0) * e.L, (rx - e.a[0]) * e.dx + (ry - e.a[1]) * e.dy)); return [e.a[0] + e.dx * t, e.a[1] + e.dy * t]; };
+    const st = s.places.length === 1 || !s.venue ? this.addrStreet(s.places[0]) : null;
+    let pick = null;
+    if (st) { const facing = E.filter((e) => (st.av ? e.nx * Math.sign(st.v - B.cx) : e.ny * Math.sign(st.v - B.cy)) > 0.6 && e.L > 0.4); if (facing.length) pick = facing.reduce((p, q) => (Math.abs((st.av ? q.mx : q.my) - st.v) < Math.abs((st.av ? p.mx : p.my) - st.v) ? q : p)); }
+    if (!pick) pick = E.reduce((p, q) => { const [px, py] = on(p), [qx, qy] = on(q); return Math.hypot(qx - rx, qy - ry) < Math.hypot(px - rx, py - ry) ? q : p; }, E[0]);
+    const [x, y] = on(pick, pick.L > 1 ? 0.12 : 0.5);
+    return { x, y, nx: pick.nx, ny: pick.ny, tx: pick.dx, ty: pick.dy, st };
   }
   spotForPlace(id) { return this.spots.find((s) => s.places.some((p) => p.id === id)); }
 
