@@ -434,3 +434,16 @@ header h1{padding-right:92px}
   :root:not([data-theme=light]) .sc-av{background:#1f3a26}
 }
 [data-theme=dark] .simcard{background:rgba(34,27,23,.96);color:var(--ink)}
+/* dark mode: search suggestions and panel text readable, search panel fully opaque */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]) .findbox{background:#221b17}
+  :root:not([data-theme=light]) #findList button{color:#f6ece2}
+  :root:not([data-theme=light]) #findList button:hover,:root:not([data-theme=light]) #findList button:focus{background:#3a2f28}
+  :root:not([data-theme=light]) #findList button:disabled,:root:not([data-theme=light]) #findList .meta,:root:not([data-theme=light]) .foundbar .meta{color:#b3a294}
+  :root:not([data-theme=light]) .findbox input{background:#2c241f;color:#f6ece2;border-color:#3a2f28}
+}
+[data-theme=dark] .findbox{background:#221b17}
+[data-theme=dark] #findList button{color:#f6ece2}
+[data-theme=dark] #findList button:hover,[data-theme=dark] #findList button:focus{background:#3a2f28}
+[data-theme=dark] #findList button:disabled,[data-theme=dark] #findList .meta,[data-theme=dark] .foundbar .meta{color:#b3a294}
+[data-theme=dark] .findbox input{background:#2c241f;color:#f6ece2;border-color:#3a2f28}
