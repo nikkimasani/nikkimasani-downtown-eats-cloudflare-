@@ -162,7 +162,7 @@ function score(r) {
   if (favs.has(r.name)) s += 1; if (isOpen(r)) s += 0.5; return Math.max(0.1, s + timeFit(r) * 0.6 + weatherFit(r) * 0.6 + historyFit(r) * 0.6);
 }
 function ranked(opt) {
-  const list = FOOD.filter((r) => matches(r, opt));
+  const list = ((opt?.meal ?? st.meal) === 'Happy Hour' ? DATA : FOOD).filter((r) => matches(r, opt));   // happy hour: bars count too
   if (!st.moods.size) {   // no mood picked: open now first, then happy hour, favourites, closest
     const k = (r) => (isOpen(r) === true ? 4 : isOpen(r) === false ? 0 : 2) + (hhNow(r) ? 1.5 : 0) + (favs.has(r.name) ? 1 : 0) - (walkMinsTo(r) ?? 8) / 40 + timeFit(r) + weatherFit(r) + historyFit(r);
     return list.map((r) => [r, 1 + (isOpen(r) ? 0.5 : 0), k(r)]).sort((x, y) => y[2] - x[2] || x[0].name.localeCompare(y[0].name)).map(([r, s]) => [r, s]);
@@ -240,8 +240,21 @@ function renderPick() {
   $('#matchCount').textContent = list.length ? `${list.length} spots match — best for right now first` : '';
   $('#wxLine').textContent = [wxLine(), eventLine(), historyLine()].filter(Boolean).join('  ·  ');
   pickList = list; pickShown = 0;
-  $('#matches').innerHTML = list.length ? '' : '<div class="empty">Nothing matches all of that. Try removing a filter or a mood.</div>';
+  $('#matches').innerHTML = list.length ? '' : '<div class="empty">Nothing matches all of that.</div>';
   morePicks(30);
+  if (list.length < 6) {   // few matches: show what each filter is costing, and the closest spots that just miss
+    const have = new Set(list.map(([r]) => r.id)), tries = [];
+    const tryWith = (label, set, undo) => { set(); const extra = ranked().filter(([r]) => !have.has(r.id)); undo(); if (extra.length) tries.push({ label, extra }); };
+    if (st.budget) { const b = st.budget; tryWith('Any budget', () => (st.budget = 0), () => (st.budget = b)); }
+    if (st.meal !== 'Any') { const m = st.meal; tryWith('Any time', () => (st.meal = 'Any'), () => (st.meal = m)); }
+    if (st.extras.size) { const e = new Set(st.extras); tryWith('No extras', () => st.extras.clear(), () => e.forEach((x) => st.extras.add(x))); }
+    if (st.moods.size) { const mo = new Set(st.moods); tryWith('Any mood', () => st.moods.clear(), () => mo.forEach((x) => st.moods.add(x))); }
+    if (tries.length) {
+      const seen = new Set(), near = []; for (const t of tries.sort((a, b) => a.extra.length - b.extra.length)) for (const [r] of t.extra) if (!seen.has(r.id) && near.length < 6) { seen.add(r.id); near.push(r); }
+      $('#matches').insertAdjacentHTML('beforeend', `<div class="nearbox"><h3>Close matches</h3><div class="chips sm">${tries.map((t, i) => `<button class="chip" data-relax="${i}">${t.label} <b>+${t.extra.length}</b></button>`).join('')}</div></div>` + near.map((r) => card(r)).join(''));
+      $('#matches').querySelectorAll('[data-relax]').forEach((b) => (b.onclick = (e) => { e.stopPropagation(); const t = tries[+b.dataset.relax].label; if (t === 'Any budget') st.budget = 0; else if (t === 'Any time') st.meal = 'Any'; else if (t === 'No extras') st.extras.clear(); else st.moods.clear(); save(); renderPick(); }));
+    }
+  }
   if (city) city.setHighlight(mapMatch ? new Set(list.map(([r]) => r.id)) : null);
 }
 $('#diet').onclick = (e) => { const b = e.target.closest('[data-diet]'); if (!b) return; const k = b.dataset.diet; DIET.has(k) ? DIET.delete(k) : DIET.add(k); store.set('diet', [...DIET]); renderPick(); };
@@ -347,11 +360,11 @@ function renderBrowse() {
   $('#fCuisine').innerHTML = cuis.map((c) => `<button class="chip ${fc.has(c) ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
   const t = bq.trim();
   const sc = new Map();
-  let list = FOOD.filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
+  let list = (t ? DATA : FOOD).filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
   list.sort(sortBy === 'name' ? (a, b) => (t ? sc.get(b) - sc.get(a) : 0) || a.name.localeCompare(b.name) : sortBy === 'price' ? (a, b) => a.price - b.price : (a, b) => b.price - a.price);
-  $('#bCount').textContent = `${list.length} of ${FOOD.length} spots`;
+  $('#bCount').textContent = t ? `${list.length} match${list.length === 1 ? '' : 'es'} across all of downtown — food, coffee and bars` : `${list.length} of ${FOOD.length} spots`;
   if (!list.length && t) {
-    const sug = didYouMean(t);
+    const sug = didYouMean(t).filter((n) => fold(n) !== fold(t));
     $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
   } else $('#browse').innerHTML = list.map((r) => card(r, false, true)).join('') || '<div class="empty">No results.</div>';
   const nflag = Object.keys(HCHK).length;
