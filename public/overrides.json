@@ -164,6 +164,18 @@
       "hours": "Wed–Sat 11:30am–9pm, Sun 11:30am–3pm",
       "source": "https://avenidahouston.com/dining/kulture/",
       "checked": "2026-11-18"
+    },
+    "Little New Orleans": {
+      "lat": 29.75986,
+      "lng": -95.36198,
+      "street": "1001 Texas Ave, Suite 150",
+      "hours": "Mon–Tue 8am–8pm, Wed–Thu 8am–10pm, Fri 8am–2am, Sat 10am–2am, Sun closed",
+      "phone": "(713) 229-0077",
+      "website": "https://littleneworleansdowntown.com/",
+      "instagram": "https://www.instagram.com/littleneworleansdowntown/",
+      "source": "https://littleneworleansdowntown.com/",
+      "checked": "2026-11-18",
+      "notInDirectory": true
     }
   }
 }

@@ -5214,5 +5214,30 @@
   "type": "Coffee & Cocktails",
   "note": "Lounge by Bravery Chef Hall's Travis St entrance serving coffee by day and cocktails later.",
   "tryit": "Espresso or a house cocktail"
+ },
+ {
+  "id": 242,
+  "name": "Little New Orleans",
+  "address": "1001 Texas Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun & Southern",
+   "Seafood"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch",
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick",
+   "spicy"
+  ],
+  "type": "Cajun",
+  "note": "Casual Cajun counter at Texas & Fannin — breakfast through late night on weekends. Busy at noon, so order ahead.",
+  "tryit": "Gumbo, shrimp po' boy, boudin balls, beignets"
  }
 ]
