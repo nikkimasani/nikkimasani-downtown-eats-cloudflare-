@@ -1125,6 +1125,18 @@ export class CityMap {
     };
     const blockOf = (x, y) => { const [i, j] = this.cellIdx(x, y); return { x0: i > 0 ? A[i - 1].x + sw + side : -1e9, x1: i < A.length ? A[i].x - sw - side : 1e9, y0: j > 0 ? C[j - 1].y + sw + side : -1e9, y1: j < C.length ? C[j].y - sw - side : 1e9 }; };
     // hand-built tops for towers whose crowns OpenStreetMap doesn't describe: [scale of footprint, share of height, colour]
+    // how the big towers actually look: cladding colour, glass or stone, rooftop masts
+    const LOOK = {
+      'JPMorgan Chase Tower': { c: '#8a8f95', glass: false, roofC: '#6d7278' },          // grey granite, ribbon windows
+      'One Shell Plaza': { c: '#ece6d8', glass: false, ant: 8.5, roofC: '#d9d3c4' },     // white travertine tube, broadcast mast
+      'Wells Fargo Plaza': { c: '#2c5a60', glass: true },                                 // blue-green curtain wall
+      'Heritage Plaza': { c: '#9fb3c6', glass: true },                                    // silver-blue glass under the Mayan top
+      '1 Houston Center': { c: '#4a3428', glass: true },
+      'First City Tower': { c: '#5d7a86', glass: true },
+      'Fulbright Tower': { c: '#9a9590', glass: false },
+      'Three Allen Center': { c: '#a7a39b', glass: true },
+      '609 Main': { c: '#5f86a3', glass: true },
+    };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
     const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
     for (const [ring, hM, minM, type, name, colour, material, roofShape, roofColour, roofH, roofDir] of list) {
@@ -1171,6 +1183,7 @@ export class CityMap {
       }
       if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
+      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; }
       this.osm.push(o);
       const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
         for (const [s, f, cc] of cr) { const q = pts.map((p) => [cx + (p[0] - cx) * s, cy + (p[1] - cy) * s]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]); this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: f * h, z0: top, c: cc || o.c, glass: o.glass, name: '', type: 'crown', cx, cy }); top += f * h; } }
@@ -1273,6 +1286,11 @@ export class CityMap {
       }
     }
     if (o.roof) this.drawRoof(o, N);
+    if (o.ant) {   // rooftop mast with a blinking red light
+      const b = v.p(o.cx, o.cy, z1), t = v.p(o.cx, o.cy, z1 + o.ant); ctx.strokeStyle = N ? '#9aa1ad' : '#7d838b'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); ctx.beginPath(); ctx.moveTo(...b); ctx.lineTo(...t); ctx.stroke();
+      ctx.lineWidth = Math.max(1, v.s * 1.2); ctx.beginPath(); for (const f of [0.3, 0.55, 0.8]) { const q = v.p(o.cx, o.cy, z1 + o.ant * f); ctx.moveTo(q[0] - 3 * v.s, q[1]); ctx.lineTo(q[0] + 3 * v.s, q[1]); } ctx.stroke();
+      if (Math.floor(performance.now() / 900) % 2 === 0 || N) circle(ctx, t[0], t[1], Math.max(1.6, v.s * 2.4), '#ff3b3b');
+    }
     if (o.pool && v.s > 0.3) {   // rooftop pool deck
       const cx = o.cx, cy = o.cy, s2 = Math.min(o.bb.x1 - o.bb.x0, o.bb.y1 - o.bb.y0) * 0.22;
       poly(ctx, [v.p(cx - s2, cy - s2 * 0.6, z1 + 0.01), v.p(cx + s2, cy - s2 * 0.6, z1 + 0.01), v.p(cx + s2, cy + s2 * 0.6, z1 + 0.01), v.p(cx - s2, cy + s2 * 0.6, z1 + 0.01)], N ? '#1d4f77' : '#4dabf7');
