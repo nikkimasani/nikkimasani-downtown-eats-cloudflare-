@@ -1,6 +1,6 @@
 {
  "checked": "2026-11-19",
- "sitesWithHours": 15,
+ "sitesWithHours": 16,
  "flags": {
   "Artistry": {
    "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
@@ -16,6 +16,11 @@
    "site": "Sun closed · Mon closed · Tue 11:30am–8pm · Wed 11:30am–8pm · Thu 11:30am–8pm · Fri 11:30am–8pm · Sat 11:30am–8pm",
    "url": "http://thegrovehouston.com",
    "slots": 69
+  },
+  "Lone Star Saloon": {
+   "site": "Sun 1pm–9pm · Mon 11am–10pm · Tue 11am–10pm · Wed 11am–10pm · Thu 11am–12am · Fri 11am–12am · Sat 11am–12am",
+   "url": "https://www.thelonestarsaloon.com/",
+   "slots": 98
   },
   "The Nash": {
    "site": "Sun closed · Mon 11am–8pm · Tue 11am–8pm · Wed 11am–8pm · Thu 11am–8pm · Fri 11am–9pm · Sat 5pm–9pm",
