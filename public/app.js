@@ -237,7 +237,7 @@ $('#pickBtn').onclick = () => {
   const r = weightedPick(ranked(), new Set(lastPick ? [lastPick] : []));
   if (!r) { $('#pickOut').innerHTML = '<div class="empty">No matches — loosen a filter.</div>'; return; }
   lastPick = r.name;
-  $('#pickOut').innerHTML = card(r, true) + `<div class="row" style="margin-top:8px"><button class="btn ghost" id="again">🎲 Spin again</button><button class="btn ghost" id="seeMap">🗺️ Walk me there</button><button class="btn ghost" id="going">✅ I'm going</button><button class="btn ghost" id="sharePick">📤 Share</button><button class="btn ghost" id="calPick">📅 Calendar</button></div>`;
+  $('#pickOut').innerHTML = card(r, true) + `<div class="heroacts"><button id="again"><span>🎲</span>Spin again</button><button id="seeMap"><span>🧭</span>Walk there</button><button id="going"><span>✅</span>I'm going</button><button id="sharePick"><span>📤</span>Share</button><button id="calPick"><span>📅</span>Calendar</button></div>`;
   $('#sharePick').onclick = () => sharePlace(r);
   $('#calPick').onclick = () => { const d = nextSlot(); downloadIcs('downtown-eats.ics', [{ r, start: d, mins: st.meal === 'Happy Hour' ? 90 : 60 }]); };
   $('#again').onclick = () => $('#pickBtn').click();
