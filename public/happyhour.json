@@ -45,9 +45,9 @@
       "confidence": "verify"
     },
     "MKT BAR": {
-      "when": "Mon–Fri (2–7 PM per Phoenicia; another guide says 4–6)",
+      "when": "Mon–Fri 4–6 PM",
       "deals": "Beer and wine specials plus appetizers; steak night on Thursdays",
-      "source": "https://phoeniciafoods.com/2016/02/12/best-bar-for-drinking-before-grocery-shopping/",
+      "source": "https://centralhouston.org/post/must-hit-happy-hours-downtown",
       "confidence": "verify"
     },
     "Flying Saucer": {
@@ -109,6 +109,76 @@
       "deals": "Cheap drink specials at the pinball bar; trivia Mondays 8 PM, DJs Fridays",
       "source": "https://www.atly.com/location/LittleDipperBar",
       "confidence": "verify"
+    },
+    "Birraporetti's": {
+      "when": "Daily 4–6 PM (bar)",
+      "deals": "Bar happy hour; half-price pizzas daily 2–4 PM",
+      "source": "https://www.cvent.com/venues/de-DE/houston/restaurant/birraporetti-s-downtown/venue-3f934692-c9e5-42a2-b2e6-877eef1b757a",
+      "confidence": "venue listing",
+      "checked": "2026-11-18"
+    },
+    "Hearsay on the Green": {
+      "when": "Mon–Fri 3–6 PM",
+      "deals": "$8 appetizers, $5 domestic/local drafts, $6 select red & white wine, $10 select classic cocktails",
+      "source": "https://hearsaygastrolounge.com/locations/green",
+      "confidence": "restaurant site",
+      "checked": "2026-11-18"
+    },
+    "The Palm": {
+      "when": "Sun–Fri 4–6:30 PM (bar)",
+      "deals": "PrimeTime bar menu: shrimp Bruno, lobster roll, crab cake sliders and drink specials",
+      "source": "https://www.thepalm.com/news-item/houston",
+      "confidence": "restaurant site",
+      "checked": "2026-11-18"
+    },
+    "Line & Lariat": {
+      "when": "Mon–Fri 4–6 PM (L&L Bar)",
+      "deals": "Wine, beer and specialty cocktail specials at the L&L Bar",
+      "source": "https://hotelicon.com/dining",
+      "confidence": "hotel site",
+      "checked": "2026-11-18"
+    },
+    "Tavern By Hearsay": {
+      "when": "Mon–Wed 3–6 PM · Thu 3–10:30 PM · Fri 3–6 PM",
+      "deals": "$9 appetizers, $10 pizza, $7 beer, $7 wine, $11 cocktails",
+      "source": "https://www.opentable.com/restaurant/profile/1334647/reserve",
+      "confidence": "OpenTable listing",
+      "checked": "2026-11-18"
+    },
+    "Grotto Ristorante": {
+      "when": "Mon–Fri 3–7 PM",
+      "deals": "Small plates and drink specials at the bar",
+      "source": "https://www.mylocalservices.com/Grotto+Downtown-Houston-Texas-20878134.html",
+      "confidence": "verify",
+      "checked": "2026-11-18"
+    },
+    "Tom's Watch Bar": {
+      "when": "Mon–Thu open–7 PM and 9 PM–close (non-event days)",
+      "deals": "$5 select drafts, wines, well drinks and cocktails",
+      "source": "https://tomswatchbar.com/?p=14157",
+      "confidence": "bar site",
+      "checked": "2026-11-18"
+    },
+    "Reserve 101": {
+      "when": "Mon–Sat 2–6 PM",
+      "deals": "Half-price draft beer, $20 bottles of wine, $5 premium cocktails (listings disagree on times)",
+      "source": "https://houston.culturemap.com/news/restaurants-bars/11-12-15-houstons-10-hottest-happy-hours-drink-and-eat-on-the-cheap-at-new-spots-and-old-faves",
+      "confidence": "verify",
+      "checked": "2026-11-18"
+    },
+    "Z on 23": {
+      "when": "Mon–Fri 4–6 PM",
+      "deals": "“Golden Hour” on the 23rd-floor rooftop",
+      "source": "https://www.opentable.co.uk/restaurant/profile/1004095",
+      "confidence": "OpenTable listing",
+      "checked": "2026-11-18"
+    },
+    "Warren's Inn": {
+      "when": "Mon–Fri 4–7 PM · Sat–Sun all day",
+      "deals": "Cheap, strong pours at the classic Market Square bar",
+      "source": "https://www.atly.com/location/Warren's-Inn",
+      "confidence": "verify",
+      "checked": "2026-11-18"
     }
   }
 }

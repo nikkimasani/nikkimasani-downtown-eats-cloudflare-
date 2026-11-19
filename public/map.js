@@ -356,7 +356,7 @@ export class CityMap {
     this.northW = [uy, vy];   // which way true north points in map units
     this.eastW = [ux, vx];
     this.proj = proj;
-    this.buildCity(); this.pinToBuildings(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs();
+    this.buildCity(); this.pinToBuildings(); this.buildRail(); this.spawnTraffic(); this.buildTunnels(); this.spawnNpcs(); this.buildDoors(); this.markTerraces();
   }
 
   // METRO publishes the exact location of every bus stop, named by corner ("Fannin St @ Texas Ave").
@@ -821,7 +821,7 @@ export class CityMap {
       // two pins in one building: fan them out a little, staying inside
       for (let k = 0; k < 6 && used.some(([ux, uy]) => Math.hypot(ux - x, uy - y) < 0.7); k++) { const a = k * 2.1, nx = x + Math.cos(a) * 0.8, ny = y + Math.sin(a) * 0.8; if (inPoly(nx, ny, o.pts)) { x = nx; y = ny; } }
       used.push([x, y]); s.x = x; s.y = y; s.cell = this.cellOf(x, y); s.bldg = o;
-      if (!s.places[0]?.tunnel) (o.shops ||= []).push({ pt: best.pt.slice(), c: AWN[Math.floor(hash(s.places[0].name + 'a') * AWN.length)] });
+      if (!s.places[0]?.tunnel) (o.shops ||= []).push({ pt: best.pt.slice(), c: AWN[Math.floor(hash(s.places[0].name + 'a') * AWN.length)], name: s.places.length > 1 ? (s.places[0].venue || s.places[0].name) : s.places[0].name });
     }
   }
   // ---------- you are here + walking navigation ----------
@@ -1302,6 +1302,7 @@ export class CityMap {
       }
     }
     if (o.roof) this.drawRoof(o, N);
+    if (o.terrace && v.s > 0.4) this.drawTerrace(o, N);
     if (o.ant) {   // rooftop mast with a blinking red light
       const b = v.p(o.cx, o.cy, z1), t = v.p(o.cx, o.cy, z1 + o.ant); ctx.strokeStyle = N ? '#9aa1ad' : '#7d838b'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); ctx.beginPath(); ctx.moveTo(...b); ctx.lineTo(...t); ctx.stroke();
       ctx.lineWidth = Math.max(1, v.s * 1.2); ctx.beginPath(); for (const f of [0.3, 0.55, 0.8]) { const q = v.p(o.cx, o.cy, z1 + o.ant * f); ctx.moveTo(q[0] - 3 * v.s, q[1]); ctx.lineTo(q[0] + 3 * v.s, q[1]); } ctx.stroke();
@@ -1354,6 +1355,49 @@ export class CityMap {
     for (const [a, b] of this.tunnelEdges) { this.tunnelAdj[a].push(b); this.tunnelAdj[b].push(a); }
   }
 
+  // the two street-level ways into the tunnels, plus the easy lobby entrance at Enterprise Plaza
+  buildDoors() {
+    const X = this.avX || {}, Y = this.csY || {}, sw = this.streetW, out = [];
+    const wf = (this.osm || []).find((o) => o.name === 'Wells Fargo Plaza');
+    if (wf) { const L = X.Louisiana ?? wf.cx, P = [...wf.pts].sort((a, b) => Math.abs(a[0] - L) - Math.abs(b[0] - L)).slice(0, 3), px = P.reduce((s, p) => s + p[0], 0) / P.length, py = P.reduce((s, p) => s + p[1], 0) / P.length;
+      out.push({ n: 'Wells Fargo Plaza', note: 'Street-level escalators straight down', x: px + Math.sign(L - px || 1) * 0.35, y: py }); }   // on the Louisiana St side, outside the tower
+    if (X.Main != null && Y.McKinney != null) out.push({ n: 'McKinney Garage on Main', note: 'Street entrance at Main & McKinney', x: X.Main + sw + 0.5, y: Y.McKinney + sw + 0.5 });
+    if (X.Louisiana != null && Y.Dallas != null) out.push({ n: 'Enterprise Plaza', note: 'Lobby escalators (office hours)', x: X.Louisiana - sw - 0.6, y: Y.Dallas - sw - 0.6 });
+    this.doors = out;
+  }
+  drawDoors(N) {
+    if (!this.doors || this.v.s < 0.35) return; const ctx = this.ctx, v = this.v, under = this.mode === 'tunnel';
+    for (const d of this.doors) {
+      const [x, y] = v.p(d.x, d.y, under ? this.tunnelZ() : 0.05), s = Math.max(0.8, Math.min(1.3, v.s)), w = 30 * s, h = 18 * s;
+      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(x, y + 2, w * 0.45, h * 0.25, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = '#12b886'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h - 10 * s, w, h, 6 * s); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${11 * s}px Inter,system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('🚇⬇', x, y - h / 2 - 10 * s);
+      if (v.s > 0.7 && !this.hide.labels && (!TAKEN || pillFit(x, y - h - 22 * s, d.n))) { const t = d.n + ' · tunnel entrance'; ctx.font = `600 ${10.5 * s}px Inter,system-ui`; const tw = ctx.measureText(t).width + 12; ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.beginPath(); ctx.roundRect(x - tw / 2, y - h - 30 * s, tw, 15 * s, 7); ctx.fill(); ctx.fillStyle = '#0b7a5a'; ctx.fillText(t, x, y - h - 22.5 * s); }
+    }
+  }
+  // bars up on the roof get a terrace: deck, umbrellas, and string lights after dark
+  markTerraces() {
+    for (const s of this.spots || []) if (s.bldg && s.places.some((p) => /rooftop|roof deck|sky ?bar|\bon 23\b|23rd floor|skylawn/i.test((p.name || '') + ' ' + (p.note || '') + ' ' + (p.type || '')))) s.bldg.terrace = true;
+  }
+  drawTerrace(o, N) {
+    const ctx = this.ctx, v = this.v, z = o.z0 + o.h + 0.01, sx = o.bb.x1 - o.bb.x0, sy = o.bb.y1 - o.bb.y0, w = sx * 0.62, d = sy * 0.62, x0 = o.cx - w / 2, y0 = o.cy - d / 2;
+    poly(ctx, [v.p(x0, y0, z), v.p(x0 + w, y0, z), v.p(x0 + w, y0 + d, z), v.p(x0, y0 + d, z)], N ? '#5a4632' : '#b88d5e', 'rgba(0,0,0,.15)');
+    const cols = ['#e8590c', '#f8f9fa', '#1c7ed6', '#2b8a3e'];
+    for (let i = 0; i < 5; i++) { const k = hash(o.cx + 'u' + i), ux = x0 + w * (0.15 + 0.7 * k), uy = y0 + d * (0.15 + 0.7 * hash(o.cy + 'v' + i)), [px, py] = v.p(ux, uy, z), [tx, ty] = v.p(ux, uy, z + 0.28), r = Math.max(3, v.s * 7);
+      ctx.strokeStyle = '#666'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke(); ctx.fillStyle = cols[i % cols.length]; ctx.beginPath(); ctx.ellipse(tx, ty, r, r * 0.5, 0, Math.PI, 0); ctx.fill(); }
+    if (N || (this._dusk || 0) > 0.3) { ctx.fillStyle = '#ffd27a'; const P = [[x0, y0], [x0 + w, y0], [x0 + w, y0 + d], [x0, y0 + d]]; for (let i = 0; i < 4; i++) { const a = P[i], b = P[(i + 1) % 4]; for (let t = 0; t <= 1; t += 0.12) { const q = lerp2(a, b, t), [px, py] = v.p(q[0], q[1], z + 0.22 - Math.sin(t * Math.PI) * 0.06); ctx.beginPath(); ctx.arc(px, py, Math.max(1, v.s * 1.6), 0, 7); ctx.fill(); } } }
+  }
+  // game days: crowds stream toward Toyota Center or Daikin Park from 3 hours before the start until an hour after
+  setEvents(list) { this.events = list || []; this.checkEvent(); }
+  checkEvent() {
+    const now = Date.now(), e = (this.events || []).find((x) => { const t = Date.parse(x.start); return now > t - 3 * 3600e3 && now < t + 3600e3; }) || null;
+    if ((e && e.start) === (this.eventNow && this.eventNow.start)) return; this.eventNow = e;
+    this.npcs = (this.npcs || []).filter((n) => !n.fan);
+    const a = e && this.areas.find((x) => x.n === e.venue); if (!a) return;
+    for (let i = 0; i < 70; i++) { const n = this.newNpc(5000 + i, false), side = i % 4, t = hash(i + 'f'); n.fan = true;
+      n.x = side < 2 ? a.r.x0 + (a.r.x1 - a.r.x0) * t : side === 2 ? a.r.x0 - this.streetW * 0.6 : a.r.x1 + this.streetW * 0.6; n.y = side === 0 ? a.r.y0 - this.streetW * 0.6 : side === 1 ? a.r.y1 + this.streetW * 0.6 : a.r.y0 + (a.r.y1 - a.r.y0) * t;
+      n.look.shirt = e.team === 'Astros' ? (i % 3 ? '#eb6e1f' : '#002d62') : (i % 3 ? '#ce1141' : '#c4ced4'); this.npcs.push(n); }
+  }
   spawnNpcs() {
     this.npcs = [];
     for (let i = 0; i < 60; i++) this.npcs.push(this.newNpc(i, false));
@@ -1653,6 +1697,7 @@ export class CityMap {
 
   frame(t) {
     this._warm = this.warmAmount();
+    if (!this._evT || t - this._evT > 60000) { this._evT = t; if (this.events) this.checkEvent(); }
     const raw = (t - (this.last || t)) / 1000, dt = Math.min(0.05, raw); this.last = t;
     // if this device can't keep up, draw at a slightly lower resolution so panning stays smooth
     if (raw > 0 && raw < 0.5 && !document.hidden) {
@@ -1758,6 +1803,7 @@ export class CityMap {
     if (!this.hide.sky) { this.drawBeacons(now, N); this.drawClouds(now, N); }
     if (mode === 'both') { ctx.fillStyle = 'rgba(14,18,30,.3)'; ctx.fillRect(0, 0, this.W, this.H); this.drawTunnels(now); this.drawMarkers(true); }
     this.drawRailOverlay();
+    this.drawDoors(N);
     if (!this.hide.sky) this.drawBirds(now, N);
     TAKEN = (this.reserved || []).map((r) => [...r]);   // map controls count as taken, so labels don't hide under them
     this.drawRoute(now);

@@ -1,9 +1,41 @@
 {
-  "name": "Downtown Eats — Houston",
-  "short_name": "Downtown Eats",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#fbf6ef",
-  "theme_color": "#d9481e",
-  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+ "name": "Downtown Eats — Houston",
+ "short_name": "Downtown Eats",
+ "start_url": "./",
+ "display": "standalone",
+ "background_color": "#fbf6ef",
+ "theme_color": "#d9481e",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml"
+  }
+ ],
+ "description": "Pick where to eat in downtown Houston",
+ "shortcuts": [
+  {
+   "name": "Pick for me",
+   "url": "./#pick"
+  },
+  {
+   "name": "Map",
+   "url": "./#map"
+  },
+  {
+   "name": "Happy hour now",
+   "url": "./#night"
+  }
+ ]
 }

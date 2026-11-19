@@ -6,9 +6,16 @@ const store = { get(k, d) { try { const v = localStorage.getItem('dte_' + k); re
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const $$ = (n) => '$'.repeat(n);
 const q = encodeURIComponent;
+// app theme: follows the phone by default; the header button cycles Auto → Light → Dark
+const THEMES = ['auto', 'light', 'dark'], THEME_ICON = { auto: '🌓', light: '☀️', dark: '🌙' };
+function applyTheme(t) { const h = document.documentElement; if (t === 'auto') delete h.dataset.theme; else h.dataset.theme = t; const b = document.querySelector('#themeBtn'); if (b) { b.textContent = THEME_ICON[t]; b.title = 'Theme: ' + t; }
+  const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches); document.querySelector('meta[name=theme-color]')?.setAttribute('content', dark ? '#17120f' : '#d9481e'); }
+let THEME = (() => { try { return localStorage.getItem('theme') || 'auto'; } catch (e) { return 'auto'; } })(); applyTheme(THEME);
+document.addEventListener('click', (e) => { if (e.target.id !== 'themeBtn') return; THEME = THEMES[(THEMES.indexOf(THEME) + 1) % 3]; try { localStorage.setItem('theme', THEME); } catch (_) {} applyTheme(THEME); toast(THEME === 'auto' ? '🌓 Theme follows your phone' : THEME === 'dark' ? '🌙 Dark theme' : '☀️ Light theme'); });
+const buzz = (p = 10) => { try { navigator.vibrate?.(p); } catch (e) {} };   // a light tap on phones that support it
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._); t._ = setTimeout(() => t.classList.remove('on'), 2200); };
 
-let DATA = [], FOOD = [], HH = { spots: {} }, META = {};
+let DATA = [], FOOD = [], HH = { spots: {} }, META = {}, HCHK = {}, EVENTS = [];
 const MOODS = [
   { k: 'quick', e: '⚡', l: 'Quick bite' }, { k: 'healthy', e: '🥗', l: 'Light & healthy' }, { k: 'comfort', e: '🍔', l: 'Comfort food' },
   { k: 'spicy', e: '🌶️', l: 'Spicy' }, { k: 'adventurous', e: '🧭', l: 'Adventurous' }, { k: 'date', e: '🕯️', l: 'Date night' },
@@ -67,15 +74,47 @@ function matches(r, opt = {}) {
   if (opt.date && isOpen(r, opt.date) === false) return false;
   return true;
 }
+// what suits right now: the time of day and the weather outside
+const isPatio = (r) => r.meals.includes('Patio') || /patio|rooftop|terrace|garden|deck/i.test((r.note || '') + ' ' + (r.type || ''));
+function timeFit(r, d = new Date()) {
+  const h = d.getHours() + d.getMinutes() / 60, has = (m) => r.meals.includes(m);
+  if (h >= 6 && h < 10.5) return has('Breakfast') || isCoffee(r) ? 1 : -0.5;
+  if (h >= 10.5 && h < 14) return (has('Lunch') ? 0.8 : 0) + (r.price <= 2 ? 0.3 : 0);
+  if (h >= 14 && h < 16) return isCoffee(r) || /bak|dessert|sweet/i.test(r.type) ? 0.6 : 0;
+  if (h >= 16 && h < 19) return hhNow(r, d) ? 1.2 : has('Happy Hour') ? 0.5 : has('Dinner') ? 0.3 : 0;
+  if (h >= 19 && h < 22) return has('Dinner') ? 0.8 : 0;
+  return has('Late Night') || openLate(r) ? 1 : -0.3;
+}
+let WX = null;   // { temp °F, rain mm, code } for downtown Houston, from Open-Meteo
+const wxBad = () => WX && (WX.rain > 0.1 || WX.code >= 51 || WX.temp >= 93 || WX.temp <= 45);
+const wxNice = () => WX && !wxBad() && WX.temp >= 62 && WX.temp <= 86;
+const weatherFit = (r) => !WX ? 0 : wxBad() ? (r.tunnel ? 1 : 0) - (isPatio(r) ? 0.8 : 0) : wxNice() && isPatio(r) ? 0.8 : 0;
+function eventLine(d = new Date()) {   // a home game today: warn about crowds around the venue
+  const e = EVENTS.find((x) => { const t = new Date(x.start); return t.toDateString() === d.toDateString() && t.getTime() + 3600e3 > d.getTime(); }); if (!e) return '';
+  const t = new Date(e.start), tm = t.toLocaleTimeString('en-US', { hour: 'numeric', minute: t.getMinutes() ? '2-digit' : undefined, timeZone: 'America/Chicago' }).toLowerCase().replace(' ', '');
+  return `${e.emoji} ${e.team}${e.vs ? ' vs ' + e.vs.replace(/^.* /, '') : ''} at ${tm} — busy around ${e.venue}`;
+}
+function wxLine() {
+  if (!WX) return ''; const t = Math.round(WX.temp);
+  if (WX.rain > 0.1 || WX.code >= 51) return `☔ ${t}° and wet — tunnel spots first, patios skipped`;
+  if (WX.temp >= 93) return `🥵 ${t}° — air-conditioned and tunnel spots first`;
+  if (WX.temp <= 45) return `🧥 ${t}° — staying indoors, tunnel spots first`;
+  if (wxNice()) return `☀️ ${t}° — patio weather, patios get a boost`;
+  return `🌤️ ${t}° downtown`;
+}
+async function loadWeather() {
+  try { const j = await (await fetch('https://api.open-meteo.com/v1/forecast?latitude=29.76&longitude=-95.37&current=temperature_2m,precipitation,weather_code&temperature_unit=fahrenheit')).json();
+    WX = { temp: j.current.temperature_2m, rain: j.current.precipitation, code: j.current.weather_code }; renderPick(); } catch (e) {}
+}
 function score(r) {
   let s = 0; for (const m of st.moods) if (r.vibes.includes(m)) s += 3;
   if (st.moods.has('upscale') && r.price >= 3) s += 1; if (st.moods.has('quick') && r.price <= 1) s += 1;
-  if (favs.has(r.name)) s += 1; if (isOpen(r)) s += 0.5; return s;
+  if (favs.has(r.name)) s += 1; if (isOpen(r)) s += 0.5; return s + timeFit(r) * 0.6 + weatherFit(r) * 0.6;
 }
 function ranked(opt) {
   const list = FOOD.filter((r) => matches(r, opt));
   if (!st.moods.size) {   // no mood picked: open now first, then happy hour, favourites, closest
-    const k = (r) => (isOpen(r) === true ? 4 : isOpen(r) === false ? 0 : 2) + (hhNow(r) ? 1.5 : 0) + (favs.has(r.name) ? 1 : 0) - (walkMinsTo(r) ?? 8) / 40;
+    const k = (r) => (isOpen(r) === true ? 4 : isOpen(r) === false ? 0 : 2) + (hhNow(r) ? 1.5 : 0) + (favs.has(r.name) ? 1 : 0) - (walkMinsTo(r) ?? 8) / 40 + timeFit(r) + weatherFit(r);
     return list.map((r) => [r, 1 + (isOpen(r) ? 0.5 : 0), k(r)]).sort((x, y) => y[2] - x[2] || x[0].name.localeCompare(y[0].name)).map(([r, s]) => [r, s]);
   }
   return list.map((r) => [r, score(r)]).filter((x) => x[1] >= 1).sort((a, b) => b[1] - a[1]);
@@ -146,7 +185,8 @@ function renderPick() {
   const ex = st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '';
   const bl = (BUDGET.find((b) => b.k === st.budget) || {}).l; $('#filtSum').textContent = `${st.meal === 'Any' ? 'Any time' : st.meal} · ${!bl || bl === 'Any' ? 'Any budget' : bl}${ex}`;
   const list = ranked();
-  $('#matchCount').textContent = list.length ? `${list.length} spots match — best fits first` : '';
+  $('#matchCount').textContent = list.length ? `${list.length} spots match — best for right now first` : '';
+  $('#wxLine').textContent = [wxLine(), eventLine()].filter(Boolean).join('  ·  ');
   pickList = list; pickShown = 0;
   $('#matches').innerHTML = list.length ? '' : '<div class="empty">Nothing matches all of that. Try removing a filter or a mood.</div>';
   morePicks(30);
@@ -155,15 +195,48 @@ function renderPick() {
 $('#moods').onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; const k = b.dataset.m; st.moods.has(k) ? st.moods.delete(k) : st.moods.add(k); save(); renderPick(); };
 let lastPick = null;
 $('#pickBtn').onclick = () => {
+  buzz([6, 30, 6, 30, 14]);
   const r = weightedPick(ranked(), new Set(lastPick ? [lastPick] : []));
   if (!r) { $('#pickOut').innerHTML = '<div class="empty">No matches — loosen a filter.</div>'; return; }
   lastPick = r.name;
-  $('#pickOut').innerHTML = card(r, true) + `<div class="row" style="margin-top:8px"><button class="btn ghost" id="again">🎲 Spin again</button><button class="btn ghost" id="seeMap">🗺️ Walk me there</button><button class="btn ghost" id="going">✅ I'm going</button></div>`;
+  $('#pickOut').innerHTML = card(r, true) + `<div class="row" style="margin-top:8px"><button class="btn ghost" id="again">🎲 Spin again</button><button class="btn ghost" id="seeMap">🗺️ Walk me there</button><button class="btn ghost" id="going">✅ I'm going</button><button class="btn ghost" id="sharePick">📤 Share</button></div>`;
+  $('#sharePick').onclick = () => sharePlace(r);
   $('#again').onclick = () => $('#pickBtn').click();
   $('#seeMap').onclick = () => walkTo(r);
   $('#going').onclick = () => { visits[r.name] = (visits[r.name] || 0) + 1; save(); toast('Logged — enjoy ' + r.name + '!'); };
   city?.setPick(r.id);
 };
+
+// ---------- group pick: everyone adds their mood and budget, it finds one place that works for all ----------
+const GMOODS = ['quick', 'healthy', 'comfort', 'spicy', 'adventurous', 'drinks', 'upscale', 'veg', 'sweet'];
+let group = store.get('group', [{ n: 'Me', moods: [], budget: 0 }, { n: 'Friend', moods: [], budget: 0 }]);
+function renderGroup() {
+  $('#groupPeople').innerHTML = group.map((p, i) => `<div class="gp"><div class="gp-h"><input value="${esc(p.n)}" data-gn="${i}" aria-label="Name">${group.length > 2 ? `<button class="icon" data-gdel="${i}" title="Remove">✕</button>` : ''}</div>
+    <div class="chips sm">${MOODS.filter((m) => GMOODS.includes(m.k)).map((m) => `<button class="chip ${p.moods.includes(m.k) ? 'on' : ''}" data-gm="${i}:${m.k}">${m.e} ${m.l}</button>`).join('')}</div>
+    <div class="chips sm">${BUDGET.map((b) => `<button class="chip ${p.budget === b.k ? 'on' : ''}" data-gb="${i}:${b.k}">${b.k ? b.l : 'Any budget'}</button>`).join('')}</div></div>`).join('');
+}
+function groupPick() {
+  const cap = Math.min(...group.map((p) => p.budget || 9)), avoid = new Set(lastPick ? [lastPick] : []);
+  const list = FOOD.filter((r) => r.price <= cap && isOpen(r) !== false && matches(r)).map((r) => {
+    let s = 0.5 + timeFit(r) * 0.5 + weatherFit(r) * 0.5, happy = 0; for (const p of group) { const hit = p.moods.filter((m) => r.vibes.includes(m)).length; s += hit * 2; if (!p.moods.length || hit) happy++; }
+    return [r, s + (happy === group.length ? 3 : 0), happy];
+  }).sort((a, b) => b[1] - a[1]).slice(0, 12);
+  const r = weightedPick(list.map(([r, s]) => [r, s]), avoid); if (!r) { $('#groupOut').innerHTML = '<div class="empty">Nothing open fits everyone — try loosening a budget.</div>'; return; }
+  lastPick = r.name; const happy = list.find((x) => x[0] === r)[2];
+  $('#groupOut').innerHTML = card(r, true) + `<div class="meta" style="margin:6px 2px">${happy === group.length ? '✅ Matches everyone’s mood' : `Fits ${happy} of ${group.length} moods`} · within ${cap < 9 ? '$'.repeat(cap) : 'any'} budget</div><div class="row"><button class="btn ghost" id="gAgain">🎲 Another</button><button class="btn ghost" id="gShare">📤 Send to the group</button></div>`;
+  $('#gAgain').onclick = groupPick; $('#gShare').onclick = () => sharePlace(r);
+}
+$('#groupBtn').onclick = () => { $('#groupBox').classList.toggle('on'); renderGroup(); $('#groupOut').innerHTML = ''; };
+$('#groupBox').addEventListener('click', (e) => {
+  const m = e.target.closest('[data-gm]'), b = e.target.closest('[data-gb]'), d = e.target.closest('[data-gdel]');
+  if (m) { const [i, k] = m.dataset.gm.split(':'); const p = group[+i]; p.moods = p.moods.includes(k) ? p.moods.filter((x) => x !== k) : [...p.moods, k]; }
+  else if (b) { const [i, k] = b.dataset.gb.split(':'); group[+i].budget = +k; }
+  else if (d) group.splice(+d.dataset.gdel, 1);
+  else if (e.target.id === 'gAdd') group.push({ n: 'Friend ' + group.length, moods: [], budget: 0 });
+  else if (e.target.id === 'gGo') { groupPick(); return; } else return;
+  store.set('group', group); renderGroup();
+});
+$('#groupBox').addEventListener('input', (e) => { const i = e.target.dataset.gn; if (i != null) { group[+i].n = e.target.value; store.set('group', group); } });
 
 // ---------- fuzzy search (typo-tolerant: "Benni" finds Benihana, "chipolte" finds Chipotle) ----------
 const fold = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9 ]/g, ' ');
@@ -232,7 +305,7 @@ function renderWeek() {
     const e = week.days[d] || {}; const r = DATA.find((x) => x.name === e.name && x.address === e.address);
     const o = r ? openState(r.hours, dayDate(i, week.slot)) : null;
     return `<div class="day" style="${today === i + 1 ? 'outline:2px solid var(--accent)' : ''}"><div class="d">${d}<small>${today === i + 1 ? 'Today' : ''}</small></div>
-    ${r ? tile(r) : '<span class="ctile empty">＋</span>'}<div>${r ? `<div class="nm" data-open="${r.id}">${esc(r.name)}</div><div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.tunnel ? ' · 🚇' : ''}${o?.known && !o.open ? ' · ⚠️ may be closed' : ''}</div>` : '<div class="meta">Not planned</div>'}</div>
+    ${r ? tile(r) : '<span class="ctile blank">＋</span>'}<div>${r ? `<div class="nm" data-open="${r.id}">${esc(r.name)}</div><div class="meta"><span class="price">${$$(r.price)}</span> · ${esc(r.type)}${r.tunnel ? ' · 🚇' : ''}${o?.known && !o.open ? ' · ⚠️ may be closed' : ''}</div>` : '<div class="meta">Not planned</div>'}</div>
     <div class="acts"><button class="icon ${e.lock ? 'on' : ''}" data-lock="${d}" title="Lock">🔒</button><button class="icon" data-swap="${d}" title="Swap">🔄</button></div></div>`;
   }).join('');
 }
@@ -255,6 +328,17 @@ $('#week').onclick = (e) => {
   if (l) { const d = l.dataset.lock; if (week.days[d]) { week.days[d].lock = !week.days[d].lock; save(); renderWeek(); } }
   if (s) { const d = s.dataset.swap; const used = new Set(Object.values(week.days).map((v) => v.name)); delete week.days[d]; planDay(d, used); save(); renderWeek(); }
   if (o) openSheet(+o.dataset.open);
+};
+// sharing: a link that opens straight to the place (or the plan) in the app
+const appUrl = () => location.origin + location.pathname;
+async function shareText(title, text, url) {
+  try { if (navigator.share) { await navigator.share({ title, text, url }); return; } } catch (e) { if (e.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text + (url ? '\n' + url : '')); toast('Link copied'); } catch (e) { toast('Copy blocked — long-press to select'); }
+}
+const sharePlace = (r) => shareText(r.name, `${r.name} — ${r.address.replace(', Houston, TX', '')}${hhFor(r) ? ' · 🍹 ' + hhFor(r).when : ''}`, appUrl() + '#p=' + encodeURIComponent(r.name));
+$('#shareWeek').onclick = () => {
+  const names = DAYS.map((d) => week.days[d]?.name || '');
+  shareText('My downtown week', 'Downtown eats — ' + week.slot + '\n' + DAYS.map((d, i) => d + ': ' + (names[i] || '—')).join('\n'), appUrl() + '#plan=' + encodeURIComponent(week.slot + '|' + names.join('|')));
 };
 $('#copyWeek').onclick = async () => {
   const txt = 'Downtown eats — ' + week.slot + '\n' + DAYS.map((d) => { const e = week.days[d]; return d + ': ' + (e ? e.name + ' (' + e.address.replace(', Houston, TX', '') + ')' : '—'); }).join('\n');
@@ -286,7 +370,7 @@ function openSheet(id, from = null) {
 
   <div class="ds-card">
     <div class="ds-row"><span>📍</span><div>${esc(r.address.replace(', Houston, TX', ''))}<div class="meta">${r.tunnel ? `🚇 Underground · ${esc(r.tunnel)} — tunnel shops are mostly weekday daytime` : 'Street level'}</div></div><a href="#" id="sMap" class="ds-mini">Map</a></div>
-    <div class="ds-row"><span>🕒</span><div>${o.known ? `<b class="${o.open ? 'ok' : 'no'}">${esc(o.label)}</b>` : '<b>Hours</b>'}<div class="meta">${esc(r.hours || 'Not listed')}${r.corrected ? ' · from the restaurant' : ''}</div></div></div>
+    <div class="ds-row"><span>🕒</span><div>${o.known ? `<b class="${o.open ? 'ok' : 'no'}">${esc(o.label)}</b>` : '<b>Hours</b>'}<div class="meta">${esc(r.hours || 'Not listed')}${r.corrected ? ' · from the restaurant' : ''}</div>${HCHK[r.name] ? `<div class="ds-warn">⚠️ Their website lists different hours: ${esc(HCHK[r.name].site)} — <a href="${esc(HCHK[r.name].url)}" target="_blank" rel="noopener">check</a></div>` : ''}${r.movedTo ? `<div class="ds-warn">📦 Moved to ${esc(r.movedTo)}</div>` : ''}</div></div>
     ${r.phone ? `<div class="ds-row"><span>📞</span><div><a href="tel:${esc(tel)}">${esc(r.phone)}</a></div></div>` : ''}
     ${r.website ? `<div class="ds-row"><span>🌐</span><div><a href="${esc(r.website)}" target="_blank" rel="noopener">${esc(r.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '').slice(0, 38))}</a></div></div>` : ''}
   </div>
@@ -339,7 +423,7 @@ $('#sheet').onclick = (e) => { if (e.target.id === 'sheet') closeSheet(); const 
 // sheet "Back" returns to the same list (with walking times if it came from a corner search)
 function toggleFav(r) { favs.has(r.name) ? favs.delete(r.name) : favs.add(r.name); save(); }
 document.addEventListener('click', (e) => {
-  const f = e.target.closest('[data-fav]'); if (f) { const r = DATA[+f.dataset.fav]; toggleFav(r); f.textContent = favs.has(r.name) ? '♥' : '♡'; return; }
+  const f = e.target.closest('[data-fav]'); if (f) { const r = DATA[+f.dataset.fav]; toggleFav(r); f.textContent = favs.has(r.name) ? '♥' : '♡'; f.classList.remove('pop'); void f.offsetWidth; f.classList.add('pop'); buzz(favs.has(r.name) ? [8, 40, 12] : 6); return; }
   if (e.target.closest('button, a, [data-walk], [data-fav]') && !e.target.closest('.open-btn, .bar-actions [data-open]')) return;
   const o = e.target.closest('.card [data-open], .card.tap[data-open]'); if (o && !o.closest('#nightList, #coffeeList')) openSheet(+o.dataset.open);
 });
@@ -366,6 +450,7 @@ function initMap() {
       : c.kind === 'waymo' ? '🚗 Waymo — a driverless robotaxi (animated)' : c.kind === 'bus' ? '🚌 METRO bus (animated) — stops at the blue M signs' : c.line === 'red' ? '🚊 METRORail Red Line (animated) — runs down Main St' : '🚊 METRORail Green / Purple line (animated) — Capitol & Rusk'),
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to move · pinch or double-tap to zoom'; },
   });
+  if (EVENTS.length) city.setEvents(EVENTS);
   $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
   if (USER) city.setUser(USER);
   pollMetro(); setInterval(pollMetro, 20000);
@@ -786,14 +871,17 @@ async function aboutPlace(r) {
     const [pj, hj, oj, ms, bj, sj] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('streets.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
     metroStatic = ms; BUILDINGS = bj; STREETS = sj;
     META = { refreshed: pj.refreshed }; HH = hj;
+    fetch('hours-check.json').then((r) => r.json()).then((j) => { HCHK = j.flags || {}; }).catch(() => {});
+    fetch('events.json').then((r) => r.json()).then((j) => { EVENTS = j.events || []; city?.setEvents(EVENTS); renderPick(); }).catch(() => {});
     DATA = pj.places.map((p, i) => {
       const o = { ...(p.official || {}) };
       if (o.facebook && /Downtown-Houston|115104521841645|\s/.test(o.facebook)) o.facebook = null;   // directory's own page, not the restaurant's
       const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
       if (fix) { Object.assign(o, fix); if (fix.hours) o.corrected = fix.source; o.aliases = fix.aliases || []; o.extraSource = fix.notInDirectory ? fix.source : null; }
       const cats = (p.official && p.official.cats) || {};
-      return { ...p, id: i, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
+      return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
+    DATA = DATA.filter((r) => r.status !== 'closed').map((r, i) => ({ ...r, id: i }));   // closed for good: drop, then renumber
     DATA.forEach((r) => {
       const barish = /\b(bar|lounge|pub|nightclub|club|saloon|tavern|nightlife|speakeasy)\b/i.test(r.type || '');
       const food = (r.meals || []).some((x) => /breakfast|brunch|lunch|dinner|full service|fast casual/i.test(x));
@@ -807,7 +895,11 @@ async function aboutPlace(r) {
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee'].includes(h)) show(h);
+  if (h.startsWith('p=')) { const r = DATA.find((x) => x.name === decodeURIComponent(h.slice(2))); if (r) openSheet(r.id); }
+  if (h.startsWith('plan=')) { const [slot, ...names] = decodeURIComponent(h.slice(5)).split('|'); week.slot = slot || week.slot; DAYS.forEach((d, i) => { const r = DATA.find((x) => x.name === names[i]); if (r) week.days[d] = { name: r.name, address: r.address, lock: true }; }); save(); show('week'); toast('Plan loaded — 🔒 days are from the link'); }
+  loadWeather();
   setupAsk();
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && !/claude|claudeusercontent/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
   // build the street model quietly so Explore cards can show where each place is
   const bg = () => { if (!city) { initMap(); if (!$('#v-map').classList.contains('on')) { city.paused = true; city._bgBuilt = true; } SPOTOF = null; if ($('#v-browse').classList.contains('on')) renderBrowse(); } };
   (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 });

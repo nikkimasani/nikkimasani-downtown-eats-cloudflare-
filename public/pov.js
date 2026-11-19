@@ -160,6 +160,18 @@ export async function openPOV(city, opts = {}) {
     g.fillStyle = 'rgba(0,0,0,0)'; g.fillRect(0, 0, 512, 128); g.fillStyle = bg; rr(g, (512 - w) / 2, 22, w, 84, 42); g.fill();
     g.font = '44px system-ui, sans-serif'; g.textBaseline = 'middle'; g.fillText(emoji, (512 - w) / 2 + 22, 66); g.font = '700 40px system-ui, sans-serif'; g.fillStyle = '#fff'; g.fillText(txt.length > 22 ? txt.slice(0, 21) + '…' : txt, (512 - w) / 2 + 92, 66);
     const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; return keep(t); };
+  // each restaurant's storefront: a coloured awning over the door and its name on a sign above
+  { const awn = [], signGeo = keep(new T.PlaneGeometry(1, 1)), MAXS = 160; let ns = 0;
+    const signTex = (name, col) => { const c = document.createElement('canvas'); c.width = 512; c.height = 112; const g = c.getContext('2d'); g.fillStyle = '#1d1f24'; g.fillRect(0, 0, 512, 112); g.fillStyle = col; g.fillRect(0, 100, 512, 12);
+      let fs = 64; g.font = `700 ${fs}px Georgia,serif`; while (g.measureText(name).width > 480 && fs > 26) { fs -= 4; g.font = `700 ${fs}px Georgia,serif`; } g.fillStyle = '#fff6e0'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(name, 256, 52); const t = keep(new T.CanvasTexture(c)); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; return t; };
+    for (const o of city.osm || []) { if (!o.shops || (o.z0 || 0) > 0.05) continue; const P = o.pts;
+      for (const sh of o.shops) { let best = null; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 0.3) continue; const t = Math.max(0.1, Math.min(0.9, ((sh.pt[0] - a[0]) * dx + (sh.pt[1] - a[1]) * dy) / (L * L))), px = a[0] + dx * t, py = a[1] + dy * t, d = Math.hypot(px - sh.pt[0], py - sh.pt[1]); if (!best || d < best.d) best = { d, px, py, dx: dx / L, dy: dy / L, L }; }
+        if (!best) continue; let nx = best.dy, ny = -best.dx; if ((o.cx - best.px) * nx + (o.cy - best.py) * ny > 0) { nx = -nx; ny = -ny; }
+        const X = best.px * S, Z = best.py * S, rot = Math.atan2(nx, ny), w = Math.min(5, best.L * S * 0.8);
+        const g = new T.BoxGeometry(w, 0.12, 1.5).toNonIndexed(); g.rotateX(0.32); g.translate(0, 3.9, 0.75); g.rotateY(rot); g.translate(X, 0, Z); awn.push({ g, c: sh.c });
+        if (ns++ < MAXS) { const sm = new T.Mesh(signGeo, keep(new T.MeshBasicMaterial({ map: signTex(sh.name, sh.c) }))); sm.scale.set(Math.min(6, w + 1), 1.3, 1); sm.position.set(X + nx * 0.06, 4.9, Z + ny * 0.06); sm.rotation.y = rot; scene.add(sm); } } }
+    const byCol = new Map(); for (const a of awn) (byCol.get(a.c) || byCol.set(a.c, []).get(a.c)).push(a.g); for (const [c, gs] of byCol) { const mm = new T.Mesh(keep(merge(gs)), keep(new T.MeshLambertMaterial({ color: night ? new T.Color(c).multiplyScalar(0.6) : c }))); gs.forEach((g) => g.dispose()); scene.add(mm); }
+  }
   const pins = [];
   for (const s of city.spots) {
     if (s.tunnel || !s.places.some((p) => city.sceneOk(p))) continue;
@@ -282,8 +294,13 @@ export async function openPOV(city, opts = {}) {
   // look by dragging; tap a pin
   let drag = null; const ray = new T.Raycaster(), ndc = new T.Vector2();
   cv.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, moved: 0, id: e.pointerId }; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
-  cv.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy); me.yaw += dx * 0.0055; me.pitch = Math.max(-1.1, Math.min(1.1, me.pitch + dy * 0.004)); if (drag.moved > 8 && follow && city.user?.heading != null) setFollow(false); });
-  cv.addEventListener('pointerup', (e) => { if (drag && drag.moved < 8) { const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects([...pins, ...tunnelPins].filter((p) => p.visible))[0]; if (hit) opts.onPick?.(hit.object.userData.spot); } drag = null; });
+  cv.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy); me.yaw += dx * 0.0055; drag.vx = dx * 0.0055 * 60; me.pitch = Math.max(-1.1, Math.min(1.1, me.pitch + dy * 0.004)); if (drag.moved > 8 && follow && city.user?.heading != null) setFollow(false); });
+  let walkTo = null, yawV = 0; const ringM = new T.Mesh(keep(new T.RingGeometry(0.35, 0.55, 28)), keep(new T.MeshBasicMaterial({ color: '#ff6b35', transparent: true, opacity: 0.85, side: T.DoubleSide }))); ringM.rotation.x = -Math.PI / 2; ringM.visible = false; scene.add(ringM);
+  cv.addEventListener('pointerup', (e) => { if (drag && drag.moved < 8) { const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects([...pins, ...tunnelPins].filter((p) => p.visible))[0];
+      if (hit) opts.onPick?.(hit.object.userData.spot);
+      else if (ray.ray.direction.y < -0.02) { const t = -ray.ray.origin.y / ray.ray.direction.y; if (t < 160) { const gx = (ray.ray.origin.x + ray.ray.direction.x * t) / S, gy = (ray.ray.origin.z + ray.ray.direction.z * t) / S; walkTo = { x: gx, y: gy }; ringM.position.set(gx * S, 0.06, gy * S); ringM.visible = true; if (follow) setFollow(false); } } }   // tap the ground to walk there
+    else if (drag && drag.vx) yawV = drag.vx;   // flick to keep turning a little
+    drag = null; });
   // joystick
   const padEl = $('.pov-pad'), knob = $('.pov-knob'); let padId = null;
   const padMove = (e) => { const r = padEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, R = r.width / 2; let dx = (e.clientX - cx) / R, dy = (e.clientY - cy) / R; const m = Math.hypot(dx, dy); if (m > 1) { dx /= m; dy /= m; } pad = [dx, dy]; knob.style.transform = `translate(${dx * R * 0.6}px, ${dy * R * 0.6}px)`; };
@@ -303,6 +320,13 @@ export async function openPOV(city, opts = {}) {
     let f = -pad[1], s = pad[0];
     if (keys.has('KeyW') || keys.has('ArrowUp')) f += 1; if (keys.has('KeyS') || keys.has('ArrowDown')) f -= 1; if (keys.has('KeyA')) s -= 1; if (keys.has('KeyD')) s += 1;
     if (keys.has('ArrowLeft')) me.yaw += dt * 1.8; if (keys.has('ArrowRight')) me.yaw -= dt * 1.8;
+    if (yawV) { me.yaw += yawV * dt; yawV *= Math.pow(0.02, dt); if (Math.abs(yawV) < 0.02) yawV = 0; }
+    if (f || s) { walkTo = null; ringM.visible = false; }
+    else if (walkTo) {   // walk toward the tapped spot, turning to face it
+      const dx = walkTo.x - me.x, dy = walkTo.y - me.y, dist = Math.hypot(dx, dy);
+      if (dist < 0.12) { walkTo = null; ringM.visible = false; } else { const want = Math.atan2(-dx, -dy); let d = want - me.yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); me.yaw += d * Math.min(1, dt * 5); f = Math.abs(d) < 1.2 ? 1 : 0; }
+      ringM.scale.setScalar(1 + Math.sin(t / 160) * 0.08);
+    }
     if (f || s) { const sp = 0.75 * dt, dx = (-Math.sin(me.yaw) * f + Math.cos(me.yaw) * s) * sp, dy = (-Math.cos(me.yaw) * f - Math.sin(me.yaw) * s) * sp;
       const ok = (x, y) => (under ? inTunnel(x, y) : !blocked(x, y)); if (ok(me.x + dx, me.y)) me.x += dx; if (ok(me.x, me.y + dy)) me.y += dy;
       me.x = Math.max(B.x0 - 10, Math.min(B.x1 + 10, me.x)); me.y = Math.max(B.y0 - 10, Math.min(B.y1 + 10, me.y)); }
