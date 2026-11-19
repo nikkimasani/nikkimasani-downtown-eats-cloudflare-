@@ -9,16 +9,23 @@ const DAY = { mo: 1, tu: 2, we: 3, th: 4, fr: 5, sa: 6, su: 0, monday: 1, tuesda
 const t2m = (t) => { const [h, m] = String(t).split(':').map(Number); return h * 60 + (m || 0); };
 
 function siteRules(ld) {
-  const rules = [];
-  const add = (days, o, c) => { let s = t2m(o), e = t2m(c); if (!Number.isFinite(s) || !Number.isFinite(e)) return; if (e <= s) e += 1440; rules.push({ days, start: s, end: e }); };
-  const dayList = (spec) => { const out = []; for (const part of String(spec).toLowerCase().split(',')) { const [a, b] = part.trim().split('-'); const i = DAY[a], j = DAY[b ?? a]; if (i == null || j == null) continue; for (let k = i; ; k = (k + 1) % 7) { out.push(k); if (k === j) break; } } return out; };
+  // collect hours per schema.org node; only trust a page that describes exactly one place's hours
+  const nodes = [];
+  const dayList = (spec) => { const out = []; for (const part of String(spec).toLowerCase().replace(/\s/g, '').split(',')) { const [a, b] = part.split('-'); const i = DAY[a], j = DAY[b ?? a]; if (i == null || j == null) return []; for (let k = i; ; k = (k + 1) % 7) { out.push(k); if (k === j) break; } } return out; };
   const walk = (x) => {
     if (!x || typeof x !== 'object') return; if (Array.isArray(x)) return x.forEach(walk);
-    if (x.openingHours) for (const s of [].concat(x.openingHours)) { const m = String(s).match(/^([A-Za-z,\- ]+)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/); if (m) add(dayList(m[1].replace(/\s/g, '')), m[2], m[3]); }
-    if (x.openingHoursSpecification) for (const sp of [].concat(x.openingHoursSpecification)) { const ds = [].concat(sp.dayOfWeek || []).map((d) => DAY[String(d).split('/').pop().toLowerCase()]).filter((d) => d != null); if (ds.length && sp.opens && sp.closes) add(ds, sp.opens, sp.closes); }
-    for (const v of Object.values(x)) if (typeof v === 'object') walk(v);
+    const rules = [], add = (days, o, c) => { let st = t2m(o), e = t2m(c); if (!Number.isFinite(st) || !Number.isFinite(e) || st === e || !days.length) return; if (e <= st) e += 1440; rules.push({ days, start: st, end: e }); };
+    if (x.openingHours) for (const str of [].concat(x.openingHours)) for (const m of String(str).matchAll(/([A-Za-z]{2}(?:\s*[-,]\s*[A-Za-z]{2})*)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/g)) add(dayList(m[1]), m[2], m[3]);
+    if (x.openingHoursSpecification) for (const sp of [].concat(x.openingHoursSpecification)) { const ds = [].concat(sp.dayOfWeek || []).map((d) => DAY[String(d).split('/').pop().toLowerCase()]).filter((d) => d != null); if (sp.opens && sp.closes) add(ds, sp.opens, sp.closes); }
+    if (rules.length) nodes.push(rules);
+    for (const v of Object.values(x)) if (typeof v === 'object' && v !== x.openingHoursSpecification) walk(v);
   };
-  walk(ld); return rules;
+  walk(ld);
+  if (nodes.length !== 1) return [];   // several venues on one page (hotels, chains): can't tell which is ours
+  const rules = nodes[0];
+  for (let d = 0; d < 7; d++) { const rs = rules.filter((r) => r.days.includes(d)); if (rs.length > 2) return []; if (rs.length === 2 && rs[0].start < rs[1].end && rs[1].start < rs[0].end) return []; }   // overlapping or 3+ ranges a day: messy data
+  if (new Set(rules.flatMap((r) => r.days)).size < 3) return [];   // too partial to compare
+  return rules;
 }
 const openAt = (rules, d, m) => rules.some((r) => (r.days.includes(d) && m >= r.start && m < r.end) || (r.days.includes((d + 6) % 7) && r.end > 1440 && m < r.end - 1440));
 const fmt = (m) => { m %= 1440; const h = Math.floor(m / 60), mm = m % 60; return `${h % 12 || 12}${mm ? ':' + String(mm).padStart(2, '0') : ''}${h >= 12 ? 'pm' : 'am'}`; };
@@ -27,6 +34,8 @@ const describe = (rules) => NAMES.map((n, d) => { const rs = rules.filter((r) =>
 
 const flags = {}; let checked = 0;
 const todo = places.map((p) => ({ name: p.name, hours: over[p.name]?.hours || p.official?.hours, url: over[p.name]?.website || p.official?.website })).filter((p) => p.hours && /^https?:/.test(p.url || ''));
+const host = (u) => { try { const x = new URL(u); return x.host + x.pathname.replace(/\/$/, ''); } catch { return u; } }, uses = {}; for (const p of todo) uses[host(p.url)] = (uses[host(p.url)] || 0) + 1;
+const todo1 = todo.filter((p) => uses[host(p.url)] === 1);   // a site shared by several venues can't speak for one of them
 async function one(p) {
   try {
     const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
@@ -35,9 +44,9 @@ async function one(p) {
     const site = siteRules(lds); if (!site.length) return; checked++;
     const ours = parseHours(p.hours); if (!ours || ours.always) return;
     let diff = 0; for (let d = 0; d < 7; d++) for (let m = 0; m < 1440; m += 30) if (openAt(site, d, m) !== openAt(ours.rules.filter((r) => !r.closed), d, m)) diff++;
-    if (diff >= 3) flags[p.name] = { site: describe(site), url: p.url, slots: diff };
+    if (diff >= 6) flags[p.name] = { site: describe(site), url: p.url, slots: diff };
   } catch { /* site down or blocked: skip */ }
 }
-for (let i = 0; i < todo.length; i += 8) await Promise.all(todo.slice(i, i + 8).map(one));
+for (let i = 0; i < todo1.length; i += 8) await Promise.all(todo1.slice(i, i + 8).map(one));
 fs.writeFileSync('public/hours-check.json', JSON.stringify({ checked: new Date().toISOString().slice(0, 10), sitesWithHours: checked, flags }, null, 1));
 console.log(`hours check: ${todo.length} sites, ${checked} publish hours, ${Object.keys(flags).length} disagree`);
