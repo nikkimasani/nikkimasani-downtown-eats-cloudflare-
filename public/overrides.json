@@ -261,6 +261,18 @@
       "source": "https://understoryhouston.com/",
       "checked": "2026-11-18",
       "keepHours": true
+    },
+    "Lawless Spirits & Kitchen": {
+      "lat": 29.76061,
+      "lng": -95.36318,
+      "street": "909 Texas Ave, Suite 2A (2nd floor)",
+      "venue": "The Rice",
+      "hours": "Mon–Thu 4pm–11pm, Fri 4pm–2am, Sat 6pm–2am, Sun closed",
+      "phone": "(281) 823-8600",
+      "website": "https://www.lawlessspirits.com",
+      "source": "https://www.yelp.com/biz/lawless-spirits-and-kitchen-houston",
+      "checked": "2026-11-19",
+      "notInDirectory": true
     }
   }
 }

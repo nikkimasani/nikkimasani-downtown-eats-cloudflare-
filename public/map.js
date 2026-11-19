@@ -384,7 +384,8 @@ export class CityMap {
       s.style = styleFor(s.places[0]);
       if (s.venue && s.places.length === 1) s.venue = null;
       if (!s.venue && s.places.length > 1) { const vs = s.places.map(venueOfA0); if (vs[0] && vs.every((x) => x === vs[0])) s.venue = vs[0]; }   // a tunnel food court (Understory) is named for its hall   // the only one from its venue on this block: just show its own name
-      s.label = s.venue ? s.venue : s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
+      const shortN = (n) => { let t = n.replace(/\s+[-–:]\s.*$/, ''); if (t.length > 18) t = t.split(' ').slice(0, 2).join(' ').replace(/\s*[&+]$/, ''); return t; };
+      s.label = s.places.length === 2 ? s.places.map((p) => shortN(p.name)).join(' · ') : s.venue ? s.venue : s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
       if (s.venue) s.style = { ...s.style, emoji: /hotel|marriott|seasons|meridien|hyatt|embassy|laura|icon|rice|whitehall/i.test(s.venue) ? '🏨' : '🏬', color: '#7048e8' };
       s.cell = this.cellOf(s.x, s.y);
     }

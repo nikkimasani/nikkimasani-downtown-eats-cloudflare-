@@ -5305,5 +5305,29 @@
   "type": "Seafood",
   "note": "Seafood dining room inside the Downtown Aquarium, with tables around a 150,000-gallon tank.",
   "tryit": "Seafood platters, fish tacos"
+ },
+ {
+  "id": 246,
+  "name": "Lawless Spirits & Kitchen",
+  "address": "909 Texas Ave, Suite 2A, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "nightlife",
+   "patio",
+   "group"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Upstairs cocktail lounge in the Rice Hotel with a terrace over Texas Ave — small plates, happy-hour cocktails. Sometimes booked for private events, so call ahead.",
+  "tryit": "Cocktails on the terrace"
  }
 ]
