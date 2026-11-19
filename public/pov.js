@@ -48,7 +48,8 @@ export async function openPOV(city, opts = {}) {
     <div class="pov-nav" hidden></div>
     <div class="pov-hint">Drag to look around · use the pad to walk · tap a pin for details</div>
     <div class="pov-pad"><div class="pov-knob"></div></div>
-    <div class="pov-side"><button class="pov-btn round" data-a="tunnel" title="Go down to the tunnels">🚇</button><button class="pov-btn round" data-a="labels" title="Show or hide pins">📍</button><button class="pov-btn round" data-a="people" title="Show or hide people and traffic">🚶</button></div>`;
+    <div class="pov-attr" hidden></div>
+    <div class="pov-side"><button class="pov-btn round" data-a="real" title="Realistic 3D city (Google)">🛰️</button><button class="pov-btn round" data-a="tunnel" title="Go down to the tunnels">🚇</button><button class="pov-btn round" data-a="labels" title="Show or hide pins">📍</button><button class="pov-btn round" data-a="people" title="Show or hide people and traffic">🚶</button></div>`;
   document.body.appendChild(wrap);
   const cv = wrap.querySelector('canvas'), $ = (q) => wrap.querySelector(q);
   const renderer = new T.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: 'high-performance' });
@@ -341,7 +342,61 @@ export async function openPOV(city, opts = {}) {
     else { const tp = { x: me.x, y: me.y }; if (blocked(tp.x, tp.y)) { for (let rad = 0.3; rad < 8 && blocked(tp.x, tp.y); rad += 0.3) for (let a = 0; a < 6.28; a += 0.4) if (!blocked(me.x + Math.cos(a) * rad, me.y + Math.sin(a) * rad)) { tp.x = me.x + Math.cos(a) * rad; tp.y = me.y + Math.sin(a) * rad; break; } }
       me.x = tp.x; me.y = tp.y; scene.fog = streetFog; scene.background = streetBg; hemi.intensity = hemiI; hemi.color.copy(hemiC); hemi.groundColor.copy(hemiG); $('.pov-title').textContent = '🧍 Street view'; }
     $('[data-a=tunnel]').textContent = u ? '⬆️' : '🚇'; $('[data-a=tunnel]').title = u ? 'Back up to the street' : 'Go down to the tunnels';
+    if (tiles) applyReal();
   };
+  // ---- realistic mode: Google's photorealistic 3D city (Map Tiles API), lined up with our map; our pins and people stay on top ----
+  let realOn = false, realReady = false, tiles = null, geo = null, baseA = null, groundOff = 0, groundTick = 9, attrTick = 9, realMsg = null;
+  const hint = (t, ms = 6000) => { const el = $('.pov-hint'); el.textContent = t; el.style.opacity = 1; el.hidden = false; clearTimeout(realMsg); realMsg = setTimeout(() => { el.style.opacity = 0; }, ms); };
+  const realHide = () => streetObjs.filter((o) => !pins.includes(o) && o !== bodies && o !== heads);
+  const applyReal = () => {
+    if (geo) geo.visible = realOn && !under;
+    const show3d = realOn && realReady; if (!under) for (const o of realHide()) o.visible = !show3d;   // our drawn city stays until Google's buildings have actually arrived
+    scene.fog = under ? scene.fog : show3d ? null : streetFog;
+    $('[data-a=real]').classList.toggle('on', realOn); $('.pov-attr').hidden = !realOn || under;
+  };
+  const align = () => {   // map Google's earth-centred tiles onto our street grid: same east/north/up, same scale, same centre
+    const E = tiles.ellipsoid, rad = Math.PI / 180, la = 29.7575, lo = -95.364, d = 0.001;
+    geo.matrix.identity(); geo.updateMatrixWorld(true); tiles.group.updateMatrixWorld(true);
+    const P = (lat, lng, h) => { const v = new T.Vector3(); E.getCartographicToPosition(lat * rad, lng * rad, h, v); return v.applyMatrix4(tiles.group.matrixWorld); };
+    const C = P(la, lo, 0), pe = P(la, lo + d, 0).sub(C), pn = P(la, lo, 0).sub(C), up3 = P(la, lo, 100).sub(C).normalize(); pn.copy(P(la + d, lo, 0)).sub(C);
+    const metres = pe.length(); pe.normalize(); pn.normalize();
+    const o0 = city.proj(la, lo), oE = city.proj(la, lo + d), oN = city.proj(la + d, lo);
+    const e2 = new T.Vector3(oE[0] - o0[0], 0, oE[1] - o0[1]), n2 = new T.Vector3(oN[0] - o0[0], 0, oN[1] - o0[1]), k = (e2.length() * S) / metres; e2.normalize(); n2.normalize();
+    const B = new T.Matrix4().makeBasis(pe, pn, up3), B2 = new T.Matrix4().makeBasis(e2, n2, new T.Vector3(0, 1, 0));
+    if (B2.determinant() < 0) console.warn('street grid is mirrored relative to the globe');
+    baseA = new T.Matrix4().makeTranslation(o0[0] * S, 0, o0[1] * S).multiply(new T.Matrix4().makeScale(k, k, k)).multiply(B2).multiply(B.clone().invert()).multiply(new T.Matrix4().makeTranslation(-C.x, -C.y, -C.z));
+    groundOff = 0; setGeo(); groundTick = 9;
+  };
+  const setGeo = () => { if (!baseA) return; geo.matrix.copy(new T.Matrix4().makeTranslation(0, groundOff, 0).multiply(baseA)); geo.matrixWorldNeedsUpdate = true; geo.updateMatrixWorld(true); };
+  const rc = new T.Raycaster(); rc.firstHitOnly = true;
+  const sampleGround = () => {   // lift or drop the whole city so the street right here sits at our ground level
+    const A = city.avenues, C0 = city.cross, a = A.reduce((p, q) => (Math.abs(q.x - me.x) < Math.abs(p.x - me.x) ? q : p)), c = C0.reduce((p, q) => (Math.abs(q.y - me.y) < Math.abs(p.y - me.y) ? q : p));
+    const [sx, sy] = Math.abs(a.x - me.x) < Math.abs(c.y - me.y) ? [a.x, me.y] : [me.x, c.y];   // the middle of the nearest road: open to the sky
+    rc.set(new T.Vector3(sx * S, 600, sy * S), new T.Vector3(0, -1, 0)); rc.far = 1400;
+    const hit = rc.intersectObject(tiles.group, true)[0]; if (!hit) return;
+    const want = groundOff - hit.point.y; if (Math.abs(want - groundOff) > 0.05) { groundOff += (want - groundOff) * (Math.abs(want - groundOff) > 8 ? 1 : 0.5); setGeo(); }
+  };
+  async function setReal(on) {
+    if (on && !tiles) {
+      const key = await (opts.mapsKey?.() ?? null);
+      if (!key) { hint(opts.mapsKeyHelp || 'The realistic view needs a Google Maps key — see the setup steps.', 8000); return; }
+      hint('Loading the 3D city from Google…', 4000);
+      try {
+        const R = await import('./vendor/tiles.module.js');
+        tiles = new R.TilesRenderer();
+        tiles.registerPlugin(new R.GoogleCloudAuthPlugin({ apiToken: key, autoRefreshToken: true }));
+        tiles.registerPlugin(new R.GLTFExtensionsPlugin({ dracoLoader: new R.DRACOLoader().setDecoderPath(new URL('./vendor/draco/', import.meta.url).href) }));
+        tiles.registerPlugin(new R.TileCompressionPlugin()); tiles.registerPlugin(new R.UnloadTilesPlugin());
+        tiles.registerPlugin(new R.ReorientationPlugin({ lat: 29.7575 * Math.PI / 180, lon: -95.364 * Math.PI / 180, height: 0, recenter: true }));
+        tiles.errorTarget = 12; tiles.setCamera(camera); tiles.setResolutionFromRenderer(camera, renderer);
+        geo = new T.Group(); geo.matrixAutoUpdate = false; geo.add(tiles.group); scene.add(geo);
+        tiles.addEventListener('load-root-tileset', () => setTimeout(align, 0));
+        tiles.addEventListener('tiles-load-end', () => { if (!realReady && baseA && tiles.group.children.length) { realReady = true; applyReal(); hint('Realistic 3D city from Google · 🛰️ to switch back', 4000); } });
+        let failed = false; tiles.addEventListener('load-error', (e) => { if (failed || realReady) return; failed = true; console.warn('3D tiles', e?.error || e); realOn = false; try { scene.remove(geo); tiles.dispose(); } catch {} tiles = null; geo = null; baseA = null; applyReal(); hint('Google refused the 3D city request — check the key has the Map Tiles API turned on, billing set up, and this website allowed.', 10000); });
+      } catch (err) { console.warn(err); tiles = null; hint("Couldn't load the realistic view on this device.", 6000); return; }
+    }
+    realOn = on && !!tiles; applyReal();
+  }
   const streetFog = scene.fog, streetBg = scene.background, hemi = scene.children.find((o) => o.isHemisphereLight), hemiI = hemi.intensity, hemiC = hemi.color.clone(), hemiG = hemi.groundColor.clone();
 
   // ---- the walker ----
@@ -369,7 +424,7 @@ export async function openPOV(city, opts = {}) {
   padEl.addEventListener('pointerdown', (e) => { padId = e.pointerId; try { padEl.setPointerCapture(e.pointerId); } catch (_) {} padMove(e); if (follow) setFollow(false); e.preventDefault(); });
   padEl.addEventListener('pointermove', (e) => { if (e.pointerId === padId) padMove(e); });
   const padEnd = () => { padId = null; pad = [0, 0]; knob.style.transform = ''; }; padEl.addEventListener('pointerup', padEnd); padEl.addEventListener('pointercancel', padEnd);
-  wrap.addEventListener('click', (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (a === 'close') close(); if (a === 'tunnel') setUnder(!under); if (a === 'follow') setFollow(!follow); if (a === 'labels') { showPins = !showPins; e.target.closest('button').classList.toggle('off', !showPins); } if (a === 'people') { showLife = !showLife; e.target.closest('button').classList.toggle('off', !showLife); } });
+  wrap.addEventListener('click', (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (a === 'close') close(); if (a === 'tunnel') setUnder(!under); if (a === 'real') setReal(!realOn); if (a === 'follow') setFollow(!follow); if (a === 'labels') { showPins = !showPins; e.target.closest('button').classList.toggle('off', !showPins); } if (a === 'people') { showLife = !showLife; e.target.closest('button').classList.toggle('off', !showLife); } });
   const resize = () => { const w = wrap.clientWidth, h = wrap.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
   window.addEventListener('resize', resize); resize();
   city.paused = true;
@@ -420,12 +475,18 @@ export async function openPOV(city, opts = {}) {
     vehicles.count = glassBand.count = nv; vehicles.instanceMatrix.needsUpdate = glassBand.instanceMatrix.needsUpdate = true; if (nv) vehicles.instanceColor.needsUpdate = true;
     syncRoute();
     if ((navTick += dt) > 0.5) { navTick = 0; const txt = opts.navText?.(); const el = $('.pov-nav'); el.hidden = !txt; if (txt) el.textContent = txt; }
+    if (tiles && realOn && !under) {
+      camera.updateMatrixWorld(); tiles.update();
+      if (baseA && (groundTick += dt) > 0.6) { groundTick = 0; sampleGround(); }
+      if ((attrTick += dt) > 2) { attrTick = 0; tiles.setResolutionFromRenderer(camera, renderer); const at = tiles.getAttributions([]).filter((x) => x.type === 'string').map((x) => x.value).join(' '); $('.pov-attr').innerHTML = `<b>Google</b>${at ? ' · ' + at.replace(/[<>&]/g, '') : ''}`; }
+    }
     renderer.render(scene, camera);
     raf = requestAnimationFrame(loop);
   };
   raf = requestAnimationFrame(loop);
 
   function close() {
+    try { tiles?.dispose(); } catch {}
     cancelAnimationFrame(raf); window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKey); window.removeEventListener('resize', resize);
     scene.traverse((o) => { if (o.isMesh || o.isSprite || o.isLineSegments) { o.geometry?.dispose?.(); } });
     disposables.forEach((d) => d.dispose?.()); renderer.dispose(); renderer.forceContextLoss?.(); wrap.remove();

@@ -947,6 +947,8 @@ async function openStreetView(r) {
   toast('Loading street view…'); document.body.classList.add('in-pov');
   try {
     povCtl = await openPOV(city, { start, follow, under: !!r?.tunnel, placeId: r?.tunnel ? r.id : null,
+      mapsKey: async () => { if (/claude/.test(location.hostname)) return null; try { const j = await (await fetch('./api/maps-key', { cache: 'no-store' })).json(); return j.key || null; } catch { return null; } },
+      mapsKeyHelp: /claude/.test(location.hostname) ? 'The realistic 3D city works on the app website (downtown-eats-nine.vercel.app), not inside Claude.' : 'The realistic 3D city needs a Google Maps key added to the website settings first.',
       onPick: (s) => { const places = s.places.filter((p) => city.sceneOk(p)); places.length === 1 ? openSheet(places[0].id) : listSheet(places, s.label); },
       navText: () => (lastNav && !lastNav.arrived ? `${lastNav.next ? lastNav.next.icon + ' In ' + lastNav.toNext + ' m, ' + lastNav.next.text.charAt(0).toLowerCase() + lastNav.next.text.slice(1) : lastNav.cur.icon + ' ' + lastNav.cur.text} · ${lastNav.minutes} min` : lastNav?.arrived ? `🏁 You've arrived at ${lastNav.target.label}` : ''),
       onMove: (m) => { if (city.user?.virtual) { city.user.x = m.x; city.user.y = m.y; if (city.nav) city.updateNav(); } },
