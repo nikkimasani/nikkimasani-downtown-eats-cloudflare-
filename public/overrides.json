@@ -225,6 +225,42 @@
       "source": "https://texas.apwa.org/wp-content/uploads/sites/58/2026/06/DowntownRestaurantList_2026.pdf",
       "checked": "2026-11-18",
       "notInDirectory": true
+    },
+    "Farro": {
+      "venue": "Understory",
+      "source": "https://understoryhouston.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "Flip n Patties": {
+      "venue": "Understory",
+      "source": "https://understoryhouston.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "La Taquiza|800": {
+      "venue": "Understory",
+      "source": "https://understoryhouston.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "Mona": {
+      "venue": "Understory",
+      "source": "https://understoryhouston.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "Seaside Poke": {
+      "venue": "Understory",
+      "source": "https://understoryhouston.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "Silver Lining": {
+      "venue": "Understory",
+      "source": "https://understoryhouston.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
     }
   }
 }

@@ -366,15 +366,15 @@ export class CityMap {
     const venueOf = (p) => { let v = p.official?.venue || p.venue; if (!v || /^(suite|unit|#|\()/i.test(v.trim())) return null; v = v.replace(/ Houston$/, '').trim(); return /^(finn hall|the finn)$/i.test(v) ? 'The Finn' : v; };
     const addrKey = (p) => (p.address || '').toLowerCase().replace(/,.*$/, '').replace(/\b(street|st)\b\.?/g, 'st').trim();
     const byAddr = {}; for (const p of pts) { const v = venueOf(p); if (v && !p.tunnel) byAddr[addrKey(p)] = v; }
-    const venueOf0 = venueOf; const venueOfA = (p) => venueOf0(p) || (!p.tunnel && byAddr[addrKey(p)]) || null;
-    const vCount = {}; for (const p of pts) { const v = venueOfA(p); if (v && !p.tunnel) vCount[v] = (vCount[v] || 0) + 1; }
+    const venueOf0 = venueOf, venueOfA0 = (p) => venueOf0(p); const venueOfA = (p) => venueOf0(p) || (!p.tunnel && byAddr[addrKey(p)]) || null;
+    const vCount = {}; for (const p of pts) { const v = venueOfA(p); if (v) vCount[(p.tunnel ? 'T' : '') + v] = (vCount[(p.tunnel ? 'T' : '') + v] || 0) + 1; }
     const groups = new Map();
     const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
     this.offMap = new Set();
     for (const p of pts) {
       if (offMap(proj(p.lat, p.lng))) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
       const [x, y] = proj(p.lat, p.lng), v = venueOfA(p);
-      const key = v && !p.tunnel && vCount[v] > 1 ? 'V' + v + '@' + this.cellIdx(x, y).join(',') : (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);   // a venue spread over several blocks (Discovery Green, GreenStreet) gets a pin per block
+      const key = v && vCount[(p.tunnel ? 'T' : '') + v] > 1 ? (p.tunnel ? 'VT' : 'V') + v + '@' + this.cellIdx(x, y).join(',') : (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);   // a venue spread over several blocks (Discovery Green, GreenStreet) gets a pin per block
       if (!groups.has(key)) groups.set(key, { x: 0, y: 0, tunnel: !!p.tunnel, places: [], venue: key[0] === 'V' ? v : null });
       const g = groups.get(key); g.places.push(p); g.x += (x - g.x) / g.places.length; g.y += (y - g.y) / g.places.length;
     }
@@ -382,7 +382,8 @@ export class CityMap {
     this.snapSpots();
     for (const s of this.spots) {
       s.style = styleFor(s.places[0]);
-      if (s.venue && s.places.length === 1) s.venue = null;   // the only one from its venue on this block: just show its own name
+      if (s.venue && s.places.length === 1) s.venue = null;
+      if (!s.venue && s.places.length > 1) { const vs = s.places.map(venueOfA0); if (vs[0] && vs.every((x) => x === vs[0])) s.venue = vs[0]; }   // a tunnel food court (Understory) is named for its hall   // the only one from its venue on this block: just show its own name
       s.label = s.venue ? s.venue : s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
       if (s.venue) s.style = { ...s.style, emoji: /hotel|marriott|seasons|meridien|hyatt|embassy|laura|icon|rice|whitehall/i.test(s.venue) ? '🏨' : '🏬', color: '#7048e8' };
       s.cell = this.cellOf(s.x, s.y);
@@ -2064,7 +2065,7 @@ export class CityMap {
     ctx.fillStyle = mode === 'tunnel' ? '#121624' : N ? '#1d2338' : '#e9eef3'; ctx.fillRect(0, 0, this.W, this.H);
     this._dusk = night; this._wxNow = this.wxState(); const sky = mode === 'tunnel' ? null : this.skyColors(night, this._warm || 0);
     if (sky) { const g = ctx.createLinearGradient(0, 0, 0, this.H); g.addColorStop(0, sky[0]); g.addColorStop(0.45, sky[1]); g.addColorStop(1, N ? '#1d2338' : '#e9eef3'); ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, this.H); }
-    if (mode === 'tunnel') { this.drawGhostGrid(); this.drawTunnels(now); this.drawMarkers(true); this.drawPickBeacon(now); return; }
+    if (mode === 'tunnel') { this.drawGhostGrid(); this.drawTunnels(now); TAKEN = (this.reserved || []).map((r) => [...r]); this.drawMarkers(true); TAKEN = null; this.drawPickBeacon(now); return; }
 
     const walk = N ? '#3a4152' : '#e9e7e2', road = N ? '#20242f' : '#959ba3', inner = N ? '#343a4a' : '#dedbd4';
     for (const f of sides(v, B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0)) poly(ctx, [v.p(...f.a), v.p(...f.b), v.p(...f.b, -0.8), v.p(...f.a, -0.8)], darken(N ? '#20253a' : '#d0d5db', f.shade));
@@ -2391,7 +2392,7 @@ export class CityMap {
       return;
     }
     const lift = this.pinLift(), list = this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y)), lbl = new Map();
-    if (TAKEN && !under) {
+    if (TAKEN) {
       const rr = lod === 'label' ? 12 : 10;
       for (const s of list) { const [x, y] = v.p(s.x, s.y, z); fits(x - rr, y - lift - rr, x + rr, y - lift + rr, true); }
       for (let k = list.length - 1; k >= 0; k--) { const s = list[k]; if (!((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s)) continue; const [x, y] = v.p(s.x, s.y, z), t = s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label; ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(t).width + 10, yy = y - lift - rr - 12;
@@ -2407,7 +2408,7 @@ export class CityMap {
       if (this.highlight && s.places.some((p) => this.highlight.has(p.id))) { const pulse = 0.55 + 0.45 * Math.sin(performance.now() / 320 + s.x), g = ctx.createRadialGradient(x, y - lift, r * 0.6, x, y - lift, r * 2.4); g.addColorStop(0, hexA(s.style.color, 0.55 * pulse)); g.addColorStop(1, hexA(s.style.color, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - lift, r * 2.4, 0, 7); ctx.fill(); }
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
-      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || under || lbl.has(s))) { const off = lbl.get(s) || [0, 0]; pill(ctx, x + off[0], y - lift - r - 12 + off[1], s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529'); }
+      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || lbl.has(s))) { const off = lbl.get(s) || [0, 0]; pill(ctx, x + off[0], y - lift - r - 12 + off[1], s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529'); }
     }
   }
 
