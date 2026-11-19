@@ -1,86 +1,41 @@
 {
  "checked": "2026-11-19",
- "sitesWithHours": 27,
+ "sitesWithHours": 16,
  "flags": {
   "Artistry": {
    "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
    "url": "http://artistryhouston.com",
    "slots": 134
   },
-  "Andes Cafe": {
-   "site": "Sun closed · Mon 11am–9pm · Tue closed · Wed closed · Thu closed · Fri closed · Sat closed",
-   "url": "http://www.andescafe.com",
-   "slots": 126
-  },
-  "Ballpark Cafe at The Westin Houston Downtown": {
-   "site": "Sun 5pm–10pm, 7am–10pm, 7am–3pm · Mon 6:30am–10pm, 6:30am–10pm, 6:30am–8pm · Tue 6:30am–10pm, 6:30am–10pm, 6:30am–8pm · Wed 6:30am–10pm, 6:30am–10pm, 6:30am–8pm · Thu 6:30am–10pm, 6:30am–10pm, 6:30am–8pm · Fri 6:30am–10pm, 6:30am–10pm, 6:30am–8pm · Sat 5pm–11pm, 7am–10pm, 7am–3pm",
-   "url": "http://www.mariott.com/en-us/hotels/houwi-the-westin-houston-downtown/dining/",
-   "slots": 77
-  },
-  "Bullritos": {
-   "site": "Sun 12am–12am, 12am–12am · Mon 10am–3pm, 10am–2pm · Tue 10am–3pm, 10am–2pm · Wed 10am–3pm, 10am–2pm · Thu 10am–3pm, 10am–2pm · Fri 10am–3pm, 10am–2pm · Sat 12am–12am, 12am–12am",
-   "url": "https://www.solrayofoods.com/",
-   "slots": 96
-  },
-  "Benihana": {
-   "site": "Sun 11am–10pm · Mon 11am–10pm · Tue 11am–10pm · Wed 11am–11pm · Thu 11am–11pm · Fri 11am–11pm · Sat 11am–11pm",
-   "url": "https://www.benihana.com/locations/houston-tx-ho/",
-   "slots": 4
-  },
   "Bungalow": {
    "site": "Sun 9am–5pm · Mon 9am–5pm · Tue 9am–5pm · Wed 9am–5pm · Thu 9am–5pm · Fri 9am–5pm · Sat 9am–5pm",
    "url": "https://bungalowdining.com/",
    "slots": 168
   },
-  "Chipotle": {
-   "site": "Sun 12am–12am · Mon 10:45am–8pm, 10:45am–8pm · Tue 10:45am–8pm, 10:45am–8pm · Wed 10:45am–8pm, 10:45am–8pm · Thu 10:45am–8pm, 10:45am–8pm · Fri 10:45am–8pm, 10:45am–8pm · Sat 10:45am–8pm, 10:45am–8pm",
-   "url": "https://locations.chipotle.com/tx/houston/909-texas-st?utm_source=google&utm_medium=yext&utm_campaign=yext_listings",
-   "slots": 66
-  },
-  "Folk Thai Kitchen": {
-   "site": "Sun closed · Mon 11am–3pm · Tue closed · Wed closed · Thu closed · Fri closed · Sat closed",
-   "url": "http://folkthaikitchen.com",
-   "slots": 68
-  },
   "The Grove": {
-   "site": "Sun closed · Mon closed · Tue 11:30am–8pm · Wed closed · Thu closed · Fri closed · Sat closed",
+   "site": "Sun closed · Mon closed · Tue 11:30am–8pm · Wed 11:30am–8pm · Thu 11:30am–8pm · Fri 11:30am–8pm · Sat 11:30am–8pm",
    "url": "http://thegrovehouston.com",
-   "slots": 65
-  },
-  "La Calle": {
-   "site": "Sun 9am–11:59pm, 9am–2am · Mon 9am–11:59pm, 7am–2am · Tue 9am–11:59pm, 7am–2am · Wed 9am–11:59pm, 7am–2am · Thu 9am–3am, 7am–3am · Fri 9am–3am, 7am–3am · Sat 9am–3am, 9am–3am",
-   "url": "http://www.lacalletacos.com",
-   "slots": 126
+   "slots": 69
   },
   "Lone Star Saloon": {
    "site": "Sun 1pm–9pm · Mon 11am–10pm · Tue 11am–10pm · Wed 11am–10pm · Thu 11am–12am · Fri 11am–12am · Sat 11am–12am",
    "url": "https://www.thelonestarsaloon.com/",
    "slots": 98
   },
-  "Morton's The Steakhouse": {
-   "site": "Sun 1pm–8pm · Mon 1pm–8pm · Tue 1pm–8pm · Wed 1pm–8pm · Thu 1pm–8pm · Fri 1pm–8pm · Sat 1pm–8pm",
-   "url": "http://mortons.com",
-   "slots": 58
-  },
   "The Nash": {
    "site": "Sun closed · Mon 11am–8pm · Tue 11am–8pm · Wed 11am–8pm · Thu 11am–8pm · Fri 11am–9pm · Sat 5pm–9pm",
    "url": "http://www.thenashhouston.com",
    "slots": 12
   },
+  "Morton's The Steakhouse": {
+   "site": "Sun 1pm–8pm · Mon 1pm–8pm · Tue 1pm–8pm · Wed 1pm–8pm · Thu 1pm–8pm · Fri 1pm–8pm · Sat 1pm–8pm",
+   "url": "http://mortons.com",
+   "slots": 58
+  },
   "Rosalie Italian Soul": {
    "site": "Sun closed · Mon closed · Tue 11am–2pm, 5pm–10pm · Wed 11am–2pm, 5pm–10pm · Thu 11am–2pm, 5pm–10pm · Fri 5pm–10pm · Sat 11am–2pm, 5pm–10pm",
    "url": "https://www.rosalieitaliansoul.com/",
    "slots": 125
-  },
-  "Saltgrass Steak House": {
-   "site": "Sun 11am–9pm, 8am–10pm, 4pm–9pm · Mon 11am–9pm, 8am–10pm, 4pm–9pm · Tue 11am–9pm, 11am–10pm, 4pm–9pm · Wed 11am–9pm, 11am–10pm, 4pm–9pm · Thu 11am–9pm, 11am–10pm, 4pm–9pm · Fri 11am–10pm, 8am–10pm, 4pm–10pm · Sat 11am–10pm, 8am–10pm, 4pm–10pm",
-   "url": "http://saltgrass.com",
-   "slots": 34
-  },
-  "Taco Fuego": {
-   "site": "Sun 10am–9pm, 11am–4am, 11am–9pm, 11am–8pm, 12pm–9pm · Mon 11am–9pm, 11am–9pm, 11am–9pm, 11am–8pm, 11am–9pm · Tue 11am–9pm, 11am–4am, 11am–9pm, 11am–8pm, 11am–9pm · Wed 11am–9pm, 11am–4am, 11am–9pm, 11am–8pm, 11am–9pm · Thu 11am–9pm, 11am–4am, 11am–9pm, 11am–8pm, 11am–9pm · Fri 10am–10pm, 11am–4am, 11am–10pm, 11am–8pm, 11am–11pm · Sat 10am–10pm, 11am–4am, 11am–10pm, 11am–8pm, 11am–11pm",
-   "url": "http://www.tacofuego.com",
-   "slots": 84
   },
   "Toro Toro": {
    "site": "Sun 5:30pm–10pm · Mon 5:30pm–10pm · Tue 5:30pm–10pm · Wed 5:30pm–10pm · Thu 5:30pm–10pm · Fri 5:30pm–10pm · Sat 5:30pm–10pm",
@@ -88,34 +43,14 @@
    "slots": 116
   },
   "Angel Share HTX": {
-   "site": "Sun 12am–2am, 12am–12am · Mon closed · Tue 4pm–11:59pm · Wed 12am–12am, 4pm–11:59pm · Thu 12am–12am, 4pm–11:59pm · Fri 12am–2am, 4pm–11:59pm · Sat 12am–2am, 4pm–11:59pm",
+   "site": "Sun 12am–2am · Mon closed · Tue 4pm–11:59pm · Wed 4pm–11:59pm · Thu 4pm–11:59pm · Fri 12am–2am, 4pm–11:59pm · Sat 12am–2am, 4pm–11:59pm",
    "url": "http://www.angelsharehtx.com",
-   "slots": 112
-  },
-  "Houston Watch Company": {
-   "site": "Sun closed · Mon closed · Tue 4pm–2am · Wed closed · Thu closed · Fri closed · Sat closed",
-   "url": "http://www.houstonwatchcompany.com",
-   "slots": 80
+   "slots": 36
   },
   "SOHO Garden HTX": {
    "site": "Sun 2pm–11pm · Mon 4pm–10pm · Tue 4pm–10pm · Wed 4pm–10pm · Thu 4pm–10pm · Fri 4pm–2am · Sat 3pm–2am",
    "url": "https://sohogardenhtx.com/",
    "slots": 84
-  },
-  "Sonderbar Internationale": {
-   "site": "Sun 2pm–10pm · Mon 9am–5pm · Tue 7pm–2am · Wed 7pm–12am · Thu 7pm–2am · Fri 7pm–2am · Sat 7pm–2am",
-   "url": "https://sonderbar.us/",
-   "slots": 61
-  },
-  "Synth Diskoteka": {
-   "site": "Sun 2pm–10pm · Mon 9am–5pm · Tue 7pm–2am · Wed 7pm–12am · Thu 7pm–2am · Fri 7pm–2am · Sat 7pm–2am",
-   "url": "https://sonderbar.us",
-   "slots": 88
-  },
-  "Z on 23": {
-   "site": "Sun 7am–11pm · Mon 6am–11pm · Tue 6am–11pm · Wed 6am–11pm · Thu 6am–11pm · Fri 6am–11pm · Sat 7am–11pm",
-   "url": "http://www.zon23rooftop.com",
-   "slots": 164
   }
  }
 }
