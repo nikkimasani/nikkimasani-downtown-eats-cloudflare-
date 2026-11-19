@@ -961,7 +961,7 @@ function walkTo(r) {
   const go = () => {
     if (!city) return;
     const sp = city.spotForPlace(r.id);
-    if (!sp) { toast('No map location for ' + r.name); return; }
+    if (!sp) { if (r.lat) { toast(`${r.name} is just past the edge of this map — opening directions in Maps`); window.open(navLinks(r)[/iP(hone|ad)|Mac/.test(navigator.userAgent) ? 'apple' : 'google'], '_blank'); } else toast('No map location for ' + r.name); return; }
     if (!city.user?.inside) { if (USER?.demo) return; showNavFar(r); return; }
     city.setPick(r.id); city.startNav({ x: sp.x, y: sp.y, label: r.name, tunnel: !!r.tunnel, id: r.id, lat: r.lat, lng: r.lng });
   };

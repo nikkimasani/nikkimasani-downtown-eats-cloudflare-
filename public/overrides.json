@@ -176,6 +176,55 @@
       "source": "https://littleneworleansdowntown.com/",
       "checked": "2026-11-18",
       "notInDirectory": true
+    },
+    "Taste of New Orleans": {
+      "lat": 29.75524,
+      "lng": -95.36735,
+      "street": "1225 Travis St",
+      "venue": "1300 Main building, Travis & Polk corner",
+      "hours": "Daily 6am–5pm",
+      "phone": "(281) 978-5218",
+      "website": "https://tasteofneworleansdowntown.com/",
+      "source": "https://www.doordash.com/store/taste-of-new-orleans-houston-50258412/",
+      "checked": "2026-11-18",
+      "notInDirectory": true
+    },
+    "Starbucks|600": {
+      "lat": 29.760346,
+      "lng": -95.364033,
+      "source": "Same building as Brown Bag Deli (JPMorgan Chase Tower, 600 Travis)",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "Bungalow": {
+      "street": "407 Main St",
+      "venue": null,
+      "source": "https://bungalowdining.com/",
+      "checked": "2026-11-18",
+      "keepHours": true
+    },
+    "Pappas Bar-B-Q": {
+      "lat": 29.748271,
+      "lng": -95.368507,
+      "street": "1217 Pierce St",
+      "hours": "Sun–Thu 10:30am–10pm, Fri–Sat 10:30am–11pm",
+      "phone": "(713) 659-1245",
+      "website": "https://pappasbbq.com",
+      "source": "https://lgbtq.visithoustontexas.com/listings/pappas-bar-b-q/22231/",
+      "checked": "2026-11-18",
+      "notInDirectory": true
+    },
+    "Aquarium Restaurant": {
+      "lat": 29.764215,
+      "lng": -95.367387,
+      "street": "410 Bagby St",
+      "venue": "Downtown Aquarium",
+      "hours": "Sun–Thu 11am–8:30pm, Fri–Sat 11am–9pm",
+      "phone": "(713) 223-3474",
+      "website": "https://www.downtownaquariumhouston.com/",
+      "source": "https://texas.apwa.org/wp-content/uploads/sites/58/2026/06/DowntownRestaurantList_2026.pdf",
+      "checked": "2026-11-18",
+      "notInDirectory": true
     }
   }
 }

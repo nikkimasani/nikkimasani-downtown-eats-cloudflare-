@@ -479,7 +479,7 @@
  {
   "id": 21,
   "name": "Bungalow",
-  "address": "909 Texas Ave, Houston, TX",
+  "address": "407 Main St, Houston, TX",
   "tunnel": null,
   "cuisines": [
    "American",
@@ -5239,5 +5239,71 @@
   "type": "Cajun",
   "note": "Casual Cajun counter at Texas & Fannin — breakfast through late night on weekends. Busy at noon, so order ahead.",
   "tryit": "Gumbo, shrimp po' boy, boudin balls, beignets"
+ },
+ {
+  "id": 243,
+  "name": "Taste of New Orleans",
+  "address": "1225 Travis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun & Southern",
+   "Seafood"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "comfort",
+   "quick",
+   "sweet"
+  ],
+  "type": "Cajun",
+  "note": "Cajun & Creole soul food at Travis & Polk, open from 6am. Known for thick, powdered-sugar beignets.",
+  "tryit": "Beignets, Bourbon Street pasta, shrimp & grits, catfish po' boy, Hot Cheetos boudin balls"
+ },
+ {
+  "id": 244,
+  "name": "Pappas Bar-B-Q",
+  "address": "1217 Pierce St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 1,
+  "vibes": [
+   "comfort",
+   "quick",
+   "group"
+  ],
+  "type": "BBQ",
+  "note": "The original Pappas Bar-B-Q, cafeteria-style Texas barbecue at Pierce & San Jacinto with a drive-through.",
+  "tryit": "Brisket, ribs, baked potato"
+ },
+ {
+  "id": 245,
+  "name": "Aquarium Restaurant",
+  "address": "410 Bagby St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Seafood"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "date"
+  ],
+  "type": "Seafood",
+  "note": "Seafood dining room inside the Downtown Aquarium, with tables around a 150,000-gallon tank.",
+  "tryit": "Seafood platters, fish tacos"
  }
 ]

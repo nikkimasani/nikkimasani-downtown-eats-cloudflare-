@@ -369,9 +369,12 @@ export class CityMap {
     const venueOf0 = venueOf; const venueOfA = (p) => venueOf0(p) || (!p.tunnel && byAddr[addrKey(p)]) || null;
     const vCount = {}; for (const p of pts) { const v = venueOfA(p); if (v && !p.tunnel) vCount[v] = (vCount[v] || 0) + 1; }
     const groups = new Map();
+    const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
+    this.offMap = new Set();
     for (const p of pts) {
+      if (offMap(proj(p.lat, p.lng))) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
       const [x, y] = proj(p.lat, p.lng), v = venueOfA(p);
-      const key = v && !p.tunnel && vCount[v] > 1 ? 'V' + v : (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);
+      const key = v && !p.tunnel && vCount[v] > 1 ? 'V' + v + '@' + this.cellIdx(x, y).join(',') : (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);   // a venue spread over several blocks (Discovery Green, GreenStreet) gets a pin per block
       if (!groups.has(key)) groups.set(key, { x: 0, y: 0, tunnel: !!p.tunnel, places: [], venue: key[0] === 'V' ? v : null });
       const g = groups.get(key); g.places.push(p); g.x += (x - g.x) / g.places.length; g.y += (y - g.y) / g.places.length;
     }
@@ -379,6 +382,7 @@ export class CityMap {
     this.snapSpots();
     for (const s of this.spots) {
       s.style = styleFor(s.places[0]);
+      if (s.venue && s.places.length === 1) s.venue = null;   // the only one from its venue on this block: just show its own name
       s.label = s.venue ? s.venue : s.places.length > 2 ? (s.places.find((p) => /hall|post htx|finn|lyric/i.test(p.name))?.name || `${s.places.length} spots`) : s.places[0].name;
       if (s.venue) s.style = { ...s.style, emoji: /hotel|marriott|seasons|meridien|hyatt|embassy|laura|icon|rice|whitehall/i.test(s.venue) ? '🏨' : '🏬', color: '#7048e8' };
       s.cell = this.cellOf(s.x, s.y);
@@ -463,6 +467,11 @@ export class CityMap {
     for (const { i, j, list } of blocks.values()) {
       const x0 = A[i - 1].x + sw + pad, x1 = A[i].x - sw - pad, y0 = C[j - 1].y + sw + pad, y1 = C[j].y - sw - pad;
       if (list.length === 1) { const s = list[0]; s.x = Math.min(x1, Math.max(x0, s.x)); s.y = Math.min(y1, Math.max(y0, s.y)); continue; }
+      if (list[0].tunnel) {   // tunnel pins: stay at their real spot, just nudged apart so they don't overlap
+        for (const s of list) { s.x = Math.min(x1, Math.max(x0, s.x)); s.y = Math.min(y1, Math.max(y0, s.y)); }
+        for (let it = 0; it < 30; it++) { let moved = false; for (let a = 0; a < list.length; a++) for (let b = a + 1; b < list.length; b++) { const p = list[a], q = list[b]; let dx = q.x - p.x, dy = q.y - p.y, d = Math.hypot(dx, dy); if (d >= 1.3) continue; if (d < 1e-3) { dx = Math.cos(a + b); dy = Math.sin(a + b); d = 1; } const k = (1.3 - d) / 2 / d; p.x -= dx * k; p.y -= dy * k; q.x += dx * k; q.y += dy * k; moved = true; } for (const s of list) { s.x = Math.min(x1, Math.max(x0, s.x)); s.y = Math.min(y1, Math.max(y0, s.y)); } if (!moved) break; }
+        continue;
+      }
       const n = list.length, cols = Math.ceil(Math.sqrt(n)), rows = Math.ceil(n / cols);
       list.sort((a, b) => (a.oy - b.oy) || (a.ox - b.ox));
       list.forEach((s, k) => {
@@ -826,16 +835,22 @@ export class CityMap {
     for (const s of this.spots) {
       if (s.tunnel) continue;
       const refs = [[s.ox ?? s.x, s.oy ?? s.y], [s.x, s.y]];
-      let best = null;
+      let best = null, best0 = null;
       for (const o of this.osm) {
         if (o.h < 0.6) continue;
-        for (const [rx, ry] of refs) {
+        for (const [ri, [rx, ry]] of refs.entries()) {
           if (rx < o.bb.x0 - 6 || rx > o.bb.x1 + 6 || ry < o.bb.y0 - 6 || ry > o.bb.y1 + 6) continue;
           const inside = inPoly(rx, ry, o.pts), [pt, d] = inside ? [[rx, ry], 0] : near(rx, ry, o.pts);
-          const score = d + (o.type === 'parking' ? 4 : 0) + (sameBlock([o.cx, o.cy], [s.x, s.y]) ? 0 : 1.5);
-          if (score < 7 && (!best || score < best.score)) best = { o, pt, inside, score };
+          const score = d + (o.type === 'parking' ? 4 : 0) + (sameBlock([o.cx, o.cy], [s.x, s.y]) ? 0 : 1.5) + (ri ? 2.5 : 0);   // the real address point beats the tidy grid slot
+          if (score < 7 && (!best || score < best.score)) best = { o, pt, inside, score, d, ri };
+          if (!ri && (!best0 || d < best0.d)) best0 = { o, pt, inside, score, d, ri };
         }
       }
+      if (s.ox != null && (!best0 || best0.d > 2.2)) {   // nothing mapped at the real address: stand a building up right there, not in a tower down the block
+        const [i0, j0] = this.cellIdx(s.ox, s.oy), A0 = this.avenues, C0 = this.cross, w0 = this.streetW + 0.5;
+        if (i0 > 0 && i0 < A0.length && j0 > 0 && j0 < C0.length) { s.x = Math.min(A0[i0].x - w0 - 1, Math.max(A0[i0 - 1].x + w0 + 1, s.ox)); s.y = Math.min(C0[j0].y - w0 - 1, Math.max(C0[j0 - 1].y + w0 + 1, s.oy)); }
+        best = null;
+      } else if (best0 && best && best.ri) best = best0;
       if (!best) {
         const inLM = this.landmarks.some((l) => s.x > l.x - 0.5 && s.x < l.x + l.w + 0.5 && s.y > l.y - 0.5 && s.y < l.y + l.d + 0.5) || this.areas.some((a) => ['grb', 'arena', 'ballpark'].includes(a.kind) && s.x > a.r.x0 && s.x < a.r.x1 && s.y > a.r.y0 && s.y < a.r.y1);
         if (inLM) continue;
@@ -850,7 +865,9 @@ export class CityMap {
       }
       let [x, y] = best.pt; const o = best.o;
       if (!best.inside || !inPoly(x, y, o.pts)) {   // step in from the wall toward the middle of the building
-        let ok = false; for (const f of [0.25, 0.4, 0.6, 0.8]) { const nx = x + (o.cx - x) * f, ny = y + (o.cy - y) * f; if (inPoly(nx, ny, o.pts) && near(nx, ny, o.pts)[1] > 0.25) { x = nx; y = ny; ok = true; break; } }
+        let ok = false; const L = Math.hypot(o.cx - x, o.cy - y) || 1;   // just inside the wall nearest the real address, not halfway across a big building
+        for (const dd of [0.45, 0.7, 1, 1.4, 2]) { if (dd >= L) break; const nx = x + (o.cx - x) / L * dd, ny = y + (o.cy - y) / L * dd; if (inPoly(nx, ny, o.pts) && near(nx, ny, o.pts)[1] > 0.25) { x = nx; y = ny; ok = true; break; } }
+        if (!ok) for (const f of [0.25, 0.4, 0.6, 0.8]) { const nx = x + (o.cx - x) * f, ny = y + (o.cy - y) * f; if (inPoly(nx, ny, o.pts) && near(nx, ny, o.pts)[1] > 0.25) { x = nx; y = ny; ok = true; break; } }
         if (!ok) { x = o.cx; y = o.cy; }
       }
       // two pins in one building: fan them out a little, staying inside
