@@ -1,6 +1,6 @@
 // First-person street view: the same downtown (real OpenStreetMap buildings, the same people, cars,
 // trains and pins) seen from eye level. three.js is loaded only when this view is opened.
-import { TUNNEL_COLORS, tunnelSection } from './map.js';
+import { TUNNEL_COLORS, tunnelSection, styleFor } from './map.js';
 const S = 10;          // 1 map unit = 10 m
 const EYE = 1.7;       // metres
 
@@ -276,7 +276,9 @@ export async function openPOV(city, opts = {}) {
     if (fl.length) {
       const tm = (arr, colr, em) => { const m = new T.Mesh(keep(merge(arr)), keep(new T.MeshLambertMaterial({ color: colr, emissive: em || '#000', side: T.DoubleSide }))); arr.forEach((g) => g.dispose()); tunnel.add(m); };
       tm(fl, '#c9c2b4'); tm(ce, '#eef1f4', '#9aa3ad');
-      { const m = new T.Mesh(keep(merge(wl)), keep(new T.MeshLambertMaterial({ color: '#e7d9c4', emissive: '#5a4e40', transparent: true, opacity: 0.6, depthWrite: false, side: T.DoubleSide }))); wl.forEach((g) => g.dispose()); tunnel.add(m); }
+      { const lo = wl.map((g) => { const b = g.clone(); b.scale(1, 0.3, 1); return b; });   // a darker lower band (wainscot) like the real tunnel walls
+        const m = new T.Mesh(keep(merge(wl)), keep(new T.MeshLambertMaterial({ color: '#ebe3d6', emissive: '#4a4236', side: T.DoubleSide }))); wl.forEach((g) => g.dispose()); tunnel.add(m);
+        const m2 = new T.Mesh(keep(merge(lo)), keep(new T.MeshLambertMaterial({ color: '#8a7560', emissive: '#2a2018', side: T.DoubleSide, polygonOffset: true, polygonOffsetFactor: -1 }))); lo.forEach((g) => g.dispose()); tunnel.add(m2); }
       // ceiling light strips
       const strips = []; for (const [ax, ay, bx, by] of legs) { const L = Math.hypot(bx - ax, by - ay) * S; if (L < 1) continue; const g = new T.BoxGeometry(Math.abs(bx - ax) > 1e-6 ? L : 0.5, 0.05, Math.abs(bx - ax) > 1e-6 ? 0.5 : L).toNonIndexed(); g.translate(((ax + bx) / 2) * S, 3.52, ((ay + by) / 2) * S); strips.push(g); }
       const lm = new T.Mesh(keep(merge(strips)), keep(new T.MeshBasicMaterial({ color: '#fffbea' }))); strips.forEach((g) => g.dispose()); tunnel.add(lm);
@@ -285,16 +287,56 @@ export async function openPOV(city, opts = {}) {
       for (const [c, arr] of bySec) { const mm = new T.Mesh(keep(merge(arr)), keep(new T.MeshBasicMaterial({ color: c }))); arr.forEach((g) => g.dispose()); tunnel.add(mm); }
     }
   }
-  const tunnelPins = [];
-  for (const s of (city.tunnelSpots || [])) { if (!s.places?.length) continue; const st = s.style || {}, sp = new T.Sprite(keep(new T.SpriteMaterial({ map: labelTex(s.label, st.emoji || '📍', 'rgba(18,184,134,.95)'), depthTest: false, transparent: true }))); sp.scale.set(7, 1.75, 1); sp.position.set(s.x * S, 2.6, s.y * S); sp.renderOrder = 10; sp.userData.spot = s; sp.visible = false; tunnel.add(sp); tunnelPins.push(sp); }
-  tunnel.traverse((o) => { if (o.isMesh) o.frustumCulled = false; });
+  const tunnelPins = [], shopSpots = [];
+  for (const s of (city.tunnelSpots || [])) { if (!s.places?.length) continue; const st = s.style || {}, sp = new T.Sprite(keep(new T.SpriteMaterial({ map: labelTex(s.label, st.emoji || '📍', 'rgba(18,184,134,.95)'), depthTest: false, transparent: true }))); sp.scale.set(4.4, 1.1, 1); sp.position.set(s.x * S, 3.05, s.y * S); sp.renderOrder = 10; sp.userData.spot = s; sp.visible = false; tunnel.add(sp); tunnelPins.push(sp); }
+  // shopfronts: every tunnel restaurant gets a lit glass front on the corridor wall, with its name on the sign, a counter and menu boards
+  { const shopTex = (p) => { const st = styleFor(p), col = st.color, c = document.createElement('canvas'); c.width = 384; c.height = 300; const g = c.getContext('2d');
+      const gr = g.createLinearGradient(0, 60, 0, 300); gr.addColorStop(0, '#fff4df'); gr.addColorStop(1, '#ecd5b1'); g.fillStyle = gr; g.fillRect(0, 60, 384, 240);
+      for (let i = 0; i < 3; i++) { g.fillStyle = '#26282c'; g.fillRect(24 + i * 116, 78, 104, 52); g.fillStyle = '#f1f3f5'; for (let l = 0; l < 4; l++) g.fillRect(32 + i * 116, 86 + l * 10, 50 + ((i + l) % 3) * 14, 4); g.fillStyle = col; g.fillRect(96 + i * 116, 86, 22, 4); }
+      g.fillStyle = '#ffd43b'; for (let i = 0; i < 4; i++) { g.beginPath(); g.arc(52 + i * 94, 150, 7, 0, 7); g.fill(); }
+      g.font = '40px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(st.emoji, 300, 182); g.fillText(st.emoji, 250, 186);
+      g.fillStyle = '#f8f9fa'; g.fillRect(18, 198, 348, 8); g.fillStyle = col; g.fillRect(18, 206, 348, 52); g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(18, 206, 348, 7);
+      g.fillStyle = '#c9bca5'; g.fillRect(0, 258, 384, 42);
+      g.fillStyle = '#2f3237'; g.fillRect(0, 60, 384, 6); g.fillRect(0, 60, 8, 240); g.fillRect(376, 60, 8, 240); g.fillRect(188, 66, 8, 192);
+      g.fillStyle = 'rgba(255,255,255,.2)'; g.beginPath(); g.moveTo(40, 66); g.lineTo(110, 66); g.lineTo(40, 190); g.closePath(); g.fill();
+      g.fillStyle = '#1f2125'; g.fillRect(0, 0, 384, 60); g.fillStyle = col; g.fillRect(0, 54, 384, 6);
+      let fs = 30; g.font = `700 ${fs}px system-ui, sans-serif`; while (g.measureText(p.name).width > 300 && fs > 14) { fs -= 2; g.font = `700 ${fs}px system-ui, sans-serif`; }
+      g.fillStyle = '#fff'; g.fillText(p.name, 212, 29); g.font = '30px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; g.fillText(st.emoji, 30, 29);
+      const t = keep(new T.CanvasTexture(c)); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; return t; };
+    const plane = keep(new T.PlaneGeometry(3.8, 3.1)); shopSpots.length = 0; const _u = 0, awnG = keep(new T.BoxGeometry(3.8, 0.08, 0.55)), tops = [], legsAt = (s) => legs.filter((L) => Math.hypot(L[0] - s.x, L[1] - s.y) < 0.02 || Math.hypot(L[2] - s.x, L[3] - s.y) < 0.02);
+    const seats = [];
+    for (const s of city.tunnelSpots || []) {
+      if (!s.places?.length) continue; const L = legsAt(s)[0]; if (!L) continue;
+      const fromA = Math.hypot(L[0] - s.x, L[1] - s.y) < 0.02, ex = fromA ? L[2] : L[0], ey = fromA ? L[3] : L[1], len = Math.hypot(ex - s.x, ey - s.y) || 1, dx = (ex - s.x) / len, dy = (ey - s.y) / len, nx = -dy, ny = dx;
+      s.places.forEach((p, k) => {
+        const side = k % 2 ? -1 : 1, t = Math.min(len - 0.25, 0.28 + Math.floor(k / 2) * 0.5), x = s.x + dx * t + nx * side * (TW2 - 0.012), y = s.y + dy * t + ny * side * (TW2 - 0.012), rot = Math.atan2(-nx * side, -ny * side);
+        const m = new T.Mesh(plane, keep(new T.MeshBasicMaterial({ map: shopTex(p) }))); m.position.set(x * S, 1.6, y * S); m.rotation.y = rot; tunnel.add(m); shopSpots.push({ x, y, fx: -nx * side, fy: -ny * side, dx, dy, id: p.id });
+        const a = new T.Mesh(awnG, keep(new T.MeshLambertMaterial({ color: styleFor(p).color, emissive: styleFor(p).color, emissiveIntensity: 0.25 }))); a.position.set((x - nx * side * 0.03) * S, 3.2, (y - ny * side * 0.03) * S); a.rotation.y = rot; tunnel.add(a);
+      });
+      if (s.places.length >= 3) for (let i = 0; i < 2; i++) seats.push([s.x + dx * (0.2 + i * 0.5), s.y + dy * (0.2 + i * 0.5)]);   // a food court: a couple of tables down the middle
+    }
+    { const used = shopSpots.map((q) => [q.x, q.y]), byC = new Map(), PAL = ['#1971c2', '#e8590c', '#2f9e44', '#7048e8', '#c2255c', '#f59f00'];   // framed posters and art down the long blank stretches
+      for (const [ax, ay, bx, by] of legs) { const L = Math.hypot(bx - ax, by - ay); if (L < 0.9) continue; const dx = (bx - ax) / L, dy = (by - ay) / L, nx = -dy, ny = dx;
+        for (let t = 0.45, k = 0; t < L - 0.3; t += 0.9, k++) { const side = k % 2 ? 1 : -1, x = ax + dx * t + nx * side * (TW2 - 0.01), y = ay + dy * t + ny * side * (TW2 - 0.01); if (used.some(([ux, uy]) => Math.hypot(ux - x, uy - y) < 0.45)) continue;
+          const c = PAL[Math.floor(hash(x.toFixed(2) + y.toFixed(2)) * PAL.length)]; const fr = new T.BoxGeometry(1.7, 1.1, 0.04).toNonIndexed(); fr.rotateY(Math.atan2(-nx * side, -ny * side)); fr.translate(x * S, 1.85, y * S); (byC.get('#2b2b2b') || byC.set('#2b2b2b', []).get('#2b2b2b')).push(fr);
+          const pn = new T.BoxGeometry(1.5, 0.9, 0.05).toNonIndexed(); pn.rotateY(Math.atan2(-nx * side, -ny * side)); pn.translate((x - nx * side * 0.002) * S, 1.85, (y - ny * side * 0.002) * S); (byC.get(c) || byC.set(c, []).get(c)).push(pn); } }
+      for (const [c, arr] of byC) { const m = new T.Mesh(keep(merge(arr)), keep(new T.MeshBasicMaterial({ color: c }))); arr.forEach((g) => g.dispose()); tunnel.add(m); } }
+    if (seats.length) { const top = [], leg = []; for (const [x, y] of seats) { const g = new T.CylinderGeometry(0.45, 0.45, 0.05, 14).toNonIndexed(); g.translate(x * S, 0.75, y * S); top.push(g); const l = new T.CylinderGeometry(0.06, 0.12, 0.75, 8).toNonIndexed(); l.translate(x * S, 0.375, y * S); leg.push(l); for (const [cx, cz] of [[0.75, 0], [-0.75, 0]]) { const ch = new T.BoxGeometry(0.42, 0.45, 0.42).toNonIndexed(); ch.translate(x * S + cx, 0.225, y * S + cz); leg.push(ch); } }
+      const mt = new T.Mesh(keep(merge(top)), keep(new T.MeshLambertMaterial({ color: '#f8f9fa', emissive: '#555' }))); top.forEach((g) => g.dispose()); tunnel.add(mt);
+      const ml = new T.Mesh(keep(merge(leg)), keep(new T.MeshLambertMaterial({ color: '#495057', emissive: '#222' }))); leg.forEach((g) => g.dispose()); tunnel.add(ml); }
+  }
+  tunnel.traverse((o) => { if (o.isMesh) o.frustumCulled = false; }); 
   const inTunnel = (x, y) => legs.some(([ax, ay, bx, by]) => x > Math.min(ax, bx) - TW2 + 0.04 && x < Math.max(ax, bx) + TW2 - 0.04 && y > Math.min(ay, by) - TW2 + 0.04 && y < Math.max(ay, by) + TW2 - 0.04);
   let under = false, streetPos = null;
   const setUnder = (u) => {
     if (u && !legs.length) return;
     under = u; tunnel.visible = u; for (const o of streetObjs) o.visible = !u ? (o.userData.wasVis ?? true) : (o.userData.wasVis = o.visible, false);
-    if (u) { streetPos = { x: me.x, y: me.y }; let best = null, bd = 1e9; for (const [ax, ay, bx, by] of legs) for (let t = 0.05; t <= 0.951; t += 0.1) { const x = ax + (bx - ax) * t, y = ay + (by - ay) * t, d = Math.hypot(x - me.x, y - me.y); if (d < bd) { bd = d; best = t <= 0.5 ? [x, y, bx - ax, by - ay] : [x, y, ax - bx, ay - by]; } }
-      me.x = best[0]; me.y = best[1]; me.yaw = Math.atan2(-best[2], -best[3]); me.pitch = -0.12; scene.fog = new T.Fog('#2b2a27', 20, 140); scene.background = new T.Color('#2b2a27'); hemi.intensity = 2.2; hemi.color.set('#fff6e6'); hemi.groundColor.set('#8a8172');
+    if (u) { streetPos = { x: me.x, y: me.y }; let best = null, bd = 1e9;
+      const want = opts.placeId != null ? shopSpots.find((q) => q.id === opts.placeId) : null, ns = want || shopSpots.reduce((p, q) => (!p || Math.hypot(q.x - me.x, q.y - me.y) < Math.hypot(p.x - me.x, p.y - me.y) ? q : p), null);
+      if (ns && (want || Math.hypot(ns.x - me.x, ns.y - me.y) < 4)) { { let ok = false; for (const al of [-0.6, 0.6, -0.35, 0.35]) { const x = ns.x + ns.fx * 0.4 + ns.dx * al, y = ns.y + ns.fy * 0.4 + ns.dy * al; if (inTunnel(x, y)) { me.x = x; me.y = y; ok = true; break; } } if (!ok) { me.x = ns.x + ns.fx * 0.4; me.y = ns.y + ns.fy * 0.4; } } me.yaw = Math.atan2(-(ns.x - me.x), -(ns.y - me.y)); me.pitch = 0.05; opts.placeId = null; }   // stand in front of the shop's door
+      else { for (const [ax, ay, bx, by] of legs) for (let t = 0.05; t <= 0.951; t += 0.1) { const x = ax + (bx - ax) * t, y = ay + (by - ay) * t, d = Math.hypot(x - me.x, y - me.y); if (d < bd) { bd = d; best = t <= 0.5 ? [x, y, bx - ax, by - ay] : [x, y, ax - bx, ay - by]; } }
+      me.x = best[0]; me.y = best[1]; me.yaw = Math.atan2(-best[2], -best[3]); me.pitch = -0.12; }
+      scene.fog = new T.Fog('#2b2a27', 20, 140); scene.background = new T.Color('#2b2a27'); hemi.intensity = 2.2; hemi.color.set('#fff6e6'); hemi.groundColor.set('#8a8172');
       $('.pov-title').textContent = '🚇 Downtown tunnels'; follow = false; }
     else { const tp = { x: me.x, y: me.y }; if (blocked(tp.x, tp.y)) { for (let rad = 0.3; rad < 8 && blocked(tp.x, tp.y); rad += 0.3) for (let a = 0; a < 6.28; a += 0.4) if (!blocked(me.x + Math.cos(a) * rad, me.y + Math.sin(a) * rad)) { tp.x = me.x + Math.cos(a) * rad; tp.y = me.y + Math.sin(a) * rad; break; } }
       me.x = tp.x; me.y = tp.y; scene.fog = streetFog; scene.background = streetBg; hemi.intensity = hemiI; hemi.color.copy(hemiC); hemi.groundColor.copy(hemiG); $('.pov-title').textContent = '🧍 Street view'; }
@@ -389,6 +431,7 @@ export async function openPOV(city, opts = {}) {
     disposables.forEach((d) => d.dispose?.()); renderer.dispose(); renderer.forceContextLoss?.(); wrap.remove();
     city.paused = false; opts.onClose?.({ x: me.x, y: me.y });
   }
+  if (opts.under) setUnder(true);   // opened for a tunnel restaurant: go straight down to its door
   return { close, where: () => ({ ...me }), under: () => under, _dbg: () => ({ legs: legs.length, kids: tunnel.children.length, vis: tunnel.visible, me: { ...me }, cam: camera.position.toArray(), inT: inTunnel(me.x, me.y), meshes: tunnel.children.filter((c) => c.isMesh).map((c) => [c.visible, c.geometry.attributes.position.count, c.geometry.boundingSphere && c.geometry.boundingSphere.center.toArray().map((v) => Math.round(v)), c.material.type, c.material.opacity]), legs0: legs.slice(0, 3) }) };
 
   // ---- helpers (hoisted) ----
