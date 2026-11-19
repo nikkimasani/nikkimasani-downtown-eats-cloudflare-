@@ -316,6 +316,7 @@ export class CityMap {
         roads: SN.filter(([, k]) => /^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l, lanes, br, layer]) => ({ k, n, pts: pl(l), w: k === 'motorway' || k === 'trunk' ? 0.62 + Math.min(4, lanes || 3) * 0.17 : 0.55, z: br || layer > 0 ? 0.7 * Math.max(1, Math.min(3, layer || 1)) : 0 })),
         bridges: SN.filter(([, k, , , br]) => br && !/^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l]) => ({ n, pts: pl(l), w: k === 'pedestrian' ? 0.35 : 0.9 })),
         paths: (SD.paths || []).map(([n, k, l, br]) => ({ n, k, pts: pl(l), br })),
+        tunnels: (SD.tunnels || []).map(([n, k, l]) => ({ n, k, pts: pl(l) })),   // the real tunnel corridors, as mapped in OpenStreetMap
         rivers: (SD.rivers || []).map(([n, l]) => ({ n, pts: pl(l), w: /buffalo/i.test(n) ? 2.2 : /white oak/i.test(n) ? 1.4 : 0.9 })),
         water: (SD.water || []).map(pl),
         parks: (SD.parks || []).map(([n, k, l]) => ({ n, k, pts: pl(l) })).filter((p) => p.pts.length > 2),
@@ -876,6 +877,7 @@ export class CityMap {
     const T = this.tunnelSpots, near = (p) => T.reduce((bi, s, i) => (md(p, s) < md(p, T[bi]) ? i : bi), 0), a = near(door), b = near(t);
     if (md(u, door) > md(u, t) * 0.7 || md(T[b], t) > 4 || a === b && md(door, t) < 3) return null;   // only worth it if the entrance is on the way and the tunnel reaches the destination
     const prev = new Map([[a, -1]]), q = [a]; while (q.length) { const i = q.shift(); if (i === b) break; for (const j of this.tunnelAdj[i]) if (!prev.has(j)) { prev.set(j, i); q.push(j); } }
+    const real = this.tunnelPath(door, t); if (real) return { door, under: [[door.x, door.y], ...real.pts, [t.x, t.y]], real: true };
     if (!prev.has(b)) return null; const chain = []; for (let i = b; i !== -1; i = prev.get(i)) chain.unshift([T[i].x, T[i].y]);
     return { door, under: [[door.x, door.y], ...chain, [t.x, t.y]] };
   }
@@ -884,7 +886,7 @@ export class CityMap {
     if (tp) {   // street to the tunnel entrance, then the underground leg
       let pts = [[u.x, u.y], ...this.routeStreet({ x: u.x, y: u.y }, { x: tp.door.x, y: tp.door.y })]; pts = pts.filter((q, i) => !i || Math.hypot(q[0] - pts[i - 1][0], q[1] - pts[i - 1][1]) > 0.05);
       const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
-      const ul = Math.min(tp.under.reduce((s, q, i) => (i ? s + Math.abs(q[0] - tp.under[i - 1][0]) + Math.abs(q[1] - tp.under[i - 1][1]) : 0), 0), (Math.abs(tp.door.x - t.x) + Math.abs(tp.door.y - t.y)) * 1.3);   // the drawn tunnel line is a guide, so don't overstate the distance
+      const ul = Math.min(tp.under.reduce((s, q, i) => (i ? s + Math.abs(q[0] - tp.under[i - 1][0]) + Math.abs(q[1] - tp.under[i - 1][1]) : 0), 0), (tp.real ? 1e9 : (Math.abs(tp.door.x - t.x) + Math.abs(tp.door.y - t.y)) * 1.3));   // the drawn tunnel line is a guide, so don't overstate the distance
       const steps = this.routeSteps(pts, cum, { ...t, label: tp.door.n, tunnel: false }).filter((s) => !s.end);
       steps.push({ at: cum[cum.length - 1], icon: '⬇️', text: `Go down at ${tp.door.n} — ${tp.door.note.toLowerCase()}`, len: 0 });
       steps.push({ at: cum[cum.length - 1] + 0.01, icon: '🚇', text: `Follow the tunnel signs toward ${t.label || 'your destination'} (roughly ${Math.round(ul) * 10} m underground)`, len: Math.round(ul * 10) });
@@ -1364,6 +1366,20 @@ export class CityMap {
     // pyramidal / hipped / anything else: every wall slopes up to an apex
     const ap = [o.cx, o.cy, z1 + rh], fs = P.map((a, i) => { const b = P[(i + 1) % P.length]; return { f: [[...a, z1], [...b, z1], ap], d: v.depth((a[0] + b[0] + o.cx) / 3, (a[1] + b[1] + o.cy) / 3), nx: (a[1] + b[1]) / 2 - o.cy, ny: -((a[0] + b[0]) / 2 - o.cx) }; });
     fs.sort((a, b) => a.d - b.d).forEach(({ f }) => { const mx = (f[0][0] + f[1][0]) / 2 - o.cx, my = (f[0][1] + f[1][1]) / 2 - o.cy; face(f, mx, my); });
+  }
+  // a walkable graph of the real tunnel corridors: corridor ends within ~8 m are treated as joined
+  tunnelNet() {
+    if (this._tnet !== undefined) return this._tnet; const L = this.geo?.tunnels || []; if (L.length < 15) return (this._tnet = null);
+    const nodes = [], adj = [], key = (p) => { for (let i = 0; i < nodes.length; i++) if (Math.abs(nodes[i][0] - p[0]) < 0.8 && Math.abs(nodes[i][1] - p[1]) < 0.8) return i; nodes.push([p[0], p[1]]); adj.push([]); return nodes.length - 1; };
+    for (const t of L) for (let i = 1; i < t.pts.length; i++) { const a = key(t.pts[i - 1]), b = key(t.pts[i]); if (a === b) continue; const d = Math.hypot(nodes[a][0] - nodes[b][0], nodes[a][1] - nodes[b][1]); adj[a].push([b, d]); adj[b].push([a, d]); }
+    return (this._tnet = { nodes, adj });
+  }
+  tunnelPath(from, to) {   // shortest path along the corridors (Dijkstra), from the corridor point nearest each end
+    const N = this.tunnelNet(); if (!N) return null; const near = (p) => N.nodes.reduce((bi, q, i) => (Math.hypot(q[0] - p.x, q[1] - p.y) < Math.hypot(N.nodes[bi][0] - p.x, N.nodes[bi][1] - p.y) ? i : bi), 0);
+    const a = near(from), b = near(to); if (Math.hypot(N.nodes[a][0] - from.x, N.nodes[a][1] - from.y) > 3 || Math.hypot(N.nodes[b][0] - to.x, N.nodes[b][1] - to.y) > 3) return null;
+    const dist = new Float64Array(N.nodes.length).fill(Infinity), prev = new Int32Array(N.nodes.length).fill(-1), done = new Uint8Array(N.nodes.length); dist[a] = 0;
+    for (;;) { let u = -1, best = Infinity; for (let i = 0; i < dist.length; i++) if (!done[i] && dist[i] < best) { best = dist[i]; u = i; } if (u < 0 || u === b) break; done[u] = 1; for (const [w, d] of N.adj[u]) if (dist[u] + d < dist[w]) { dist[w] = dist[u] + d; prev[w] = u; } }
+    if (!isFinite(dist[b])) return null; const out = []; for (let i = b; i !== -1; i = prev[i]) out.unshift(N.nodes[i]); return { pts: out, len: dist[b] };
   }
   buildTunnels() {
     const T = this.spots.filter((s) => s.tunnel);
@@ -2044,6 +2060,16 @@ export class CityMap {
     const ctx = this.ctx, v = this.v, z = this.tunnelZ(), T = this.tunnelSpots; if (!T.length) return;
     const w = 0.8;
     const seg = (ax, ay, bx, by) => { const x0 = Math.min(ax, bx) - w, x1 = Math.max(ax, bx) + w, y0 = Math.min(ay, by) - w, y1 = Math.max(ay, by) + w; poly(ctx, [v.p(x0, y0, z), v.p(x1, y0, z), v.p(x1, y1, z), v.p(x0, y1, z)], '#34425c'); for (const f of sides(v, x0, y0, x1 - x0, y1 - y0)) poly(ctx, [v.p(...f.a, z), v.p(...f.b, z), v.p(...f.b, z + 0.5), v.p(...f.a, z + 0.5)], '#26324a'); };
+    const realT = this.geo?.tunnels?.length >= 15 ? this.geo.tunnels : null;
+    if (realT) {   // the actual corridors from OpenStreetMap: a lit floor with a bright centre line
+      const path = (pts) => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(...v.p(q[0], q[1], z)) : ctx.moveTo(...v.p(q[0], q[1], z)))); };
+      ctx.lineCap = ctx.lineJoin = 'round'; ctx.strokeStyle = '#2b3550'; ctx.lineWidth = Math.max(5, v.s * 14); for (const t of realT) { path(t.pts); ctx.stroke(); }
+      const OSMC = { 'North Travis Tunnel': '#7048e8', 'Tunnel Loop': '#e03131', 'North Louisiana Tunnel': '#1c7ed6', 'South Louisiana Tunnel': '#4dabf7', 'East McKinney Tunnel': '#f76707', 'Lamar Tunnel': '#d6c41c', 'West Walker Tunnel': '#15aabf', 'West Dallas Tunnel': '#ae3ec9', 'Harris County Tunnel': '#868e96' }, col = (t) => OSMC[t.n] || '#38d9a9';
+      ctx.lineWidth = Math.max(1.6, v.s * 3); for (const t of realT) { const c = col(t); ctx.strokeStyle = c; ctx.shadowColor = c; ctx.shadowBlur = 8; path(t.pts); ctx.stroke(); } ctx.shadowBlur = 0;
+      if (v.s > 0.5) { const done = new Set(); for (const t of [...realT].sort((a, b) => b.pts.length - a.pts.length)) if (t.n && !done.has(t.n) && t.pts.length > 1) { done.add(t.n); const q = t.pts[Math.floor(t.pts.length / 2)], [x, y] = v.p(q[0], q[1], z); pill(ctx, x, y - 10, t.n, 10, col(t), '#fff'); } }
+      for (const n of this.npcs) if (n.under && n.inside <= 0) this.drawNpc(n, now, z);
+      return;
+    }
     for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b]; seg(A.x, A.y, Bn.x, A.y); seg(Bn.x, A.y, Bn.x, Bn.y); }
     // each tunnel section in its own colour, like the official tunnel map
     const groups = new Map(); for (const [a, b] of this.tunnelEdges) { const A = T[a], Bn = T[b], sec = tunnelSection(Bn) || tunnelSection(A) || 'Tunnel'; if (!groups.has(sec)) groups.set(sec, []); groups.get(sec).push([A, Bn]); }

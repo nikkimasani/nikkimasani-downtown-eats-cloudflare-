@@ -34,7 +34,22 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const st = { moods: new Set(store.get('moods', [])), meal: store.get('meal', 'Any'), budget: store.get('budget', 0), extras: new Set(store.get('extras', [])) };
 let favs = new Set(store.get('favs', [])), visits = store.get('visits', {});
 let week = store.get('week', { slot: 'Lunch', days: {} });
-const save = () => { store.set('moods', [...st.moods]); store.set('meal', st.meal); store.set('budget', st.budget); store.set('extras', [...st.extras]); store.set('favs', [...favs]); store.set('visits', visits); store.set('week', week); };
+let SYNC = store.get('syncKey', null), _syncT = null;
+function syncData() { return { v: 1, at: Date.now(), favs: [...favs], visits, log: store.get('log', []), week, diet: store.get('diet', []), office: store.get('office', null), hfix: store.get('hoursFix', {}) }; }
+function syncSoon() { if (!SYNC) return; clearTimeout(_syncT); _syncT = setTimeout(() => rpc('de_sync_put', { p_key: SYNC, p_data: syncData() }).catch(() => {}), 1500); }
+async function syncPull() {
+  if (!SYNC) return; try { const d = await rpc('de_sync_get', { p_key: SYNC }); if (!d) { syncSoon(); return; }
+    for (const n of d.favs || []) favs.add(n); for (const [n, c] of Object.entries(d.visits || {})) visits[n] = Math.max(visits[n] || 0, c);
+    const seen = new Set(LOG.map((x) => x.t + x.n)); for (const x of d.log || []) if (!seen.has(x.t + x.n)) LOG.push(x); LOG.sort((a, b) => a.t - b.t); store.set('log', LOG);
+    if (d.week && (d.at || 0) > (store.get('syncAt', 0))) week = d.week; if (d.diet) { DIET = new Set([...DIET, ...d.diet]); store.set('diet', [...DIET]); }
+    if (!OFFICE && d.office) { OFFICE = d.office; store.set('office', OFFICE); } Object.assign(HFIX, d.hfix || {}); store.set('hoursFix', HFIX);
+    store.set('syncAt', Date.now()); save(); renderPick(); } catch (e) {}
+}
+// ---------- small backend (Supabase): live votes, sync across devices, push reminders ----------
+const SB = 'https://bazjlrualnmbanmhiuau.supabase.co', SBK = 'sb_publishable_ez3TVctnbFIUHqr_dMOUeQ_5WpsYEHs', VAPID = 'BCJegSVrwj6kYQkAfHScuzrJlWI6srf_3uKYobxu7nZ_u1ozmTSWNpX3zHckkxYVYD61hXbUsm-OxU-Gq0FpX-M';
+async function sb(path, opt = {}) { const r = await fetch(SB + '/rest/v1/' + path, { ...opt, headers: { apikey: SBK, 'content-type': 'application/json', ...(opt.headers || {}) } }); if (!r.ok) throw new Error(await r.text()); const t = await r.text(); return t ? JSON.parse(t) : null; }
+const rpc = (fn, args) => sb('rpc/' + fn, { method: 'POST', body: JSON.stringify(args) });
+const save = () => { store.set('moods', [...st.moods]); store.set('meal', st.meal); store.set('budget', st.budget); store.set('extras', [...st.extras]); store.set('favs', [...favs]); store.set('visits', visits); store.set('week', week); syncSoon(); };
 
 const hhFor = (r) => HH.spots[r.name] || null;
 // is happy hour on right now? (the "when" text uses the same day/time grammar as opening hours)
@@ -246,6 +261,23 @@ $('#pickBtn').onclick = () => {
   city?.setPick(r.id);
 };
 
+// live vote: everyone with the link taps a choice and sees the tally update
+let _voteT = null;
+async function openVote(id) {
+  clearInterval(_voteT); show('pick');
+  const draw = async () => { let p, votes; try { [p] = await sb('de_polls?id=eq.' + id + '&select=*'); votes = await sb('de_votes?poll_id=eq.' + id + '&select=voter,choice'); } catch (e) { return; } if (!p) { $('#pickOut').innerHTML = '<div class="empty">That vote link has expired.</div>'; return; }
+    const me = store.get('voterName', ''), opts = p.options.map((n) => DATA.find((x) => x.name === n)).filter(Boolean), tally = opts.map((_, i) => votes.filter((v) => v.choice === i)), total = votes.length || 1, mine = votes.find((v) => v.voter === me);
+    $('#pickOut').innerHTML = `<div class="card poll"><h3>🗳️ ${esc(p.title || 'Where should we eat?')}</h3><div class="meta">${votes.length} vote${votes.length === 1 ? '' : 's'} so far · updates live${me ? ` · you're “${esc(me)}”` : ''}</div>
+      ${me ? '' : `<input id="voterName" class="vname" placeholder="Your name (so friends know who voted)" maxlength="40">`}
+      ${opts.map((x, i) => `<button class="pollopt ${mine && mine.choice === i ? 'mine' : ''}" data-v="${i}">${tile(x)}<span><b>${esc(x.name)}</b><em>${$$(x.price)} · ${esc(x.type)} · ${esc(openLabel(x).label || '')}</em><i class="bar" style="width:${Math.round((tally[i].length / total) * 100)}%"></i><small>${tally[i].length} ${tally[i].length ? '· ' + esc(tally[i].map((v) => v.voter).join(', ')) : ''}</small></span></button>`).join('')}
+      <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="voteShare">📤 Share link</button>${votes.length ? `<button class="btn sm" id="voteGo">🧭 Go with the winner</button>` : ''}</div></div>`;
+    $('#voteShare').onclick = () => shareText('Where should we eat?', 'Vote for where we eat — results update live', appUrl() + '#vote=' + id);
+    if ($('#voteGo')) $('#voteGo').onclick = () => { const w = tally.map((t, i) => [t.length, i]).sort((a, b) => b[0] - a[0])[0][1]; clearInterval(_voteT); walkTo(opts[w]); };
+    $('#pickOut').querySelectorAll('[data-v]').forEach((b) => (b.onclick = async () => { let name = store.get('voterName', '') || ($('#voterName')?.value || '').trim(); if (!name) { $('#voterName')?.focus(); toast('Add your name first'); return; } store.set('voterName', name);
+      try { await sb('de_votes?on_conflict=poll_id,voter', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates' }, body: JSON.stringify({ poll_id: id, voter: name, choice: +b.dataset.v }) }); buzz(10); draw(); } catch (e) { toast('Vote didn’t go through — try again'); } }));
+  };
+  await draw(); _voteT = setInterval(() => { if ($('#v-pick').classList.contains('on') && document.visibilityState === 'visible') draw(); else clearInterval(_voteT); }, 5000);
+}
 // ---------- group pick: everyone adds their mood and budget, it finds one place that works for all ----------
 const GMOODS = ['quick', 'healthy', 'comfort', 'spicy', 'adventurous', 'drinks', 'upscale', 'veg', 'sweet'];
 let group = store.get('group', [{ n: 'Me', moods: [], budget: 0 }, { n: 'Friend', moods: [], budget: 0 }]);
@@ -265,7 +297,9 @@ function groupPick() {
   $('#groupOut').innerHTML = card(r, true) + `<div class="meta" style="margin:6px 2px">${happy === group.length ? '✅ Matches everyone’s mood' : `Fits ${happy} of ${group.length} moods`} · within ${cap < 9 ? '$'.repeat(cap) : 'any'} budget</div><div class="row"><button class="btn ghost" id="gAgain">🎲 Another</button><button class="btn ghost" id="gShare">📤 Send to the group</button></div>`;
   $('#gAgain').onclick = groupPick; $('#gShare').onclick = () => sharePlace(r);
   $('#groupOut').insertAdjacentHTML('beforeend', `<button class="btn ghost" id="gPoll" style="margin-top:8px">🗳️ Send a 3-way vote instead</button>`);
-  $('#gPoll').onclick = () => { const top = list.slice(0, 3).map(([x]) => x.name); shareText('Where should we eat?', 'Vote for where we eat:\n' + top.map((n, i) => `${i + 1}. ${n}`).join('\n'), appUrl() + '#poll=' + encodeURIComponent(top.join('|'))); };
+  $('#gPoll').onclick = async () => { const top = list.slice(0, 3).map(([x]) => x.name);
+    try { const [p] = await sb('de_polls', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify({ options: top }) }); shareText('Where should we eat?', 'Vote for where we eat — results update live:\n' + top.map((n, i) => `${i + 1}. ${n}`).join('\n'), appUrl() + '#vote=' + p.id); openVote(p.id); }
+    catch (e) { shareText('Where should we eat?', 'Vote for where we eat:\n' + top.map((n, i) => `${i + 1}. ${n}`).join('\n'), appUrl() + '#poll=' + encodeURIComponent(top.join('|'))); } };
 }
 $('#groupBtn').onclick = () => { $('#groupBox').classList.toggle('on'); renderGroup(); $('#groupOut').innerHTML = ''; };
 $('#groupBox').addEventListener('click', (e) => {
@@ -345,7 +379,7 @@ const dayDate = (i, slot) => { const d = new Date(); const diff = (i + 1) - d.ge
 function renderWeek() {
   chipRow($('#weekSlot'), ['Breakfast', 'Lunch', 'Dinner', 'Happy Hour'], (x) => x === week.slot, (x) => { week.slot = x; }, renderWeek);
   const today = new Date().getDay();
-  $('#monthBox').innerHTML = monthLine() + officeLine();
+  $('#monthBox').innerHTML = monthLine() + officeLine() + `<div class="officerow">🔄 ${SYNC ? `Synced across devices · <button class="linkbtn" id="syncLink">add another device</button> · <button class="linkbtn" id="syncOff">turn off</button>` : `<button class="linkbtn" id="syncOn">Sync favourites, history and plan across your devices</button>`}</div>`;
   $('#week').innerHTML = DAYS.map((d, i) => {
     const e = week.days[d] || {}; const r = DATA.find((x) => x.name === e.name && x.address === e.address);
     const o = r ? openState(r.hours, dayDate(i, week.slot)) : null;
@@ -392,6 +426,11 @@ function askSpend(r) {
   setTimeout(() => { if (box.isConnected) { box.classList.remove('on'); setTimeout(() => box.remove(), 300); } }, 12000);
 }
 function officeLine() { return `<div class="officerow">🏢 ${OFFICE ? `Walk times start from <b>${esc(OFFICE.name)}</b> when location is off · <button class="linkbtn" id="clearOffice">change</button>` : 'Set your office from any place’s details (“🏢 I work near here”) to get walk times without GPS.'}</div>`; }
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'syncOn') { const k = Array.from(crypto.getRandomValues(new Uint8Array(18)), (b) => b.toString(36).padStart(2, '0')).join(''); SYNC = k; store.set('syncKey', k); rpc('de_sync_put', { p_key: k, p_data: syncData() }).then(() => toast('🔄 Sync is on')).catch(() => toast('Couldn’t reach the sync server')); renderWeek(); }
+  if (e.target.id === 'syncLink') shareText('Downtown Eats sync', 'Open this on your other device to sync (keep it private — anyone with it sees your list):', appUrl() + '#sync=' + SYNC);
+  if (e.target.id === 'syncOff') { SYNC = null; store.set('syncKey', null); renderWeek(); toast('Sync off on this device'); }
+});
 document.addEventListener('click', (e) => { if (e.target.id === 'clearOffice') { OFFICE = null; store.set('office', null); renderWeek(); toast('Office cleared'); } });
 function monthLine() {
   const now = new Date(), m = LOG.filter((x) => { const d = new Date(x.t); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }); if (!m.length) return '';
@@ -418,6 +457,7 @@ $('#copyWeek').onclick = async () => {
 // ---------- detail sheet ----------
 let sheetFrom = null;
 function openSheet(id, from = null) {
+  if (!metroLast && !openSheet._m) { openSheet._m = true; fetch('api/metro', { cache: 'no-store' }).then((x) => x.json()).then(async (j) => { metroLast = j; if (!metroStatic) metroStatic = await fetch('metro-static.json').then((y) => y.json()).catch(() => null); if ($('#sheet').classList.contains('on')) openSheet(id, from); }).catch(() => {}); }
   sheetFrom = from;
   const r = DATA[id]; if (!r) return; const L = links(r), o = openLabel(r), hh = hhFor(r);
   const N = navLinks(r), ext = (u, label, icon) => `<a class="ds-link" href="${esc(u)}" target="_blank" rel="noopener"><span>${icon}</span>${label}<i>›</i></a>`;
@@ -445,6 +485,7 @@ function openSheet(id, from = null) {
     ${r.website ? `<div class="ds-row"><span>🌐</span><div><a href="${esc(r.website)}" target="_blank" rel="noopener">${esc(r.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '').slice(0, 38))}</a></div></div>` : ''}
   </div>
 
+  ${(() => { const nt = nextTrains(r); return nt && nt.arr.length ? `<div class="ds-card"><div class="ds-cap">🚊 Next trains · ${esc(nt.station)} (${nt.walk} min walk)</div>${nt.arr.map((x) => `<div class="trainrow"><i style="background:${x.color}"></i><span>${esc(x.line)}${x.toward && x.toward !== nt.station ? ' → ' + esc(x.toward) : ''}</span><b>${x.min ? x.min + ' min' : 'now'}</b></div>`).join('')}<div class="meta" style="margin-top:4px">Live from METRO</div></div>` : ''; })()}
   ${hh ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div><b>${esc(hh.when)}</b><div style="margin-top:4px">${esc(hh.deals)}</div>${!hhNow(r) && nextHH(r) ? `<button class="btn ghost sm" data-remind="${r.id}" style="margin-top:8px">🔔 Remind me before it starts (${esc(fmt(nextHH(r).m))})</button>` : ''}<div class="meta" style="margin-top:6px"><a href="${esc(hh.source)}" target="_blank" rel="noopener">${esc(new URL(hh.source).hostname.replace('www.', ''))}</a> · ${hh.confidence === 'verify' ? 'double-check before you go' : esc(hh.confidence)} · checked ${esc(HH.checked)}</div></div>`
     : r.meals.includes('Happy Hour') ? `<div class="ds-card hh"><div class="ds-cap">🍹 Happy hour</div>Listed as offering happy hour — times and prices aren't verified yet. <a href="${L.specials}" target="_blank" rel="noopener">Look up today's deals</a></div>` : ''}
 
@@ -497,8 +538,13 @@ function nextHH(r, from = new Date()) {
   return null;
 }
 const REMIND = new Map();
+async function pushSub() {   // web push needs the installed app on iPhone (Share → Add to Home Screen)
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try { const reg = await navigator.serviceWorker.ready; let s = await reg.pushManager.getSubscription(); if (!s) { if (Notification.permission !== 'granted' && (await Notification.requestPermission()) !== 'granted') return null; const key = Uint8Array.from(atob(VAPID.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - VAPID.length % 4) % 4)), (c) => c.charCodeAt(0)); s = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key }); } return s.toJSON(); } catch (e) { return null; }
+}
 async function remindHH(r) {
   const n = nextHH(r); if (!n) return; const when = n.at.getTime() - 15 * 60e3, wait = Math.max(5e3, when - Date.now());
+  const sub = await pushSub(); if (sub) { try { await rpc('de_remind', { p_sub: sub, p_title: '🍹 Happy hour soon', p_body: `${r.name} starts happy hour at ${fmt(n.m)} — ${hhFor(r).deals.slice(0, 90)}`, p_url: appUrl() + '#p=' + encodeURIComponent(r.name), p_at: new Date(when).toISOString() }); toast(`🔔 Reminder set for ${fmt(n.m - 15)} — it'll arrive even if the app is closed`); return; } catch (e) {} }
   try { if ('Notification' in window && Notification.permission === 'default') await Notification.requestPermission(); } catch (e) {}
   clearTimeout(REMIND.get(r.name)); REMIND.set(r.name, setTimeout(() => { const msg = `🍹 Happy hour at ${r.name} starts in 15 min`; toast(msg); buzz([10, 60, 10]); try { if (Notification.permission === 'granted') new Notification('Downtown Eats', { body: msg, icon: 'icon-192.png' }); } catch (e) {} }, wait));
   toast(`🔔 I'll remind you at ${fmt(n.m - 15)} — keep the app open`);
@@ -560,6 +606,17 @@ document.querySelectorAll('#layerSeg button').forEach((b) => (b.onclick = () => 
 
 // ---------- live METRO buses and trains (when the site's METRO_API_KEY is set) ----------
 let metroStatic = null, metroLast = null, BUILDINGS = null, STREETS = null;
+// next trains at the rail station nearest a place, from METRO's live predictions
+function nextTrains(r) {
+  const L = metroLast, S = metroStatic; if (!L || !L.ready || !S || !r.lat) return null; const R = S.routes || {}, ST = S.stops || {}, now = Date.now() / 1000;
+  const rail = (L.trips || []).filter((t) => [0, 1, 2].includes((R[t.route] || [])[1])); if (!rail.length) return null;
+  const railStops = new Set(rail.flatMap((t) => t.s.map(([sid]) => sid))), d2 = (sid) => { const s = ST[sid]; return s ? ((s[0] - r.lat) * 110.85) ** 2 + ((s[1] - r.lng) * 96.68) ** 2 : 1e9; };
+  const best = [...railStops].sort((a, b) => d2(a) - d2(b))[0]; if (!best || d2(best) > 0.6 * 0.6) return null;   // within ~600 m
+  const name = ST[best][2].replace(/ (Station|Stop).*$/, ''), same = [...railStops].filter((sid) => ST[sid] && ST[sid][2].replace(/ (Station|Stop).*$/, '') === name);
+  const arr = []; for (const t of rail) for (const [sid, tm] of t.s) if (same.includes(sid) && tm > now - 30) { const last = t.s[t.s.length - 1]; arr.push({ line: (R[t.route] || [])[3] || t.route, color: '#' + ((R[t.route] || [])[2] || '888'), toward: ST[last[0]] ? ST[last[0]][2].replace(/ (Station|Stop).*$/, '') : '', min: Math.max(0, Math.round((tm - now) / 60)) }); }
+  arr.sort((a, b) => a.min - b.min); const seen = new Set(), out = []; for (const x of arr) { const k = x.line + x.toward + x.min; if (!seen.has(k)) { seen.add(k); out.push(x); } if (out.length >= 4) break; }
+  return { station: name, walk: Math.max(1, Math.round(Math.sqrt(d2(best)) * 1000 / 80)), arr: out };
+}
 async function pollMetro() {
   if (!city || document.hidden) return;
   try {
@@ -992,11 +1049,13 @@ async function aboutPlace(r) {
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open right now · ${DATA.filter((r) => r.tunnel).length} in the tunnels`;
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee'].includes(h)) show(h);
+  if (h.startsWith('vote=')) openVote(h.slice(5));
+  if (h.startsWith('sync=')) { SYNC = h.slice(5); store.set('syncKey', SYNC); syncPull(); toast('🔄 This device is now synced'); show('week'); }
   if (h.startsWith('poll=')) { const opts = decodeURIComponent(h.slice(5)).split('|').map((n) => DATA.find((x) => x.name === n)).filter(Boolean); if (opts.length) { show('pick'); $('#pickOut').innerHTML = `<div class="card poll"><h3>🗳️ Where should we eat?</h3><div class="meta">Tap your vote — it opens your messages so you can send it back.</div>${opts.map((x) => `<button class="pollopt" data-vote="${x.id}">${tile(x)}<span><b>${esc(x.name)}</b><em>${$$(x.price)} · ${esc(x.type)} · ${esc(openLabel(x).label || '')}</em></span></button>`).join('')}</div>`; $('#pickOut').onclick = (e) => { const v = e.target.closest('[data-vote]'); if (v) { const x = DATA[+v.dataset.vote]; shareText('My vote', `I vote ${x.name} 👍`, appUrl() + '#p=' + encodeURIComponent(x.name)); } }; } }
   if (h === 'surprise') { show('pick'); setTimeout(() => $('#pickBtn').click(), 300); }
   if (h.startsWith('p=')) { const r = DATA.find((x) => x.name === decodeURIComponent(h.slice(2))); if (r) openSheet(r.id); }
   if (h.startsWith('plan=')) { const [slot, ...names] = decodeURIComponent(h.slice(5)).split('|'); week.slot = slot || week.slot; DAYS.forEach((d, i) => { const r = DATA.find((x) => x.name === names[i]); if (r) week.days[d] = { name: r.name, address: r.address, lock: true }; }); save(); show('week'); toast('Plan loaded — 🔒 days are from the link'); }
-  loadWeather();
+  loadWeather(); syncPull();
   setupAsk();
   if ('serviceWorker' in navigator && location.protocol === 'https:' && !/claude|claudeusercontent/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
   // build the street model quietly so Explore cards can show where each place is

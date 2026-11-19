@@ -400,3 +400,8 @@ header h1{padding-right:92px}
 .heroacts button span{font-size:18px;line-height:1}
 .heroacts button:active{transform:scale(.95)}
 .pickrow .btn.big{padding-block:12px;font-size:16px}
+
+.vname{width:100%;margin-top:8px;font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:transparent;color:inherit}
+.pollopt{position:relative}.pollopt span{flex:1;min-width:0}.pollopt .bar{display:block;height:5px;border-radius:3px;background:var(--accent);margin-top:5px;transition:width .4s;font-style:normal}.pollopt small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.pollopt.mine{border-color:var(--accent);outline:2px solid var(--accent)}
+.trainrow{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:14px}.trainrow:first-of-type{border-top:0}.trainrow i{width:10px;height:10px;border-radius:50%;flex:none}.trainrow span{flex:1}.trainrow b{font-variant-numeric:tabular-nums}
