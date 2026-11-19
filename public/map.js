@@ -202,22 +202,56 @@ const SKIN = ['#f6d3b3', '#e8b48f', '#c98e64', '#a86b45', '#7a4a2c', '#5a3520'];
 const HAIR = ['#2b1b12', '#5b3a1e', '#a0522d', '#e0b04c', '#1d1d1d', '#6d4c41', '#b0b0b0'];
 const SHIRT = ['#4dabf7', '#ff8787', '#69db7c', '#ffd43b', '#9775fa', '#ffa94d', '#38d9a9', '#f783ac', '#495057'];
 const PANTS = ['#364fc7', '#495057', '#2b2b2b', '#5f3dc4', '#a5d8ff', '#e9ecef'];
-function drawPerson(ctx, x, y, u, look, phase, moving, gem, now) {
-  const step = moving ? Math.sin(phase) : 0, bob = moving ? Math.abs(Math.sin(phase)) * 1.2 * u : 0;
-  ellipse(ctx, x, y, 6 * u, 2.6 * u, 'rgba(0,0,0,.2)');
-  y -= bob; ctx.lineCap = 'round';
-  ctx.strokeStyle = look.pants; ctx.lineWidth = 3.2 * u;
-  ctx.beginPath(); ctx.moveTo(x - 2 * u, y - 10 * u); ctx.lineTo(x - 2 * u + step * 2.4 * u, y - 1 * u); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x + 2 * u, y - 10 * u); ctx.lineTo(x + 2 * u - step * 2.4 * u, y - 1 * u); ctx.stroke();
-  ctx.fillStyle = look.shirt; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - 5 * u, y - 21 * u, 10 * u, 12 * u, 3 * u) : ctx.rect(x - 5 * u, y - 21 * u, 10 * u, 12 * u); ctx.fill();
+const NAMES = ['Maya', 'Jordan', 'Luis', 'Aisha', 'Ben', 'Priya', 'Marcus', 'Sofia', 'Tyler', 'Grace', 'Diego', 'Hannah', 'Kwame', 'Lena', 'Omar', 'Chloe', 'Andre', 'Mei', 'Jamal', 'Rosa', 'Ethan', 'Nia', 'Carlos', 'Zoe', 'Raj', 'Ivy', 'Malik', 'Elena', 'Sam', 'Tasha', 'Victor', 'Leah', 'Hiro', 'Bianca', 'Devon', 'Amara', 'Nate', 'Lucia', 'Femi', 'Kara', 'Trinh', 'Javier', 'Olivia', 'DeShawn', 'Ana', 'Wes'];
+const NEED = { hunger: { e: '🍔', l: 'Hungry', kinds: ['food'] }, thirst: { e: '🍹', l: 'Thirsty', kinds: ['bar'] }, energy: { e: '☕', l: 'Tired', kinds: ['coffee'] }, fun: { e: '🎉', l: 'Bored', kinds: ['bar', 'food'] } };
+const ROLE = { office: ['💼', 'Office worker'], local: ['🙂', 'Local'], tourist: ['📸', 'Tourist'], jogger: ['🏃', 'Jogger'], courier: ['🚲', 'Delivery rider'], night: ['🌃', 'Night owl'], fan: ['🏟️', 'Game-day fan'] };
+const ME_LOOK = { skin: '#c98e64', hair: '#2b1b12', shirt: '#1c7ed6', pants: '#343a40', long: true };
+const UMB = ['#e03131', '#1971c2', '#212529', '#f08c00', '#7048e8', '#2f9e44', '#f8f9fa'];
+function placeKind(p) { const k = [p.type, ...(p.cuisines || []), ...(p.vibes || [])].join(' '); if (/coffee|caffeine|caf[eé]|bakery|boba|juice|\btea\b|kolache|donut/i.test(k) && !/nightlife/i.test(k)) return 'coffee'; if (/\bbar\b|lounge|\bpub\b|nightclub|nightlife|saloon|tavern|brew/i.test(k)) return 'bar'; return 'food'; }
+function drawPerson(ctx, x, y, u, look, phase, moving, gem, now, wx = '') {
+  const step = moving ? Math.sin(phase) : 0, bob = moving && !look.bike ? Math.abs(Math.sin(phase)) * 1.2 * u : 0;
+  const ln = (a, b, c, d) => { ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c, d); ctx.stroke(); };
+  ellipse(ctx, x, y, (look.bike ? 10 : 6) * u, 2.6 * u, 'rgba(0,0,0,.2)');
+  ctx.lineCap = 'round';
+  if (look.bike) {   // two wheels and a frame; the rider sits up on top
+    ctx.strokeStyle = '#212529'; ctx.lineWidth = 1.3 * u;
+    for (const sx of [-6, 6]) { ctx.beginPath(); ctx.ellipse(x + sx * u, y - 3.2 * u, 3.2 * u, 3.2 * u, 0, 0, 7); ctx.stroke(); }
+    ctx.strokeStyle = '#868e96'; ctx.lineWidth = 1.5 * u; ctx.beginPath(); ctx.moveTo(x - 6 * u, y - 3.2 * u); ctx.lineTo(x - 1 * u, y - 9 * u); ctx.lineTo(x + 4.5 * u, y - 9 * u); ctx.lineTo(x + 6 * u, y - 3.2 * u); ctx.moveTo(x - 1 * u, y - 9 * u); ctx.lineTo(x + 0.5 * u, y - 3.4 * u); ctx.stroke();
+    y -= 6 * u;
+  }
+  y -= bob;
+  const feet = look.bike ? [Math.sin(phase) * 2 * u, -Math.sin(phase) * 2 * u] : [step * 2.4 * u, -step * 2.4 * u], end = look.bike ? 3.5 : 1;
+  [[-2, feet[0]], [2, feet[1]]].forEach(([ox, f]) => {
+    const x0 = x + ox * u, y0 = y - 10 * u, x1 = x0 + f, y1 = y - end * u;
+    if (look.shorts) { ctx.strokeStyle = look.skin; ctx.lineWidth = 2.5 * u; ln(x0, y0, x1, y1); ctx.strokeStyle = look.pants; ctx.lineWidth = 3.4 * u; ln(x0, y0, x0 + f * 0.4, y0 + (y1 - y0) * 0.4); }
+    else { ctx.strokeStyle = look.pants; ctx.lineWidth = 3.2 * u; ln(x0, y0, x1, y1); }
+  });
+  if (look.box) { ctx.fillStyle = look.box; ctx.fillRect(x - 8 * u, y - 25 * u, 7 * u, 7 * u); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillRect(x - 8 * u, y - 25 * u, 7 * u, 1.4 * u); }
+  const coat = wx === 'cold', torsoH = coat ? 15 : 12;
+  ctx.fillStyle = coat ? darken(look.shirt, 0.45) : look.shirt; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - 5 * u, y - 21 * u, 10 * u, torsoH * u, 3 * u) : ctx.rect(x - 5 * u, y - 21 * u, 10 * u, torsoH * u); ctx.fill();
+  if (coat) { ctx.fillStyle = '#c92a2a'; ctx.fillRect(x - 4.5 * u, y - 21.5 * u, 9 * u, 2.2 * u); }   // scarf
+  if (look.tie) { ctx.strokeStyle = look.tie; ctx.lineWidth = 1.6 * u; ln(x, y - 20.4 * u, x, y - 13.5 * u); }
+  if (look.camera) { ctx.fillStyle = '#212529'; ctx.fillRect(x - 2.2 * u, y - 17.5 * u, 4.4 * u, 3 * u); circle(ctx, x, y - 16 * u, 0.9 * u, '#74c0fc'); }
+  const umb = wx === 'rain' && !look.bike && !look.shorts;
   ctx.strokeStyle = look.skin; ctx.lineWidth = 2.4 * u;
-  ctx.beginPath(); ctx.moveTo(x - 5 * u, y - 19 * u); ctx.lineTo(x - 6.4 * u - step * 1.4 * u, y - 11 * u); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x + 5 * u, y - 19 * u); ctx.lineTo(x + 6.4 * u + step * 1.4 * u, y - 11 * u); ctx.stroke();
+  if (look.bike) { ln(x - 5 * u, y - 19 * u, x + 3.5 * u, y - 14 * u); ln(x + 5 * u, y - 19 * u, x + 5 * u, y - 14 * u); }
+  else {
+    ln(x - 5 * u, y - 19 * u, x - 6.4 * u - step * 1.4 * u, y - 11 * u);
+    if (umb) ln(x + 5 * u, y - 19 * u, x + 6 * u, y - 24 * u); else ln(x + 5 * u, y - 19 * u, x + 6.4 * u + step * 1.4 * u, y - 11 * u);
+    if (look.bag && !umb) { ctx.fillStyle = '#5c3d2e'; ctx.fillRect(x + 4.8 * u + step * 1.4 * u, y - 11 * u, 4.4 * u, 3.4 * u); }
+  }
   circle(ctx, x, y - 26 * u, 5.3 * u, look.skin);
   ctx.fillStyle = look.hair; ctx.beginPath(); ctx.arc(x, y - 27 * u, 5.7 * u, Math.PI, 0); ctx.fill();
   if (look.long) { ctx.fillRect(x - 5.7 * u, y - 27 * u, 2.1 * u, 7 * u); ctx.fillRect(x + 3.6 * u, y - 27 * u, 2.1 * u, 7 * u); }
+  const hat = look.hat || (wx === 'hot' && look.sun ? '#f1e3c0' : null);
+  if (hat && !umb) { ellipse(ctx, x, y - 30 * u, 8 * u, 2.4 * u, hat); ctx.fillStyle = hat; ctx.beginPath(); ctx.arc(x, y - 30.5 * u, 4.4 * u, Math.PI, 0); ctx.fill(); }
+  if (umb) {
+    ctx.strokeStyle = '#343a40'; ctx.lineWidth = 1.2 * u; ln(x + 6 * u, y - 23 * u, x + 3 * u, y - 39 * u);
+    ctx.fillStyle = look.umb || '#1971c2'; ctx.beginPath(); ctx.ellipse(x + 3 * u, y - 38 * u, 11 * u, 6 * u, 0, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.beginPath(); ctx.ellipse(x + 3 * u, y - 38 * u, 11 * u, 6 * u, 0, Math.PI, Math.PI * 1.35); ctx.lineTo(x + 3 * u, y - 38 * u); ctx.fill();
+  }
   if (gem) {
-    const py = y - 39 * u + Math.sin(now / 420 + phase) * 1.4 * u, w = 3.4 * u * (0.6 + 0.4 * Math.abs(Math.cos(now / 650 + phase)));
+    const py = y - (umb ? 48 : 39) * u + Math.sin(now / 420 + phase) * 1.4 * u, w = 3.4 * u * (0.6 + 0.4 * Math.abs(Math.cos(now / 650 + phase)));
     poly(ctx, [[x, py - 5.5 * u], [x + w, py], [x, py + 5.5 * u], [x - w, py]], gem, 'rgba(0,0,0,.25)');
     poly(ctx, [[x, py - 5.5 * u], [x + w, py], [x, py]], 'rgba(255,255,255,.4)');
   }
@@ -961,6 +995,9 @@ export class CityMap {
     path(); ctx.setLineDash([2, 12]); ctx.lineDashOffset = -now / 35; ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = Math.max(2, v.s * 3); ctx.stroke(); ctx.setLineDash([]);
     ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
     if (n.under) { const U = n.under.map((q) => v.p(q[0], q[1], 0.05)); ctx.beginPath(); U.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.setLineDash([8, 8]); ctx.lineDashOffset = -now / 40; ctx.strokeStyle = '#12b886'; ctx.lineWidth = Math.max(3.5, v.s * 6); ctx.stroke(); ctx.setLineDash([]); }   // the underground leg, dashed green
+    if (v.s > 0.35 && n.cum?.length > 1) {   // a see-through you walks the route ahead of you, on a loop
+      const tot = n.cum[n.cum.length - 1], at = ((now / 1000) * 1.8) % (tot + 2.5); if (at <= tot) { let i = 1; while (i < n.cum.length - 1 && n.cum[i] < at) i++; const a = n.pts[i - 1], b = n.pts[i], f = (at - n.cum[i - 1]) / Math.max(1e-6, n.cum[i] - n.cum[i - 1]), [gx, gy] = v.p(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, 0.05);
+        ctx.globalAlpha = 0.55; drawPerson(ctx, gx, gy, Math.max(0.6, this.u() * 0.8), ME_LOOK, now / 90, true, '#2fdc5a', now, ''); ctx.globalAlpha = 1; } }
     const t = n.target, [fx, fy] = v.p(t.x, t.y, 0.05), [, ft] = v.p(t.x, t.y, 2.2);   // destination flag
     ctx.strokeStyle = '#212529'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx, ft); ctx.stroke();
     poly(ctx, [[fx, ft], [fx + 16, ft + 6], [fx, ft + 12]], '#e03131', '#fff', 1.5); ellipse(ctx, fx, fy, 5, 2.5, 'rgba(0,0,0,.25)');
@@ -977,8 +1014,12 @@ export class CityMap {
     }
     const [x, y] = v.p(u.x, u.y, 0.05), pulse = (now / 1600) % 1;
     ctx.strokeStyle = `rgba(28,126,214,${0.6 * (1 - pulse)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y, 8 + pulse * 22, (8 + pulse * 22) / 2, 0, 0, 7); ctx.stroke();
-    circle(ctx, x, y, 9, '#fff'); circle(ctx, x, y, 6.5, '#1c7ed6');
-    if (v.s > 0.35 && !this.nav && !this.walkView) pill(ctx, x, y - 22, u.demo ? 'You are here (demo)' : 'You are here', 11, 'rgba(28,126,214,.95)', '#fff');
+    if (v.s > 0.35 && !this.walkView) {   // you, as a Sim: your own little person with a big green plumbob
+      const uu = Math.max(0.7, this.u() * 0.95), mv = this._meLast && Math.hypot(this._meLast[0] - u.x, this._meLast[1] - u.y) > 0.01; this._meLast = [u.x, u.y];
+      this._mePh = (this._mePh || 0) + (mv ? 0.35 : 0);
+      drawPerson(ctx, x, y, uu, ME_LOOK, this._mePh, mv, '#2fdc5a', now, this._wxNow || '');
+      if (!this.nav) pill(ctx, x, y - 58 * uu, u.demo ? 'You (demo)' : 'You', 11, 'rgba(28,126,214,.95)', '#fff');
+    } else { circle(ctx, x, y, 9, '#fff'); circle(ctx, x, y, 6.5, '#1c7ed6'); }
   }
   spotForPlace(id) { return this.spots.find((s) => s.places.some((p) => p.id === id)); }
 
@@ -1422,7 +1463,7 @@ export class CityMap {
     const ctx = this.ctx, v = this.v, z = o.z0 + o.h + 0.01, sx = o.bb.x1 - o.bb.x0, sy = o.bb.y1 - o.bb.y0, w = sx * 0.62, d = sy * 0.62, x0 = o.cx - w / 2, y0 = o.cy - d / 2;
     poly(ctx, [v.p(x0, y0, z), v.p(x0 + w, y0, z), v.p(x0 + w, y0 + d, z), v.p(x0, y0 + d, z)], N ? '#5a4632' : '#b88d5e', 'rgba(0,0,0,.15)');
     const cols = ['#e8590c', '#f8f9fa', '#1c7ed6', '#2b8a3e'];
-    for (let i = 0; i < 5; i++) { const k = hash(o.cx + 'u' + i), ux = x0 + w * (0.15 + 0.7 * k), uy = y0 + d * (0.15 + 0.7 * hash(o.cy + 'v' + i)), [px, py] = v.p(ux, uy, z), [tx, ty] = v.p(ux, uy, z + 0.28), r = Math.max(3, v.s * 7);
+    if (this._wxNow !== 'rain') for (let i = 0; i < 5; i++) { const k = hash(o.cx + 'u' + i), ux = x0 + w * (0.15 + 0.7 * k), uy = y0 + d * (0.15 + 0.7 * hash(o.cy + 'v' + i)), [px, py] = v.p(ux, uy, z), [tx, ty] = v.p(ux, uy, z + 0.28), r = Math.max(3, v.s * 7);
       ctx.strokeStyle = '#666'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke(); ctx.fillStyle = cols[i % cols.length]; ctx.beginPath(); ctx.ellipse(tx, ty, r, r * 0.5, 0, Math.PI, 0); ctx.fill(); }
     if (N || (this._dusk || 0) > 0.3) { ctx.fillStyle = '#ffd27a'; const P = [[x0, y0], [x0 + w, y0], [x0 + w, y0 + d], [x0, y0 + d]]; for (let i = 0; i < 4; i++) { const a = P[i], b = P[(i + 1) % 4]; for (let t = 0; t <= 1; t += 0.12) { const q = lerp2(a, b, t), [px, py] = v.p(q[0], q[1], z + 0.22 - Math.sin(t * Math.PI) * 0.06); ctx.beginPath(); ctx.arc(px, py, Math.max(1, v.s * 1.6), 0, 7); ctx.fill(); } } }
   }
@@ -1431,37 +1472,12 @@ export class CityMap {
   checkEvent() {
     const now = Date.now(), e = (this.events || []).find((x) => { const t = Date.parse(x.start); return now > t - 3 * 3600e3 && now < t + 3600e3; }) || null;
     if ((e && e.start) === (this.eventNow && this.eventNow.start)) return; this.eventNow = e;
+    for (const n of this.npcs || []) if (n.fan) { if (n.atSpot) n.atSpot.inn = Math.max(0, (n.atSpot.inn || 0) - 1); this.leaveQueue(n); if (this.followN === n) this.followN = null; }
     this.npcs = (this.npcs || []).filter((n) => !n.fan);
     const a = e && this.areas.find((x) => x.n === e.venue); if (!a) return;
-    for (let i = 0; i < 70; i++) { const n = this.newNpc(5000 + i, false), side = i % 4, t = hash(i + 'f'); n.fan = true;
+    for (let i = 0; i < 70; i++) { const n = this.newNpc(5000 + i, false, { role: 'fan' }), side = i % 4, t = hash(i + 'f'); n.fan = true;
       n.x = side < 2 ? a.r.x0 + (a.r.x1 - a.r.x0) * t : side === 2 ? a.r.x0 - this.streetW * 0.6 : a.r.x1 + this.streetW * 0.6; n.y = side === 0 ? a.r.y0 - this.streetW * 0.6 : side === 1 ? a.r.y1 + this.streetW * 0.6 : a.r.y0 + (a.r.y1 - a.r.y0) * t;
       n.look.shirt = e.team === 'Astros' ? (i % 3 ? '#eb6e1f' : '#002d62') : (i % 3 ? '#ce1141' : '#c4ced4'); this.npcs.push(n); }
-  }
-  spawnNpcs() {
-    this.npcs = [];
-    for (let i = 0; i < 60; i++) this.npcs.push(this.newNpc(i, false));
-    for (let i = 0; i < Math.min(25, this.tunnelSpots.length * 1.2); i++) this.npcs.push(this.newNpc(i + 1000, true));
-  }
-  newNpc(seed, under) {
-    const r = (k) => hash(seed + ':' + k);
-    const look = { skin: SKIN[Math.floor(r(1) * SKIN.length)], hair: HAIR[Math.floor(r(2) * HAIR.length)], shirt: SHIRT[Math.floor(r(3) * SHIRT.length)], pants: PANTS[Math.floor(r(4) * PANTS.length)], long: r(5) > 0.55 };
-    const n = { id: seed, under, look, phase: r(6) * 6, speed: 0.8 + r(7) * 0.5, wait: r(8) * 5, path: [], target: null, inside: 0, thought: null, thoughtT: 0 };
-    if (under) { const k = Math.floor(r(9) * this.tunnelSpots.length); const s = this.tunnelSpots[k]; n.x = s.x; n.y = s.y; n.node = k; }
-    else { const a = this.avenues[2 + Math.floor(r(9) * (this.avenues.length - 6))], c = this.cross[2 + Math.floor(r(10) * (this.cross.length - 6))], o = this.walkOff(); n.x = a.x + (r(11) > 0.5 ? o : -o); n.y = c.y + (r(12) > 0.5 ? o : -o); }
-    return n;
-  }
-  chooseTarget(n) {
-    const pool = this.spots.filter((s) => s.tunnel === n.under); if (!pool.length) return null;
-    const w = pool.map((s) => {
-      let k = 1 + s.places.length * 0.2;
-      if (this.highlight) k *= s.places.some((p) => this.highlight.has(p.id)) ? 6 : 0.3;
-      if (!s.places.some((p) => this.openC(p))) k *= 0.1;
-      if (this.pick != null && s.places.some((p) => p.id === this.pick)) k *= 10;
-      return k;
-    });
-    let x = Math.random() * w.reduce((a, b) => a + b, 0);
-    for (let i = 0; i < pool.length; i++) { x -= w[i]; if (x <= 0) return pool[i]; }
-    return pool[0];
   }
   walkOff() { return this.streetW + 0.2; }   // pedestrians keep to the middle of the sidewalk
   // walk on sidewalks only: out to the nearest sidewalk, along it, and across streets only at the crosswalks
@@ -1479,25 +1495,285 @@ export class CityMap {
     const pts = []; for (let i = 1; i < nodes.length; i++) { const a = T[nodes[i - 1]], b = T[nodes[i]]; pts.push([b.x, a.y], [b.x, b.y]); }
     n.node = end; return pts;
   }
+  // ---------- Sims-style people: daily routines, needs, lines, jobs, weather, chats, nightlife ----------
+  clockH() { const d = new Date(); return d.getHours() + d.getMinutes() / 60; }
+  isWeekend() { const g = new Date().getDay(); return g === 0 || g === 6; }
+  wxState() { const w = this.weather; if (!w) return ''; if (w.rain > 0.1 || w.code >= 51) return 'rain'; if (w.temp >= 93) return 'hot'; if (w.temp <= 50) return 'cold'; return ''; }
+  lastCall() { const h = this.clockH(); return h >= 1.75 && h < 2.25; }
+  phaseName() {
+    const h = this.clockH(), we = this.isWeekend();
+    if (h >= 1.75 && h < 2.25) return '🔔 Last call';
+    if (h >= 2.25 && h < 5.5) return '🌙 Late night';
+    if (h < 1.75) return '🌃 Nightlife';
+    if (we) return h < 10 ? '☕ Slow weekend morning' : h < 14.5 ? '🥞 Weekend brunch' : h < 18 ? '🛍️ Weekend afternoon' : h < 21 ? '🍽️ Dinner out' : '🌃 Nightlife';
+    return h < 7 ? '🌅 Early birds' : h < 9.5 ? '🚊 Morning commute' : h < 11.3 ? '☕ Coffee runs' : h < 13.8 ? '🍔 Lunch rush' : h < 16 ? '😴 Afternoon lull' : h < 19 ? '🍹 After-work crowd' : h < 21 ? '🍽️ Dinner time' : '🌃 Nightlife';
+  }
+  popTarget() {
+    const h = this.clockH(), day = new Date().getDay(), we = day === 0 || day === 6;
+    const W = [[0, 34], [2, 12], [5, 10], [6.5, 32], [8, 72], [9.5, 44], [11.3, 58], [12.2, 125], [13.5, 72], [15, 48], [17, 96], [18.5, 86], [20, 62], [22, 56], [24, 34]];
+    const E = [[0, 58], [2, 18], [5, 8], [8, 18], [10, 44], [12.5, 78], [15, 60], [18, 66], [21, 88], [23, 82], [24, 58]];
+    const L = we ? E : W; let base = L[0][1];
+    for (let i = 1; i < L.length; i++) if (h <= L[i][0]) { const [a, va] = L[i - 1], [b, vb] = L[i]; base = va + (vb - va) * ((h - a) / (b - a)); break; }
+    let k = 1; if ((day === 5 || day === 6) && (h >= 20 || h < 2)) k *= 1.2;
+    const w = this.wxState(); if (w === 'rain') k *= 0.5; else if (w === 'hot') k *= 0.72; else if (w === 'cold') k *= 0.8;
+    return Math.round(Math.min(140, base * k * (this.lite ? 0.6 : 1)));
+  }
+  underTarget() {
+    if (!this.tunnelsOpen?.() || (this.tunnelSpots || []).length < 2) return 0;
+    let n = Math.min(25, this.tunnelSpots.length * 1.2); const h = this.clockH();
+    if (h > 11.3 && h < 13.8) n *= 1.6; if (['rain', 'hot', 'cold'].includes(this.wxState())) n *= 1.6;   // bad weather sends everyone underground
+    return Math.round(n);
+  }
+  needWeights() {
+    const h = this.clockH();
+    if (h >= 5 && h < 10.5) return { energy: 3, hunger: 1, thirst: 0.1, fun: 0.2 };
+    if (h >= 10.5 && h < 14) return { hunger: 3, energy: 0.8, thirst: 0.3, fun: 0.3 };
+    if (h >= 14 && h < 16) return { energy: 1.6, hunger: 1, fun: 0.6, thirst: 0.4 };
+    if (h >= 16 && h < 20) return { thirst: 3, hunger: 1.7, fun: 0.8, energy: 0.3 };
+    return { fun: 2.6, thirst: 2, hunger: 1, energy: 0.1 };
+  }
+  rollNeeds(n) { const w = this.needWeights(); for (const k in NEED) n.needs[k] = Math.min(1, Math.random() * 0.35 + (w[k] || 0) * 0.2 * (0.6 + Math.random() * 0.6)); n.need = Object.keys(n.needs).reduce((a, b) => (n.needs[a] >= n.needs[b] ? a : b)); }
+  pickRole(r) {
+    const h = this.clockH(), we = this.isWeekend(), wx = this.wxState(), o = [['local', 2], ['tourist', we ? 2.6 : 0.9]];
+    if (!we && h > 6.5 && h < 19.5) o.push(['office', 5]);
+    if (((h > 6 && h < 9.2) || (h > 17 && h < 20)) && wx !== 'rain') o.push(['jogger', 0.9]);
+    if (h > 10.5 && h < 22.5) o.push(['courier', 0.7]);
+    if (h >= 21 || h < 3) o.push(['night', 6]);
+    let x = r * o.reduce((s, q) => s + q[1], 0); for (const [k, w] of o) { x -= w; if (x <= 0) return k; } return 'local';
+  }
+  dressFor(n, r) {
+    const L = n.look, pick = (a, k) => a[Math.floor(hash(n.id + k) * a.length)];
+    if (n.role === 'office') { L.shirt = pick(['#f8f9fa', '#dee2e6', '#a5d8ff', '#343a40', '#e7f5ff'], 's'); L.pants = pick(['#212529', '#343a40', '#1c2a3a', '#495057'], 'p'); L.tie = r > 0.35 ? pick(['#c92a2a', '#1864ab', '#5f3dc4', '#2b8a3e', '#e67700'], 't') : null; L.bag = r > 0.55; }
+    if (n.role === 'tourist') { L.hat = pick(['#f4e3b5', '#ffffff', '#ffd43b', '#e03131'], 'h'); L.camera = true; L.shirt = pick(['#ffa94d', '#74c0fc', '#f783ac', '#ffe066', '#ffffff'], 's'); }
+    if (n.role === 'jogger') { L.shorts = true; L.shirt = pick(['#ff6b6b', '#51cf66', '#fcc419', '#22b8cf', '#f06595'], 's'); L.pants = '#212529'; n.speed = 2.3 + r * 0.4; }
+    if (n.role === 'courier') { L.bike = true; L.box = pick(['#2f9e44', '#e8590c', '#f03e3e', '#1971c2'], 'b'); L.shirt = L.box; n.speed = 3 + r * 0.5; }
+    if (n.role === 'night') { L.shirt = pick(['#e64980', '#7048e8', '#15aabf', '#212529', '#f8f9fa', '#fab005'], 's'); L.pants = pick(['#212529', '#343a40', '#364fc7'], 'p'); }
+  }
+  getHomes() {
+    if (this._homes) return this._homes; const H = [], A = this.avenues, C = this.cross;
+    if (!A?.length || !C?.length) return (this._homes = []);
+    const ok = ([x, y]) => x > A[1].x - 1 && x < A[A.length - 2].x + 1 && y > C[1].y - 1 && y < C[C.length - 2].y + 1;
+    for (const s of this.rail?.stations || []) { const p = this.snapWalk(s.x, s.y); if (ok(p)) H.push({ p, kind: 'station', n: s.n + ' station' }); }
+    for (const o of [...(this.osm || [])].filter((o) => o.h > 9).sort((a, b) => b.h - a.h).slice(0, 34)) { const p = this.snapWalk(o.cx, o.cy); if (ok(p)) H.push({ p, kind: 'tower', n: o.name || 'an office tower' }); }
+    if (H.length < 6) for (let i = 2; i < A.length - 2; i += 2) for (let j = 2; j < C.length - 2; j += 2) H.push({ p: [A[i].x + this.walkOff(), C[j].y + this.walkOff()], kind: 'street', n: 'home' });
+    return (this._homes = H);
+  }
+  snapWalk(x, y) {
+    const o = this.walkOff(), A = this.avenues, C = this.cross;
+    const a = A.reduce((p, q) => (Math.abs(q.x - x) < Math.abs(p.x - x) ? q : p)), c = C.reduce((p, q) => (Math.abs(q.y - y) < Math.abs(p.y - y) ? q : p));
+    const ax = a.x + (x >= a.x ? o : -o), cy = c.y + (y >= c.y ? o : -o);
+    return Math.abs(ax - x) < Math.abs(cy - y) ? [ax, y] : [x, cy];
+  }
+  spotKind(s) { if (!s._kinds) { s._kinds = new Set(s.places.map(placeKind)); s._pop = 0.55 + hash(s.label + 'pop') * 2.4 + (s.places.some((p) => (p.vibes || []).includes('group')) ? 0.6 : 0); } return s._kinds; }
+  qCap(s) { return 2 + Math.min(6, s.places.length * 2); }
+  spawnNpcs() {
+    this.npcs = []; this._seed = 10000; this.rides = [];
+    const want = this.popTarget(), H = this.getHomes();
+    for (let i = 0; i < want; i++) this.npcs.push(this.newNpc(i, false));
+    for (let i = 0; i < this.underTarget(); i++) this.npcs.push(this.newNpc(i + 1000, true));
+    for (const n of this.npcs) if (Math.random() < 0.3 && n.role !== 'jogger' && n.role !== 'courier') {   // the city doesn't start empty: some people are already inside somewhere
+      const t = this.chooseTarget(n); if (!t || (t.inn || 0) >= this.qCap(t)) continue; this.enterSpot(n, t); n.inside *= Math.random(); n.x = t.x; n.y = t.y; if (n.under) n.node = this.tunnelSpots.indexOf(t);
+    }
+    void H;
+  }
+  newNpc(seed, under, opt = {}) {
+    const r = (k) => hash(seed + ':' + k);
+    const look = { skin: SKIN[Math.floor(r(1) * SKIN.length)], hair: HAIR[Math.floor(r(2) * HAIR.length)], shirt: SHIRT[Math.floor(r(3) * SHIRT.length)], pants: PANTS[Math.floor(r(4) * PANTS.length)], long: r(5) > 0.55 };
+    const n = { id: seed, under, look, phase: r(6) * 6, speed: 0.8 + r(7) * 0.5, wait: opt.fresh ? 0 : r(8) * 5, path: [], target: null, inside: 0, thought: null, thoughtT: 0, name: NAMES[Math.floor(r(13) * NAMES.length)], needs: {}, mood: 0.7, chatCD: 4 + r(14) * 14, legs: 0 };
+    n.role = opt.role || (under ? (this.isWeekend() ? 'local' : r(15) < 0.7 ? 'office' : 'local') : this.pickRole(r(15)));
+    this.dressFor(n, r(16)); this.rollNeeds(n);
+    if (opt.at) { n.x = opt.at[0]; n.y = opt.at[1]; }
+    else if (under) { const k = Math.floor(r(9) * this.tunnelSpots.length); const s = this.tunnelSpots[k]; n.x = s.x; n.y = s.y; n.node = k; }
+    else { const a = this.avenues[2 + Math.floor(r(9) * (this.avenues.length - 6))], c = this.cross[2 + Math.floor(r(10) * (this.cross.length - 6))], o = this.walkOff(); n.x = a.x + (r(11) > 0.5 ? o : -o); n.y = c.y + (r(12) > 0.5 ? o : -o); }
+    return n;
+  }
+  chooseTarget(n) {
+    const pool = this.spots.filter((s) => s.tunnel === n.under); if (!pool.length) return null;
+    const want = NEED[n.need]?.kinds || ['food'], h = this.clockH();
+    const w = pool.map((s) => {
+      const kinds = this.spotKind(s); let k = (1 + s.places.length * 0.2) * s._pop;
+      k *= want.some((x) => kinds.has(x)) ? 4 : 0.25;
+      if (n.role === 'night' && kinds.has('bar')) k *= 3;
+      if (this.highlight) k *= s.places.some((p) => this.highlight.has(p.id)) ? 6 : 0.3;
+      if (!s.places.some((p) => this.openC(p))) k *= 0.05;
+      if (this.opts.hhNow && h >= 15 && h < 20 && s.places.some((p) => this.hhC(p))) k *= 2.2;   // happy hour pulls the after-work crowd
+      if (this.pick != null && s.places.some((p) => p.id === this.pick)) k *= 10;
+      if (!n.under) k /= 1 + (Math.hypot(s.x - n.x, s.y - n.y) / 16) ** 2;   // people prefer somewhere close by
+      return k;
+    });
+    let x = Math.random() * w.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < pool.length; i++) { x -= w[i]; if (x <= 0) return pool[i]; }
+    return pool[0];
+  }
+  randomWalkPoint() { const A = this.avenues, C = this.cross, o = this.walkOff(), a = A[1 + Math.floor(Math.random() * (A.length - 2))], c = C[1 + Math.floor(Math.random() * (C.length - 2))]; return Math.random() < 0.5 ? { x: a.x + (Math.random() < 0.5 ? o : -o), y: c.y + (Math.random() - 0.5) * 3 } : { x: a.x + (Math.random() - 0.5) * 3, y: c.y + (Math.random() < 0.5 ? o : -o) }; }
+  sendHome(n) {
+    if (n.leaving) return; const H = this.getHomes(), h = this.clockH();
+    if (n.atSpot) { n.atSpot.inn = Math.max(0, (n.atSpot.inn || 0) - 1); n.atSpot = null; } this.leaveQueue(n);
+    if (n.reserved && n.target) { n.target.inn = Math.max(0, (n.target.inn || 0) - 1); n.reserved = false; }
+    n.target = null; n.inside = 0; n.chat = null;
+    if (n.under) { n.gone = true; return; }
+    if ((h >= 21 || h < 3.5) && Math.random() < 0.65) { n.leaving = 'ride'; n.path = []; this.callRide(n); return; }
+    if (!H.length) { n.gone = true; return; }
+    const near = [...H].sort((a, b) => Math.hypot(a.p[0] - n.x, a.p[1] - n.y) - Math.hypot(b.p[0] - n.x, b.p[1] - n.y)).slice(0, 6), home = near[Math.floor(Math.random() * near.length)];
+    n.leaving = 'home'; n.home = home; n.path = this.routeStreet(n, { x: home.p[0], y: home.p[1] }); n.thought = home.kind === 'station' ? '🚊' : '🏠'; n.thoughtT = 3;
+  }
+  callRide(n) {
+    const sw = this.streetW, a = this.avenues.reduce((p, q) => (Math.abs(q.x - n.x) < Math.abs(p.x - n.x) ? q : p)), c = this.cross.reduce((p, q) => (Math.abs(q.y - n.y) < Math.abs(p.y - n.y) ? q : p));
+    const onAv = Math.abs(a.x - n.x) < Math.abs(c.y - n.y), sd = onAv ? Math.sign(n.x - a.x) || 1 : Math.sign(n.y - c.y) || 1;
+    const r = onAv ? { x: a.x + sd * sw * 0.45, y: n.y, dx: 0, dy: sd } : { x: n.x, y: c.y + sd * sw * 0.45, dx: -sd, dy: 0 };
+    (this.rides = this.rides || []).push({ ...r, t: 0, n, state: 'come', col: ['#212529', '#f8f9fa', '#495057', '#1c2a3a'][Math.floor(Math.random() * 4)] });
+    n.thought = '🚕'; n.thoughtT = 6; n.wait = 99;
+  }
+  stepRides(dt) {
+    for (const r of this.rides || []) {
+      r.t += dt;
+      if (r.state === 'come' && r.t > 1.6) { r.state = 'wait'; r.t = 0; }
+      else if (r.state === 'wait' && r.t > 1.2) { r.state = 'go'; r.t = 0; if (r.n) r.n.gone = true; }
+    }
+    this.rides = (this.rides || []).filter((r) => !(r.state === 'go' && r.t > 2.2));
+  }
+  ridePos(r) { const k = r.state === 'come' ? -5 * Math.pow(1 - r.t / 1.6, 2) : r.state === 'go' ? 5 * Math.pow(r.t / 2.2, 1.5) : 0; return [r.x + r.dx * k, r.y + r.dy * k]; }
+  drawRide(r, N) {
+    const [x, y] = this.ridePos(r), along = r.dy !== 0, w = along ? 0.46 : 0.95, d = along ? 0.95 : 0.46;
+    box(this.ctx, this.v, x - w / 2, y - d / 2, w, d, 0.26, N ? darken(r.col, 0.3) : r.col, 0.05);
+    box(this.ctx, this.v, x - w * 0.36, y - d * 0.3, w * 0.72, d * 0.6, 0.16, N ? '#8fb8de' : '#4dabf7', 0.31);
+    const [lx, ly] = this.v.p(x, y, 0.52), g = 0.6 + 0.4 * Math.sin(performance.now() / 180);
+    this.ctx.shadowColor = '#f783ac'; this.ctx.shadowBlur = 10 * g; circle(this.ctx, lx, ly, Math.max(2, this.v.s * 3.2), '#f06595'); this.ctx.shadowBlur = 0;
+  }
+  leaveQueue(n) { if (!n.queue) return; const q = n.queue.q || []; const i = q.indexOf(n); if (i >= 0) q.splice(i, 1); if (!q.length) n.queue.qBase = null; n.queue = null; }
+  joinQueue(n, s) {
+    s.q = s.q || []; n.queue = s; n.path = []; s.q.push(n);
+    if (!s.qBase) { const d = n.lastDir || [1, 0]; s.qBase = [n.x, n.y]; s.qDir = [-d[0], -d[1]]; }
+    n.thought = '⏳'; n.thoughtT = 2;
+  }
+  enterSpot(n, s) {
+    n.atSpot = s; s.inn = (s.inn || 0) + 1; n.target = null; n.admitted = false;
+    const kinds = this.spotKind(s); n.inside = kinds.has('bar') ? 25 + Math.random() * 25 : kinds.has('coffee') ? 6 + Math.random() * 6 : 14 + Math.random() * 16;
+  }
+  finishVisit(n) {
+    const s = n.atSpot; if (s) s.inn = Math.max(0, (s.inn || 0) - 1); n.atSpot = null;
+    n.needs[n.need] = 0; n.mood = Math.min(1, n.mood + 0.35);
+    const street = this.npcs.filter((m) => !m.under && !m.fan && !m.leaving).length;
+    if (n.fan || Math.random() < 0.3 || (!n.under && street > this.popTarget() + 2)) { if (!n.fan) return this.sendHome(n); }
+    this.rollNeeds(n); n.wait = 0.5 + Math.random() * 2;
+  }
+  managePop(dt) {
+    this._popT = (this._popT || 0) - dt; if (this._popT > 0) return; this._popT = 0.8;
+    const street = this.npcs.filter((n) => !n.under && !n.fan && !n.leaving), under = this.npcs.filter((n) => n.under && !n.gone);
+    const want = this.popTarget(), wantU = this.underTarget();
+    if (street.length < want) { const H = this.getHomes(); for (let i = 0; i < Math.min(4, want - street.length) && H.length; i++) { const h = H[Math.floor(Math.random() * H.length)], n = this.newNpc(++this._seed, false, { at: h.p, fresh: true }); n.from = h; n.wait = Math.random() * 0.6; n.thought = h.kind === 'station' ? '🚊' : '👋'; n.thoughtT = 2; this.npcs.push(n); } }
+    else if (street.length > want + 4) { const c = street.filter((n) => n.inside <= 0 && !n.queue && !n.chat); for (let i = 0; i < Math.min(3, street.length - want - 4, c.length); i++) this.sendHome(c[Math.floor(Math.random() * c.length)]); }
+    if (under.length < wantU) for (let i = 0; i < Math.min(3, wantU - under.length); i++) { const n = this.newNpc(++this._seed, true); n.wait = 0; this.npcs.push(n); }
+    else if (under.length > wantU) under.filter((n) => n.inside <= 0).slice(0, under.length - wantU).forEach((n) => { if (n.atSpot) n.atSpot.inn = Math.max(0, n.atSpot.inn - 1); n.gone = true; });
+    const ws = this.wxState(); if (ws !== this._wxWas) { this._wxWas = ws; for (const n of this.npcs) if (!n.under && ws === 'rain' && Math.random() < 0.5 && n.inside <= 0 && !n.leaving) { n.thought = '☔'; n.thoughtT = 3; } }
+    for (const n of this.npcs) if (n.gone) { this.leaveQueue(n); if (this.followN === n) { this.followN = null; this.opts.onNpcGone?.(n); } }
+    this.npcs = this.npcs.filter((n) => !n.gone);
+    this._statT = (this._statT || 0) - 0.8; if (this._statT <= 0) { this._statT = 2; this.computeStats(); }
+  }
+  trySocial(dt) {
+    this._socT = (this._socT || 0) - dt; if (this._socT > 0) return; this._socT = 0.4;
+    const free = this.npcs.filter((n) => !n.under && n.inside <= 0 && !n.queue && !n.chat && !n.leaving && n.role !== 'courier' && n.role !== 'jogger' && n.chatCD <= 0 && n.path.length && !n.atLight);
+    const E = ['😄', '👋', '😂', '🙌', '👀', '🤝', '🥳', '☕?', '🍕?'];
+    for (let i = 0; i < 3 && free.length > 1; i++) {
+      const a = free[Math.floor(Math.random() * free.length)], b = free.find((m) => m !== a && !m.chat && Math.abs(m.x - a.x) < 0.7 && Math.abs(m.y - a.y) < 0.7); if (!b || a.chat) continue;
+      const T = 3 + Math.random() * 3; a.chat = { w: b, t: T, e: E[Math.floor(Math.random() * E.length)] }; b.chat = { w: a, t: T, e: E[Math.floor(Math.random() * E.length)] };
+      a.chatCD = b.chatCD = 30 + Math.random() * 40;
+      if (Math.random() < 0.45 && a.target && !a.target.tunnel) b.joinWith = a;   // "let's go together"
+    }
+  }
   stepNpcs(dt) {
+    this.managePop(dt); this.trySocial(dt); this.stepRides(dt);
+    const hot = this.wxState() === 'hot', last = this.lastCall();
+    for (const s of this.spots || []) {   // lines: let the next person in when there's room, and shuffle everyone up
+      if (!s.q?.length) continue;
+      while (s.q.length && (s.inn || 0) < this.qCap(s)) { const m = s.q.shift(); m.queue = null; m.admitted = true; m.target = s; m.path = [[s.x, s.y]]; s.inn = (s.inn || 0) + 1; m.reserved = true; }
+      if (!s.q.length) { s.qBase = null; continue; }
+      s.q.forEach((m, k) => { const tx = s.qBase[0] + s.qDir[0] * 0.55 * k, ty = s.qBase[1] + s.qDir[1] * 0.55 * k, dx = tx - m.x, dy = ty - m.y, d = Math.hypot(dx, dy), sp = m.speed * dt * 1.4; if (d > 0.02) { m.x += d <= sp ? dx : dx / d * sp; m.y += d <= sp ? dy : dy / d * sp; m.phase += dt * 6; m.qMoving = true; } else m.qMoving = false; m.mood = Math.max(0.1, m.mood - dt * 0.012); });
+    }
     for (const n of this.npcs) {
-      n.thoughtT -= dt;
-      if (n.inside > 0) { n.inside -= dt; continue; }
+      n.thoughtT -= dt; n.chatCD -= dt;
+      if (n.gone) continue;
+      if (n.inside > 0) { n.inside -= dt; if (last && n.atSpot && this.spotKind(n.atSpot).has('bar') && Math.random() < dt * 0.6) n.inside = 0; if (n.inside <= 0) this.finishVisit(n); continue; }
+      if (n.queue) continue;
+      if (n.chat) { n.chat.t -= dt; if (n.chat.t <= 0) { const j = n.joinWith; n.chat = null; n.joinWith = null; if (j && j.target && !j.gone && !n.leaving) { if (n.reserved && n.target) { n.target.inn = Math.max(0, n.target.inn - 1); n.reserved = false; } n.target = j.target; n.need = j.need; n.path = this.routeStreet(n, j.target); n.thought = '👫'; n.thoughtT = 3; } } continue; }
       if (n.wait > 0) { n.wait -= dt; continue; }
       if (!n.path.length) {
-        if (n.target) { n.inside = 5 + Math.random() * 12; n.target = null; continue; }
-        const t = this.chooseTarget(n); if (!t) continue;
+        if (n.leaving === 'home') { n.gone = true; continue; }
+        if (n.leaving) continue;
+        if (n.role === 'jogger') { if (++n.legs > 4) { this.sendHome(n); continue; } const p = this.randomWalkPoint(); n.path = this.routeStreet(n, p); continue; }
+        if (n.role === 'courier') {
+          if (n.legs > 5) { this.sendHome(n); continue; }
+          if (n.carry) { n.thought = '✅'; n.thoughtT = 2; n.carry = null; n.wait = 0.8; n.legs++; continue; }
+          if (n.target) { n.carry = n.target; n.target = null; n.thought = '📦'; n.thoughtT = 2.5; n.wait = 2; const H = this.getHomes(), h = H[Math.floor(Math.random() * H.length)]; if (h) n.path = this.routeStreet(n, { x: h.p[0], y: h.p[1] }); n.dropTo = h; continue; }
+          n.need = 'hunger'; const t = this.chooseTarget(n); if (!t) { n.wait = 2; continue; } n.target = t; n.path = this.routeStreet(n, this.snapPt(t)); n.legs++; continue;
+        }
+        if (n.role === 'tourist' && !n.target && Math.random() < 0.35) { const parks = this.areas.filter((a) => a.kind === 'park' || a.kind === 'plaza'); if (parks.length) { const a = parks[Math.floor(Math.random() * parks.length)]; if (n.sight === a) { n.sight = null; } else { n.sight = a; n.path = this.routeStreet(n, { x: (a.r.x0 + a.r.x1) / 2 + (Math.random() - 0.5) * 2, y: (a.r.y0 + a.r.y1) / 2 + (Math.random() - 0.5) * 2 }); n.thought = '📸'; n.thoughtT = 3; n.wait = 0; continue; } } }
+        if (n.sight) { n.sight = null; n.wait = 4 + Math.random() * 4; n.thought = '📸'; n.thoughtT = 3; continue; }
+        if (n.target) {   // arrived at the door
+          if (n.reserved) { n.reserved = false; n.atSpot = n.target; n.target = null; const k = this.spotKind(n.atSpot); n.inside = k.has('bar') ? 25 + Math.random() * 25 : k.has('coffee') ? 6 + Math.random() * 6 : 14 + Math.random() * 16; continue; }
+          this.enterSpot(n, n.target); continue;
+        }
+        const t = this.chooseTarget(n); if (!t) { n.wait = 2; continue; }
         n.target = t; n.path = (n.under ? this.routeTunnel(n, t) : this.routeStreet(n, t)).filter(Boolean);
         if (!n.path.length) { n.wait = 1 + Math.random() * 3; n.target = null; continue; }
         const pl = t.places[Math.floor(Math.random() * t.places.length)];
-        n.thought = styleFor(pl).emoji; n.thoughtFor = pl; n.thoughtT = 3.5;
+        n.thought = (NEED[n.need]?.e || '') + styleFor(pl).emoji; n.thoughtFor = pl; n.thoughtT = 3.5;
       }
-      const [tx, ty] = n.path[0], dx = tx - n.x, dy = ty - n.y, d = Math.hypot(dx, dy), sp = n.speed * dt * 2;
+      // about to walk in the door: join the line if the place is full
+      if (!n.under && n.target && !n.admitted && !n.reserved && n.path.length === 1 && n.role !== 'courier' && (n.target.inn || 0) >= this.qCap(n.target)) { this.joinQueue(n, n.target); continue; }
+      const [tx, ty] = n.path[0], dx = tx - n.x, dy = ty - n.y, d = Math.hypot(dx, dy), sp = n.speed * dt * 2 * (hot && n.role !== 'courier' ? 0.8 : 1);
       const nx = d <= sp ? tx : n.x + dx / d * sp, ny = d <= sp ? ty : n.y + dy / d * sp;
       if (!n.under && this.mustWait(n.x, n.y, nx, ny)) { n.atLight = true; continue; }
-      n.atLight = false;
+      n.atLight = false; if (d > 1e-6) n.lastDir = [dx / d, dy / d];
       if (d <= sp) { n.x = tx; n.y = ty; n.path.shift(); } else { n.x = nx; n.y = ny; }
-      n.phase += dt * 8 * n.speed;
+      n.phase += dt * 8 * Math.min(n.speed, 1.6);
+      if (hot && n.role !== 'courier' && Math.random() < dt * 0.02) { n.thought = '🥵'; n.thoughtT = 2.5; }
+    }
+  }
+  snapPt(s) { const [x, y] = this.snapWalk(s.x, s.y); return { x, y }; }
+  computeStats() {
+    const A = this.avenues, C = this.cross, bins = new Map(), add = (x, y, k = 1) => { const i = A.reduce((b, a, m) => (Math.abs(a.x - x) < Math.abs(A[b].x - x) ? m : b), 0), j = C.reduce((b, c, m) => (Math.abs(c.y - y) < Math.abs(C[b].y - y) ? m : b), 0), key = i + ',' + j; bins.set(key, (bins.get(key) || 0) + k); };
+    let walking = 0, inside = 0, inLine = 0, hh = 0, under = 0, riding = (this.rides || []).length;
+    for (const n of this.npcs) {
+      if (n.under) { under++; continue; }
+      if (n.inside > 0) { inside++; if (n.atSpot) { add(n.atSpot.x, n.atSpot.y); if (this.opts.hhNow && n.atSpot.places.some((p) => this.hhC(p))) hh++; } }
+      else { if (n.queue) inLine++; else walking++; add(n.x, n.y); }
+    }
+    let best = null, bv = 0; for (const [k, c] of bins) if (c > bv) { bv = c; best = k; }
+    const [bi, bj] = best ? best.split(',').map(Number) : [0, 0];
+    this.stats = { total: this.npcs.length, walking, inside, inLine, hh, under, riding, busiest: best ? `${A[bi].n} & ${C[bj].n}` : null, busiestN: bv, phase: this.phaseName(), weather: this.wxState() };
+    this.opts.onStats?.(this.stats);
+  }
+  npcInfo(n) {
+    const R = ROLE[n.role] || ROLE.local, need = NEED[n.need], nm = (s) => s?.places?.[0]?.name || s?.label || 'somewhere';
+    let doing;
+    if (n.leaving === 'ride') doing = '🚕 Catching a ride home';
+    else if (n.leaving) doing = n.home?.kind === 'station' ? `🚊 Heading to ${n.home.n}` : '🏠 Heading home';
+    else if (n.chat) doing = `💬 Chatting with ${n.chat.w.name}`;
+    else if (n.queue) doing = `⏳ Waiting in line at ${nm(n.queue)} (${(n.queue.q || []).indexOf(n) + 1} of ${(n.queue.q || []).length})`;
+    else if (n.inside > 0) doing = `${n.atSpot && this.spotKind(n.atSpot).has('bar') ? '🍸' : '🍽️'} Inside ${nm(n.atSpot)}`;
+    else if (n.role === 'jogger') doing = '🏃 Out for a run';
+    else if (n.role === 'courier') doing = n.carry ? `📦 Delivering an order from ${nm(n.carry)}` : n.target ? `🛵 Picking up from ${nm(n.target)}` : '🛵 Waiting for the next order';
+    else if (n.sight) doing = `📸 Sightseeing at ${n.sight.n}`;
+    else if (n.target) doing = `${need?.e || '🚶'} ${need?.l || 'Walking'} — walking to ${n.thoughtFor?.name || nm(n.target)}`;
+    else if (n.atLight) doing = '🚦 Waiting to cross';
+    else doing = '🚶 Wandering downtown';
+    const mood = n.mood > 0.75 ? '😊 Great' : n.mood > 0.5 ? '🙂 Fine' : n.mood > 0.3 ? '😐 Getting impatient' : '😤 Grumpy';
+    return { name: n.name, role: R[1], emoji: R[0], doing, mood, wx: this.wxState(), under: n.under, place: n.thoughtFor || null, following: this.followN === n };
+  }
+  followNpc(n) { this.followN = n || null; if (n) { this.follow = false; const z = n.under ? this.tunnelZ() : 0; this.zoomTo(n.x, n.y, Math.max(this.v.s, 1.1), z); } }
+  stepFollowNpc(dt) {
+    const n = this.followN; if (!n || this.pointers?.size || this.anim) return;
+    const [px, py] = this.v.p(n.x, n.y, n.under && this.mode !== 'street' ? this.tunnelZ() : 0), k = Math.min(1, dt * 3);
+    this.v.ox += (this.W / 2 - px) * k; this.v.oy += (this.H * 0.55 - py) * k;
+  }
+  drawNightGlow(now) {   // neon puddles outside busy bars after dark
+    if ((this._dusk || 0) < 0.45) return; const ctx = this.ctx, v = this.v;
+    for (const s of this.spots || []) {
+      if (s.tunnel || !(s.inn > 0 || s.q?.length) || !this.spotKind(s).has('bar')) continue;
+      const [x, y] = v.p(s.x, s.y, 0.02), r = Math.max(10, v.s * 46) * (1 + Math.min(1, (s.inn + (s.q?.length || 0)) / 8) * 0.6), p = 0.7 + 0.3 * Math.sin(now / 400 + s.x);
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r), c = hash(s.label + 'neon') > 0.5 ? '230,73,128' : '132,94,247';
+      g.addColorStop(0, `rgba(${c},${0.42 * p})`); g.addColorStop(1, `rgba(${c},0)`); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.5, 0, 0, 7); ctx.fill();
     }
   }
 
@@ -1578,6 +1854,7 @@ export class CityMap {
       try { cv.setPointerCapture(e.pointerId); } catch (_) {}
       pointers.set(e.pointerId, pt(e)); stopMotion();
       if (this.follow) { this.follow = false; this.opts.onFollow?.(false); }
+      if (this.followN) { this.followN = null; this.opts.onNpcFollow?.(false); }
       if (pointers.size === 1) { moved = 0; startDrag(pt(e), e.button === 2 || e.shiftKey || e.altKey); }
       else if (pointers.size === 2) { const g = two(); pinch = { ...g, s: this.v.s, r: this.v.r, ang0: g.ang, rotating: false }; drag = null; moved += 20; }
     });
@@ -1662,6 +1939,7 @@ export class CityMap {
     }
   }
   // opening hours are parsed from text, so remember each answer for 30 s instead of re-parsing every frame
+  hhC(p) { if (!this.opts.hhNow) return false; const now = Date.now(), m = (this._hh = this._hh || new Map()), c = m.get(p.id); if (c && now - c[1] < 60000) return c[0]; const v = !!this.opts.hhNow(p); m.set(p.id, [v, now]); return v; }
   openC(p) { const now = Date.now(), c = (this._open = this._open || new Map()).get(p.id); if (c && now - c[1] < 30000) return c[0]; const v = this.openFn(p); this._open.set(p.id, [v, now]); return v; }
   setHighlight(ids) { this.highlight = ids; }
   screenCenter() {   // the ground point under the middle of the screen
@@ -1689,7 +1967,7 @@ export class CityMap {
   hit(sx, sy) {
     const lod = this.lod();
     for (const n of this.npcs) {
-      if (n.inside > 0 || !this.layers().includes(n.under)) continue;
+      if (n.inside > 0 || n.gone || !this.layers().includes(n.under)) continue;
       const [x, y] = this.v.p(n.x, n.y, n.under ? this.tunnelZ() : 0), u = Math.max(0.55, this.u() * 0.8);
       if (Math.abs(sx - x) < 7 * u + 4 && sy < y + 3 && sy > y - 30 * u) return { npc: n };
     }
@@ -1760,14 +2038,14 @@ export class CityMap {
       this.v.ox = a.from.x + (tx - a.from.x) * e; this.v.oy = a.from.y + (ty - a.from.y) * e;
       if (a.t >= 1) this.anim = null;
     }
-    this.stepNpcs(dt); this.stepTrains(dt);
+    this.stepNpcs(dt); this.stepTrains(dt); this.stepFollowNpc(dt);
     if (!this.paused) this.draw(t);
   }
 
   draw(now) {
     const ctx = this.ctx, v = this.v, B = this.bounds, night = this.nightAmount(), mode = this.mode, lod = this.lod(), N = night > 0.5;
     ctx.fillStyle = mode === 'tunnel' ? '#121624' : N ? '#1d2338' : '#e9eef3'; ctx.fillRect(0, 0, this.W, this.H);
-    this._dusk = night; const sky = mode === 'tunnel' ? null : this.skyColors(night, this._warm || 0);
+    this._dusk = night; this._wxNow = this.wxState(); const sky = mode === 'tunnel' ? null : this.skyColors(night, this._warm || 0);
     if (sky) { const g = ctx.createLinearGradient(0, 0, 0, this.H); g.addColorStop(0, sky[0]); g.addColorStop(0.45, sky[1]); g.addColorStop(1, N ? '#1d2338' : '#e9eef3'); ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, this.H); }
     if (mode === 'tunnel') { this.drawGhostGrid(); this.drawTunnels(now); this.drawMarkers(true); this.drawPickBeacon(now); return; }
 
@@ -1797,6 +2075,7 @@ export class CityMap {
     for (const f of this.fill) if (f.lot) this.drawLot(f, N);
     for (const l of this.osmLots || []) poly(ctx, l.pts.map((p) => v.p(p[0], p[1], 0.01)), N ? '#2a2f3b' : '#c9ced4');
     this.drawShadows();
+    if (!this.hide.people) this.drawNightGlow(now);
     this.drawSignals(now);
     if (mode === 'both') for (const s of this.tunnelSpots) { const [x, y] = v.p(s.x, s.y); ellipse(ctx, x, y, 4, 2, 'rgba(32,201,151,.6)'); }
 
@@ -1805,7 +2084,7 @@ export class CityMap {
     for (const l of this.landmarks) items.push({ k: v.boxDepth(l.x, l.y, l.w, l.d), l });
     for (const o of this.osm || []) { const [sx, sy] = v.p(o.cx, o.cy), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20, up = (o.z0 + o.h) * ZU * v.s; if (sx < -r || sx > this.W + r || sy + r < 0 || sy - up - r > this.H) continue; items.push({ k: this.osmDepth(o), o }); }
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
-    if (!this.hide.people) for (const n of this.npcs) if (!n.under && n.inside <= 0) items.push({ k: v.depth(n.x, n.y) + 0.5, n });
+    if (!this.hide.people) { for (const n of this.npcs) if (!n.under && n.inside <= 0 && !n.gone) items.push({ k: v.depth(n.x, n.y) + 0.5, n }); for (const r of this.rides || []) { const [rx, ry] = this.ridePos(r); items.push({ k: v.depth(rx, ry) + 0.4, rd: r }); } }
     if (!this._stTrees) { const T = [], sw = this.streetW, A = this.avenues, C = this.cross, mapped = this.geo?.trees || [];
       const near = (x, y) => mapped.some(([a, b]) => Math.abs(a - x) < 1.2 && Math.abs(b - y) < 1.2);
       for (const a of A) for (const sd of [-1, 1]) for (let j = 0; j < C.length - 1; j++) for (let y = C[j].y + sw + 1; y < C[j + 1].y - sw - 0.6; y += 2.4) { const x = a.x + sd * (sw + 0.16); if (hash(x + '|' + y) < 0.42 && !near(x, y)) T.push([x, y]); }
@@ -1832,8 +2111,10 @@ export class CityMap {
       else if (it.t) this.drawTrain(it.t, N, ghost);
       else if (it.c) this.drawCar(it.c, N, ghost, now);
       else if (it.tr) this.drawStreetTree(it.tr[0], it.tr[1], N, ghost);
+      else if (it.rd) this.drawRide(it.rd, N);
       else this.drawNpc(it.n, now, 0);
     }
+    { const f = this.followN; if (f && !f.under && f.inside <= 0 && !f.gone && !this.hide.people) this.drawNpc(f, now, 0); }   // the person you're following stays visible even behind a tower
     if (sky && !this.hide.sky) {   // distant sky over the far edge of the city, and a warm wash at golden hour (under pins and labels)
       const hz = this.H * 0.24, g = ctx.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, sky[0] + 'e0'); g.addColorStop(0.5, sky[1] + '70'); g.addColorStop(1, sky[1] + '00');
       ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, hz);
@@ -2114,11 +2395,21 @@ export class CityMap {
   }
 
   drawNpc(n, now, z) {
-    const [x, y] = this.v.p(n.x, n.y, z), u = Math.max(0.55, this.u() * 0.8);
+    const [x, y] = this.v.p(n.x, n.y, z), u = Math.max(0.55, this.u() * 0.8), ctx = this.ctx;
     if (x < -40 || y < -60 || x > this.W + 40 || y > this.H + 40) return;
-    const gem = this.pick != null && n.target?.places.some((p) => p.id === this.pick) ? '#fcc419' : '#40c057';
-    drawPerson(this.ctx, x, y, u, n.look, n.phase, !!n.path.length && n.wait <= 0, gem, now);
-    if (n.thought && n.thoughtT > 0 && this.v.s > 0.3) pill(this.ctx, x + 12 * u, y - 38 * u, n.thought, 11, 'rgba(255,255,255,.95)');
+    const L = n.look; if (L.umb == null) { L.umb = UMB[Math.floor(hash(n.id + 'u') * UMB.length)]; L.sun = hash(n.id + 'sun') < 0.4; }
+    const wx = n.under ? '' : this._wxNow || '', fol = this.followN === n;
+    const gem = this.pick != null && (n.target || n.atSpot)?.places?.some((p) => p.id === this.pick) ? '#ffd43b' : n.mood > 0.6 ? '#40c057' : n.mood > 0.35 ? '#a9e34b' : '#ff922b';
+    const moving = (!!n.path.length && n.wait <= 0 && !n.chat && !n.atLight) || !!n.qMoving;
+    if (fol) { const p = 0.5 + 0.5 * Math.sin(now / 250); ctx.strokeStyle = `rgba(250,176,5,${0.5 + p * 0.5})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y, 11 * u + p * 3, (11 * u + p * 3) / 2, 0, 0, 7); ctx.stroke(); }
+    drawPerson(ctx, x, y, u, L, n.phase, moving, gem, now, wx);
+    let b = null;
+    if (n.chat) b = '💬' + n.chat.e;
+    else if (n.thought && n.thoughtT > 0) b = n.thought;
+    else if (n.queue && n.queue.q?.[0] === n && this.v.s > 0.55) b = '⏳';
+    else if ((this.v.s > 1 || fol) && n.target && n.path.length && NEED[n.need] && n.role !== 'courier') b = NEED[n.need].e;
+    if (b && this.v.s > 0.3) pill(ctx, x + 12 * u, y - (wx === 'rain' ? 52 : 40) * u, b, 11, 'rgba(255,255,255,.95)');
+    if (fol) pill(ctx, x, y + 12 * u, '⭐ ' + n.name, 11, 'rgba(255,212,59,.96)');
   }
 
   drawLabels(N) {
@@ -2145,5 +2436,6 @@ export class CityMap {
     const ctx = this.ctx; ctx.shadowColor = '#69db7c'; ctx.shadowBlur = 14;
     poly(ctx, [[x, py - 15], [x + w, py], [x, py + 15], [x - w, py]], '#51cf66', '#2b8a3e', 1.5); ctx.shadowBlur = 0;
     poly(ctx, [[x, py - 15], [x + w, py], [x, py]], 'rgba(255,255,255,.4)');
+    ctx.font = '15px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('🍽️', x, py - 26);
   }
 }

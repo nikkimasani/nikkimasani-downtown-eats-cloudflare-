@@ -566,6 +566,34 @@ document.addEventListener('click', (e) => {
   const o = e.target.closest('.card [data-open], .card.tap[data-open]'); if (o && !o.closest('#nightList, #coffeeList')) openSheet(+o.dataset.open);
 });
 
+// ---------- Sims-style people on the map ----------
+let simN = null, simTimer = null;
+function renderSim() {
+  const n = simN; if (!n || !city) return hideSim(); const i = city.npcInfo(n), b = $('#simCard');
+  b.innerHTML = `<div class="sc-top"><span class="sc-av">${i.emoji}</span><div class="sc-who"><b>${esc(i.name)}</b><small>${esc(i.role)}${i.under ? ' · in the tunnels' : ''} · ${i.mood}</small></div><button class="sc-x" data-sim="x" aria-label="Close">✕</button></div>
+    <div class="sc-doing">${esc(i.doing)}</div>
+    <div class="sc-acts"><button data-sim="follow" class="${i.following ? 'on' : ''}">${i.following ? '⭐ Following' : '⭐ Follow'}</button>${i.place ? `<button data-sim="place">${esc(i.place.name)} ›</button>` : ''}</div>`;
+  b.hidden = false;
+}
+function showSim(n) { simN = n; renderSim(); clearInterval(simTimer); simTimer = setInterval(renderSim, 1000); buzz(6); }
+function hideSim() { simN = null; clearInterval(simTimer); const b = $('#simCard'); if (b) b.hidden = true; if (city) city.followNpc(null); }
+$('#simCard').onclick = (e) => {
+  const a = e.target.closest('[data-sim]')?.dataset.sim; if (!a || !simN) return;
+  if (a === 'x') return hideSim();
+  if (a === 'follow') { city.followNpc(city.followN === simN ? null : simN); renderSim(); return; }
+  if (a === 'place') { const p = city.npcInfo(simN).place; if (p) openSheet(p.id); }
+};
+let simOpen = false, lastStats = null;
+function renderSimStats(s) {
+  lastStats = s; const b = $('#simStats'); if (!b || VIEW?.hide?.people) { if (b) b.hidden = true; return; }
+  const people = s.walking + s.inside + s.inLine + s.under;
+  b.hidden = false; b.setAttribute('aria-expanded', simOpen);
+  b.innerHTML = simOpen
+    ? `<b>${s.phase}</b><span>👥 ${people} sims · 🚶 ${s.walking} walking · 🍽️ ${s.inside} inside${s.inLine ? ` · ⏳ ${s.inLine} in line` : ''}${s.under ? ` · 🚇 ${s.under} in tunnels` : ''}${s.hh ? ` · 🍹 ${s.hh} at happy hour` : ''}${s.riding ? ` · 🚕 ${s.riding} rides` : ''}</span>${s.busiest ? `<span>🔥 Busiest block: ${esc(s.busiest)}</span>` : ''}<em>A simulation: crowds follow the time of day, weather and what's open, not live counts</em>`
+    : `${s.phase.split(' ')[0]} 👥 ${people}${s.inLine ? ` · ⏳ ${s.inLine}` : ''}`;
+}
+$('#simStats').onclick = () => { simOpen = !simOpen; if (lastStats) renderSimStats(lastStats); };
+
 // ---------- map ----------
 let city = null, mapMatch = false, mapOpen = false;
 function initMap() {
@@ -576,7 +604,11 @@ function initMap() {
     streets: STREETS,       // real street centrelines, parks, water, rail and trees
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (all, spot) => { const places = all.filter((p) => city.sceneOk(p)); return places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label); },
-    onNpc: (n) => { const p = n.thoughtFor; toast(p ? `${n.thought} Craving ${p.type.toLowerCase()} — heading to ${p.name}` : '💭 Just browsing downtown'); },
+    onNpc: (n) => showSim(n),
+    hhNow: (p) => !!hhNow(p),
+    onStats: (s) => renderSimStats(s),
+    onNpcGone: (n) => { toast(`👋 ${n.name} left downtown`); hideSim(); },
+    onNpcFollow: (on) => { if (!on && simN) renderSim(); },
     onHistory: (n) => $('#mapBack').classList.toggle('show', n > 0),
     onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
     onCorner: (c, near) => showFound(c.label, near),

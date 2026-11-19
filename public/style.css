@@ -405,3 +405,24 @@ header h1{padding-right:92px}
 .pollopt{position:relative}.pollopt span{flex:1;min-width:0}.pollopt .bar{display:block;height:5px;border-radius:3px;background:var(--accent);margin-top:5px;transition:width .4s;font-style:normal}.pollopt small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
 .pollopt.mine{border-color:var(--accent);outline:2px solid var(--accent)}
 .trainrow{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:14px}.trainrow:first-of-type{border-top:0}.trainrow i{width:10px;height:10px;border-radius:50%;flex:none}.trainrow span{flex:1}.trainrow b{font-variant-numeric:tabular-nums}
+/* Sims-style people: live stats chip and the person card */
+.simstats{font-size:12px;font-weight:700;max-width:min(360px,calc(100vw - 20px));text-align:left;white-space:normal;line-height:1.35}
+.simstats[aria-expanded=true]{display:flex;flex-direction:column;gap:2px;padding:9px 12px;border-radius:14px}
+.simstats span{font-weight:600;color:#495057}
+.simstats em{font-style:normal;font-weight:500;font-size:10.5px;color:#868e96}
+.simcard{position:absolute;left:10px;right:62px;bottom:116px;z-index:6;max-width:380px;background:var(--card,#fff);color:var(--ink,#212529);border-radius:16px;box-shadow:0 8px 26px rgba(0,0,0,.2);padding:10px 12px;display:flex;flex-direction:column;gap:6px;animation:scIn .22s ease}
+.simcard[hidden]{display:none}
+@keyframes scIn{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.sc-top{display:flex;align-items:center;gap:10px}
+.sc-av{width:34px;height:34px;border-radius:50%;background:#ebfbee;display:grid;place-items:center;font-size:18px;box-shadow:inset 0 0 0 2px #40c057}
+.sc-who{flex:1;min-width:0;display:flex;flex-direction:column}
+.sc-who b{font-size:14px}.sc-who small{font-size:11.5px;color:#868e96}
+.sc-x{border:0;background:transparent;font-size:15px;color:#868e96;padding:4px 6px;cursor:pointer}
+.sc-doing{font-size:13px;line-height:1.35}
+.sc-acts{display:flex;gap:6px;flex-wrap:wrap}
+.sc-acts button{border:0;border-radius:999px;padding:6px 11px;font:700 12px Inter,system-ui,sans-serif;background:#f1f3f5;color:#343a40;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-acts button.on{background:#ffd43b;color:#212529}
+@media(min-width:700px){.simcard{left:16px;bottom:88px}}
+[data-theme=dark] .simstats span{color:#ced4da}
+[data-theme=dark] .sc-acts button{background:#343a40;color:#f1f3f5}
+[data-theme=dark] .sc-av{background:#1f3a26}
