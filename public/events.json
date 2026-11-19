@@ -1,1 +1,41 @@
-{"updated":null,"events":[]}
+{
+ "updated": "2026-11-19T01:16:41.053Z",
+ "source": "ESPN public schedules",
+ "events": [
+  {
+   "team": "Rockets",
+   "emoji": "🏀",
+   "venue": "Toyota Center",
+   "vs": "LA Clippers",
+   "start": "2026-11-24T01:30:00.000Z"
+  },
+  {
+   "team": "Rockets",
+   "emoji": "🏀",
+   "venue": "Toyota Center",
+   "vs": "Phoenix Suns",
+   "start": "2026-11-26T01:30:00.000Z"
+  },
+  {
+   "team": "Rockets",
+   "emoji": "🏀",
+   "venue": "Toyota Center",
+   "vs": "Philadelphia 76ers",
+   "start": "2026-11-29T01:30:00.000Z"
+  },
+  {
+   "team": "Rockets",
+   "emoji": "🏀",
+   "venue": "Toyota Center",
+   "vs": "Los Angeles Lakers",
+   "start": "2026-12-01T00:30:00.000Z"
+  },
+  {
+   "team": "Rockets",
+   "emoji": "🏀",
+   "venue": "Toyota Center",
+   "vs": "Toronto Raptors",
+   "start": "2026-12-02T01:30:00.000Z"
+  }
+ ]
+}
