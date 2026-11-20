@@ -347,10 +347,10 @@ export async function openPOV(city, opts = {}) {
   // ---- realistic mode: Google's photorealistic 3D city (Map Tiles API), lined up with our map; our pins and people stay on top ----
   let realOn = false, realReady = false, tiles = null, geo = null, baseA = null, groundOff = 0, groundTick = 9, attrTick = 9, realMsg = null;
   const hint = (t, ms = 6000) => { const el = $('.pov-hint'); el.textContent = t; el.style.opacity = 1; el.hidden = false; clearTimeout(realMsg); realMsg = setTimeout(() => { el.style.opacity = 0; }, ms); };
-  const realHide = () => streetObjs.filter((o) => !pins.includes(o) && o !== bodies && o !== heads);
+  const realHide = () => scene.children.filter((o) => !o.isLight && o !== geo && o !== tunnel && !pins.includes(o) && o !== bodies && o !== heads && !o.userData.keepReal);   // everything we drew for the street (incl. lamps and trees added later), but not our labels or people
   const applyReal = () => {
     if (geo) geo.visible = realOn && !under;
-    const show3d = realOn && realReady; if (!under) for (const o of realHide()) o.visible = !show3d;   // our drawn city stays until Google's buildings have actually arrived
+    const show3d = realOn && realReady; if (!under) for (const o of realHide()) { if (show3d) { if (!('_rv' in o.userData)) o.userData._rv = o.visible; o.visible = false; } else if ('_rv' in o.userData) { o.visible = o.userData._rv; delete o.userData._rv; } }   // our drawn city stays until Google's buildings have actually arrived
     scene.fog = under ? scene.fog : show3d ? null : streetFog;
     $('[data-a=real]').classList.toggle('on', realOn); $('.pov-attr').hidden = !realOn || under;
   };
@@ -372,9 +372,9 @@ export async function openPOV(city, opts = {}) {
   const sampleGround = () => {   // lift or drop the whole city so the street right here sits at our ground level
     const A = city.avenues, C0 = city.cross, a = A.reduce((p, q) => (Math.abs(q.x - me.x) < Math.abs(p.x - me.x) ? q : p)), c = C0.reduce((p, q) => (Math.abs(q.y - me.y) < Math.abs(p.y - me.y) ? q : p));
     const [sx, sy] = Math.abs(a.x - me.x) < Math.abs(c.y - me.y) ? [a.x, me.y] : [me.x, c.y];   // the middle of the nearest road: open to the sky
-    rc.set(new T.Vector3(sx * S, 600, sy * S), new T.Vector3(0, -1, 0)); rc.far = 1400;
-    const hit = rc.intersectObject(tiles.group, true)[0]; if (!hit) return;
-    const want = groundOff - hit.point.y; if (Math.abs(want - groundOff) > 0.05) { groundOff += (want - groundOff) * (Math.abs(want - groundOff) > 8 ? 1 : 0.5); setGeo(); }
+    const down = (x, z) => { rc.set(new T.Vector3(x, 600, z), new T.Vector3(0, -1, 0)); rc.far = 1400; return rc.intersectObject(tiles.group, true)[0]?.point.y; };
+    const ys = [down(sx * S, sy * S), down(me.x * S, me.y * S)].filter((v) => v != null); if (!ys.length) return;   // the lower of the road and right underfoot: awnings and trees don't lift us
+    const want = groundOff - Math.min(...ys); if (Math.abs(want - groundOff) > 0.05) { groundOff += (want - groundOff) * (Math.abs(want - groundOff) > 8 ? 1 : 0.5); setGeo(); }
   };
   async function setReal(on) {
     if (on && !tiles) {
@@ -389,7 +389,7 @@ export async function openPOV(city, opts = {}) {
         tiles.registerPlugin(new R.GLTFExtensionsPlugin({ dracoLoader: new R.DRACOLoader().setDecoderPath(new URL('./vendor/draco/', import.meta.url).href) }));
         tiles.registerPlugin(new R.TileCompressionPlugin()); tiles.registerPlugin(new R.UnloadTilesPlugin());
         tiles.registerPlugin(new R.ReorientationPlugin({ lat: 29.7575 * Math.PI / 180, lon: -95.364 * Math.PI / 180, height: 0, recenter: true }));
-        tiles.errorTarget = 12; tiles.setCamera(camera); tiles.setResolutionFromRenderer(camera, renderer);
+        tiles.errorTarget = 6; tiles.setCamera(camera); tiles.setResolutionFromRenderer(camera, renderer);
         geo = new T.Group(); geo.matrixAutoUpdate = false; geo.add(tiles.group); scene.add(geo);
         tiles.addEventListener('load-root-tileset', () => setTimeout(align, 0));
         let models = 0; const ready = () => { if (tiles && !realReady && baseA && models >= 12) { realReady = true; applyReal(); hint('Realistic 3D city from Google · 🛰️ to switch back', 4000); } };
@@ -414,7 +414,7 @@ export async function openPOV(city, opts = {}) {
   let drag = null; const ray = new T.Raycaster(), ndc = new T.Vector2();
   cv.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, moved: 0, id: e.pointerId }; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
   cv.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy); me.yaw += dx * 0.0055; drag.vx = dx * 0.0055 * 60; me.pitch = Math.max(-1.1, Math.min(1.1, me.pitch + dy * 0.004)); if (drag.moved > 8 && follow && city.user?.heading != null) setFollow(false); });
-  let walkTo = null, yawV = 0; const ringM = new T.Mesh(keep(new T.RingGeometry(0.35, 0.55, 28)), keep(new T.MeshBasicMaterial({ color: '#ff6b35', transparent: true, opacity: 0.85, side: T.DoubleSide }))); ringM.rotation.x = -Math.PI / 2; ringM.visible = false; scene.add(ringM);
+  let walkTo = null, yawV = 0; const ringM = new T.Mesh(keep(new T.RingGeometry(0.35, 0.55, 28)), keep(new T.MeshBasicMaterial({ color: '#ff6b35', transparent: true, opacity: 0.85, side: T.DoubleSide }))); ringM.rotation.x = -Math.PI / 2; ringM.visible = false; ringM.userData.keepReal = true; scene.add(ringM);
   cv.addEventListener('pointerup', (e) => { if (drag && drag.moved < 8) { const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects([...pins, ...tunnelPins].filter((p) => p.visible))[0];
       if (hit) opts.onPick?.(hit.object.userData.spot);
       else if (ray.ray.direction.y < -0.02) { const t = -ray.ray.origin.y / ray.ray.direction.y; if (t < 160) { const gx = (ray.ray.origin.x + ray.ray.direction.x * t) / S, gy = (ray.ray.origin.z + ray.ray.direction.z * t) / S; walkTo = { x: gx, y: gy }; ringM.position.set(gx * S, 0.06, gy * S); ringM.visible = true; if (follow) setFollow(false); } } }   // tap the ground to walk there
