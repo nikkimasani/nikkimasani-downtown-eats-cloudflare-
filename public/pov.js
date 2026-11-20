@@ -359,9 +359,9 @@ export async function openPOV(city, opts = {}) {
     geo.matrix.identity(); geo.updateMatrixWorld(true); tiles.group.updateMatrixWorld(true);
     const P = (lat, lng, h) => { const v = new T.Vector3(); E.getCartographicToPosition(lat * rad, lng * rad, h, v); return v.applyMatrix4(tiles.group.matrixWorld); };
     const C = P(la, lo, 0), pe = P(la, lo + d, 0).sub(C), pn = P(la, lo, 0).sub(C), up3 = P(la, lo, 100).sub(C).normalize(); pn.copy(P(la + d, lo, 0)).sub(C);
-    const metres = pe.length(); pe.normalize(); pn.normalize();
+    const metres = pe.length(); pe.normalize(); pn.sub(up3.clone().multiplyScalar(pn.dot(up3))).normalize(); pe.sub(up3.clone().multiplyScalar(pe.dot(up3))).normalize(); pn.copy(new T.Vector3().crossVectors(up3, pe));   // a clean right-angled frame: no skew
     const o0 = city.proj(la, lo), oE = city.proj(la, lo + d), oN = city.proj(la + d, lo);
-    const e2 = new T.Vector3(oE[0] - o0[0], 0, oE[1] - o0[1]), n2 = new T.Vector3(oN[0] - o0[0], 0, oN[1] - o0[1]), k = (e2.length() * S) / metres; e2.normalize(); n2.normalize();
+    const e2 = new T.Vector3(oE[0] - o0[0], 0, oE[1] - o0[1]), k = (e2.length() * S) / metres; e2.normalize(); const n2 = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), e2).negate(); if (n2.dot(new T.Vector3(oN[0] - o0[0], 0, oN[1] - o0[1])) < 0) n2.negate();
     const B = new T.Matrix4().makeBasis(pe, pn, up3), B2 = new T.Matrix4().makeBasis(e2, n2, new T.Vector3(0, 1, 0));
     if (B2.determinant() < 0) console.warn('street grid is mirrored relative to the globe');
     baseA = new T.Matrix4().makeTranslation(o0[0] * S, 0, o0[1] * S).multiply(new T.Matrix4().makeScale(k, k, k)).multiply(B2).multiply(B.clone().invert()).multiply(new T.Matrix4().makeTranslation(-C.x, -C.y, -C.z));
@@ -392,7 +392,8 @@ export async function openPOV(city, opts = {}) {
         tiles.errorTarget = 12; tiles.setCamera(camera); tiles.setResolutionFromRenderer(camera, renderer);
         geo = new T.Group(); geo.matrixAutoUpdate = false; geo.add(tiles.group); scene.add(geo);
         tiles.addEventListener('load-root-tileset', () => setTimeout(align, 0));
-        tiles.addEventListener('tiles-load-end', () => { if (tiles && !realReady && baseA && tiles.group.children.length) { realReady = true; applyReal(); hint('Realistic 3D city from Google · 🛰️ to switch back', 4000); } });
+        let models = 0; const ready = () => { if (tiles && !realReady && baseA && models >= 12) { realReady = true; applyReal(); hint('Realistic 3D city from Google · 🛰️ to switch back', 4000); } };
+        tiles.addEventListener('load-model', () => { models++; ready(); }); tiles.addEventListener('tiles-load-end', ready);   // swap once enough of the city has arrived (Google keeps streaming finer detail after)
         let failed = false; tiles.addEventListener('load-error', (e) => { if (failed || realReady) return; failed = true; console.warn('3D tiles', e?.error || e); realOn = false; try { scene.remove(geo); tiles.dispose(); } catch {} tiles = null; geo = null; baseA = null; applyReal(); hint(key.provider === 'cesium' ? 'Cesium refused the 3D city request — check the token has Google Photorealistic 3D Tiles added in My Assets, and this website is allowed.' : 'Google refused the 3D city request — check the key has the Map Tiles API turned on, billing set up, and this website allowed.', 10000); });
       } catch (err) { console.warn(err); tiles = null; hint("Couldn't load the realistic view on this device.", 6000); return; }
     }
