@@ -4,7 +4,7 @@
 // placed. Landmarks sit on their real blocks. Restaurants are pins inside buildings; zoomed out
 // they collapse into one badge per block so the city stays calm.
 
-const TW = 32, TH = 16, ZU = 8.5;   // heights drawn ~60% of true scale so towers don't swallow the map          // px per unit at zoom 1 (1 unit = 10 m)
+const TW = 32, TH = 16, ZU = 17;   // heights close to true scale so the skyline reads; towers near the focus fade (see drawOsm)          // px per unit at zoom 1 (1 unit = 10 m)
 const M_LAT = 110850, M_LNG = 96680;
 const MAIN_A = [29.763689, -95.359828], MAIN_B = [29.751043, -95.368924];
 // west → east (parallel to Main)
@@ -60,6 +60,19 @@ const GP_STATIONS = [{ n: 'Theater District', av: 'Smith' }, { n: 'Central Stati
 const VEH = { waymo: { L: 0.7, W: 0.32, H: 0.24 }, bus: { L: 1.6, W: 0.4, H: 0.46 }, train: { L: 4.2, W: 0.4, H: 0.42 } };
 const GLASS = ['#8fb3c9', '#7d9db8', '#9fb6c8', '#6f8fa8', '#a7bfcf', '#86a3b5'], CONCRETE = ['#cfd6de', '#d9d2c5', '#c8cdd3', '#e2ddd3', '#bfc7cf', '#d6cbbb'], LOW = ['#e2d6c4', '#d8cfc2', '#cdbfae', '#e6e0d6', '#d3c8b8', '#c9c2b6'];
 // buildings OpenStreetMap leaves unnamed or plain, styled by hand (lat, lng inside the footprint)
+// signature towers OpenStreetMap leaves unnamed, short or half-mapped: [lat,lng] of the tower, search radius (m),
+// real height to the top (m), and how it looks. body: build the shaft under crown pieces that float with nothing beneath.
+const SKYLINE = [
+  { at: [29.76070, -95.36665], r: 42, name: 'TC Energy Center', hM: 238, c: '#b86f60', glass: false, roofC: '#93554a' },   // red granite, stepped Dutch-Gothic gables
+  { at: [29.75772, -95.36897], r: 30, name: 'Enterprise Plaza', hM: 230, c: '#7f8d98', glass: true },
+  { at: [29.75713, -95.36799], r: 45, name: 'CenterPoint Energy Plaza', hM: 226, c: '#43525e', glass: true, body: true },
+  { at: [29.75995, -95.36576], r: 38, name: 'Pennzoil Place', hM: 159, c: '#2e2a28', glass: true, roofC: '#3a3532', roofM: 26 },   // twin bronze trapezoids
+  { at: [29.76110, -95.36328], r: 45, name: 'Texas Tower', hM: 224, c: '#a9c1d2', glass: true },
+  { at: [29.75446, -95.37274], r: 36, name: '1600 Smith', hM: 223, c: '#5b7383', glass: true },
+  { at: [29.75463, -95.36978], r: 36, name: 'Wedge International Tower', c: '#6b4f43', glass: true },
+  { at: [29.75765, -95.37049], r: 22, name: 'One Allen Center', c: '#9d9a93' },
+];
+const RENAME = { '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
 const STYLE_FIX = [{ at: [29.75412, -95.36274], name: 'Four Seasons Hotel', c: '#cdb59a', grid: '#6b5646', minH: 80 }];
 const SUFFIX = (n) => n === 'Texas' ? 'Texas Ave' : n + ' St';
 export const STREETS = { avenues: AVENUES, cross: CROSS, full: SUFFIX };
@@ -1267,7 +1280,7 @@ export class CityMap {
       const isGlass = glass || mat === 'glass' || /glass/.test(mat) || (h >= 8 && lum < 0.38 && !/brick|stone|concrete/.test(mat));   // dark towers downtown are tinted glass
       if (mat === 'glass' && !glass) c = GLASS[Math.floor(k * GLASS.length)];
       if (type === 'parking') c = '#b9bcc2';
-      const o = { pts, bb, h, z0, c, glass: isGlass, name, type, cx, cy };
+      const o = { pts, bb, h, z0, c, glass: isGlass, name, type, cx, cy, topM: hM >= 60 ? Math.round(hM) : 0 };
       if (/^#[0-9a-f]{6}$/i.test(roofColour || '')) o.roofC = roofColour; else if (/^(red|green|grey|gray|black|white|brown|blue)$/i.test(roofColour || '')) o.roofC = { red: '#a5463a', green: '#4f7a5a', grey: '#8a8f96', gray: '#8a8f96', black: '#3a3d42', white: '#eceae4', brown: '#7a5a44', blue: '#4a6c9a' }[roofColour.toLowerCase()];
       const rs = String(roofShape || '').toLowerCase();
       if (/^(pyramidal|hipped|gabled|dome|onion|round|half-hipped|skillion)$/.test(rs)) {
@@ -1292,6 +1305,26 @@ export class CityMap {
       const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
         for (const [s, f, cc] of cr) { const q = pts.map((p) => [cx + (p[0] - cx) * s, cy + (p[1] - cy) * s]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]); this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: f * h, z0: top, c: cc || o.c, glass: o.glass, name: '', type: 'crown', cx, cy }); top += f * h; } }
     }
+    // signature towers: name them, set their real heights and cladding, and build missing shafts
+    for (const S of SKYLINE) {
+      const [px, py] = this.proj(S.at[0], S.at[1]), R = S.r / 10;
+      const near = this.osm.filter((o) => o.type !== 'crown' && Math.hypot(o.cx - px, o.cy - py) < R && o.z0 + o.h > 4); if (!near.length) continue;
+      const ground = near.filter((o) => o.z0 < 0.5);
+      if (S.body && !ground.some((o) => o.h > 6)) {   // only the crown is mapped: the shaft is the outline around its pieces, up to where they start
+        const P = near.flatMap((o) => o.pts).sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+        const lo = [], hi = []; for (const p of P) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); } for (const p of [...P].reverse()) { while (hi.length > 1 && cr(hi[hi.length - 2], hi[hi.length - 1], p) <= 0) hi.pop(); hi.push(p); }
+        const pts = [...lo.slice(0, -1), ...hi.slice(0, -1)], xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+        const ob = { pts, bb: { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }, h: Math.min(...near.map((o) => o.z0)) + 0.05, z0: 0, c: S.c, glass: !!S.glass, name: S.name, type: 'office', cx: xs.reduce((a, b) => a + b, 0) / xs.length, cy: ys.reduce((a, b) => a + b, 0) / ys.length };
+        this.osm.push(ob); near.push(ob); ground.push(ob);
+      }
+      const top = Math.max(...near.map((o) => o.z0 + o.h + (o.rh || 0)));
+      if (S.hM && top > 0) { const k = S.hM / 10 / top; if (Math.abs(k - 1) > 0.02) for (const o of near) { o.z0 *= k; o.h *= k; if (o.rh) { o.rh *= k; if (o.rz) o.rz = o.rz.map((z) => z * k); } } }
+      if (S.roofM) for (const o of near) if (o.roof === 'skillion' && o.rh) { const nr = Math.min(S.roofM / 10, (o.h + o.rh) * 0.5), f = nr / o.rh; o.h += o.rh - nr; o.rh = nr; o.rz = o.rz.map((z) => z * f); }
+      const tall = Math.max(...near.map((o) => o.z0 + o.h)), main = (ground.length ? ground : near).reduce((a, o) => ((o.bb.x1 - o.bb.x0) * (o.bb.y1 - o.bb.y0) * (o.z0 + o.h) > (a.bb.x1 - a.bb.x0) * (a.bb.y1 - a.bb.y0) * (a.z0 + a.h) ? o : a));
+      for (const o of near) { if (o.z0 + o.h < tall * 0.45) continue; if (S.c) o.c = S.c; if (S.glass != null) o.glass = S.glass; if (S.roofC) o.roofC = S.roofC; if (o.name && o.name !== S.name && o !== main) o.name = ''; }
+      main.name = S.name; main.sky = true; if (S.hM) main.topM = S.hM;
+    }
+    for (const o of this.osm) if (RENAME[o.name]) o.name = RENAME[o.name];
     // drop upper parts left floating because the tower under them isn't mapped
     this.osm = this.osm.filter((o) => !(o.z0 > 0.5) || o.type === 'crown' || this.osm.some((u) => u !== o && u.z0 < o.z0 && u.z0 + u.h >= o.z0 - 0.6 && inPoly(o.cx, o.cy, u.pts)));
     if (this.osm.length < 50) { this.osm = null; this.osmLots = []; this.landmarks = this.allLandmarks; return false; }   // bad download: fall back to the drawn city
@@ -2024,7 +2057,7 @@ export class CityMap {
       const [x, y] = this.v.p(st.x + (st.line === 'red' ? 1.3 : 0), st.y, 1.6); if (Math.abs(sx - x) < 60 && Math.abs(sy - y) < 11 && this.v.s > 0.3) return { landmark: { n: '🚊 ' + st.n + (st.line === 'red' ? ' · Red Line' : ' · Green & Purple lines'), station: true } };
     }
     if (!best && this.mode !== 'tunnel') for (const o of this.osmNamed || []) {
-      const [x, y] = this.v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (Math.abs(sx - x) < 50 && Math.abs(sy - y) < 10) return { landmark: { n: `${o.name} · ${Math.round(o.h * 10)} m tall` } };
+      const [x, y] = this.v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (Math.abs(sx - x) < 50 && Math.abs(sy - y) < 10) return { landmark: { n: `${o.name} · ${o.topM || Math.round((o.z0 + o.h + (o.rh || 0)) * 10)} m tall` } };
     }
     if (!best && this.mode !== 'tunnel') for (const l of this.landmarks) {
       const [x, y] = this.v.p(l.x + l.w / 2, l.y + l.d / 2, l.h * 0.6);
@@ -2135,6 +2168,11 @@ export class CityMap {
     // skip anything that can't be on screen (most of the city once you're zoomed in)
     const W = this.W, H = this.H, off = (x, y, w, d, h) => { const [sx, sy] = v.p(x + w / 2, y + d / 2), r = (w + d) * TW * 0.5 * v.s + 20, up = h * ZU * v.s + r; return sx < -r || sx > W + r || sy < -r * 0.6 || sy - up > H; };
     const ghost = mode === 'both' ? 0.4 : 1;
+    // towers standing in front of the picked spot turn see-through, so tall true-scale buildings never hide it
+    const fs = this.pick != null && this.mode !== 'tunnel' ? this.spots.find((s) => !s.tunnel && s.places.some((p) => p.id === this.pick)) : null, fpt = fs && v.p(fs.x, fs.y, 0), fdep = fs && v.depth(fs.x, fs.y);
+    const xray = (o) => { if (!fs || o.z0 + o.h < 4 || this.osmDepth(o) < fdep + 0.3) return false; if (ptIn(fs.x, fs.y, o.pts)) return false;
+      let x0 = 1e9, x1 = -1e9, y1 = -1e9, top = 1e9; for (const p of o.pts) { const [a, b] = v.p(p[0], p[1], o.z0); const [, t] = v.p(p[0], p[1], o.z0 + o.h); if (a < x0) x0 = a; if (a > x1) x1 = a; if (b > y1) y1 = b; if (t < top) top = t; }
+      return fpt[0] > x0 && fpt[0] < x1 && fpt[1] < y1 && fpt[1] > top - 40; };
     for (const it of items) {
       if (it.f ? off(it.f.x, it.f.y, it.f.w, it.f.d, it.f.h) : it.l ? off(it.l.x, it.l.y, it.l.w, it.l.d, it.l.h + 3) : it.a ? off(it.a.r.x0, it.a.r.y0, it.a.r.x1 - it.a.r.x0, it.a.r.y1 - it.a.r.y0, 6) : false) continue;
       if (it.f) {
@@ -2143,7 +2181,7 @@ export class CityMap {
       }
       else if (it.l) this.drawLandmark(it.l, N, ghost);
       else if (it.a) this.drawArea(it.a, N, '3d', ghost);
-      else if (it.o) this.drawOsm(it.o, N, ghost);
+      else if (it.o) this.drawOsm(it.o, N, xray(it.o) ? Math.min(ghost, 0.32) : ghost);
       else if (it.t) this.drawTrain(it.t, N, ghost);
       else if (it.c) this.drawCar(it.c, N, ghost, now);
       else if (it.tr) this.drawStreetTree(it.tr[0], it.tr[1], N, ghost);
