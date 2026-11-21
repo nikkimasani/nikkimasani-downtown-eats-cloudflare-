@@ -134,7 +134,7 @@
     <form class="searchbar" id="findForm" autocomplete="off">
       <span class="sb-ico">🔍</span>
       <input id="findIn" type="search" enterkeyhint="search" placeholder="Search restaurants, bars, corners…" aria-label="Search the map">
-      <button type="button" id="sbRoute" class="sb-route">ROUTE</button>
+      <button type="button" id="sbRoute" class="sb-route" aria-label="Directions">↱ Route</button>
     </form>
     <div class="seg scene" id="sceneSeg" role="group" aria-label="Day or night map">
       <button data-s="day" class="on" title="Day: places to eat">☀️<span class="lbl"> Day</span></button>
@@ -174,7 +174,7 @@
   </div>
   <div class="findbox" id="findBox"><div id="findList"></div></div>
   <div class="mapchips" id="mapChips"></div>
-  <button class="locatebtn" id="findMe">➤ LOCATE ME</button><button id="zloc" hidden></button>
+  <button class="locatebtn" id="findMe" hidden aria-hidden="true" tabindex="-1"></button>
   <div class="foundbar" id="mapFound"></div>
   <div class="simcard" id="simCard" hidden></div>
   <div class="navpanel" id="navPanel" aria-live="polite"></div>
@@ -183,6 +183,7 @@
   <div class="zoombox">
     <button id="povBtn" class="povround" aria-label="Street view — walk around in 3D" title="Street view: walk around in 3D">🧍<small>3D</small></button>
     <button id="zcomp" class="compass" aria-label="Point north" title="Tap to face north"><span id="needle"><b>N</b><i></i></span></button>
+    <button id="zloc" class="locbtn" aria-label="Find me on the map" title="Find me">➤</button>
     <button id="zrot" class="desk" aria-label="Rotate map" title="Rotate 90° (or twist with two fingers)">⟳</button>
     <button id="zin" class="desk" aria-label="Zoom in">+</button>
     <button id="zout" class="desk" aria-label="Zoom out">−</button>

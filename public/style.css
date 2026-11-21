@@ -474,3 +474,60 @@ header h1{font-size:26px}
 #v-browse > .row::-webkit-scrollbar{display:none}
 .chip{padding:5px 11px;font-size:13px}
 select.chip{padding-right:24px}
+
+/* ---------- map controls, tidied: one slim search bar, one row of small toggles, one neat rail on the right ---------- */
+#v-map .hud{gap:6px;flex-wrap:wrap;align-items:center}
+#v-map .searchbar{padding:3px 4px 3px 12px;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+#v-map .sb-ico{font-size:14px}
+#v-map .searchbar input{font-size:15px;padding:7px 0}
+#v-map .sb-route{padding:6px 11px;font:700 11.5px Inter,system-ui,sans-serif;letter-spacing:.02em;border-color:#5c636a;white-space:nowrap}
+#v-map .hud .seg{padding:2px;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+#v-map .hud .seg button{height:28px;padding:0 10px;font-size:12.5px;line-height:28px}
+#v-map .hud .seg.scene button{padding:0 8px;font-size:14px}
+#v-map .hud .pill{height:32px;padding:0 11px;font-size:12.5px;line-height:32px;box-shadow:0 2px 8px rgba(0,0,0,.14);display:inline-flex;align-items:center;gap:4px}
+#v-map .hud #moreBtn{width:32px;padding:0;justify-content:center;font-size:15px}
+#v-map .hud #moreBtn .lbl{display:none}
+#v-map .hud .simstats{margin-left:auto}
+#v-map .hud .simstats[aria-expanded=true]{height:auto;line-height:1.35;flex-basis:100%;margin-left:0}
+#v-map .hud .simstats:not([hidden]) ~ #moreBtn{margin-left:0}
+#v-map .hud #moreBtn{margin-left:auto}
+#v-map .hud .simstats:not([hidden]) + #moreBtn{margin-left:0}
+#v-map .hud-more .pill{height:30px;line-height:30px}
+/* right rail: one column, same size, grouped */
+#v-map .zoombox{gap:0;right:10px;bottom:60px !important;background:rgba(255,255,255,.95);border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.18);padding:3px;overflow:hidden}
+#v-map .zoombox button{width:38px;height:38px;border-radius:11px;box-shadow:none;background:transparent;font-size:17px}
+#v-map .zoombox button + button{margin-top:2px}
+#v-map .zoombox .povround{width:38px;height:42px;border-radius:11px;font-size:16px}
+#v-map .zoombox .povround small{font-size:8px;margin-top:1px}
+#v-map .zoombox .locbtn{display:grid;place-items:center;font-size:16px}
+#v-map .zoombox .locbtn.on{border-radius:11px}
+:root[data-theme=dark] #v-map .zoombox{background:rgba(34,27,23,.95)}
+:root[data-theme=dark] #v-map .zoombox button{background:transparent}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) #v-map .zoombox{background:rgba(34,27,23,.95)}}
+/* bottom: smaller filter chips, no big Locate pill, quieter hint */
+#v-map .locatebtn{display:none !important}
+#v-map .mapchips{bottom:8px;gap:6px}
+#v-map .mchip{padding:6px 11px;font-size:12.5px;border-width:1px;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+#v-map .mapmsg{bottom:58px;font-size:11.5px;padding:5px 10px}
+#v-map .legend{bottom:56px !important}
+@media (max-width:520px){#v-map .legend:not(.min){bottom:56px !important}}
+#v-map .foundbar{bottom:56px;right:60px}
+#v-map .backpill{padding:7px 13px;font-size:13px}
+@media(min-width:700px){#v-map .zoombox{right:16px}}
+#v-map .hud .seg button{padding:0 8px;font-size:12px}
+#v-map .hud .seg.scene button{padding:0 6px;font-size:13px}
+#v-map .hud .simstats:not([aria-expanded=true]){padding:0 8px;font-size:12px;white-space:nowrap}
+:root[data-theme=dark] #v-map .zoombox button{color:#f6ece2}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) #v-map .zoombox button{color:#f6ece2}}
+#v-map .hud-more{padding:8px;gap:6px;border-radius:16px}
+#v-map .hud-more .hm-row{gap:6px}
+#v-map .hud-more .hm-toggles label{font-size:13px}
+#v-map .hud-more .hm-tip,#v-map .hud-more .hm-live{font-size:12px}
+#v-map .hud-more .hm-h{font-size:12.5px}
+/* calmer bottom bar and Pick buttons */
+.tabs{padding:5px 8px calc(env(safe-area-inset-bottom) + 5px)}
+.tabs button{padding:5px 2px;gap:1px;font-size:10.5px}
+.tabs button span{font-size:18px}
+#v-pick .btn.big{padding:10px 14px;font-size:15px;border-radius:12px}
+#v-pick .card{padding:12px}
+#v-pick .card .note{font-size:13.5px}
