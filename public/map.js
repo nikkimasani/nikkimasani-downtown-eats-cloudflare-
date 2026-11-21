@@ -72,6 +72,11 @@ const SKYLINE = [
   { at: [29.75463, -95.36978], r: 36, name: 'Wedge International Tower', c: '#6b4f43', glass: true },
   { at: [29.75765, -95.37049], r: 22, name: 'One Allen Center', c: '#9d9a93' },
 ];
+// hand-made tops for towers whose mapped crowns are too coarse: the shaft stops below hM by the tiers' total height,
+// mapped bits above it inside the footprint are dropped, and the tiers stack on centre: [scale, metres, colour]
+const SIG_TOPS = {
+  'Heritage Plaza': { hM: 232, c: '#6e93ad', glass: true, tiers: [[0.9, 5, '#d6cdb9'], [0.76, 5, '#d6cdb9'], [0.62, 5, '#cfc5af'], [0.48, 5, '#cfc5af'], [0.34, 4, '#c8bda6'], [0.2, 4, '#c8bda6']] },   // stepped Mayan-temple top
+};
 const RENAME = { '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
 const STYLE_FIX = [{ at: [29.75412, -95.36274], name: 'Four Seasons Hotel', c: '#cdb59a', grid: '#6b5646', minH: 80 }];
 const SUFFIX = (n) => n === 'Texas' ? 'Texas Ave' : n + ' St';
@@ -1187,8 +1192,12 @@ export class CityMap {
     const angA = dirAng(0, 1), angC = dirAng(1, 0);
     const showNum = v.s > 1.15;
     const covered = (wx, wy) => this.landmarks.some((l) => l.kind === 'post' && wx > l.x && wx < l.x + l.w && wy > l.y && wy < l.y + l.d);
-    const sign = (x, y, text, ang, major, num) => {
+    // towers standing in front of a sign hide it, so signs never float across a building face
+    const occ = []; for (const o of this.osm || []) { if (o.z0 > 0.5 || o.h < 5) continue; let x0 = 1e9, x1 = -1e9, yb = -1e9, yt = 1e9; for (const p of o.pts) { const [a, b] = v.p(p[0], p[1], 0), t = v.p(p[0], p[1], o.h)[1]; if (a < x0) x0 = a; if (a > x1) x1 = a; if (b > yb) yb = b; if (t < yt) yt = t; } if (x1 < -50 || x0 > this.W + 50 || yb < -50 || yt > this.H + 50) continue; const m = (x1 - x0) * 0.03; occ.push([x0 + m, x1 - m, yt, yb - (yb - yt) * 0.04, this.osmDepth(o), o.pts]); }
+    const hidden = (wx, wy, x, y) => { const d = v.depth(wx, wy); return occ.some(([x0, x1, yt, yb, od, pts]) => x > x0 && x < x1 && y > yt && y < yb && od > d + 0.2 && !ptIn(wx, wy, pts)); };
+    const sign = (x, y, text, ang, major, num, wx, wy) => {
       if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
+      if (wx != null && hidden(wx, wy, x, y)) return;
       ctx.font = `700 ${size}px system-ui, -apple-system, sans-serif`;
       const label = num ? `${text}  ·  ${num}` : text, w = ctx.measureText(label).width + size * 1.1, h = size * 1.55;
       { const c = Math.abs(Math.cos(ang)), s2 = Math.abs(Math.sin(ang)), bw = (w * c + h * s2) * 0.42, bh = (w * s2 + h * c) * 0.42; if (!fits(x - bw, y - bh, x + bw, y + bh)) return; }
@@ -1201,11 +1210,11 @@ export class CityMap {
     };
     for (let i = 0; i < A.length; i++) for (let j = 0; j < C.length - 1; j++) {
       if ((j + i) % kA || covered(A[i].x, (C[j].y + C[j + 1].y) / 2)) continue; const [x, y] = v.p(A[i].x, (C[j].y + C[j + 1].y) / 2);
-      sign(x, y, SUFFIX(A[i].n), angA, MAJOR.has(A[i].n), showNum && C[j].num != null ? `${C[j].num}s` : '');
+      sign(x, y, SUFFIX(A[i].n), angA, MAJOR.has(A[i].n), showNum && C[j].num != null ? `${C[j].num}s` : '', A[i].x, (C[j].y + C[j + 1].y) / 2);
     }
     for (let j = 0; j < C.length; j++) for (let i = 0; i < A.length - 1; i++) {
       if ((i + j + 1) % kC) continue; const [x, y] = v.p((A[i].x + A[i + 1].x) / 2, C[j].y);
-      sign(x, y, SUFFIX(C[j].n), angC, MAJOR.has(C[j].n), showNum && A[i].num != null ? `${A[i].num}s` : '');
+      sign(x, y, SUFFIX(C[j].n), angC, MAJOR.has(C[j].n), showNum && A[i].num != null ? `${A[i].num}s` : '', (A[i].x + A[i + 1].x) / 2, C[j].y);
     }
     if (v.s > 1.5) {   // corner plates at every intersection when zoomed right in
       ctx.font = `700 10px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -1263,7 +1272,7 @@ export class CityMap {
         const areaOf = (Q) => { let s = 0; for (let i = 0; i < Q.length; i++) { const a = Q[i], b = Q[(i + 1) % Q.length]; s += a[0] * b[1] - b[0] * a[1]; } return Math.abs(s / 2); };
         let best = null, ba = 0;
         for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) { const r = blockOf(mx + dx * this.blockW * 0.5, my + dy * this.blockD * 0.5), q = clip(pts, r); if (q.length >= 3) { const a = areaOf(q); if (a > ba) { ba = a; best = q; } } }
-        if (!best || ba < 0.15) continue; pts = best; }
+        if (!best || ba < 0.15) continue; if (!(hM >= 50 || (minM || 0) >= 30) || ba < areaOf(pts) * 0.55) pts = best; }   // towers and their tops keep their real outline (clipping chops crowns into slivers)
       let ar = 0; for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length]; ar += a[0] * b[1] - b[0] * a[1]; }
       if (ar < 0) pts.reverse();   // counter-clockwise, so each wall's outward side is known
       const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), bb = { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
@@ -1325,8 +1334,17 @@ export class CityMap {
       main.name = S.name; main.sky = true; if (S.hM) main.topM = S.hM;
     }
     for (const o of this.osm) if (RENAME[o.name]) o.name = RENAME[o.name];
+    for (const [nm, T] of Object.entries(SIG_TOPS)) {
+      const m = this.osm.filter((o) => o.name === nm && o.z0 < 0.5).sort((a, b) => b.h - a.h)[0]; if (!m) continue;
+      this.osm = this.osm.filter((o) => o === m || !(o.z0 > m.h * 0.6 && ptIn(o.cx, o.cy, m.pts)));
+      const tot = T.tiers.reduce((a, t) => a + t[1], 0) / 10; m.h = T.hM / 10 - tot; m.rh = 0; m.roof = null; m.c = T.c; m.glass = T.glass; m.topM = T.hM;
+      let z = m.h; for (const [sc, hm, cc] of T.tiers) { const q = m.pts.map((p) => [m.cx + (p[0] - m.cx) * sc, m.cy + (p[1] - m.cy) * sc]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]);
+        this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: hm / 10, z0: z, c: cc, glass: false, name: '', type: 'crown', cx: m.cx, cy: m.cy }); z += hm / 10; }
+    }
     // drop upper parts left floating because the tower under them isn't mapped
     this.osm = this.osm.filter((o) => !(o.z0 > 0.5) || o.type === 'crown' || this.osm.some((u) => u !== o && u.z0 < o.z0 && u.z0 + u.h >= o.z0 - 0.6 && inPoly(o.cx, o.cy, u.pts)));
+    for (const o of this.osm) if (o.z0 > 0.5) { let best = null; for (const u of this.osm) if (u !== o && u.z0 < o.z0 && u.z0 + u.h >= o.z0 - 0.6 && inPoly(o.cx, o.cy, u.pts) && (!best || u.z0 + u.h > best.z0 + best.h)) best = u; o.base = best; }
+    for (const o of this.osm) { const seen = new Set([o]); let b = o.base; while (b && !seen.has(b)) { seen.add(b); b = b.base; } if (b) o.base = null; }   // no loops
     if (this.osm.length < 50) { this.osm = null; this.osmLots = []; this.landmarks = this.allLandmarks; return false; }   // bad download: fall back to the drawn city
     // a few blocks OpenStreetMap hasn't mapped yet, drawn by hand (fractions run west→east and north→south across the block)
     const FILL = [
@@ -1349,7 +1367,8 @@ export class CityMap {
     this.osmNamed = this.osm.filter((o) => o.name && o.h >= 6).sort((a, b) => b.h - a.h);
     return true;
   }
-  osmDepth(o) { let m = -Infinity; for (const p of o.pts) { const d = this.v.depth(p[0], p[1]); if (d > m) m = d; } return m; }
+  osmDepth(o) { if (o.base) return this.osmDepth(o.base) + o.z0 * 1e-4;   // tops draw right after the tower they sit on, never behind it
+    let m = -Infinity; for (const p of o.pts) { const d = this.v.depth(p[0], p[1]); if (d > m) m = d; } return m; }
   drawOsm(o, N, alpha) {
     const ctx = this.ctx, v = this.v, P = o.pts, n = P.length, z0 = o.z0, z1 = o.z0 + o.h;
     ctx.globalAlpha = alpha;
@@ -1447,7 +1466,6 @@ export class CityMap {
       const cx = o.cx, cy = o.cy, s2 = Math.min(o.bb.x1 - o.bb.x0, o.bb.y1 - o.bb.y0) * 0.22;
       poly(ctx, [v.p(cx - s2, cy - s2 * 0.6, z1 + 0.01), v.p(cx + s2, cy - s2 * 0.6, z1 + 0.01), v.p(cx + s2, cy + s2 * 0.6, z1 + 0.01), v.p(cx - s2, cy + s2 * 0.6, z1 + 0.01)], N ? '#1d4f77' : '#4dabf7');
     }
-    if (o.name === 'Heritage Plaza') { const w = (o.bb.x1 - o.bb.x0) * 0.3; pyramid(ctx, v, o.cx - w / 2, o.cy - w / 2, w, w, z1, 1.6, col); }
     ctx.globalAlpha = 1;
   }
 
@@ -2490,9 +2508,9 @@ export class CityMap {
     const ctx = this.ctx, v = this.v, A = this.avenues, C = this.cross;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.font = `700 ${Math.round(Math.min(13, 9 + v.s * 4))}px system-ui, sans-serif`; ctx.fillStyle = N ? 'rgba(255,255,255,.8)' : 'rgba(33,37,41,.85)';
-    const all = v.s > 0.5;
-    for (const a of A) if (all || MAJOR.has(a.n)) { const [x, y] = v.p(a.x, C[0].y - 1.6), w = ctx.measureText(a.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(a.n, x, y); }
-    for (const c of C) if (all || MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 2.4, c.y), w = ctx.measureText(c.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(c.n, x, y); }
+    const all = v.s > 0.5, edge = !(all && !this.hide.signs);   // zoomed in, the green street signs name the streets; edge names would float over the towers
+    if (edge) for (const a of A) if (all || MAJOR.has(a.n)) { const [x, y] = v.p(a.x, C[0].y - 1.6), w = ctx.measureText(a.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(a.n, x, y); }
+    if (edge) for (const c of C) if (all || MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 2.4, c.y), w = ctx.measureText(c.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(c.n, x, y); }
     for (const f of this.freewayLabels || []) { const [x, y] = v.p(f.x, f.y); pillFit(ctx, x, y, f.t, 10, f.water ? 'rgba(25,113,194,.85)' : 'rgba(33,37,41,.75)', '#fff'); }
     if (v.s > 0.3) {
       for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7); pillFit(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
