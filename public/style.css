@@ -607,3 +607,5 @@ header h1{font-size:22px !important;margin:2px 0 0;padding-right:84px}
 :root[data-theme=dark] #v-map .hud .seg button.on{background:#f6ece2;color:#221b17}
 :root[data-theme=dark] #v-map .hud .seg.scene button.on[data-s=day]{background:#5c4a1a;color:#ffe8a3}
 :root[data-theme=dark] #v-map .mchip.on{background:#e8590c;color:#fff;border-color:#e8590c}
+/* header stats: never cut off — wraps to a second line on narrow or large-text screens */
+#hdr{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
