@@ -531,3 +531,51 @@ select.chip{padding-right:24px}
 #v-pick .btn.big{padding:10px 14px;font-size:15px;border-radius:12px}
 #v-pick .card{padding:12px}
 #v-pick .card .note{font-size:13.5px}
+
+/* ---------- other tabs, tidied: smaller header, even rows, less bulk ---------- */
+header#top{padding-top:2px}
+header h1{font-size:22px !important;margin:2px 0 0;padding-right:84px}
+#hdr{font-size:12px;margin:2px 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:4px}
+.themebtn{width:32px;height:32px;font-size:15px;top:2px}
+.themebtn.textbtn{right:40px}
+.view h2{font-size:19px;margin:6px 0 8px}
+.view .sub{font-size:12.5px;line-height:1.4;margin:-2px 0 10px}
+.chip{padding:6px 11px;font-size:13px}
+.chips{gap:6px}
+.search{padding:10px 14px;font-size:15px;border-radius:12px}
+.subtabs{padding:3px;margin-bottom:10px}
+.subtabs button{padding:6px 6px;font-size:13px}
+.btn{padding:9px 14px;font-size:14px;border-radius:12px}
+.btn.big{padding:10px 14px;font-size:15px}
+/* cards */
+.card{padding:12px;border-radius:14px}
+.card h3{font-size:15px}
+.card .meta{font-size:12.5px}
+.card .note{font-size:13.5px;margin-top:4px}
+.card .mini{width:46px;height:46px;border-radius:10px}
+.card .locrow{gap:10px;margin-top:8px}
+.card .tags{margin-top:8px}
+.grid{gap:10px}
+.review-card{padding:10px 12px}
+.review-card summary{list-style:none;cursor:pointer;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:8px}
+.review-card summary::-webkit-details-marker{display:none}
+.review-card summary span{margin-left:auto;flex:none;color:var(--accent);font-size:12.5px}
+.review-card[open] summary span{display:none}
+.review-card[open] summary{margin-bottom:6px}
+/* plan */
+.week{gap:6px}
+.day{grid-template-columns:44px 32px 1fr auto;gap:8px;padding:8px 10px;border-radius:12px}
+.day .d{font-size:15px}
+.day .ctile{width:32px;height:32px;border-radius:9px;font-size:17px}
+.day .ctile.blank{font-size:16px}
+.day .nm{font-size:14px}
+.day .acts button{width:32px;height:32px;padding:0;font-size:14px;border-radius:9px}
+.weekacts{display:grid !important;grid-template-columns:repeat(3,1fr);gap:8px}
+.weekacts #planBtn{grid-column:1/-1}
+.weekacts .btn{width:100%;justify-content:center;text-align:center;padding:9px 6px;font-size:13.5px;white-space:nowrap}
+.officerow{font-size:12.5px}
+/* ask */
+#v-ask textarea{font-size:14.5px;border-radius:12px;min-height:84px}
+#v-pick .mood button{padding:5px 10px;font-size:12.5px}
+#v-pick .mood button b{font-size:14px}
+.pickfilters summary{padding:7px 12px;font-size:13px}
