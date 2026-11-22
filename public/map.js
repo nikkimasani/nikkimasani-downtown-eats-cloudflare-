@@ -63,7 +63,7 @@ const GLASS = ['#8fb3c9', '#7d9db8', '#9fb6c8', '#6f8fa8', '#a7bfcf', '#86a3b5']
 // signature towers OpenStreetMap leaves unnamed, short or half-mapped: [lat,lng] of the tower, search radius (m),
 // real height to the top (m), and how it looks. body: build the shaft under crown pieces that float with nothing beneath.
 const SKYLINE = [
-  { at: [29.76070, -95.36665], r: 42, name: 'TC Energy Center', hM: 238, c: '#b86f60', glass: false, roofC: '#93554a', fac: 'punch' },   // red granite, stepped Dutch-Gothic gables
+  { at: [29.76070, -95.36665], r: 42, name: 'TC Energy Center', hM: 238, c: '#b86f60', glass: false, roofC: '#93554a', fac: 'punch', stepGable: true },   // red granite, stepped Dutch-Gothic gables
   { at: [29.75772, -95.36897], r: 30, name: 'Enterprise Plaza', hM: 230, c: '#7f8d98', glass: true },
   { at: [29.75713, -95.36799], r: 45, name: 'CenterPoint Energy Plaza', hM: 226, c: '#43525e', glass: true, body: true },
   { at: [29.75995, -95.36576], r: 38, name: 'Pennzoil Place', hM: 159, c: '#2e2a28', glass: true, roofC: '#3a3532', roofM: 26 },   // twin bronze trapezoids
@@ -1343,7 +1343,7 @@ export class CityMap {
       if (S.hM && top > 0) { const k = S.hM / 10 / top; if (Math.abs(k - 1) > 0.02) for (const o of near) { o.z0 *= k; o.h *= k; if (o.rh) { o.rh *= k; if (o.rz) o.rz = o.rz.map((z) => z * k); } } }
       if (S.roofM) for (const o of near) if (o.roof === 'skillion' && o.rh) { const nr = Math.min(S.roofM / 10, (o.h + o.rh) * 0.5), f = nr / o.rh; o.h += o.rh - nr; o.rh = nr; o.rz = o.rz.map((z) => z * f); }
       const tall = Math.max(...near.map((o) => o.z0 + o.h)), main = (ground.length ? ground : near).reduce((a, o) => ((o.bb.x1 - o.bb.x0) * (o.bb.y1 - o.bb.y0) * (o.z0 + o.h) > (a.bb.x1 - a.bb.x0) * (a.bb.y1 - a.bb.y0) * (a.z0 + a.h) ? o : a));
-      for (const o of near) { if (o.z0 + o.h < tall * 0.45) continue; if (S.c) o.c = S.c; if (S.glass != null) o.glass = S.glass; if (S.roofC) o.roofC = S.roofC; if (S.fac) o.fac = S.fac; if (o.name && o.name !== S.name && o !== main) o.name = ''; }
+      for (const o of near) { if (o.z0 + o.h < tall * 0.45) continue; if (S.c) o.c = S.c; if (S.glass != null) o.glass = S.glass; if (S.roofC) o.roofC = S.roofC; if (S.fac) o.fac = S.fac; if (S.stepGable && o.roof === 'gabled') o.stepped = true; if (o.name && o.name !== S.name && o !== main) o.name = ''; }
       main.name = S.name; main.sky = true; if (S.hM) main.topM = S.hM;
     }
     for (const o of this.osm) if (RENAME[o.name]) o.name = RENAME[o.name];
@@ -1529,6 +1529,20 @@ export class CityMap {
     if (o.roof === 'gabled' && P.length === 4) {   // ridge along the long side
       const e = [0, 1, 2, 3].map((i) => Math.hypot(P[(i + 1) % 4][0] - P[i][0], P[(i + 1) % 4][1] - P[i][1])), s = e[0] + e[2] < e[1] + e[3] ? 0 : 1;
       const m1 = lerp2(P[s], P[s + 1], 0.5), m2 = lerp2(P[s + 2], P[(s + 3) % 4], 0.5), R1 = [...m1, z1 + rh], R2 = [...m2, z1 + rh];
+      if (o.stepped) {   // stepped Dutch gable (TC Energy Center): stacked slabs narrowing to the ridge, pinnacles on each step and a spire at each peak
+        const K = 6, Q = [P[s], P[s + 1], P[s + 2], P[(s + 3) % 4]], M = [m1, m1, m2, m2], col = N ? darken(o.c, 0.45) : o.c, fin = [];
+        for (let i = 0; i < K; i++) {
+          const t = 1 - i / K, za = z1 + rh * i / K, zb = z1 + rh * (i + 1) / K, q = Q.map((p, j) => lerp2(M[j], p, t));
+          const ws = q.map((a2, j) => { const b2 = q[(j + 1) % 4], dx = b2[0] - a2[0], dy = b2[1] - a2[1], L = Math.hypot(dx, dy) || 1; return { a: a2, b: b2, nx: dy / L, ny: -dx / L, d: v.depth((a2[0] + b2[0]) / 2, (a2[1] + b2[1]) / 2) }; });
+          for (const w of ws.sort((x, y) => x.d - y.d)) { const [f, r] = v.vis(w.nx, w.ny); if (f <= 0.001) continue; poly(ctx, [v.p(...w.a, zb), v.p(...w.b, zb), v.p(...w.b, za), v.p(...w.a, za)], darken(col, 0.12 + 0.1 * r / Math.SQRT2)); }
+          poly(ctx, q.map((p) => v.p(p[0], p[1], zb)), lighten(col, 0.06));
+          if (i > 0) for (const j of [0, 1, 2, 3]) fin.push([q[j], zb, rh / K * 0.7]);
+        }
+        fin.push([m1, z1 + rh, rh * 0.55], [m2, z1 + rh, rh * 0.55]);
+        ctx.strokeStyle = N ? '#6b4038' : darken(col, 0.2); ctx.lineCap = 'round';
+        for (const [p, z, hgt] of fin) { const b0 = v.p(p[0], p[1], z), t0 = v.p(p[0], p[1], z + hgt); ctx.lineWidth = Math.max(1, v.s * (hgt > rh * 0.3 ? 2.6 : 1.6)); ctx.beginPath(); ctx.moveTo(...b0); ctx.lineTo(...t0); ctx.stroke(); }
+        ctx.lineCap = 'butt'; return;
+      }
       const fs = [[[...P[s + 1], z1], [...P[s + 2], z1], R2, R1], [[...P[(s + 3) % 4], z1], [...P[s], z1], R1, R2], [[...P[s], z1], [...P[s + 1], z1], R1], [[...P[s + 2], z1], [...P[(s + 3) % 4], z1], R2]];
       fs.map((f) => ({ f, d: v.depth(f.reduce((a, q) => a + q[0], 0) / f.length, f.reduce((a, q) => a + q[1], 0) / f.length) })).sort((a, b) => a.d - b.d).forEach(({ f }) => { const mx = f.reduce((a, q) => a + q[0], 0) / f.length - o.cx, my = f.reduce((a, q) => a + q[1], 0) / f.length - o.cy; face(f, mx, my); });
       return;
