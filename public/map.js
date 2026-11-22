@@ -1194,10 +1194,11 @@ export class CityMap {
     const covered = (wx, wy) => this.landmarks.some((l) => l.kind === 'post' && wx > l.x && wx < l.x + l.w && wy > l.y && wy < l.y + l.d);
     // towers standing in front of a sign hide it, so signs never float across a building face
     const occ = []; for (const o of this.osm || []) { if (o.z0 > 0.5 || o.h < 5) continue; let x0 = 1e9, x1 = -1e9, yb = -1e9, yt = 1e9; for (const p of o.pts) { const [a, b] = v.p(p[0], p[1], 0), t = v.p(p[0], p[1], o.h)[1]; if (a < x0) x0 = a; if (a > x1) x1 = a; if (b > yb) yb = b; if (t < yt) yt = t; } if (x1 < -50 || x0 > this.W + 50 || yb < -50 || yt > this.H + 50) continue; const m = (x1 - x0) * 0.03; occ.push([x0 + m, x1 - m, yt, yb - (yb - yt) * 0.04, this.osmDepth(o), o.pts]); }
+    const inArena = (wx, wy) => this.areas.some((ar) => ['ballpark', 'arena', 'grb'].includes(ar.kind) && wx > ar.r.x0 + 0.3 && wx < ar.r.x1 - 0.3 && wy > ar.r.y0 + 0.3 && wy < ar.r.y1 - 0.3);   // streets closed under the stadiums
     const hidden = (wx, wy, x, y) => { const d = v.depth(wx, wy); return occ.some(([x0, x1, yt, yb, od, pts]) => x > x0 && x < x1 && y > yt && y < yb && od > d + 0.2 && !ptIn(wx, wy, pts)); };
     const sign = (x, y, text, ang, major, num, wx, wy) => {
       if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
-      if (wx != null && hidden(wx, wy, x, y)) return;
+      if (wx != null && (inArena(wx, wy) || hidden(wx, wy, x, y))) return;
       ctx.font = `700 ${size}px system-ui, -apple-system, sans-serif`;
       const label = num ? `${text}  ·  ${num}` : text, w = ctx.measureText(label).width + size * 1.1, h = size * 1.55;
       { const c = Math.abs(Math.cos(ang)), s2 = Math.abs(Math.sin(ang)), bw = (w * c + h * s2) * 0.42, bh = (w * s2 + h * c) * 0.42; if (!fits(x - bw, y - bh, x + bw, y + bh)) return; }
@@ -2388,19 +2389,77 @@ export class CityMap {
       return;
     }
     ctx.globalAlpha = alpha;
+    // shared helpers: a lit prism over any outline (walls back-to-front, then the top), and an ellipse outline
+    const P = (x, y, z) => v.p(x, y, z);
+    const shade = (col, nx, ny) => { const [, rr] = v.vis(nx, ny); return darken(col, 0.06 + 0.16 * (1 - (rr + 1.41) / 2.82)); };
+    const prism = (pts, z0, z1, col, o = {}) => {
+      const cxp = pts.reduce((t, p) => t + p[0], 0) / pts.length, cyp = pts.reduce((t, p) => t + p[1], 0) / pts.length;
+      const ws = pts.map((pa, k) => { const pb = pts[(k + 1) % pts.length], dx = pb[0] - pa[0], dy = pb[1] - pa[1], L = Math.hypot(dx, dy) || 1; let nx = dy / L, ny = -dx / L; if (nx * ((pa[0] + pb[0]) / 2 - cxp) + ny * ((pa[1] + pb[1]) / 2 - cyp) < 0) { nx = -nx; ny = -ny; } return { a: pa, b: pb, nx, ny, L, d: v.depth((pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2) }; }).sort((p1, p2) => p1.d - p2.d);
+      for (const w of ws) { const [f] = v.vis(w.nx, w.ny); if (f <= 0.001) continue; const c = shade(col, w.nx, w.ny); poly(ctx, [P(...w.a, z1), P(...w.b, z1), P(...w.b, z0), P(...w.a, z0)], c); o.wall?.(w, c); }
+      if (!o.noTop) poly(ctx, pts.map((q) => P(q[0], q[1], z1)), o.top || lighten(col, 0.04));
+      return ws;
+    };
+    const ell = (cx, cy, rx, ry, n = 36) => Array.from({ length: n }, (_, k) => [cx + rx * Math.cos((k / n) * Math.PI * 2), cy + ry * Math.sin((k / n) * Math.PI * 2)]);
+    const rect = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+    const lineAt = (pts, z, col, lw) => { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath(); pts.forEach((q, k) => (k ? ctx.lineTo(...P(q[0], q[1], z)) : ctx.moveTo(...P(q[0], q[1], z)))); ctx.closePath(); ctx.stroke(); };
+    const now = performance.now(), W = r.x1 - r.x0, D = r.y1 - r.y0, cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2;
     if (a.kind === 'ballpark') {
-      const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2, w = r.x1 - r.x0, d = r.y1 - r.y0;
-      box(ctx, v, r.x0 + 0.5, r.y0 + 0.5, w - 1, d - 1, 3.6, N ? '#5a4a40' : '#c8b29a', 0, { alpha, noTop: true });
-      ctx.globalAlpha = alpha; quad(r.x0 + 1.5, r.y0 + 1.5, r.x1 - 1.5, r.y1 - 1.5, 3.6, N ? '#2d5b3a' : '#6cc070');
-      const [dx, dy] = v.p(cx + w * 0.12, cy + d * 0.12, 3.62), k = v.s * 4;
-      ctx.fillStyle = N ? '#7a6248' : '#d9a36b'; ctx.beginPath(); ctx.moveTo(dx, dy - 6 * k); ctx.lineTo(dx + 7 * k, dy); ctx.lineTo(dx, dy + 6 * k); ctx.lineTo(dx - 7 * k, dy); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 1; for (let i = 0; i <= 6; i++) { const y = r.y0 + 0.5 + (d - 1) * i / 6; ctx.beginPath(); ctx.moveTo(...v.p(r.x0 + 0.5, y, 6)); ctx.lineTo(...v.p(r.x1 - 0.5, y, 6)); ctx.stroke(); }
+      // Daikin Park: red-brick arcade, Union Station with its clock tower on Crawford, the arched glass wall in
+      // left field facing downtown, and the white retractable roof on mint-green trusses
+      const x0 = r.x0 + 0.5, x1 = r.x1 - 0.5, y0 = r.y0 + 0.5, y1 = r.y1 - 0.5, brick = N ? '#5e3a2c' : '#b8653f', stone = N ? '#6b5f50' : '#dcc7a2', wallH = 3.2;
+      // Union Station along Crawford, its clock tower on the Texas Ave corner (drawn before the bowl when it sits behind it)
+      const drawUS = () => {
+      const ux0 = r.x0 + 0.1, ux1 = ux0 + Math.min(3.2, W * 0.16);
+      prism(rect(ux0, y1 - D * 0.5, ux1, y1 - 0.2), 0, 3.4, brick, { top: N ? '#4a3a32' : '#9c8f80' });
+      const TS = 1.5, tx = ux0 + 0.2, ty = y1 - TS - 0.3; prism(rect(tx, ty, tx + TS, ty + TS), 0, 5.6, brick, { noTop: true, wall: (w) => { if (v.s < 0.3) return; ctx.fillStyle = N ? 'rgba(255,200,120,.5)' : 'rgba(40,46,56,.55)'; for (const z of [1.2, 2.4, 3.6]) { const qa = lerp2(w.a, w.b, 0.35), qb = lerp2(w.a, w.b, 0.65); poly(ctx, [P(...qa, z + 0.7), P(...qb, z + 0.7), P(...qb, z), P(...qa, z)], ctx.fillStyle); } } });
+      prism(rect(tx - 0.08, ty - 0.08, tx + TS + 0.08, ty + TS + 0.08), 5.6, 5.85, stone, {});
+      const ap = [tx + TS / 2, ty + TS / 2, 6.9]; for (const [pa, pb] of [[[tx, ty], [tx + TS, ty]], [[tx + TS, ty], [tx + TS, ty + TS]], [[tx + TS, ty + TS], [tx, ty + TS]], [[tx, ty + TS], [tx, ty]]]) { const nx = (pb[1] - pa[1]), ny = -(pb[0] - pa[0]), mx = (pa[0] + pb[0]) / 2 - ap[0], my = (pa[1] + pb[1]) / 2 - ap[1], s2 = nx * mx + ny * my < 0 ? -1 : 1; if (v.vis(nx * s2, ny * s2)[0] > 0) poly(ctx, [P(...pa, 5.85), P(...pb, 5.85), P(...ap)], shade(N ? '#3a4a40' : '#5f8f78', nx * s2, ny * s2)); }
+      for (const [fx, fy] of [[tx + TS / 2, ty + TS + 0.01], [tx + TS + 0.01, ty + TS / 2], [tx + TS / 2, ty - 0.01], [tx - 0.01, ty + TS / 2]]) { const [qx, qy] = P(fx, fy, 5.0); circle(ctx, qx, qy, Math.max(1.5, v.s * 7), N ? '#ffe9a8' : '#f8f4e8'); }
+      };
+      const usFirst = v.depth(r.x0 + 0.8, r.y1 - D * 0.25) < v.depth(cx, cy); if (usFirst) drawUS();
+      prism(rect(x0, y0, x1, y1), 0, 0.45, stone, { noTop: true });
+      prism(rect(x0, y0, x1, y1), 0.45, wallH, brick, { noTop: true, wall: (w) => {   // tall arched windows all round
+        if (v.s < 0.25) return; const n = Math.max(4, Math.round(w.L / 0.7)); ctx.fillStyle = N ? 'rgba(255,200,120,.55)' : 'rgba(40,46,56,.6)';
+        for (let k = 0; k < n; k++) { const t0 = (k + 0.25) / n, t1 = (k + 0.75) / n, qa = lerp2(w.a, w.b, t0), qb = lerp2(w.a, w.b, t1), qm = lerp2(w.a, w.b, (t0 + t1) / 2);
+          ctx.beginPath(); ctx.moveTo(...P(...qa, 0.8)); ctx.lineTo(...P(...qa, 2.4)); ctx.quadraticCurveTo(...P(...qm, 2.95), ...P(...qb, 2.4)); ctx.lineTo(...P(...qb, 0.8)); ctx.closePath(); ctx.fill(); } } });
+      // roof: a vault along the long axis, white panels between mint trusses
+      const alongX = W >= D, segs = 14, rise = 3.6, prof = (t) => wallH + Math.sin(t * Math.PI) * rise;
+      const cross = (t) => alongX ? [y0 + (y1 - y0) * t, null] : [x0 + (x1 - x0) * t, null];
+      const strip = (t0, t1) => alongX ? [[x0, y0 + (y1 - y0) * t0, prof(t0)], [x1, y0 + (y1 - y0) * t0, prof(t0)], [x1, y0 + (y1 - y0) * t1, prof(t1)], [x0, y0 + (y1 - y0) * t1, prof(t1)]]
+        : [[x0 + (x1 - x0) * t0, y0, prof(t0)], [x0 + (x1 - x0) * t0, y1, prof(t0)], [x0 + (x1 - x0) * t1, y1, prof(t1)], [x0 + (x1 - x0) * t1, y0, prof(t1)]];
+      const strips = []; for (let k = 0; k < segs; k++) { const t0 = k / segs, t1 = (k + 1) / segs, sl = Math.cos(((t0 + t1) / 2) * Math.PI); strips.push({ q: strip(t0, t1), sl, d: alongX ? v.depth(cx, y0 + (y1 - y0) * (t0 + t1) / 2) : v.depth(x0 + (x1 - x0) * (t0 + t1) / 2, cy) }); }
+      for (const sp of strips.sort((p1, p2) => p1.d - p2.d)) { const nx = alongX ? 0 : -sp.sl, ny = alongX ? -sp.sl : 0, rr = v.vis(nx, ny)[1]; poly(ctx, sp.q.map((q) => P(...q)), N ? darken('#454b5a', 0.15 * (1 - (rr + 1.41) / 2.82)) : darken('#f2f4f2', 0.03 + 0.14 * Math.abs(sp.sl) * (1 - (rr + 1.41) / 2.82))); }
+      // end walls (arched gables): the west/left-field one is the big glass wall
+      const gable = (atStart) => { const pts = []; for (let k = 0; k <= segs; k++) { const t = k / segs; pts.push(alongX ? [atStart ? x0 : x1, y0 + (y1 - y0) * t, prof(t)] : [x0 + (x1 - x0) * t, atStart ? y0 : y1, prof(t)]); } pts.push(alongX ? [atStart ? x0 : x1, y1, wallH] : [x1, atStart ? y0 : y1, wallH]); return pts; };
+      for (const st of [true, false]) { const g = gable(st), nx = alongX ? (st ? -1 : 1) : 0, ny = alongX ? 0 : (st ? -1 : 1), [f] = v.vis(nx, ny); if (f <= 0.001) continue;
+        const glassEnd = st; poly(ctx, g.map((q) => P(...q)), glassEnd ? (N ? 'rgba(255,214,150,.75)' : shade('#a7c6d0', nx, ny)) : shade(N ? '#4a505e' : '#eef0ee', nx, ny));
+        if (glassEnd && v.s > 0.3) { ctx.strokeStyle = N ? 'rgba(120,90,50,.5)' : 'rgba(70,130,110,.75)'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.beginPath(); for (let k = 1; k < segs; k++) { const q = g[k]; const b = alongX ? [q[0], q[1], wallH] : [q[0], q[1], wallH]; ctx.moveTo(...P(...b)); ctx.lineTo(...P(...q)); } ctx.stroke(); } }
+      // trusses: mint-green ribs over the roof and along its edges
+      ctx.strokeStyle = N ? '#3f6f62' : '#78b9a3'; ctx.lineWidth = Math.max(1, v.s * 2.2); const nr = Math.max(3, Math.round((alongX ? W : D) / 3.2)); ctx.lineWidth = Math.max(1.5, v.s * 4);
+      for (let k = 0; k <= nr; k++) { const u = k / nr; ctx.beginPath(); for (let m = 0; m <= segs; m++) { const t = m / segs, q = alongX ? [x0 + (x1 - x0) * u, y0 + (y1 - y0) * t, prof(t) + 0.05] : [x0 + (x1 - x0) * t, y0 + (y1 - y0) * u, prof(t) + 0.05]; m ? ctx.lineTo(...P(...q)) : ctx.moveTo(...P(...q)); } ctx.stroke(); }
+      if (N) { ctx.lineWidth = Math.max(1.5, v.s * 3); for (const side of [0, 1]) { ctx.beginPath(); for (let k = 0; k <= 40; k++) { const u = k / 40, q = alongX ? [x0 + (x1 - x0) * u, side ? y1 : y0, wallH + 0.05] : [side ? x1 : x0, y0 + (y1 - y0) * u, wallH + 0.05]; k ? ctx.lineTo(...P(...q)) : ctx.moveTo(...P(...q)); } ctx.strokeStyle = `hsl(${(now / 30) % 360},90%,65%)`; ctx.stroke(); } }
+      if (!usFirst) drawUS();
     } else if (a.kind === 'arena') {
-      box(ctx, v, r.x0 + 0.8, r.y0 + 0.8, r.x1 - r.x0 - 1.6, r.y1 - r.y0 - 1.6, 4.2, N ? '#3b4252' : '#aab4bf', 0, { alpha, mullions: true });
-      ctx.globalAlpha = alpha; const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2; quad(cx - 2.2, cy - 2.2, cx + 2.2, cy + 2.2, 4.25, N ? '#59606e' : '#c3cad3'); const [x, y] = v.p(cx, cy, 4.3); circle(ctx, x, y, Math.max(1.5, 3 * v.s * 3), '#c92a2a');
+      // Toyota Center: a tan brick and glass base with a pale oval drum and a low domed roof ringed in red
+      const x0 = r.x0 + 0.5, x1 = r.x1 - 0.5, y0 = r.y0 + 0.5, y1 = r.y1 - 0.5, base = N ? '#5c4a3a' : '#c9a079', drum = N ? '#4a4d57' : '#ddd3c3';
+      prism(rect(x0, y0, x1, y1), 0, 1.7, base, { top: N ? '#3e3a3a' : '#bfae98', wall: (w) => {
+        if (v.s < 0.25) return; ctx.strokeStyle = N ? 'rgba(255,205,130,.55)' : 'rgba(45,52,64,.5)'; ctx.lineWidth = Math.max(1, v.s * 2.4); ctx.beginPath(); for (const z of [0.55, 1.15]) { ctx.moveTo(...P(...lerp2(w.a, w.b, 0.06), z)); ctx.lineTo(...P(...lerp2(w.a, w.b, 0.94), z)); } ctx.stroke();
+        const n = Math.max(3, Math.round(w.L / 1.1)); for (let k = 0; k < n; k++) { const qa = lerp2(w.a, w.b, (k + 0.38) / n), qb = lerp2(w.a, w.b, (k + 0.62) / n); poly(ctx, [P(...qa, 1.5), P(...qb, 1.5), P(...qb, 0.65), P(...qa, 0.65)], N ? '#a51d24' : '#c92a2a'); } } });
+      const rx = (x1 - x0) * 0.47, ry = (y1 - y0) * 0.44, ring = ell(cx, cy, rx, ry);
+      prism(ring, 1.7, 2.9, drum, { noTop: true, wall: (w, c) => { if (v.s < 0.3) return; ctx.strokeStyle = N ? 'rgba(255,214,150,.35)' : 'rgba(0,0,0,.08)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...P(...w.a, 1.75)); ctx.lineTo(...P(...w.a, 2.85)); ctx.stroke(); } });
+      poly(ctx, ell(cx, cy, rx * 1.01, ry * 1.01).map((q) => P(q[0], q[1], 2.9)), N ? '#2c3344' : '#d9d5cd');
+      for (const [k, z] of [[0.9, 3.05], [0.72, 3.18], [0.48, 3.27]]) poly(ctx, ell(cx, cy, rx * k, ry * k).map((q) => P(q[0], q[1], z)), N ? mix('#2c3344', 0.04 * k, 255) : darken('#dedad2', 0.03 * (1 - k)));
+      lineAt(ell(cx, cy, rx * 0.97, ry * 0.97), 2.95, N ? 'rgba(255,60,60,.9)' : '#d62828', Math.max(1.5, v.s * 4));
+      lineAt(ell(cx, cy, rx * 0.4, ry * 0.4), 3.25, N ? 'rgba(255,60,60,.8)' : '#d62828', Math.max(1, v.s * 2.5));
+      if (N) { ctx.globalAlpha = alpha * (0.5 + 0.2 * Math.sin(now / 900)); lineAt(ell(cx, cy, rx * 1.02, ry * 1.02), 2.4, 'rgba(255,190,120,.8)', Math.max(1.5, v.s * 3)); ctx.globalAlpha = alpha; }
     } else if (a.kind === 'grb') {
-      box(ctx, v, r.x0 + 0.6, r.y0 + 0.6, r.x1 - r.x0 - 1.2, r.y1 - r.y0 - 1.2, 3.4, N ? '#46505f' : '#dfe4ea', 0, { alpha, mullions: true });
-      for (let i = 0; i < 4; i++) { const y = r.y0 + 2 + (r.y1 - r.y0 - 4) * i / 3; box(ctx, v, r.x1 - 2.6, y, 0.9, 0.9, 5.2, '#d9480f', 0, { alpha }); }
+      // George R. Brown: a long white hall with a blue glass band, a ribbed roof and its red ship-funnel stacks
+      const x0 = r.x0 + 0.6, x1 = r.x1 - 0.6, y0 = r.y0 + 0.6, y1 = r.y1 - 0.6, wh = N ? '#4b5462' : '#e9edf0';
+      prism(rect(x0, y0, x1, y1), 0, 3.3, wh, { top: N ? '#3d4553' : '#dfe4e9', wall: (w) => {
+        if (v.s < 0.2) return; poly(ctx, [P(...w.a, 2.2), P(...w.b, 2.2), P(...w.b, 1.0), P(...w.a, 1.0)], N ? 'rgba(255,214,150,.55)' : shade('#6f9fc4', w.nx, w.ny));
+        ctx.strokeStyle = N ? 'rgba(0,0,0,.25)' : 'rgba(255,255,255,.55)'; ctx.lineWidth = 1; ctx.beginPath(); const n = Math.max(4, Math.round(w.L / 0.5)); for (let k = 1; k < n; k++) { const q = lerp2(w.a, w.b, k / n); ctx.moveTo(...P(...q, 1.0)); ctx.lineTo(...P(...q, 2.2)); } ctx.stroke(); } });
+      ctx.strokeStyle = N ? 'rgba(255,255,255,.06)' : 'rgba(120,130,140,.35)'; ctx.lineWidth = 1; ctx.beginPath(); const nr = Math.max(6, Math.round((y1 - y0) / 0.8)); for (let k = 1; k < nr; k++) { const y = y0 + (y1 - y0) * k / nr; ctx.moveTo(...P(x0 + 0.1, y, 3.31)); ctx.lineTo(...P(x1 - 0.1, y, 3.31)); } ctx.stroke();
+      for (let k = 0; k < 4; k++) { const y = y0 + 1.4 + (y1 - y0 - 2.8) * k / 3, sx = x1 - 1.2; prism(ell(sx, y, 0.42, 0.42, 16), 3.3, 5.6, N ? '#9a2a10' : '#e0501a', { top: N ? '#3a1408' : '#5a2010' }); prism(ell(sx, y, 0.46, 0.46, 16), 5.3, 5.6, N ? '#7a8088' : '#f1f1f1', { noTop: true }); }
     }
     ctx.globalAlpha = 1;
   }
