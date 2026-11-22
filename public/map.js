@@ -84,7 +84,7 @@ const SIG_TOPS = {
   '1910 Courthouse': { hM: 36, c: '#ddd0b4', glass: false, tiers: [[0.4, 4, '#ddd0b4'], [0.34, 5, '#6f9f8b'], [0.26, 3, '#6f9f8b'], [0.16, 2, '#6f9f8b'], [0.06, 2, '#d9b45a']] },   // drum and green copper dome
   'Annunciation Catholic Church': { hM: 52, c: '#cbbb9f', glass: false, tiers: [[0.26, 18, '#cbbb9f'], [0.2, 8, '#c4b393'], [0.12, 9, '#8f8a84'], [0.05, 6, '#8f8a84']] },   // the tall bell tower and spire
 };
-const RENAME = { '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
+const RENAME = { 'C. Baldwin, Curio Collection by Hilton': 'C. Baldwin Hotel', '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
 const STYLE_FIX = [{ at: [29.75412, -95.36274], name: 'Four Seasons Hotel', c: '#cdb59a', grid: '#6b5646', minH: 80 }];
 const SUFFIX = (n) => n === 'Texas' ? 'Texas Ave' : n + ' St';
 export const STREETS = { avenues: AVENUES, cross: CROSS, full: SUFFIX };
@@ -1303,6 +1303,7 @@ export class CityMap {
       'Annunciation Catholic Church': { c: '#cbbb9f', glass: false, roofC: '#6e6a66' },
       'Bob Casey United States Courthouse': { c: '#d9d3c7', glass: false, fac: 'slots' },
       'Marriott Marquis Houston': { c: '#d6dbe1', glass: true },
+      'C. Baldwin, Curio Collection by Hilton': { c: '#5f5249', glass: false, fac: 'slots', roofC: '#4a403a', pri: true },   // dark bronze-brown slab with tall window strips
     };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
     const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
@@ -1350,7 +1351,7 @@ export class CityMap {
       }
       if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
-      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; if (ls.fac) o.fac = ls.fac; }
+      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; if (ls.fac) o.fac = ls.fac; if (ls.pri) o.pri = true; }
       this.osm.push(o);
       const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
         for (const [s, f, cc] of cr) { const q = pts.map((p) => [cx + (p[0] - cx) * s, cy + (p[1] - cy) * s]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]); this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: f * h, z0: top, c: cc || o.c, glass: o.glass, name: '', type: 'crown', cx, cy }); top += f * h; } }
@@ -1414,7 +1415,7 @@ export class CityMap {
         this.osm.push({ pts: [[px0, py0], [px1, py0], [px1, py1], [px0, py1]], bb: { x0: px0, x1: px1, y0: py0, y1: py1 }, h: p.h, z0: 0, c: p.c, glass: false, name: p.name || null, type: p.type, cx: (px0 + px1) / 2, cy: (py0 + py1) / 2 });
       }
     }
-    this.osmNamed = this.osm.filter((o) => o.name && o.h >= 6).sort((a, b) => b.h - a.h);
+    this.osmNamed = this.osm.filter((o) => o.name && (o.h >= 6 || o.sky || o.pri)).sort((a, b) => (b.pri ? 1 : 0) - (a.pri ? 1 : 0) || b.h - a.h);   // well-known spots label first, then by height
     return true;
   }
   osmDepth(o) { if (o.base) return this.osmDepth(o.base) + o.z0 * 1e-4;   // tops draw right after the tower they sit on, never behind it
