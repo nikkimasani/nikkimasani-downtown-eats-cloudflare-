@@ -71,11 +71,16 @@ const SKYLINE = [
   { at: [29.75446, -95.37274], r: 36, name: '1600 Smith', hM: 223, c: '#5b7383', glass: true },
   { at: [29.75463, -95.36978], r: 36, name: 'Wedge International Tower', c: '#6b4f43', glass: true },
   { at: [29.75765, -95.37049], r: 22, name: 'One Allen Center', c: '#9d9a93' },
+  { at: [29.76030, -95.36935], r: 30, name: 'City Hall', c: '#e4dccb', glass: false, fac: 'punch', minH: 1.5, roofC: '#cfc6b3' },        // 1939 limestone Art Deco
+  { at: [29.75950, -95.37000], r: 26, name: 'Central Library', c: '#d3cdc1', glass: false, fac: 'slots', minH: 1.5 },                 // Jesse H. Jones Building
 ];
 // hand-made tops for towers whose mapped crowns are too coarse: the shaft stops below hM by the tiers' total height,
 // mapped bits above it inside the footprint are dropped, and the tiers stack on centre: [scale, metres, colour]
 const SIG_TOPS = {
   'Heritage Plaza': { hM: 232, c: '#5e8fa3', glass: true, tiers: [[0.94, 3, '#e4ddcc'], [0.84, 4, '#e4ddcc'], [0.72, 4, '#ddd5c2'], [0.6, 4, '#ddd5c2'], [0.48, 4, '#d6cdb8'], [0.36, 4, '#d6cdb8'], [0.24, 3, '#cfc5ae'], [0.14, 3, '#5e8fa3']] },   // stepped Mayan-temple top with a small glass temple   // stepped Mayan-temple top
+  'Niels Esperson Building': { hM: 124, c: '#e2d3b0', glass: false, tiers: [[0.78, 6, '#e8dcbd'], [0.6, 7, '#e8dcbd'], [0.46, 6, '#e3d5b2'], [0.34, 5, '#dccba3'], [0.22, 4, '#d4bf8e'], [0.1, 4, '#c9a85e']] },   // the round Italian Renaissance temple on top
+  '1910 Courthouse': { hM: 36, c: '#ddd0b4', glass: false, tiers: [[0.4, 4, '#ddd0b4'], [0.34, 5, '#6f9f8b'], [0.26, 3, '#6f9f8b'], [0.16, 2, '#6f9f8b'], [0.06, 2, '#d9b45a']] },   // drum and green copper dome
+  'Annunciation Catholic Church': { hM: 52, c: '#cbbb9f', glass: false, tiers: [[0.26, 18, '#cbbb9f'], [0.2, 8, '#c4b393'], [0.12, 9, '#8f8a84'], [0.05, 6, '#8f8a84']] },   // the tall bell tower and spire
 };
 const RENAME = { '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
 const STYLE_FIX = [{ at: [29.75412, -95.36274], name: 'Four Seasons Hotel', c: '#cdb59a', grid: '#6b5646', minH: 80 }];
@@ -1195,6 +1200,7 @@ export class CityMap {
     // towers standing in front of a sign hide it, so signs never float across a building face
     const occ = []; for (const o of this.osm || []) { if (o.z0 > 0.5 || o.h < 5) continue; let x0 = 1e9, x1 = -1e9, yb = -1e9, yt = 1e9; for (const p of o.pts) { const [a, b] = v.p(p[0], p[1], 0), t = v.p(p[0], p[1], o.h)[1]; if (a < x0) x0 = a; if (a > x1) x1 = a; if (b > yb) yb = b; if (t < yt) yt = t; } if (x1 < -50 || x0 > this.W + 50 || yb < -50 || yt > this.H + 50) continue; const m = (x1 - x0) * 0.03; occ.push([x0 + m, x1 - m, yt, yb - (yb - yt) * 0.04, this.osmDepth(o), o.pts]); }
     const inArena = (wx, wy) => this.areas.some((ar) => ['ballpark', 'arena', 'grb'].includes(ar.kind) && wx > ar.r.x0 + 0.3 && wx < ar.r.x1 - 0.3 && wy > ar.r.y0 + 0.3 && wy < ar.r.y1 - 0.3);   // streets closed under the stadiums
+    for (const ar of this.areas) { const hh = { ballpark: 6.8, arena: 3.3, grb: 5.6 }[ar.kind]; if (!hh) continue; const R = ar.r, pts = [[R.x0, R.y0], [R.x1, R.y0], [R.x1, R.y1], [R.x0, R.y1]]; let x0 = 1e9, x1 = -1e9, yb = -1e9, yt = 1e9; for (const p of pts) { const [a2, b2] = v.p(p[0], p[1], 0), t = v.p(p[0], p[1], hh)[1]; if (a2 < x0) x0 = a2; if (a2 > x1) x1 = a2; if (b2 > yb) yb = b2; if (t < yt) yt = t; } occ.push([x0, x1, yt, yb, v.depth((R.x0 + R.x1) / 2, (R.y0 + R.y1) / 2), pts]); }   // stadiums hide the signs behind them too
     const hidden = (wx, wy, x, y) => { const d = v.depth(wx, wy); return occ.some(([x0, x1, yt, yb, od, pts]) => x > x0 && x < x1 && y > yt && y < yb && od > d + 0.2 && !ptIn(wx, wy, pts)); };
     const sign = (x, y, text, ang, major, num, wx, wy) => {
       if (x < -120 || x > this.W + 120 || y < -30 || y > this.H + 30) return;
@@ -1276,6 +1282,25 @@ export class CityMap {
       'Calpine Center': { c: '#4e7d8a', glass: true },
       'Niels Esperson Building': { c: '#d9c7a1', glass: false, fac: 'punch' },
       'Market Square Tower': { c: '#7da1b8', glass: true },
+      'Jones Hall': { c: '#ebe1cb', glass: false, fac: 'ribs', roofC: '#d8ccb3' },                 // travertine box ringed by slender piers
+      'Alley Theatre': { c: '#cdbfa9', glass: false, roofC: '#b8aa93' },                            // rough concrete with corner towers
+      'Wortham Theatre Center': { c: '#b77558', glass: false, fac: 'punch', roofC: '#8f5a44' },      // red brick, big glass arch on Texas Ave
+      'Hobby Center for the Performing Arts': { c: '#cdb790', glass: true },
+      'Julia Ideson Building': { c: '#e6cfa6', glass: false, fac: 'punch', roofC: '#b85b33' },       // Spanish Renaissance, clay-tile roof
+      '1910 Courthouse': { c: '#ddd0b4', glass: false, fac: 'punch' },
+      'Mellie Esperson Building': { c: '#e2d3b0', glass: false, fac: 'punch' },
+      '1884 Houston Cotton Exchange Building': { c: '#b0664a', glass: false, fac: 'punch' },
+      'Scanlan Building': { c: '#c7a888', glass: false, fac: 'punch' },
+      'Pillot Building': { c: '#b8714f', glass: false, fac: 'punch' },
+      'Rice Hotel Lofts': { c: '#b86a4b', glass: false, fac: 'punch' },
+      'Magnolia Hotel Houston, a Tribute Portfolio Hotel': { c: '#c9a77f', glass: false, fac: 'punch' },
+      'Sam Houston Hotel': { c: '#b36f52', glass: false, fac: 'punch' },
+      'The Lancaster Hotel': { c: '#cbb494', glass: false, fac: 'punch' },
+      'Hotel ICON': { c: '#c9b9a0', glass: false, fac: 'punch' },
+      'Union Station': { c: '#b8653f', glass: false, fac: 'punch' },
+      'Annunciation Catholic Church': { c: '#cbbb9f', glass: false, roofC: '#6e6a66' },
+      'Bob Casey United States Courthouse': { c: '#d9d3c7', glass: false, fac: 'slots' },
+      'Marriott Marquis Houston': { c: '#d6dbe1', glass: true },
     };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
     const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
@@ -1331,7 +1356,7 @@ export class CityMap {
     // signature towers: name them, set their real heights and cladding, and build missing shafts
     for (const S of SKYLINE) {
       const [px, py] = this.proj(S.at[0], S.at[1]), R = S.r / 10;
-      const near = this.osm.filter((o) => o.type !== 'crown' && Math.hypot(o.cx - px, o.cy - py) < R && o.z0 + o.h > 4); if (!near.length) continue;
+      const near = this.osm.filter((o) => o.type !== 'crown' && Math.hypot(o.cx - px, o.cy - py) < R && o.z0 + o.h > (S.minH ?? 4)); if (!near.length) continue;
       const ground = near.filter((o) => o.z0 < 0.5);
       if (S.body && !ground.some((o) => o.h > 6)) {   // only the crown is mapped: the shaft is the outline around its pieces, up to where they start
         const P = near.flatMap((o) => o.pts).sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
