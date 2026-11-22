@@ -63,7 +63,7 @@ const GLASS = ['#8fb3c9', '#7d9db8', '#9fb6c8', '#6f8fa8', '#a7bfcf', '#86a3b5']
 // signature towers OpenStreetMap leaves unnamed, short or half-mapped: [lat,lng] of the tower, search radius (m),
 // real height to the top (m), and how it looks. body: build the shaft under crown pieces that float with nothing beneath.
 const SKYLINE = [
-  { at: [29.76070, -95.36665], r: 42, name: 'TC Energy Center', hM: 238, c: '#b86f60', glass: false, roofC: '#93554a' },   // red granite, stepped Dutch-Gothic gables
+  { at: [29.76070, -95.36665], r: 42, name: 'TC Energy Center', hM: 238, c: '#b86f60', glass: false, roofC: '#93554a', fac: 'punch' },   // red granite, stepped Dutch-Gothic gables
   { at: [29.75772, -95.36897], r: 30, name: 'Enterprise Plaza', hM: 230, c: '#7f8d98', glass: true },
   { at: [29.75713, -95.36799], r: 45, name: 'CenterPoint Energy Plaza', hM: 226, c: '#43525e', glass: true, body: true },
   { at: [29.75995, -95.36576], r: 38, name: 'Pennzoil Place', hM: 159, c: '#2e2a28', glass: true, roofC: '#3a3532', roofM: 26 },   // twin bronze trapezoids
@@ -75,7 +75,7 @@ const SKYLINE = [
 // hand-made tops for towers whose mapped crowns are too coarse: the shaft stops below hM by the tiers' total height,
 // mapped bits above it inside the footprint are dropped, and the tiers stack on centre: [scale, metres, colour]
 const SIG_TOPS = {
-  'Heritage Plaza': { hM: 232, c: '#6e93ad', glass: true, tiers: [[0.9, 5, '#d6cdb9'], [0.76, 5, '#d6cdb9'], [0.62, 5, '#cfc5af'], [0.48, 5, '#cfc5af'], [0.34, 4, '#c8bda6'], [0.2, 4, '#c8bda6']] },   // stepped Mayan-temple top
+  'Heritage Plaza': { hM: 232, c: '#5e8fa3', glass: true, tiers: [[0.94, 3, '#e4ddcc'], [0.84, 4, '#e4ddcc'], [0.72, 4, '#ddd5c2'], [0.6, 4, '#ddd5c2'], [0.48, 4, '#d6cdb8'], [0.36, 4, '#d6cdb8'], [0.24, 3, '#cfc5ae'], [0.14, 3, '#5e8fa3']] },   // stepped Mayan-temple top with a small glass temple   // stepped Mayan-temple top
 };
 const RENAME = { '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
 const STYLE_FIX = [{ at: [29.75412, -95.36274], name: 'Four Seasons Hotel', c: '#cdb59a', grid: '#6b5646', minH: 80 }];
@@ -1253,15 +1253,28 @@ export class CityMap {
     // hand-built tops for towers whose crowns OpenStreetMap doesn't describe: [scale of footprint, share of height, colour]
     // how the big towers actually look: cladding colour, glass or stone, rooftop masts
     const LOOK = {
-      'JPMorgan Chase Tower': { c: '#8a8f95', glass: false, roofC: '#6d7278' },          // grey granite, ribbon windows
-      'One Shell Plaza': { c: '#ece6d8', glass: false, ant: 8.5, roofC: '#d9d3c4' },     // white travertine tube, broadcast mast
-      'Wells Fargo Plaza': { c: '#2c5a60', glass: true },                                 // blue-green curtain wall
-      'Heritage Plaza': { c: '#9fb3c6', glass: true },                                    // silver-blue glass under the Mayan top
+      'JPMorgan Chase Tower': { c: '#8e9399', glass: false, roofC: '#6d7278', fac: 'slots' },   // five-sided grey granite, tall ribbon windows
+      'One Shell Plaza': { c: '#ece6d8', glass: false, ant: 8.5, roofC: '#d9d3c4', fac: 'ribs' },   // white travertine tube, broadcast mast
+      'Wells Fargo Plaza': { c: '#25545b', glass: true },                                  // blue-green curtain wall
+      'Heritage Plaza': { c: '#5e8fa3', glass: true },                                     // blue-green glass under the Mayan top
       '1 Houston Center': { c: '#4a3428', glass: true },
       'First City Tower': { c: '#5d7a86', glass: true },
-      'Fulbright Tower': { c: '#9a9590', glass: false },
+      'Fulbright Tower': { c: '#9a9590', glass: false, fac: 'slots' },
       'Three Allen Center': { c: '#a7a39b', glass: true },
       '609 Main': { c: '#5f86a3', glass: true },
+      'Bank of America Tower': { c: '#5f7f95', glass: true },
+      'Two Shell Plaza': { c: '#e6e0d2', glass: false, fac: 'ribs' },
+      '1000 Main': { c: '#7c95a8', glass: true },
+      'Kinder Morgan Building': { c: '#6f6a64', glass: false, fac: 'slots' },
+      'Total Plaza': { c: '#b8ad9c', glass: false, fac: 'punch' },
+      'KBR Tower': { c: '#8f8a83', glass: false, fac: 'punch' },
+      '1400 Smith Street': { c: '#4d6f83', glass: true },
+      '1500 Louisiana Street': { c: '#6d8aa0', glass: true },
+      '811 Main': { c: '#86a3b8', glass: true },
+      'Two Allen Center': { c: '#a39d93', glass: false, fac: 'punch' },
+      'Calpine Center': { c: '#4e7d8a', glass: true },
+      'Niels Esperson Building': { c: '#d9c7a1', glass: false, fac: 'punch' },
+      'Market Square Tower': { c: '#7da1b8', glass: true },
     };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
     const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
@@ -1309,7 +1322,7 @@ export class CityMap {
       }
       if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
-      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; }
+      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; if (ls.fac) o.fac = ls.fac; }
       this.osm.push(o);
       const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
         for (const [s, f, cc] of cr) { const q = pts.map((p) => [cx + (p[0] - cx) * s, cy + (p[1] - cy) * s]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]); this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: f * h, z0: top, c: cc || o.c, glass: o.glass, name: '', type: 'crown', cx, cy }); top += f * h; } }
@@ -1330,7 +1343,7 @@ export class CityMap {
       if (S.hM && top > 0) { const k = S.hM / 10 / top; if (Math.abs(k - 1) > 0.02) for (const o of near) { o.z0 *= k; o.h *= k; if (o.rh) { o.rh *= k; if (o.rz) o.rz = o.rz.map((z) => z * k); } } }
       if (S.roofM) for (const o of near) if (o.roof === 'skillion' && o.rh) { const nr = Math.min(S.roofM / 10, (o.h + o.rh) * 0.5), f = nr / o.rh; o.h += o.rh - nr; o.rh = nr; o.rz = o.rz.map((z) => z * f); }
       const tall = Math.max(...near.map((o) => o.z0 + o.h)), main = (ground.length ? ground : near).reduce((a, o) => ((o.bb.x1 - o.bb.x0) * (o.bb.y1 - o.bb.y0) * (o.z0 + o.h) > (a.bb.x1 - a.bb.x0) * (a.bb.y1 - a.bb.y0) * (a.z0 + a.h) ? o : a));
-      for (const o of near) { if (o.z0 + o.h < tall * 0.45) continue; if (S.c) o.c = S.c; if (S.glass != null) o.glass = S.glass; if (S.roofC) o.roofC = S.roofC; if (o.name && o.name !== S.name && o !== main) o.name = ''; }
+      for (const o of near) { if (o.z0 + o.h < tall * 0.45) continue; if (S.c) o.c = S.c; if (S.glass != null) o.glass = S.glass; if (S.roofC) o.roofC = S.roofC; if (S.fac) o.fac = S.fac; if (o.name && o.name !== S.name && o !== main) o.name = ''; }
       main.name = S.name; main.sky = true; if (S.hM) main.topM = S.hM;
     }
     for (const o of this.osm) if (RENAME[o.name]) o.name = RENAME[o.name];
@@ -1379,7 +1392,7 @@ export class CityMap {
       walls.push({ a, b, L, nx, ny, sun: Math.max(0, -r / Math.SQRT2), shade: 0.125 + 0.105 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
     }
     walls.sort((p, q) => p.d - q.d);
-    const fancy = v.s >= 0.3 && o.h > 1.2, warm = this._warm || 0;
+    const fancy = (v.s >= 0.3 && o.h > 1.2) || (v.s >= 0.18 && o.h > 6), warm = this._warm || 0;   // towers keep their detail when zoomed out: they are the skyline
     for (const w of walls) {
       const quad = [v.p(w.a[0], w.a[1], z1), v.p(w.b[0], w.b[1], z1), v.p(w.b[0], w.b[1], z0), v.p(w.a[0], w.a[1], z0)];
       let base = darken(col, w.shade);
@@ -1395,7 +1408,36 @@ export class CityMap {
         ctx.strokeStyle = N ? 'rgba(0,0,0,.18)' : 'rgba(20,40,70,.12)'; ctx.lineWidth = 1; ctx.beginPath();
         const step = o.h > 15 ? 0.84 : 0.42; for (let z = z0 + step; z < z1 - 0.1; z += step) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
       }
-      if (v.s < 0.32 || w.L < 0.4) continue;
+      if (v.s < (o.h > 6 ? 0.18 : 0.32) || w.L < 0.4) continue;
+      const fz0 = o.type === 'crown' ? z0 : z0 + 0.45, sp = v.p(w.a[0], w.a[1], z0), sq = v.p(w.b[0], w.b[1], z0), spx = Math.hypot(sq[0] - sp[0], sq[1] - sp[1]) / w.L;   // screen px per unit along this wall
+      if (o.fac === 'ribs' && spx > 5) {   // deep vertical fins (One Shell's travertine tube): a shadow and a lit edge per fin
+        const nv = Math.max(3, Math.round(w.L / 0.22)), sh = N ? 'rgba(0,0,0,.35)' : 'rgba(60,55,45,.22)', hl = N ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.55)';
+        ctx.lineWidth = Math.max(1, spx * 0.05);
+        ctx.strokeStyle = sh; ctx.beginPath(); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, (i + 0.18) / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); } ctx.stroke();
+        ctx.strokeStyle = hl; ctx.beginPath(); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); } ctx.stroke();
+        continue;
+      }
+      if (o.fac === 'slots' && spx > 4) {   // tall ribbon windows between granite piers (JPMorgan Chase)
+        const nv = Math.max(3, Math.round(w.L / 0.3)); ctx.strokeStyle = N ? 'rgba(255,214,140,.25)' : 'rgba(28,36,48,.55)'; ctx.lineWidth = Math.max(1, spx * 0.12); ctx.beginPath();
+        for (let i = 0; i < nv; i++) { const q = lerp2(w.a, w.b, (i + 0.5) / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.12)); } ctx.stroke();
+        continue;
+      }
+      if (o.fac === 'punch' && spx > 4) {   // square punched windows in a stone grid (TC Energy, the brown towers)
+        const cols = Math.max(3, Math.round(w.L / 0.26)), seg = spx * w.L / cols, rows = Math.max(2, Math.round((z1 - fz0) / 0.37));
+        ctx.setLineDash([seg * 0.5, seg * 0.5]); ctx.lineDashOffset = -seg * 0.25; ctx.strokeStyle = N ? 'rgba(255,210,130,.4)' : 'rgba(30,34,44,.6)'; ctx.lineWidth = Math.max(1, ZU * v.s * 0.17); ctx.beginPath();
+        for (let r = 0; r < rows; r++) { const z = fz0 + (r + 0.5) * (z1 - 0.1 - fz0) / rows; ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset = 0;
+        continue;
+      }
+      if (o.glass && !N && o.h > 4 && spx > 3) {   // the sky slides across a curtain wall: one soft diagonal reflection per face
+        const r = hash(o.cx.toFixed(1) + w.a[0].toFixed(1)), t0 = 0.15 + r * 0.5, zt = z0 + o.h * (0.35 + r * 0.45), zb = zt - o.h * 0.35;
+        const A = lerp2(w.a, w.b, t0), Bq = lerp2(w.a, w.b, Math.min(1, t0 + 0.28)), C2 = lerp2(w.a, w.b, Math.min(1, t0 + 0.5)), D2 = lerp2(w.a, w.b, Math.min(1, t0 + 0.22));
+        ctx.globalAlpha = alpha * 0.16; poly(ctx, [v.p(...A, zt), v.p(...Bq, zt), v.p(...C2, Math.max(z0, zb)), v.p(...D2, Math.max(z0, zb))], '#ffffff'); ctx.globalAlpha = alpha;
+        if (spx > 9) {   // fine mullion grid when close
+          ctx.strokeStyle = 'rgba(15,30,45,.14)'; ctx.lineWidth = 1; ctx.beginPath(); const nv = Math.max(3, Math.round(w.L / 0.16));
+          for (let i = 1; i < nv; i++) { if (i % 3 === 0) continue; const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], z0 + 0.3)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); }
+          for (let z = z0 + 0.4; z < z1 - 0.1; z += 0.37) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
+        }
+      }
       if (o.grid) {   // punched windows in a grid (Four Seasons)
         ctx.strokeStyle = N ? 'rgba(255,214,140,.55)' : o.grid; ctx.lineWidth = Math.max(1, v.s * 1.6); ctx.globalAlpha = alpha * 0.55; ctx.beginPath();
         const nv = Math.max(2, Math.round(w.L / 0.32)); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], z0 + 0.5)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.15)); }
