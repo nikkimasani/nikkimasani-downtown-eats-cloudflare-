@@ -273,6 +273,31 @@
       "source": "https://www.yelp.com/biz/lawless-spirits-and-kitchen-houston",
       "checked": "2026-11-19",
       "notInDirectory": true
+    },
+    "C. Baldwin Lobby Bar": {
+      "lat": 29.75786,
+      "lng": -95.37138,
+      "street": "400 Dallas St (lobby)",
+      "venue": "C. Baldwin",
+      "hours": "Daily 2pm–12am",
+      "phone": "(713) 759-0202",
+      "website": "https://www.cbaldwinhotel.com",
+      "source": "https://www.hotelplanner.com/Hotels/245058/",
+      "checked": "2026-11-22",
+      "notInDirectory": true
+    },
+    "Parlour Hideaway": {
+      "lat": 29.75788,
+      "lng": -95.37132,
+      "street": "400 Dallas St (behind the Lobby Bar)",
+      "venue": "C. Baldwin",
+      "website": "https://sagehospitalitygroup.com/our-places/our-portfolio/parlour-hideaway",
+      "source": "https://sagehospitalitygroup.com/our-places/our-portfolio/parlour-hideaway",
+      "checked": "2026-11-22",
+      "notInDirectory": true
+    },
+    "Rosalie Italian Soul": {
+      "venue": "C. Baldwin"
     }
   }
 }

@@ -5329,5 +5329,48 @@
   "type": "Cocktail Bar",
   "note": "Upstairs cocktail lounge in the Rice Hotel with a terrace over Texas Ave — small plates, happy-hour cocktails. Sometimes booked for private events, so call ahead.",
   "tryit": "Cocktails on the terrace"
+ },
+ {
+  "id": 284,
+  "name": "C. Baldwin Lobby Bar",
+  "address": "400 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Dinner"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "nightlife",
+   "patio",
+   "group"
+  ],
+  "type": "Hotel Bar",
+  "note": "Sunken circular bar under a big chandelier in the C. Baldwin lobby, with a coffee bar and an open-air patio.",
+  "tryit": "Cocktails on the patio"
+ },
+ {
+  "id": 285,
+  "name": "Parlour Hideaway",
+  "address": "400 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Late Night"
+  ],
+  "price": 4,
+  "vibes": [
+   "date",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Speakeasy behind a secret door off the C. Baldwin's Lobby Bar — premium cocktails, champagne and caviar bites. Hours vary, so call ahead.",
+  "tryit": "Champagne and truffled grilled cheese"
  }
 ]
