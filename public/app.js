@@ -235,6 +235,7 @@ function renderPick() {
   chipRow($('#extras'), EXTRAS, (x) => st.extras.has(x.k), (x) => (st.extras.has(x.k) ? st.extras.delete(x.k) : st.extras.add(x.k)));
   const ex0 = DIET.size ? ` · ${[...DIET].map((k) => DIETS.find((d) => d.k === k).l.split(' ').pop()).join(', ')}` : '';
   const ex = ex0 + (st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '');
+  $('#pickClear').hidden = !(st.moods.size || st.meal !== 'Any' || st.budget || DIET.size || st.extras.size);
   const bl = (BUDGET.find((b) => b.k === st.budget) || {}).l; $('#filtSum').textContent = `${st.meal === 'Any' ? 'Any time' : st.meal} · ${!bl || bl === 'Any' ? 'Any budget' : bl}${ex}`;
   const list = ranked();
   $('#matchCount').textContent = list.length ? `${list.length} spots match — best for right now first` : '';
@@ -257,6 +258,7 @@ function renderPick() {
   }
   if (city) city.setHighlight(mapMatch ? new Set(list.map(([r]) => r.id)) : null);
 }
+$('#pickClear').onclick = (e) => { e.preventDefault(); e.stopPropagation(); st.moods.clear(); st.meal = 'Any'; st.budget = 0; st.extras.clear(); DIET.clear(); store.set('diet', []); save(); renderPick(); };
 $('#diet').onclick = (e) => { const b = e.target.closest('[data-diet]'); if (!b) return; const k = b.dataset.diet; DIET.has(k) ? DIET.delete(k) : DIET.add(k); store.set('diet', [...DIET]); renderPick(); };
 $('#moods').onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; const k = b.dataset.m; st.moods.has(k) ? st.moods.delete(k) : st.moods.add(k); save(); renderPick(); };
 let lastPick = null;
@@ -373,12 +375,14 @@ function renderBrowse() {
   if (stq) $('#browse').insertAdjacentHTML('afterbegin', `<div class="card corner-card"${stq.kind === 'parallel' ? '' : ' data-corner="1"'}><h3>📍 ${esc(stq.label)}</h3><div class="meta">${stq.kind === 'parallel' ? 'Pick one street from each direction, like Main & Texas.' : 'Tap to see it on the map with every spot within a block'}</div></div>`);
   if (stq && !list.length) $('#bCount').textContent = 'Street search';
   for (const [id, on] of [['#favOnly', fav1], ['#tunOnly', tun1], ['#openOnly', open1], ['#hhOnly', hh1]]) $(id).classList.toggle('on', on);
+  $('#bClear').hidden = !(t || fav1 || tun1 || open1 || hh1 || fc.size || sortBy !== 'name');
 }
 $('#q').oninput = (e) => { bq = e.target.value; renderBrowse(); };
 $('#browse').addEventListener('click', (e) => {
   const rv = e.target.closest('[data-review]'); if (rv) { openSheet(+rv.dataset.review); return; }
   if (e.target.closest('[data-corner]')) { const q = parseStreetQuery(bq); show('map'); setTimeout(() => runFind({ st: q }), 60); return; }
   const b = e.target.closest('[data-sug]'); if (b) { $('#q').value = bq = b.dataset.sug; renderBrowse(); } });
+$('#bClear').onclick = () => { bq = ''; $('#q').value = ''; fav1 = tun1 = open1 = hh1 = false; fc.clear(); sortBy = 'name'; $('#sort').value = 'name'; renderBrowse(); };
 $('#toggleF').onclick = () => $('#filters').classList.toggle('on');
 $('#favOnly').onclick = () => { fav1 = !fav1; renderBrowse(); };
 $('#tunOnly').onclick = () => { tun1 = !tun1; renderBrowse(); };
@@ -740,7 +744,7 @@ const CHIPS = [
 ];
 let chip = 'all';
 const chipText = (r) => [r.name, r.type, ...(r.cuisines || [])].join(' ');
-function renderChips() { $('#mapChips').innerHTML = CHIPS.map((c) => `<button class="mchip ${chip === c.k ? 'on' : ''}" data-c="${c.k}">${c.l}</button>`).join(''); }
+function renderChips() { $('#mapChips').innerHTML = (chip !== 'all' ? '<button class="mchip clr" data-c="all">✕ Clear</button>' : '') + CHIPS.map((c) => `<button class="mchip ${chip === c.k ? 'on' : ''}" data-c="${c.k}">${c.l}</button>`).join(''); }
 function applyChip(quiet) {
   if (!city) return; const c = CHIPS.find((x) => x.k === chip);
   city.showParking = chip === 'park';
@@ -749,7 +753,7 @@ function applyChip(quiet) {
   city.setHighlight(new Set(ids)); if (!quiet) toast(ids.length ? `${c.l}: ${ids.length} spot${ids.length === 1 ? '' : 's'}` : `No ${c.l.replace(/^\S+ /, '').toLowerCase()} spots on this map`);
   mapOpen = false; $('#mapOpen')?.classList.remove('on');
 }
-$('#mapChips').onclick = (e) => { const b = e.target.closest('[data-c]'); if (!b) return; chip = chip === b.dataset.c ? 'all' : b.dataset.c; renderChips(); applyChip(); };
+$('#mapChips').onclick = (e) => { const b = e.target.closest('[data-c]'); if (!b) return; chip = chip === b.dataset.c || b.dataset.c === 'all' ? 'all' : b.dataset.c; renderChips(); applyChip(); };
 renderChips();
 $('#findMe').onclick = () => findMe();
 function renderFind() {
@@ -757,7 +761,8 @@ function renderFind() {
   $('#findList').innerHTML = list.length ? list.map((x, i) => `<button data-f="${i}" ${x.st || x.r ? '' : 'disabled'}>${esc(x.t)}</button>`).join('') : `<div class="meta">Try a corner like <b>Main &amp; Texas</b>, an address like <b>1000 Main</b>, or a restaurant name.</div>`;
   $('#findList').onclick = (e) => { const b = e.target.closest('[data-f]'); if (b) runFind(list[+b.dataset.f]); };
 }
-$('#findIn').oninput = renderFind;
+$('#findIn').oninput = () => { $('#findClear').hidden = !$('#findIn').value; renderFind(); };
+$('#findClear').onclick = () => { const i = $('#findIn'); i.value = ''; $('#findClear').hidden = true; renderFind(); $('#mapFound')?.classList.remove('on'); if (city) city.mark = null; i.focus(); };
 $('#findForm').onsubmit = (e) => { e.preventDefault(); const l = findSuggestions($('#findIn').value).filter((x) => x.st || x.r); if (l.length) runFind(l[0]); else toast('No street corner or spot matches that'); };
 $('#mapBack').onclick = () => { closeSheet(); city?.back(); };
 // keep the Back pill and the directions panel just under the map controls, however many rows they wrap to
@@ -814,6 +819,7 @@ let nightF = new Set(), nightSort = 'now';
 function nightScore(r) { return (hhNow(r) ? 4 : 0) + (isOpen(r) === true ? 2 : 0) + (openLate(r) ? 1 : 0) + (r.bar && /bar|lounge|pub|club|saloon|brew/i.test(r.type) ? 0.5 : 0); }
 function renderNight() {
   const bars = DATA.filter((r) => r.night);
+  $('#nClear').hidden = !nightF.size;
   $('#nightChips').innerHTML = NIGHT_F.map((f) => `<button class="chip ${nightF.has(f.k) ? 'on' : ''}" data-nf="${f.k}">${f.l}</button>`).join('');
   let list = bars.filter((r) => [...nightF].every((k) => { const f = NIGHT_F.find((x) => x.k === k); return f.f ? f.f(r) : f.re.test(nightText(r)); }));
   const by = { now: (a, b) => nightScore(b) - nightScore(a) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
@@ -835,6 +841,7 @@ function barCard(r) {
       : r.hhListed ? `<div class="hhbox"><b>🍹 Listed for happy hour</b><span>Times and prices aren't published yet — check with the bar.</span></div>` : ''}
   <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`;
 }
+$('#nClear').onclick = () => { nightF.clear(); renderNight(); };
 $('#nightChips').onclick = (e) => { const b = e.target.closest('[data-nf]'); if (!b) return; const k = b.dataset.nf; nightF.has(k) ? nightF.delete(k) : nightF.add(k); renderNight(); };
 $('#nightSort').onchange = (e) => { nightSort = e.target.value; if (nightSort === 'near' && !USER) startLocate(); renderNight(); };
 $('#nightMap').onclick = () => { show('map'); setScene('night'); };
@@ -854,6 +861,7 @@ const COFFEE_F = [
 let coffeeF = new Set(), coffeeSort = 'now';
 function renderCoffee() {
   const all = DATA.filter(isCoffee);
+  $('#cClear').hidden = !coffeeF.size;
   $('#coffeeChips').innerHTML = COFFEE_F.map((f) => `<button class="chip ${coffeeF.has(f.k) ? 'on' : ''}" data-cf="${f.k}">${f.l}</button>`).join('');
   const list = all.filter((r) => [...coffeeF].every((k) => COFFEE_F.find((x) => x.k === k).f(r)));
   const by = { now: (a, b) => (isOpen(b) === true) - (isOpen(a) === true) || (walkMinsTo(a) ?? 99) - (walkMinsTo(b) ?? 99) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
@@ -869,6 +877,7 @@ function renderCoffee() {
     <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`; }).join('') || '<div class="empty">No coffee spots match all of those. Try removing a filter.</div>';
   $('#coffeeCount').textContent = `${list.length} spot${list.length === 1 ? '' : 's'}`;
 }
+$('#cClear').onclick = () => { coffeeF.clear(); renderCoffee(); };
 $('#coffeeChips').onclick = (e) => { const b = e.target.closest('[data-cf]'); if (!b) return; const k = b.dataset.cf; coffeeF.has(k) ? coffeeF.delete(k) : coffeeF.add(k); renderCoffee(); };
 $('#coffeeSort').onchange = (e) => { coffeeSort = e.target.value; if (coffeeSort === 'near' && !USER) startLocate(() => renderCoffee()); renderCoffee(); };
 $('#coffeeMap').onclick = () => {

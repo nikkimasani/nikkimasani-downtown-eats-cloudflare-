@@ -29,7 +29,7 @@
 <section class="view on" id="v-pick">
   <h2>What are you feeling?</h2>
   <div class="mood" id="moods"></div>
-  <details class="pickfilters" id="filtBox"><summary><span>⚙️ Filters</span><em id="filtSum">Any time · Any budget</em></summary>
+  <details class="pickfilters" id="filtBox"><summary><span>⚙️ Filters</span><em id="filtSum">Any time · Any budget</em><button type="button" class="clearf" id="pickClear" hidden>✕ Clear</button></summary>
     <h3>When?</h3>
     <div class="chips" id="meal"></div>
     <h3>Budget</h3>
@@ -87,6 +87,7 @@
   <div class="row" style="margin-top:10px;align-items:center">
     <select class="chip" id="nightSort"><option value="now">Best right now</option><option value="near">Closest to me</option><option value="az">A–Z</option></select>
     <button class="chip" id="nightMap">🗺️ Bars on the map</button>
+    <button class="chip clearf" id="nClear" hidden>✕ Clear</button>
     <span class="count" id="nightCount" style="margin:0 0 0 auto"></span>
   </div>
   <div class="grid" id="nightList" style="margin-top:10px"></div>
@@ -101,6 +102,7 @@
   <div class="row" style="margin-top:10px;align-items:center">
     <select class="chip" id="coffeeSort"><option value="now">Open first</option><option value="near">Closest to me</option><option value="az">A–Z</option></select>
     <button class="chip" id="coffeeMap">🗺️ Coffee on the map</button>
+    <button class="chip clearf" id="cClear" hidden>✕ Clear</button>
     <span class="count" id="coffeeCount" style="margin:0 0 0 auto"></span>
   </div>
   <div class="grid" id="coffeeList" style="margin-top:10px"></div>
@@ -112,6 +114,7 @@
   <h2>All downtown spots</h2>
   <input class="search" id="q" placeholder="Search name, cuisine, dish, street, tunnel…">
   <div class="row" style="margin-top:10px">
+    <button class="chip clearf" id="bClear" hidden>✕ Clear</button>
     <button class="chip" id="toggleF">Filters ▾</button>
     <button class="chip" id="openOnly">🟢 Open now</button>
     <button class="chip" id="hhOnly">🍹 Happy hour</button>
@@ -134,6 +137,7 @@
     <form class="searchbar" id="findForm" autocomplete="off">
       <span class="sb-ico">🔍</span>
       <input id="findIn" type="search" enterkeyhint="search" placeholder="Search restaurants, bars, corners…" aria-label="Search the map">
+      <button type="button" class="sb-clear" id="findClear" aria-label="Clear search" hidden>✕</button>
       <button type="button" id="sbRoute" class="sb-route" aria-label="Directions">↱ Route</button>
     </form>
     <div class="seg scene" id="sceneSeg" role="group" aria-label="Day or night map">

@@ -624,3 +624,12 @@ body.navving #v-map .mapchips,body.navving #v-map .backpill,body.navving #v-map 
 #v-map .simcard{z-index:9}
 #v-map .simcard .close,#v-map .foundbar .close{position:relative;z-index:2;min-width:36px;min-height:36px}
 #v-map .zoombox .locbtn.on{transform:none;background:#2f6fd6;color:#fff;border-radius:11px}
+
+/* clear-filter buttons */
+.clearf{border-color:var(--accent) !important;color:var(--accent) !important;font-weight:700}
+.clearf[hidden]{display:none !important}
+.pickfilters summary .clearf{margin-left:8px;flex:none;background:transparent;border:1px solid;border-radius:999px;padding:2px 9px;font:700 11.5px Inter,system-ui,sans-serif}
+#v-map .mchip.clr{border-color:#e8590c;color:#e8590c;font-weight:700}
+#v-map .sb-clear{flex:none;width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:inherit;font-size:12px;display:grid;place-items:center;padding:0}
+#v-map .sb-clear[hidden]{display:none}
+#v-map input[type=search]::-webkit-search-cancel-button{display:none}
