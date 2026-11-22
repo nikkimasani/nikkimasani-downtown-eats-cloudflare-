@@ -71,6 +71,8 @@ const SKYLINE = [
   { at: [29.75446, -95.37274], r: 36, name: '1600 Smith', hM: 223, c: '#5b7383', glass: true },
   { at: [29.75463, -95.36978], r: 36, name: 'Wedge International Tower', c: '#6b4f43', glass: true },
   { at: [29.75765, -95.37049], r: 22, name: 'One Allen Center', c: '#9d9a93' },
+  { at: [29.75991, -95.36097], r: 8, name: 'Christ Church Cathedral', c: '#a5634a', glass: false, minH: 0.5, roofC: '#5a5450', church: { hM: 18, towerM: 38 } },   // 1117 Texas Ave: red-brick Gothic Revival
+  { at: [29.75153, -95.36039], nudge: [-7.3, 1.3], r: 30, name: 'Hilton Americas-Houston', hM: 102, c: '#d9cdb8', glass: false, fac: 'punch', minH: 3 },                                     // 1600 Lamar St
   { at: [29.76030, -95.36935], r: 30, name: 'City Hall', c: '#e4dccb', glass: false, fac: 'punch', minH: 1.5, roofC: '#cfc6b3' },        // 1939 limestone Art Deco
   { at: [29.75950, -95.37000], r: 26, name: 'Central Library', c: '#d3cdc1', glass: false, fac: 'slots', minH: 1.5 },                 // Jesse H. Jones Building
 ];
@@ -78,7 +80,7 @@ const SKYLINE = [
 // mapped bits above it inside the footprint are dropped, and the tiers stack on centre: [scale, metres, colour]
 const SIG_TOPS = {
   'Heritage Plaza': { hM: 232, c: '#5e8fa3', glass: true, tiers: [[0.94, 3, '#e4ddcc'], [0.84, 4, '#e4ddcc'], [0.72, 4, '#ddd5c2'], [0.6, 4, '#ddd5c2'], [0.48, 4, '#d6cdb8'], [0.36, 4, '#d6cdb8'], [0.24, 3, '#cfc5ae'], [0.14, 3, '#5e8fa3']] },   // stepped Mayan-temple top with a small glass temple   // stepped Mayan-temple top
-  'Niels Esperson Building': { hM: 124, c: '#e2d3b0', glass: false, tiers: [[0.78, 6, '#e8dcbd'], [0.6, 7, '#e8dcbd'], [0.46, 6, '#e3d5b2'], [0.34, 5, '#dccba3'], [0.22, 4, '#d4bf8e'], [0.1, 4, '#c9a85e']] },   // the round Italian Renaissance temple on top
+  'Niels Esperson Building': { hM: 124, c: '#e2d3b0', glass: false, tiers: [[0.92, 3, '#ece1c5'], [0.8, 4, '#e8dcbd', { fac: 'punch' }], [0.62, 2, '#efe6cf', { round: true }], [0.56, 8, '#e9dfc4', { round: true, fac: 'ribs' }], [0.6, 1.5, '#efe6cf', { round: true }], [0.5, 1, '#d9c79f', { round: true, dome: 6, domeC: '#cdb27a' }], [0.14, 3, '#efe6cf', { round: true, fac: 'ribs' }], [0.15, 0.5, '#d4b45e', { round: true, dome: 2.5, domeC: '#c9a24a' }]] },   // square base, round Corinthian temple, gilded dome and lantern
   '1910 Courthouse': { hM: 36, c: '#ddd0b4', glass: false, tiers: [[0.4, 4, '#ddd0b4'], [0.34, 5, '#6f9f8b'], [0.26, 3, '#6f9f8b'], [0.16, 2, '#6f9f8b'], [0.06, 2, '#d9b45a']] },   // drum and green copper dome
   'Annunciation Catholic Church': { hM: 52, c: '#cbbb9f', glass: false, tiers: [[0.26, 18, '#cbbb9f'], [0.2, 8, '#c4b393'], [0.12, 9, '#8f8a84'], [0.05, 6, '#8f8a84']] },   // the tall bell tower and spire
 };
@@ -1355,7 +1357,7 @@ export class CityMap {
     }
     // signature towers: name them, set their real heights and cladding, and build missing shafts
     for (const S of SKYLINE) {
-      const [px, py] = this.proj(S.at[0], S.at[1]), R = S.r / 10;
+      let [px, py] = this.proj(S.at[0], S.at[1]); const R = S.r / 10; if (S.nudge) { px += S.nudge[0]; py += S.nudge[1]; }
       const near = this.osm.filter((o) => o.type !== 'crown' && Math.hypot(o.cx - px, o.cy - py) < R && o.z0 + o.h > (S.minH ?? 4)); if (!near.length) continue;
       const ground = near.filter((o) => o.z0 < 0.5);
       if (S.body && !ground.some((o) => o.h > 6)) {   // only the crown is mapped: the shaft is the outline around its pieces, up to where they start
@@ -1371,14 +1373,23 @@ export class CityMap {
       const tall = Math.max(...near.map((o) => o.z0 + o.h)), main = (ground.length ? ground : near).reduce((a, o) => ((o.bb.x1 - o.bb.x0) * (o.bb.y1 - o.bb.y0) * (o.z0 + o.h) > (a.bb.x1 - a.bb.x0) * (a.bb.y1 - a.bb.y0) * (a.z0 + a.h) ? o : a));
       for (const o of near) { if (o.z0 + o.h < tall * 0.45) continue; if (S.c) o.c = S.c; if (S.glass != null) o.glass = S.glass; if (S.roofC) o.roofC = S.roofC; if (S.fac) o.fac = S.fac; if (S.stepGable && o.roof === 'gabled') o.stepped = true; if (o.name && o.name !== S.name && o !== main) o.name = ''; }
       main.name = S.name; main.sky = true; if (S.hM) main.topM = S.hM;
+      if (S.church) {   // nave with a steep gable, and a square bell tower with a pyramid spire on its front corner
+        main.h = S.church.hM / 10 * 0.6; main.roof = 'gabled'; main.rh = S.church.hM / 10 * 0.4; main.c = S.c; main.roofC = S.roofC; main.topM = S.church.towerM;
+        if (main.pts.length > 4) { const xs = main.pts.map((p) => p[0]), ys = main.pts.map((p) => p[1]); main.pts = [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)], [Math.min(...xs), Math.max(...ys)]]; main.rp = null; }
+        const xs = main.pts.map((p) => p[0]), ys = main.pts.map((p) => p[1]), tw = Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 0.32, tx = Math.min(...xs), ty = Math.max(...ys) - tw;
+        const tp = [[tx, ty], [tx + tw, ty], [tx + tw, ty + tw], [tx, ty + tw]];
+        this.osm.push({ pts: tp, bb: { x0: tx, x1: tx + tw, y0: ty, y1: ty + tw }, h: S.church.towerM / 10 * 0.72, z0: 0, c: S.c, glass: false, name: '', type: 'tower', cx: tx + tw / 2, cy: ty + tw / 2, roof: 'pyramidal', rh: S.church.towerM / 10 * 0.28, roofC: '#4f4a46' });
+      }
     }
     for (const o of this.osm) if (RENAME[o.name]) o.name = RENAME[o.name];
     for (const [nm, T] of Object.entries(SIG_TOPS)) {
       const m = this.osm.filter((o) => o.name === nm && o.z0 < 0.5).sort((a, b) => b.h - a.h)[0]; if (!m) continue;
       this.osm = this.osm.filter((o) => o === m || !(o.z0 > m.h * 0.6 && ptIn(o.cx, o.cy, m.pts)));
-      const tot = T.tiers.reduce((a, t) => a + t[1], 0) / 10; m.h = T.hM / 10 - tot; m.rh = 0; m.roof = null; m.c = T.c; m.glass = T.glass; m.topM = T.hM;
-      let z = m.h; for (const [sc, hm, cc] of T.tiers) { const q = m.pts.map((p) => [m.cx + (p[0] - m.cx) * sc, m.cy + (p[1] - m.cy) * sc]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]);
-        this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: hm / 10, z0: z, c: cc, glass: false, name: '', type: 'crown', cx: m.cx, cy: m.cy }); z += hm / 10; }
+      const tot = T.tiers.reduce((a, t) => a + t[1] + (t[3]?.dome || 0), 0) / 10; m.h = T.hM / 10 - tot; m.rh = 0; m.roof = null; m.c = T.c; m.glass = T.glass; m.topM = T.hM;
+      const half = Math.min(m.bb.x1 - m.bb.x0, m.bb.y1 - m.bb.y0) / 2;
+      let z = m.h; for (const [sc, hm, cc, op = {}] of T.tiers) {   // op.round: a cylinder; op.fac: wall detail (ribs = colonnade); op.dome: a dome of that many metres on top
+        const q = op.round ? Array.from({ length: 28 }, (_, k) => [m.cx + Math.cos(k / 28 * Math.PI * 2) * half * sc, m.cy + Math.sin(k / 28 * Math.PI * 2) * half * sc]) : m.pts.map((p) => [m.cx + (p[0] - m.cx) * sc, m.cy + (p[1] - m.cy) * sc]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]);
+        this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: hm / 10, z0: z, c: cc, glass: false, name: '', type: 'crown', cx: m.cx, cy: m.cy, fac: op.fac, ...(op.dome ? { roof: 'dome', rh: op.dome / 10, roofC: op.domeC || cc } : {}) }); z += hm / 10 + (op.dome || 0) / 10; }
     }
     // drop upper parts left floating because the tower under them isn't mapped
     this.osm = this.osm.filter((o) => !(o.z0 > 0.5) || o.type === 'crown' || this.osm.some((u) => u !== o && u.z0 < o.z0 && u.z0 + u.h >= o.z0 - 0.6 && inPoly(o.cx, o.cy, u.pts)));
@@ -1434,10 +1445,10 @@ export class CityMap {
         ctx.strokeStyle = N ? 'rgba(0,0,0,.18)' : 'rgba(20,40,70,.12)'; ctx.lineWidth = 1; ctx.beginPath();
         const step = o.h > 15 ? 0.84 : 0.42; for (let z = z0 + step; z < z1 - 0.1; z += step) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
       }
-      if (v.s < (o.h > 6 ? 0.18 : 0.32) || w.L < 0.4) continue;
+      if (v.s < (o.h > 6 ? 0.18 : 0.32) || w.L < (o.type === 'crown' ? 0.05 : 0.4)) continue;
       const fz0 = o.type === 'crown' ? z0 : z0 + 0.45, sp = v.p(w.a[0], w.a[1], z0), sq = v.p(w.b[0], w.b[1], z0), spx = Math.hypot(sq[0] - sp[0], sq[1] - sp[1]) / w.L;   // screen px per unit along this wall
       if (o.fac === 'ribs' && spx > 5) {   // deep vertical fins (One Shell's travertine tube): a shadow and a lit edge per fin
-        const nv = Math.max(3, Math.round(w.L / 0.22)), sh = N ? 'rgba(0,0,0,.35)' : 'rgba(60,55,45,.22)', hl = N ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.55)';
+        const nv = Math.max(o.type === 'crown' ? 1 : 3, Math.round(w.L / 0.22)), sh = N ? 'rgba(0,0,0,.35)' : 'rgba(60,55,45,.22)', hl = N ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.55)';
         ctx.lineWidth = Math.max(1, spx * 0.05);
         ctx.strokeStyle = sh; ctx.beginPath(); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, (i + 0.18) / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); } ctx.stroke();
         ctx.strokeStyle = hl; ctx.beginPath(); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); } ctx.stroke();
@@ -2654,7 +2665,12 @@ export class CityMap {
     if (edge) for (const c of C) if (all || MAJOR.has(c.n)) { const [x, y] = v.p(A[0].x - 2.4, c.y), w = ctx.measureText(c.n).width; if (fits(x - w / 2, y - 8, x + w / 2, y + 8)) ctx.fillText(c.n, x, y); }
     for (const f of this.freewayLabels || []) { const [x, y] = v.p(f.x, f.y); pillFit(ctx, x, y, f.t, 10, f.water ? 'rgba(25,113,194,.85)' : 'rgba(33,37,41,.75)', '#fff'); }
     if (v.s > 0.3) {
-      for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7); pillFit(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
+      const VENUE = { 'Daikin Park': { t: '⚾ Daikin Park', bg: '#002d62', bd: '#eb6e1f', z: 7.6 }, 'Toyota Center': { t: '🏀 Toyota Center', bg: '#ce1141', bd: '#ffffff', z: 4 }, 'George R. Brown Convention Center': { t: 'George R. Brown Convention Center', bg: '#1d4f91', bd: '#e0501a', z: 6 } };   // team and venue colours
+      for (const a of this.areas) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, VENUE[a.n]?.z ?? (a.kind === 'park' || a.kind === 'plaza' ? 0.5 : 7)), V = VENUE[a.n];
+        if (V) { const sz = Math.round(Math.max(11, Math.min(15, 10 + v.s * 4))); ctx.font = `800 ${sz}px system-ui, "Apple Color Emoji", sans-serif`; const w = ctx.measureText(V.t).width + sz * 1.3, h = sz * 1.9; if (!fits(x - w / 2 - 3, y - h / 2 - 2, x + w / 2 + 3, y + h / 2 + 2)) continue;
+          ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2; ctx.fillStyle = V.bg; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, h / 2); ctx.fill(); ctx.restore();
+          ctx.strokeStyle = V.bd; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(x - w / 2 + 1, y - h / 2 + 1, w - 2, h - 2, h / 2); ctx.stroke(); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(V.t, x, y + 0.5); continue; }
+        pillFit(ctx, x, y, a.n, 10, a.kind === 'park' ? 'rgba(47,158,68,.88)' : 'rgba(73,80,87,.85)', '#fff'); }
       for (const st of this.rail?.stations || []) { const [x, y] = v.p(st.x + (st.line === 'red' ? 0.6 : 0), st.y, 1.6); pillFit(ctx, x, y, '🚊 ' + st.n, 10, st.line === 'red' ? 'rgba(224,49,49,.92)' : 'rgba(47,158,68,.92)', '#fff'); }
       if (v.s > 0.42) { const lim = v.s > 0.8 ? 60 : 14; for (const o of (this.osmNamed || []).slice(0, lim)) { const [x, y] = v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (x > -60 && x < this.W + 60 && y > -20 && y < this.H + 20) pillFit(ctx, x, y, o.name, 10, 'rgba(255,255,255,.88)', '#343a40'); } }
       if (v.s > 0.42) for (const l of this.landmarks) { const [x, y] = v.p(l.x + l.w / 2, l.y + l.d / 2, l.h + 1.5); pillFit(ctx, x, y, l.n, 10, 'rgba(255,255,255,.88)', '#343a40'); }
