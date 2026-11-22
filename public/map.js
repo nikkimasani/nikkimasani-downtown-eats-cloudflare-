@@ -909,7 +909,7 @@ export class CityMap {
   // Walk view: zoomed in at street level, map turns so the way you're facing (or walking) is straight up
   setWalkView(on) {
     this.walkView = on;
-    if (on && this.user?.inside) { this.follow = true; this.headingUp(true); this.zoomTo(this.user.x, this.user.y, 1.9, 0, true); }
+    if (on && this.user?.inside) { this.follow = true; this.headingUp(true); this.zoomTo(this.user.x, this.user.y, 1.35, 0, true); }
     if (!on) { this.zoomTo(this.v.cx, this.v.cy, Math.min(this.v.s, 0.9)); }
     return !!this.user?.inside;
   }
@@ -2243,7 +2243,8 @@ export class CityMap {
     const W = this.W, H = this.H, off = (x, y, w, d, h) => { const [sx, sy] = v.p(x + w / 2, y + d / 2), r = (w + d) * TW * 0.5 * v.s + 20, up = h * ZU * v.s + r; return sx < -r || sx > W + r || sy < -r * 0.6 || sy - up > H; };
     const ghost = mode === 'both' ? 0.4 : 1;
     // towers standing in front of the picked spot turn see-through, so tall true-scale buildings never hide it
-    const fs = this.pick != null && this.mode !== 'tunnel' ? this.spots.find((s) => !s.tunnel && s.places.some((p) => p.id === this.pick)) : null, fpt = fs && v.p(fs.x, fs.y, 0), fdep = fs && v.depth(fs.x, fs.y);
+    const fu = (this.follow || this.nav) && this.user?.inside && this.mode !== 'tunnel' ? { x: this.user.x, y: this.user.y } : null;   // walking: see yourself through the towers
+    const fs = fu || (this.pick != null && this.mode !== 'tunnel' ? this.spots.find((s) => !s.tunnel && s.places.some((p) => p.id === this.pick)) : null), fpt = fs && v.p(fs.x, fs.y, 0), fdep = fs && v.depth(fs.x, fs.y);
     const xray = (o) => { if (!fs || o.z0 + o.h < 4 || this.osmDepth(o) < fdep + 0.3) return false; if (ptIn(fs.x, fs.y, o.pts)) return false;
       let x0 = 1e9, x1 = -1e9, y1 = -1e9, top = 1e9; for (const p of o.pts) { const [a, b] = v.p(p[0], p[1], o.z0); const [, t] = v.p(p[0], p[1], o.z0 + o.h); if (a < x0) x0 = a; if (a > x1) x1 = a; if (b > y1) y1 = b; if (t < top) top = t; }
       return fpt[0] > x0 && fpt[0] < x1 && fpt[1] < y1 && fpt[1] > top - 40; };

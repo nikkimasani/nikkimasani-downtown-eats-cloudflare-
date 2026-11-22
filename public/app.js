@@ -588,7 +588,7 @@ function renderSim() {
     <div class="sc-acts"><button data-sim="follow" class="${i.following ? 'on' : ''}">${i.following ? '⭐ Following' : '⭐ Follow'}</button>${i.place ? `<button data-sim="place">${esc(i.place.name)} ›</button>` : ''}</div>`;
   b.hidden = false;
 }
-function showSim(n) { simN = n; renderSim(); clearInterval(simTimer); simTimer = setInterval(renderSim, 1000); buzz(6); }
+function showSim(n) { simN = n; $('#mapFound')?.classList.remove('on'); renderSim(); clearInterval(simTimer); simTimer = setInterval(renderSim, 1000); buzz(6); }
 function hideSim() { simN = null; clearInterval(simTimer); const b = $('#simCard'); if (b) b.hidden = true; if (city) city.followNpc(null); }
 $('#simCard').onclick = (e) => {
   const a = e.target.closest('[data-sim]')?.dataset.sim; if (!a || !simN) return;
@@ -693,7 +693,7 @@ function showFound(label, near) {
   for (const { s, d } of near) for (const p of s.places) if (!walk.has(p.id)) { places.push(p); walk.set(p.id, walkMin(d)); }
   const bar = $('#mapFound');
   bar.innerHTML = `<div><b>📍 ${esc(label)}</b><div class="meta">${places.length ? `${places.length} spots within about a block` : 'No restaurants right at this corner'}</div></div>${places.length ? '<button class="btn" id="fSee">See them</button>' : ''}<button class="close" id="fX" aria-label="Close">×</button>`;
-  bar.classList.add('on');
+  bar.classList.add('on'); if (simN) hideSim();   // one card at a time
   if (places.length) $('#fSee').onclick = () => listSheet(places, 'Near ' + label, walk);
   $('#fX').onclick = () => { bar.classList.remove('on'); if (city) city.mark = null; };
 }
@@ -989,7 +989,9 @@ function showNavFar(r) {
 }
 function renderNav(st) {
   const p = $('#navPanel');
+  document.body.classList.toggle('navving', !!st);
   if (!st) { p.classList.remove('on'); return; }
+  if (!p.classList.contains('on')) { $('#mapFound')?.classList.remove('on'); if (simN) hideSim(); }
   const r = DATA[st.target.id], L = r ? navLinks(r) : null, eta = new Date(Date.now() + st.minutes * 60000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   if (st.arrived) {
     p.innerHTML = `<div class="nv-main"><div class="nv-ico">🏁</div><div><b>You've arrived at ${esc(st.target.label)}</b>${st.target.tunnel ? '<div class="meta">Take the escalator or stairs down to the tunnel level.</div>' : '<div class="meta">Enjoy!</div>'}</div></div><div class="nv-row"><button class="btn sm" id="nvEnd">Done</button></div>`;
