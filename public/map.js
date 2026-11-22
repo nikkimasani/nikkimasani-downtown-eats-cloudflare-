@@ -1536,11 +1536,11 @@ export class CityMap {
           const ws = q.map((a2, j) => { const b2 = q[(j + 1) % 4], dx = b2[0] - a2[0], dy = b2[1] - a2[1], L = Math.hypot(dx, dy) || 1; return { a: a2, b: b2, nx: dy / L, ny: -dx / L, d: v.depth((a2[0] + b2[0]) / 2, (a2[1] + b2[1]) / 2) }; });
           for (const w of ws.sort((x, y) => x.d - y.d)) { const [f, r] = v.vis(w.nx, w.ny); if (f <= 0.001) continue; poly(ctx, [v.p(...w.a, zb), v.p(...w.b, zb), v.p(...w.b, za), v.p(...w.a, za)], darken(col, 0.12 + 0.1 * r / Math.SQRT2)); }
           poly(ctx, q.map((p) => v.p(p[0], p[1], zb)), lighten(col, 0.06));
-          if (i > 0) for (const j of [0, 1, 2, 3]) fin.push([q[j], zb, rh / K * 0.7]);
+          if (i > 0) for (const j of [0, 1, 2, 3]) fin.push([q[j], zb, rh / K * 0.3]);
         }
-        fin.push([m1, z1 + rh, rh * 0.55], [m2, z1 + rh, rh * 0.55]);
+        fin.push([m1, z1 + rh, rh * 0.16], [m2, z1 + rh, rh * 0.16]);
         ctx.strokeStyle = N ? '#6b4038' : darken(col, 0.2); ctx.lineCap = 'round';
-        for (const [p, z, hgt] of fin) { const b0 = v.p(p[0], p[1], z), t0 = v.p(p[0], p[1], z + hgt); ctx.lineWidth = Math.max(1, v.s * (hgt > rh * 0.3 ? 2.6 : 1.6)); ctx.beginPath(); ctx.moveTo(...b0); ctx.lineTo(...t0); ctx.stroke(); }
+        for (const [p, z, hgt] of fin) { const b0 = v.p(p[0], p[1], z), t0 = v.p(p[0], p[1], z + hgt); ctx.lineWidth = Math.max(1, v.s * (hgt > rh * 0.1 ? 1.8 : 1.2)); ctx.beginPath(); ctx.moveTo(...b0); ctx.lineTo(...t0); ctx.stroke(); }
         ctx.lineCap = 'butt'; return;
       }
       const fs = [[[...P[s + 1], z1], [...P[s + 2], z1], R2, R1], [[...P[(s + 3) % 4], z1], [...P[s], z1], R1, R2], [[...P[s], z1], [...P[s + 1], z1], R1], [[...P[s + 2], z1], [...P[(s + 3) % 4], z1], R2]];
