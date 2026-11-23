@@ -685,9 +685,18 @@ export class CityMap {
       if (detail) {
         const along = st.line === 'red';
         const pw = along ? 0.24 : 2.4, pd = along ? 2.4 : 0.22, px = along ? p.x + 0.52 : p.x - pw / 2, py = along ? p.y - pd / 2 : p.y + 0.34;   // platforms sit inside the street, beside the tracks
-        box(ctx, v, px, py, pw, pd, 0.06, N ? '#6b7280' : '#e9ecef');
-        box(ctx, v, px - (along ? 0.04 : 0), py - (along ? 0 : 0.04), pw + (along ? 0.08 : 0), pd + (along ? 0 : 0.08), 0.04, col, 0.42);
-        for (const k of [0.15, 0.85]) { const [x, yy] = along ? v.p(px + pw / 2, py + pd * k, 0.06) : v.p(px + pw * k, py + pd / 2, 0.06); const [, y2] = along ? v.p(px + pw / 2, py + pd * k, 0.42) : v.p(px + pw * k, py + pd / 2, 0.42); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x, y2); ctx.stroke(); }
+        // raised platform with a yellow safety edge, slim posts, a curved white canopy and glass windscreens; lit at night
+        box(ctx, v, px, py, pw, pd, 0.14, N ? '#5c6370' : '#d9dcdf');
+        const ex = along ? (p.x + 0.52 < R.x ? px + pw - 0.03 : px) : px, ey = along ? py : (p.y + 0.34 < R.capY ? py + pd - 0.03 : py);
+        poly(ctx, [v.p(ex, ey, 0.141), v.p(ex + (along ? 0.03 : pw), ey, 0.141), v.p(ex + (along ? 0.03 : pw), ey + (along ? pd : 0.03), 0.141), v.p(ex, ey + (along ? pd : 0.03), 0.141)], '#fcc419');
+        const posts = [0.12, 0.38, 0.62, 0.88], P2 = (k, z) => along ? v.p(px + pw / 2, py + pd * k, z) : v.p(px + pw * k, py + pd / 2, z);
+        ctx.strokeStyle = N ? '#9aa1aa' : '#6c737b'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.beginPath(); for (const k of posts) { ctx.moveTo(...P2(k, 0.14)); ctx.lineTo(...P2(k, 0.86)); } ctx.stroke();
+        if (v.s > 0.7) { ctx.fillStyle = N ? 'rgba(160,190,220,.18)' : 'rgba(170,205,230,.35)'; for (const k of [0.25, 0.75]) { const a = P2(k - 0.08, 0.16), b = P2(k + 0.08, 0.16), c = P2(k + 0.08, 0.5), d = P2(k - 0.08, 0.5); ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.lineTo(...c); ctx.lineTo(...d); ctx.closePath(); ctx.fill(); } }
+        const cw = 0.22, seg = 10, canopy = []; for (let k = 0; k <= seg; k++) { const t = k / seg, z = 0.86 + Math.sin(t * Math.PI) * 0.12; canopy.push(along ? [px + pw / 2 - cw, py + pd * t, z] : [px + pw * t, py + pd / 2 - cw, z]); }
+        for (let k = seg; k >= 0; k--) { const t = k / seg, z = 0.86 + Math.sin(t * Math.PI) * 0.12; canopy.push(along ? [px + pw / 2 + cw, py + pd * t, z] : [px + pw * t, py + pd / 2 + cw, z]); }
+        poly(ctx, canopy.map((q) => v.p(...q)), N ? '#8a909a' : '#f8f9fa', N ? null : 'rgba(0,0,0,.18)');
+        poly(ctx, canopy.slice(0, seg + 1).map((q) => v.p(...q)).concat(canopy.slice(0, seg + 1).reverse().map((q) => v.p(q[0], q[1], q[2] - 0.04))), col);   // coloured fascia in the line's colour
+        if (N) for (const k of posts) { const [lx, ly] = P2(k, 0.8); circle(ctx, lx, ly, Math.max(2, v.s * 4), 'rgba(255,236,190,.85)'); }
       } else { const [x, y] = v.p(p.x, p.y); circle(ctx, x, y, Math.max(3, v.s * 9), '#fff'); circle(ctx, x, y, Math.max(2, v.s * 6.5), col); }
     }
   }
@@ -1671,7 +1680,7 @@ export class CityMap {
     const a = e && this.areas.find((x) => x.n === e.venue); if (!a) return;
     for (let i = 0; i < 70; i++) { const n = this.newNpc(5000 + i, false, { role: 'fan' }), side = i % 4, t = hash(i + 'f'); n.fan = true;
       n.x = side < 2 ? a.r.x0 + (a.r.x1 - a.r.x0) * t : side === 2 ? a.r.x0 - this.streetW * 0.6 : a.r.x1 + this.streetW * 0.6; n.y = side === 0 ? a.r.y0 - this.streetW * 0.6 : side === 1 ? a.r.y1 + this.streetW * 0.6 : a.r.y0 + (a.r.y1 - a.r.y0) * t;
-      n.look.shirt = e.team === 'Astros' ? (i % 3 ? '#eb6e1f' : '#002d62') : (i % 3 ? '#ce1141' : '#c4ced4'); this.npcs.push(n); }
+      n.look.shirt = e.team === 'Astros' ? (i % 3 ? '#eb6e1f' : '#002d62') : e.team === 'Rockets' ? (i % 3 ? '#ce1141' : '#c4ced4') : ['#343a40', '#f8f9fa', '#1c3d6e', '#868e96', '#e9ecef'][i % 5]; this.npcs.push(n); }
   }
   walkOff() { return this.streetW + 0.2; }   // pedestrians keep to the middle of the sidewalk
   // walk on sidewalks only: out to the nearest sidewalk, along it, and across streets only at the crosswalks
@@ -2179,7 +2188,7 @@ export class CityMap {
       }
     }
     if (!best && this.mode !== 'tunnel') for (const st of this.rail?.stations || []) {
-      const [x, y] = this.v.p(st.x + (st.line === 'red' ? 1.3 : 0), st.y, 1.6); if (Math.abs(sx - x) < 60 && Math.abs(sy - y) < 11 && this.v.s > 0.3) return { landmark: { n: '🚊 ' + st.n + (st.line === 'red' ? ' · Red Line' : ' · Green & Purple lines'), station: true, sname: st.n, ll: this.unproj ? this.unproj(st.x, st.y) : null } };
+      const [x, y] = this.v.p(st.x + (st.line === 'red' ? 1.3 : 0), st.y, 1.6); if (Math.abs(sx - x) < 60 && Math.abs(sy - y) < 11 && this.v.s > 0.3) { this.focusSt = { x: st.x, y: st.y }; return { landmark: { n: '🚊 ' + st.n + (st.line === 'red' ? ' · Red Line' : ' · Green & Purple lines'), station: true, sname: st.n, ll: this.unproj ? this.unproj(st.x, st.y) : null } }; }
     }
     if (!best && this.mode !== 'tunnel') for (const o of this.osmNamed || []) {
       const [x, y] = this.v.p(o.cx, o.cy, o.z0 + o.h + 1.2); if (Math.abs(sx - x) < 50 && Math.abs(sy - y) < 10) return { landmark: { n: `${o.name} · ${o.topM || Math.round((o.z0 + o.h + (o.rh || 0)) * 10)} m tall` } };
@@ -2326,7 +2335,7 @@ export class CityMap {
     const ghost = mode === 'both' ? 0.4 : 1;
     // towers standing in front of the picked spot turn see-through, so tall true-scale buildings never hide it
     const fu = (this.follow || this.nav) && this.user?.inside && this.mode !== 'tunnel' ? { x: this.user.x, y: this.user.y } : null;   // walking: see yourself through the towers
-    const fs = fu || (this.pick != null && this.mode !== 'tunnel' ? this.spots.find((s) => !s.tunnel && s.places.some((p) => p.id === this.pick)) : null), fpt = fs && v.p(fs.x, fs.y, 0), fdep = fs && v.depth(fs.x, fs.y);
+    const fs = fu || this.focusSt || (this.pick != null && this.mode !== 'tunnel' ? this.spots.find((s) => !s.tunnel && s.places.some((p) => p.id === this.pick)) : null), fpt = fs && v.p(fs.x, fs.y, 0), fdep = fs && v.depth(fs.x, fs.y);
     const xray = (o) => { if (!fs || o.z0 + o.h < 4 || this.osmDepth(o) < fdep + 0.3) return false; if (ptIn(fs.x, fs.y, o.pts)) return false;
       let x0 = 1e9, x1 = -1e9, y1 = -1e9, top = 1e9; for (const p of o.pts) { const [a, b] = v.p(p[0], p[1], o.z0); const [, t] = v.p(p[0], p[1], o.z0 + o.h); if (a < x0) x0 = a; if (a > x1) x1 = a; if (b > y1) y1 = b; if (t < top) top = t; }
       return fpt[0] > x0 && fpt[0] < x1 && fpt[1] < y1 && fpt[1] > top - 40; };

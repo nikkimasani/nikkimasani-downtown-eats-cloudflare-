@@ -17,6 +17,9 @@ for (const t of TEAMS) {
     }
   } catch (err) { console.log('events: ' + t.team + ' unavailable'); }
 }
+// shows and conventions at the George R. Brown (or anywhere else) added by hand in public/venue-events.json:
+// [{ "team": "Convention", "emoji": "🎪", "venue": "George R. Brown Convention Center", "vs": "Show name", "start": "2026-12-05T15:00:00Z" }]
+try { for (const e of JSON.parse(fs.readFileSync('public/venue-events.json', 'utf8'))) { const at = Date.parse(e.start); if (at > now - 6 * 3600e3 && at < now + 60 * 86400e3) out.push(e); } } catch {}
 out.sort((a, b) => a.start.localeCompare(b.start));
 fs.writeFileSync('public/events.json', JSON.stringify({ updated: new Date().toISOString(), source: 'ESPN public schedules', events: out }, null, 1));
 console.log('events: ' + out.length + ' home games in the next 3 weeks');

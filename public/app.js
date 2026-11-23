@@ -602,6 +602,7 @@ $('#simCard').onclick = (e) => {
 };
 // tap a building or a rail station: what it is, and what's inside or when the next trains come
 function showBldg(l) {
+  if (city && !l.station) city.focusSt = null;
   simN = null; clearInterval(simTimer); $('#mapFound')?.classList.remove('on'); const b = $('#simCard');
   let body = '';
   if (l.station) {
@@ -614,7 +615,7 @@ function showBldg(l) {
   b.innerHTML = `<div class="sc-top"><span class="sc-av">${l.station ? '🚊' : l.type === 'parking' || l.type === 'garage' ? '🅿️' : l.type === 'hotel' ? '🏨' : l.type === 'church' ? '⛪' : '🏙️'}</span><div class="sc-who"><b>${esc(l.station ? l.sname + ' Station' : l.n)}</b><small>${esc(l.station ? l.n.replace(/^🚊 [^·]+· /, '') : (l.places?.length ? `${l.places.length} place${l.places.length > 1 ? 's' : ''} inside` : 'Tap a pin to see a restaurant'))}</small></div><button class="sc-x" data-sim="x" aria-label="Close">✕</button></div>${body}`;
   b.hidden = false; buzz(6);
 }
-$('#simCard').addEventListener('click', (e) => { const id = e.target.closest('[data-bp]')?.dataset.bp; if (id != null) { openSheet(+id); } const x = e.target.closest('[data-sim="x"]'); if (x && !simN) $('#simCard').hidden = true; });
+$('#simCard').addEventListener('click', (e) => { const id = e.target.closest('[data-bp]')?.dataset.bp; if (id != null) { openSheet(+id); } const x = e.target.closest('[data-sim="x"]'); if (x && !simN) { $('#simCard').hidden = true; if (city) city.focusSt = null; } });
 let simOpen = false, lastStats = null;
 function renderSimStats(s) {
   lastStats = s; const b = $('#simStats'); if (!b || VIEW?.hide?.people) { if (b) b.hidden = true; return; }
