@@ -5395,5 +5395,74 @@
   "type": "Cuban",
   "note": "Cuban café in the Bank of America Tower — Cubanos, ropa vieja, mojitos and live music some nights.",
   "tryit": "Cubano, ropa vieja, mojito"
+ },
+ {
+  "id": 287,
+  "name": "Buried Seeds Wine Bar",
+  "address": "1133 Providence St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine Bar",
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "date",
+   "nightlife",
+   "group"
+  ],
+  "type": "Wine Bar",
+  "note": "Wine bar in the Warehouse District on Providence St, with wine-and-music events.",
+  "tryit": "A glass and the album-night events"
+ },
+ {
+  "id": 288,
+  "name": "Roots Wine Bar",
+  "address": "3107 Leeland St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine Bar",
+   "New American"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Dinner",
+   "Brunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "date",
+   "patio",
+   "group"
+  ],
+  "type": "Wine Bar",
+  "note": "Self-pour wine bar in EaDo — dozens of wines on tap by the ounce, a retail shop and Gulf Coast plates.",
+  "tryit": "Self-serve wine taps, fried oysters"
+ },
+ {
+  "id": 289,
+  "name": "Last Concert Cafe",
+  "address": "1403 Nance St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "nightlife",
+   "patio",
+   "group"
+  ],
+  "type": "Tex-Mex",
+  "note": "Warehouse District institution behind a red door — Tex-Mex, a funky patio and live music.",
+  "tryit": "Green-chile-and-potato soup"
  }
 ]

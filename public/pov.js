@@ -12,6 +12,12 @@ const hash = (s) => { let h = 2166136261; s = String(s); for (let i = 0; i < s.l
 // the wall of a place's own building nearest its real address, with the outward direction (toward the street)
 export function storefront(s, city) { return city?.storefront ? city.storefront(s) : null; }
 export function standFor(city, s) {
+  if (s.offGrid) {   // off the downtown grid (Warehouse District): stand on the nearest real street, looking at the building
+    let best = null;
+    for (const g of city.geo?.minor || []) for (let i = 1; i < g.pts.length; i++) { const [ax, ay] = g.pts[i - 1], [bx, by] = g.pts[i], dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy || 1, t = Math.max(0, Math.min(1, ((s.x - ax) * dx + (s.y - ay) * dy) / L)), x = ax + dx * t, y = ay + dy * t, d = Math.hypot(s.x - x, s.y - y); if (!best || d < best.d) best = { x, y, d }; }
+    if (best && best.d < 12) { const L = best.d || 1, ux = (best.x - s.x) / L, uy = (best.y - s.y) / L, back = city.streetW * 0.9 + 0.4, x = best.x + ux * back, y = best.y + uy * back;   // the far sidewalk, so the building fills the view instead of a wall
+      return { x, y, yaw: Math.atan2(-(s.x - x), -(s.y - y)), pitch: 0.14 }; }
+  }
   const f = storefront(s, city);
   if (f) {   // across the street from the door, a little down the block, looking at it
     const k = hash(s.label) > 0.5 ? 1 : -1, inP = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c; } return c; };

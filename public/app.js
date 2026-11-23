@@ -198,7 +198,7 @@ function miniMap(r) {
     <rect x="14" y="14" width="36" height="36" rx="3" fill="var(--mini-block)"/>${r.tunnel ? '<rect x="14" y="30" width="36" height="4" rx="2" fill="#20c997" opacity=".55"/>' : ''}
     <circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6.5" fill="${c}" stroke="#fff" stroke-width="2.5"/></svg>`;
 }
-const cornerTxt = (r) => { const g = gridSpot(r); return g ? `${g.av} & ${g.cr}` : ''; };
+const cornerTxt = (r) => { const g = gridSpot(r); if (g) return `${g.av} & ${g.cr}`; const sp = SPOTOF?.get(r.id); return sp?.offGrid ? `${(r.address || '').split(',')[0]} · Warehouse District` : ''; };
 function card(r, hero, map) {
   return `<div class="card tap ${hero ? 'hero spin' : ''}" data-open="${r.id}">
   <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>

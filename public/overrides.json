@@ -309,6 +309,40 @@
       "source": "https://www.aaa.com/tripcanvas/restaurant/buena-vista-cuban-cafe-downtown-AA71497",
       "checked": "2026-11-22",
       "notInDirectory": true
+    },
+    "Buried Seeds Wine Bar": {
+      "lat": 29.76858,
+      "lng": -95.35612,
+      "street": "1133 Providence St",
+      "source": "https://blackrestaurantweeks.com/venue/buried-seeds-wine-bar/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Roots Wine Bar": {
+      "lat": 29.74795,
+      "lng": -95.3448,
+      "street": "3107 Leeland St",
+      "hours": "Wed–Fri 4pm–12am, Sat 11am–12am, Sun 11am–10pm",
+      "source": "https://lgbtq.visithoustontexas.com/listings/roots/31190/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Last Concert Cafe": {
+      "lat": 29.76835,
+      "lng": -95.35275,
+      "street": "1403 Nance St",
+      "phone": "(713) 226-8563",
+      "source": "https://www.houstonpress.com/guide/houston-restaurants/last-concert-cafe-6784712",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Theodore Rex": {
+      "lat": 29.76812,
+      "lng": -95.35421,
+      "street": "1302 Nance St",
+      "hours": "Thu–Mon 5pm–10pm",
+      "source": "https://foodle.pro/restaurants/houston/theodore-rex",
+      "checked": "2026-11-23"
     }
   }
 }

@@ -379,6 +379,8 @@ export class CityMap {
     if (SD) {
       const pl = (l) => l.map(([la, ln]) => proj(la, ln));
       this.geo = {
+        minor: (() => { const gA = this.avenues, gC = this.cross, X0 = Math.min(...gA.map((a) => a.x)) - 1, X1 = Math.max(...gA.map((a) => a.x)) + 1, Y0 = Math.min(...gC.map((c) => c.y)) - 1, Y1 = Math.max(...gC.map((c) => c.y)) + 1;   // streets off the downtown grid (the Warehouse District)
+          return SN.filter(([, k]) => /^(primary|secondary|tertiary|residential|unclassified|living_street)$/.test(k)).map(([n, k, l]) => ({ n, k, pts: pl(l) })).filter((g) => g.pts.every((q) => q[0] < X0 || q[0] > X1 || q[1] < Y0 || q[1] > Y1)); })(),
         roads: SN.filter(([, k]) => /^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l, lanes, br, layer]) => ({ k, n, pts: pl(l), w: k === 'motorway' || k === 'trunk' ? 0.62 + Math.min(4, lanes || 3) * 0.17 : 0.55, z: br || layer > 0 ? 0.7 * Math.max(1, Math.min(3, layer || 1)) : 0 })),
         bridges: SN.filter(([, k, , , br]) => br && !/^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l]) => ({ n, pts: pl(l), w: k === 'pedestrian' ? 0.35 : 0.9 })),
         paths: (SD.paths || []).map(([n, k, l, br]) => ({ n, k, pts: pl(l), br })),
@@ -403,8 +405,10 @@ export class CityMap {
     const groups = new Map();
     const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
     this.offMap = new Set();
+    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478]];   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
+    const inExtra = (p) => EXTRA.some(([s0, w0, n0, e0]) => p.lat >= s0 && p.lat <= n0 && p.lng >= w0 && p.lng <= e0);
     for (const p of pts) {
-      if (offMap(proj(p.lat, p.lng))) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
+      if (offMap(proj(p.lat, p.lng)) && !inExtra(p)) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
       const [x, y] = proj(p.lat, p.lng), v = venueOfA(p);
       const key = v && vCount[(p.tunnel ? 'T' : '') + v] > 1 ? (p.tunnel ? 'VT' : 'V') + v + '@' + this.cellIdx(x, y).join(',') : (p.tunnel ? 'T' : 'S') + Math.round(x) + ':' + Math.round(y);   // a venue spread over several blocks (Discovery Green, GreenStreet) gets a pin per block
       if (!groups.has(key)) groups.set(key, { x: 0, y: 0, tunnel: !!p.tunnel, places: [], venue: key[0] === 'V' ? v : null });
@@ -491,6 +495,7 @@ export class CityMap {
     const A = this.avenues, C = this.cross, sw = this.streetW, pad = 0.9;
     const blocks = new Map();
     for (const s of this.spots) {
+      if (!s.tunnel && (s.y < C[0].y - this.blockD * 1.2 || s.x < A[0].x - this.blockW * 1.2 || s.x > A[A.length - 1].x + this.blockW * 1.2 || s.y > C[C.length - 1].y + this.blockD * 1.2)) { s.ox = s.x; s.oy = s.y; s.offGrid = true; continue; }   // off the street grid (Warehouse District): stay at the real address
       let [i, j] = this.cellIdx(s.x, s.y);
       i = Math.min(Math.max(i, 1), A.length - 1); j = Math.min(Math.max(j, 1), C.length - 1);   // edge spots go to the outermost block
       const k = (s.tunnel ? 'T' : 'S') + i + ':' + j;
@@ -2750,6 +2755,11 @@ export class CityMap {
     // freeways and ramps, as mapped — bridges and flyovers lifted on piers, with their shadow underneath
     const road = N ? '#2b303c' : '#b7bcc4', edge = N ? '#1b1f29' : '#9aa1aa';
     const pathZ = (pts, z) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1], z)) : ctx.moveTo(...v.p(p[0], p[1], z)))); };
+    for (const g of G.minor || []) { path(g.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#d8d2c6'; ctx.lineWidth = strokeW(g.k === 'residential' || g.k === 'unclassified' ? 1.15 : 1.5) + 3; ctx.stroke(); }   // sidewalks
+    for (const g of G.minor || []) { path(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.k === 'residential' || g.k === 'unclassified' ? 0.8 : 1.1); ctx.stroke(); }
+    if (v.s > 0.55) { ctx.font = `700 ${Math.round(9 + v.s * 2)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const seen = new Set();
+      for (const g of G.minor || []) { if (!g.n || seen.has(g.n) || g.pts.length < 2) continue; const a = v.p(...g.pts[0]), b = v.p(...g.pts[g.pts.length - 1]); if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 70) continue; seen.add(g.n); const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; let ang = Math.atan2(b[1] - a[1], b[0] - a[0]); if (ang > Math.PI / 2) ang -= Math.PI; if (ang < -Math.PI / 2) ang += Math.PI;
+        ctx.save(); ctx.translate(mx, my); ctx.rotate(ang); ctx.fillStyle = N ? 'rgba(230,230,230,.75)' : 'rgba(70,70,70,.8)'; ctx.fillText(g.n.replace(/ Street$/, ' St'), 0, 0); ctx.restore(); } }
     const ground = G.roads.filter((g) => !g.z), raised = G.roads.filter((g) => g.z).sort((a, b) => a.z - b.z);
     for (const g of ground) { path(g.pts); ctx.strokeStyle = edge; ctx.lineWidth = strokeW(g.w) + 2; ctx.stroke(); }
     for (const g of ground) { path(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.w); ctx.stroke(); }
