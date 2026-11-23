@@ -19,7 +19,9 @@ else { try { pois = JSON.parse(fs.readFileSync('public/osm-pois.json', 'utf8')).
 
 const P = JSON.parse(fs.readFileSync('public/places.json', 'utf8'));
 const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/&/g, 'and').replace(/\b(the|houston|eado|east end|downtown|restaurant|bar|cafe)\b/g, '').replace(/[^a-z0-9]/g, '');
-const have = P.places.map((p) => ({ n: norm(p.name), num: (p.address || '').match(/^\d+/)?.[0] }));
+let OV = {}; try { OV = JSON.parse(fs.readFileSync('public/overrides.json', 'utf8')).spots || {}; } catch {}
+const have = P.places.map((p) => { const o = OV[p.name] || p.official || {}; return { n: norm(p.name), num: (p.address || '').match(/^\d+/)?.[0], lat: o.lat, lng: o.lng }; });
+const close = (h, p) => h.lat && Math.abs(h.lat - p.lat) * 110850 < 60 && Math.abs(h.lng - p.lng) * 96680 < 60;   // same spot under a slightly different name (J Bar M Barbecue / J-Bar-M BBQ)
 const slugId = (s) => { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return 100000 + (h % 900000); };
 const D = { Mo: 'Mon', Tu: 'Tue', We: 'Wed', Th: 'Thu', Fr: 'Fri', Sa: 'Sat', Su: 'Sun' };
 const t12 = (s) => { const [H, M] = s.split(':').map(Number); const h = H % 24, ap = h < 12 ? 'am' : 'pm', hh = h % 12 || 12; return `${hh}${M ? ':' + String(M).padStart(2, '0') : ''}${ap}`; };
@@ -41,7 +43,7 @@ for (const p of pois) {
   const t = p.t || {}, name = t.name; if (!name || !p.lat) continue;
   if (/^(no|closed)$/i.test(t.opening_hours || '') || t['disused:amenity'] || /^(yes)$/.test(t.disused || '')) continue;
   const n = norm(name), num = t['addr:housenumber'];
-  if (!n || have.some((h) => h.n && (h.n === n || (n.length > 5 && (h.n.includes(n) || n.includes(h.n))) || (num && h.num === num && h.n.slice(0, 4) === n.slice(0, 4))))) continue;
+  if (!n || have.some((h) => h.n && (h.n === n || (n.length > 5 && (h.n.includes(n) || n.includes(h.n))) || (num && h.num === num && h.n.slice(0, 4) === n.slice(0, 4)) || (close(h, p) && h.n.slice(0, 4) === n.slice(0, 4))))) continue;
   const a = t.amenity || (t.craft ? 'brewery' : ''), cu = (t.cuisine || '').split(';').map((s) => s.trim()).filter(Boolean).map(cap);
   const bar = /^(bar|pub|biergarten|nightclub|brewery)$/.test(a);
   const type = a === 'bar' ? (/wine/i.test(name + (t.drink || '')) ? 'Wine Bar' : /cocktail/i.test(t.bar || '') ? 'Cocktail Bar' : 'Bar') : a === 'pub' ? 'Pub' : a === 'biergarten' ? 'Beer Garden' : a === 'nightclub' ? 'Nightclub' : a === 'brewery' ? 'Brewery' : a === 'cafe' ? (cu[0] || 'Cafe') : a === 'ice_cream' ? 'Dessert' : cu[0] || (a === 'fast_food' ? 'Fast Food' : 'Restaurant');
@@ -49,7 +51,7 @@ for (const p of pois) {
   const street = t['addr:street'] ? `${num ? num + ' ' : ''}${t['addr:street']}` : '';
   P.places.push({ id: slugId('osm' + p.id), name, address: street ? `${street}, Houston, TX` : 'Houston, TX', tunnel: null, cuisines: cu.length ? cu.slice(0, 2) : [type], meals, price: a === 'fast_food' || a === 'cafe' ? 1 : 2, vibes: bar ? ['nightlife'] : [],
     type, note: 'From OpenStreetMap.', tryit: '', official: { lat: p.lat, lng: p.lng, street, phone: t.phone || t['contact:phone'] || null, website: t.website || t['contact:website'] || null, hours: hours(t.opening_hours), osm: p.id } });
-  have.push({ n, num }); added++;
+  have.push({ n, num, lat: p.lat, lng: p.lng }); added++;
 }
 fs.writeFileSync('public/places.json', JSON.stringify(P));
 console.log('osm pois', pois.length, '· added', added);
