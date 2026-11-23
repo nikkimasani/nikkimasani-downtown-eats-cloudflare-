@@ -2474,8 +2474,8 @@ export class CityMap {
     if (v.s >= 0.5) {
       // BCycle: a row of red bikes and a kiosk at the big plazas
       for (const n of ['Discovery Green', 'Market Square Park', 'Hermann Square', 'Main Street Square']) { const a = area(n); if (!a) continue; const bx = a.r.x0 + 0.4, by = a.r.y1 - 0.5; if (!onScr(bx, by)) continue;
-        items.push({ k: v.depth(bx, by) + 0.2, fn: () => { box(ctx, v, bx - 0.1, by - 0.1, 0.2, 0.2, 0.45, N ? '#7a1f1f' : '#c92a2a', 0, {});
-          for (let i = 0; i < 6; i++) { const x = bx + 0.35 + i * 0.22, [s0x, s0y] = v.p(x, by - 0.12, 0.08), [s1x, s1y] = v.p(x, by + 0.12, 0.08); ctx.strokeStyle = i % 3 === 2 ? 'rgba(0,0,0,.25)' : N ? '#a33' : '#d9302c'; ctx.lineWidth = Math.max(1, v.s * 1.6); ctx.beginPath(); ctx.moveTo(s0x, s0y); ctx.lineTo(s1x, s1y); ctx.stroke(); } } }); }
+        items.push({ k: v.depth(bx, by) + 0.2, fn: () => { box(ctx, v, bx - 0.14, by - 0.14, 0.28, 0.28, 0.7, N ? '#7a1f1f' : '#c92a2a', 0, {});
+          for (let i = 0; i < 6; i++) { const x = bx + 0.35 + i * 0.22, [s0x, s0y] = v.p(x, by - 0.12, 0.08), [s1x, s1y] = v.p(x, by + 0.12, 0.08); ctx.strokeStyle = i % 3 === 2 ? 'rgba(0,0,0,.25)' : N ? '#a33' : '#d9302c'; ctx.lineWidth = Math.max(1.5, v.s * 2.6); ctx.beginPath(); ctx.moveTo(s0x, s0y); ctx.lineTo(s1x, s1y); ctx.stroke(); } } }); }
       // food trucks on weekday lunches
       if (!we && h >= 10.8 && h < 14.2) for (const [n, side] of [['Discovery Green', 'y0'], ['Hermann Square', 'x1'], ['Market Square Park', 'y1']]) { const a = area(n); if (!a) continue;
         for (let i = 0; i < 2; i++) { const along = side[0] === 'y', tx = along ? a.r.x0 + 1.2 + i * 1.6 : a.r[side] + 0.75, ty = along ? a.r[side] + (side === 'y0' ? -0.75 : 0.75) : a.r.y0 + 1.2 + i * 1.6; if (!onScr(tx, ty)) continue;
@@ -2506,7 +2506,8 @@ export class CityMap {
           items.push({ k: v.depth(q[0], q[1]) + 0.5, fn: () => { const [x, y] = v.p(q[0], q[1]); drawPerson(ctx, x, y, Math.max(0.55, this.u() * 0.8), { ...JOG_LOOK, shirt: ['#ff6b6b', '#fcc419', '#4dabf7', '#69db7c', '#f783ac'][(ti + j) % 5] }, now / 70 + j, true, null, now, ''); } }); } });
     }
     // game nights: a halo over the arena while the crowd is in
-    const ev = this.eventNow, a = ev && area(ev.venue); if (a && N) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, 4); items.push({ k: 1e9, fn: () => { const g = ctx.createRadialGradient(x, y, 0, x, y, 140 * Math.max(0.5, v.s)); g.addColorStop(0, ev.team === 'Astros' ? 'rgba(235,110,31,.35)' : 'rgba(206,17,65,.35)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - 200, y - 200, 400, 400); } }); }
+    const ev = this.eventNow, a = ev && area(ev.venue); if (a && N) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, 4); items.push({ k: 1e9, fn: () => { const g = ctx.createRadialGradient(x, y, 0, x, y, 140 * Math.max(0.5, v.s)); const pulse = 0.75 + 0.25 * Math.sin(now / 600); g.addColorStop(0, ev.team === 'Astros' ? `rgba(235,110,31,${0.55 * pulse})` : `rgba(230,30,70,${0.55 * pulse})`); g.addColorStop(0.5, ev.team === 'Astros' ? 'rgba(235,110,31,.15)' : 'rgba(230,30,70,.15)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - 220, y - 220, 440, 440);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let k = 0; k < 4; k++) { const ang = -Math.PI / 2 + Math.sin(now / 1800 + k * 1.7) * 0.5, L = 260 * Math.max(0.6, v.s), bg = ctx.createLinearGradient(x, y, x + Math.cos(ang) * L, y + Math.sin(ang) * L); bg.addColorStop(0, 'rgba(255,240,210,.22)'); bg.addColorStop(1, 'rgba(255,240,210,0)'); ctx.fillStyle = bg; ctx.beginPath(); ctx.moveTo(x - 6, y); ctx.lineTo(x + Math.cos(ang - 0.06) * L, y + Math.sin(ang - 0.06) * L); ctx.lineTo(x + Math.cos(ang + 0.06) * L, y + Math.sin(ang + 0.06) * L); ctx.lineTo(x + 6, y); ctx.fill(); } ctx.restore(); } }); }   // searchlights sweep the sky on game nights
   }
 
   drawLot(f, N) {
