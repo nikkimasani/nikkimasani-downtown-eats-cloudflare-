@@ -517,7 +517,8 @@
       "notInDirectory": true,
       "hours": "Mon–Fri 4pm–11:45pm, Sat 2pm–11:45pm, Sun 4pm–11:45pm",
       "source": "https://frankiapp.com/business/neil-s-bahr-19332",
-      "geocode": true
+      "lat": 29.744531,
+      "lng": -95.344192
     },
     "Nickel City": {
       "street": "2910 McKinney St",

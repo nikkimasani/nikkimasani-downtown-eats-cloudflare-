@@ -1,7 +1,17 @@
 {
  "checked": "2026-11-23",
- "sitesWithHours": 15,
+ "sitesWithHours": 17,
  "flags": {
+  "Artistry": {
+   "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
+   "url": "http://artistryhouston.com",
+   "slots": 134
+  },
+  "Bubble Boba": {
+   "site": "Sun closed · Mon 8am–7pm · Tue 8am–7pm · Wed 8am–7pm · Thu 8am–7pm · Fri 8am–7pm · Sat 8am–7pm",
+   "url": "https://www.bubblebobahouston.com/",
+   "slots": 47
+  },
   "Bungalow": {
    "site": "Sun 9am–5pm · Mon 9am–5pm · Tue 9am–5pm · Wed 9am–5pm · Thu 9am–5pm · Fri 9am–5pm · Sat 9am–5pm",
    "url": "https://bungalowdining.com/",
