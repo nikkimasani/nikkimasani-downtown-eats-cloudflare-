@@ -2738,7 +2738,11 @@ export class CityMap {
   drawGeo(N, now) {
     const ctx = this.ctx, v = this.v, B = this.bounds, G = this.geo;
     ctx.save(); ctx.beginPath(); const c = [v.p(B.x0, B.y0), v.p(B.x1, B.y0), v.p(B.x1, B.y1), v.p(B.x0, B.y1)]; ctx.moveTo(...c[0]); for (const q of c.slice(1)) ctx.lineTo(...q); ctx.closePath(); ctx.clip();
-    const path = (pts) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1])) : ctx.moveTo(...v.p(p[0], p[1])))); };
+    const BB = this._geoBB ||= new WeakMap(), W = this.W, H = this.H, M = 80 + 40 * v.s;
+    const off = (pts) => { let bb = BB.get(pts); if (!bb) { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; for (const q of pts) { if (q[0] < x0) x0 = q[0]; if (q[0] > x1) x1 = q[0]; if (q[1] < y0) y0 = q[1]; if (q[1] > y1) y1 = q[1]; } bb = [x0, y0, x1, y1]; BB.set(pts, bb); }
+      let sx0 = 1e9, sx1 = -1e9, sy0 = 1e9, sy1 = -1e9; for (const [x, y] of [[bb[0], bb[1]], [bb[2], bb[1]], [bb[2], bb[3]], [bb[0], bb[3]]]) { const [a, b] = v.p(x, y); if (a < sx0) sx0 = a; if (a > sx1) sx1 = a; if (b < sy0) sy0 = b; if (b > sy1) sy1 = b; }
+      return sx1 < -M || sx0 > W + M || sy1 < -M || sy0 > H + M; };   // off screen: skip it (EaDo and the Warehouse District add thousands of shapes)
+    const path = (pts) => { ctx.beginPath(); if (off(pts)) return; pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1])) : ctx.moveTo(...v.p(p[0], p[1])))); };
     const strokeW = (w) => Math.max(1, w * TW * v.s * 0.72);
     ctx.lineCap = ctx.lineJoin = 'round';
     // parks & plazas

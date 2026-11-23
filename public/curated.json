@@ -5486,5 +5486,625 @@
   "type": "New American",
   "note": "EaDo bistro with a Michelin Bib Gourmand — natural wine, cider and bold small plates.",
   "tryit": "Nancy Cakes, the burger"
+ },
+ {
+  "id": 291,
+  "name": "Tiny Champions",
+  "address": "2617 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian",
+   "Pizza"
+  ],
+  "meals": [
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "date",
+   "group"
+  ],
+  "type": "Italian",
+  "note": "Pizza and pasta spot from the Nancy's Hustle team.",
+  "tryit": "Mortadella tortellini"
+ },
+ {
+  "id": 292,
+  "name": "East End Hardware",
+  "address": "3005 Leeland St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "nightlife",
+   "patio",
+   "group"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Patio cocktail bar with boozy snow cones and a jukebox.",
+  "tryit": "A boozy snow cone"
+ },
+ {
+  "id": 293,
+  "name": "J-Bar-M BBQ",
+  "address": "2201 Leeland St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "patio"
+  ],
+  "type": "BBQ",
+  "note": "New-school barbecue in a handsome smokehouse near the ballpark.",
+  "tryit": "Brisket and the sausages"
+ },
+ {
+  "id": 294,
+  "name": "Huynh Restaurant",
+  "address": "912 St Emanuel St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Vietnamese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 1,
+  "vibes": [
+   "group",
+   "quick"
+  ],
+  "type": "Vietnamese",
+  "note": "EaDo classic for pho, vermicelli bowls and banh cuon.",
+  "tryit": "Banh cuon"
+ },
+ {
+  "id": 295,
+  "name": "Koffeteria",
+  "address": "1110 Hutchins St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery",
+   "Coffee"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Bakery & Cafe",
+  "note": "Bakery-cafe with inventive pastries and coffee.",
+  "tryit": "Whatever's new in the pastry case"
+ },
+ {
+  "id": 296,
+  "name": "Brothers Taco House",
+  "address": "1604 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex",
+   "Tacos"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Tacos",
+  "note": "Breakfast-taco institution with a line out the door.",
+  "tryit": "Breakfast tacos"
+ },
+ {
+  "id": 297,
+  "name": "Rodeo Goat",
+  "address": "2105 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "patio"
+  ],
+  "type": "Burgers",
+  "note": "Burger and craft-beer joint with a big patio.",
+  "tryit": "A specialty burger"
+ },
+ {
+  "id": 298,
+  "name": "Chapman & Kirby",
+  "address": "2118 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Cocktails"
+  ],
+  "meals": [
+   "Dinner",
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "nightlife",
+   "group"
+  ],
+  "type": "Bar & Lounge",
+  "note": "Stylish 9,000 sq ft bar and kitchen in East Village.",
+  "tryit": "Craft cocktails"
+ },
+ {
+  "id": 299,
+  "name": "Truck Yard Houston",
+  "address": "2118 Lamar St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife",
+   "patio",
+   "group"
+  ],
+  "type": "Bar",
+  "note": "Outdoor beer garden with food trucks and a Ferris wheel.",
+  "tryit": "A frozen drink on the Ferris wheel"
+ },
+ {
+  "id": 300,
+  "name": "EaDough Pastries & Provisions",
+  "address": "3204 Polk St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery",
+   "Coffee"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Bakery & Cafe",
+  "note": "Neighborhood bakery and provisions shop.",
+  "tryit": "Morning pastries"
+ },
+ {
+  "id": 301,
+  "name": "Pitch 25",
+  "address": "2120 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites",
+   "American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "patio",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Huge soccer bar and beer park co-founded by Brian Ching.",
+  "tryit": "Watch a match on the lawn"
+ },
+ {
+  "id": 302,
+  "name": "Leeland House",
+  "address": "2119 Leeland St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "American",
+  "note": "Neighborhood American restaurant and bar.",
+  "tryit": "Ask for the daily special"
+ },
+ {
+  "id": 303,
+  "name": "Brass Tacks",
+  "address": "612 Live Oak St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee",
+   "Tacos"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch",
+   "Happy Hour"
+  ],
+  "price": 1,
+  "vibes": [
+   "patio",
+   "quick"
+  ],
+  "type": "Cafe",
+  "note": "Patio cafe with pastries, coffee, tacos and cocktails.",
+  "tryit": "Coffee and a taco"
+ },
+ {
+  "id": 304,
+  "name": "True Anomaly Brewing",
+  "address": "2012 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Beer"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "group",
+   "nightlife"
+  ],
+  "type": "Brewery",
+  "note": "Award-winning brewery taproom in East Village.",
+  "tryit": "A sour or a lager flight"
+ },
+ {
+  "id": 305,
+  "name": "8th Wonder Brewery",
+  "address": "2202 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Beer"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "group",
+   "patio"
+  ],
+  "type": "Brewery",
+  "note": "Astrodome-inspired brewery and distillery near the stadiums.",
+  "tryit": "Rocket Fuel porter"
+ },
+ {
+  "id": 306,
+  "name": "Lightnin's Good Times",
+  "address": "1201 St Emanuel St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Low-lit 'dive' with DJs and a dance floor from the EZ's team.",
+  "tryit": "The LGT gin & tonic"
+ },
+ {
+  "id": 307,
+  "name": "Little Woodrow's EaDo",
+  "address": "801 St Emanuel St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife",
+   "patio",
+   "group"
+  ],
+  "type": "Bar",
+  "note": "Big backyard sports bar — the Astros gameday hangout.",
+  "tryit": "Tuesday hermit-crab races"
+ },
+ {
+  "id": 308,
+  "name": "Neil's Bahr",
+  "address": "2006 Walker St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife",
+   "group"
+  ],
+  "type": "Bar",
+  "note": "Nerdy dive with comics, Mario Kart and board games.",
+  "tryit": "A cheap drink and a game"
+ },
+ {
+  "id": 309,
+  "name": "Nickel City",
+  "address": "2910 McKinney St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife",
+   "patio"
+  ],
+  "type": "Bar",
+  "note": "Austin's 'Rust Belt chic' bar, now in an EaDo warehouse.",
+  "tryit": "A frozen Irish coffee"
+ },
+ {
+  "id": 310,
+  "name": "Around the Corner",
+  "address": "1510 Hutchins St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee",
+   "American"
+  ],
+  "meals": [
+   "Brunch",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "patio",
+   "date"
+  ],
+  "type": "Bar",
+  "note": "Restored 1903 bungalow — coffee by day, wine and brunch, big patio.",
+  "tryit": "Thursday steak night"
+ },
+ {
+  "id": 311,
+  "name": "King's Court Bar & Kitchen",
+  "address": "903 Hutchins St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Indian",
+   "British"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Pub",
+  "note": "British-Indian pub by the soccer stadium.",
+  "tryit": "Tikka masala and a pint"
+ },
+ {
+  "id": 312,
+  "name": "Sunset Rooftop Lounge",
+  "address": "2119 Dallas St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "nightlife",
+   "date"
+  ],
+  "type": "Lounge",
+  "note": "Rooftop lounge with skyline views.",
+  "tryit": "Sunset drinks on the roof"
+ },
+ {
+  "id": 313,
+  "name": "Kim Son",
+  "address": "2001 Jefferson St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Vietnamese",
+   "Chinese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "group"
+  ],
+  "type": "Vietnamese",
+  "note": "Houston's landmark Vietnamese restaurant in old Chinatown.",
+  "tryit": "Egg rolls"
+ },
+ {
+  "id": 314,
+  "name": "Cafe TH",
+  "address": "2108 Pease St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Vietnamese"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Vietnamese",
+  "note": "Beloved banh mi and pho cafe (vegan pho too).",
+  "tryit": "Banh mi bo kho"
+ },
+ {
+  "id": 315,
+  "name": "The Secret Group",
+  "address": "2101 Polk St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife"
+  ],
+  "type": "Music Venue",
+  "note": "Comedy and live-music venue with a bar.",
+  "tryit": "Check the show calendar"
+ },
+ {
+  "id": 316,
+  "name": "Lil' Danny Speedo's Go Fly a Kite Lounge",
+  "address": "823 Dumble St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar Bites"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "nightlife"
+  ],
+  "type": "Dive Bar",
+  "note": "Tiny, quirky neighborhood dive.",
+  "tryit": "A cold beer"
+ },
+ {
+  "id": 317,
+  "name": "Moon Tower Inn",
+  "address": "3004 Canal St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers",
+   "Hot Dogs"
+  ],
+  "meals": [
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 1,
+  "vibes": [
+   "patio",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "All-outdoor beer garden known for its wild-game hot dogs.",
+  "tryit": "A wild-game dog"
+ },
+ {
+  "id": 318,
+  "name": "Eight Row Flint EaDo",
+  "address": "3501 Harrisburg Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex",
+   "Cocktails"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "patio",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Icehouse with a rooftop patio and ranch waters.",
+  "tryit": "Ranch water"
+ },
+ {
+  "id": 319,
+  "name": "By The Wayside",
+  "address": "5644 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktails"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "nightlife",
+   "date"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Second Ward cocktail bar, live-music room and rotating art gallery.",
+  "tryit": "A cocktail and the live set"
  }
 ]

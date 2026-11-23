@@ -320,13 +320,12 @@
       "hours": "Tue–Fri 4pm–12am, Sat 2pm–12am, Sun 2pm–10pm"
     },
     "Roots Wine Bar": {
-      "lat": 29.74795,
-      "lng": -95.3448,
       "street": "3107 Leeland St",
       "hours": "Wed–Fri 4pm–12am, Sat 11am–12am, Sun 11am–10pm",
       "source": "https://lgbtq.visithoustontexas.com/listings/roots/31190/",
       "checked": "2026-11-23",
-      "notInDirectory": true
+      "notInDirectory": true,
+      "geocode": true
     },
     "Last Concert Cafe": {
       "lat": 29.76835,
@@ -354,6 +353,212 @@
       "source": "https://guide.michelin.com/us/en/texas/houston_2986624/restaurant/nancy-s-hustle",
       "checked": "2026-11-23",
       "notInDirectory": true
+    },
+    "Tiny Champions": {
+      "street": "2617 McKinney St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.748624,
+      "lng": -95.350985
+    },
+    "East End Hardware": {
+      "street": "3005 Leeland St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.742161,
+      "lng": -95.351221
+    },
+    "J-Bar-M BBQ": {
+      "street": "2201 Leeland St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.746268,
+      "lng": -95.358084
+    },
+    "Huynh Restaurant": {
+      "street": "912 St Emanuel St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.751917,
+      "lng": -95.355043
+    },
+    "Koffeteria": {
+      "street": "1110 Hutchins St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.749925,
+      "lng": -95.355357
+    },
+    "Brothers Taco House": {
+      "street": "1604 Emancipation Ave",
+      "geocode": true,
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "geoStreet": "1604 Dowling St"
+    },
+    "Rodeo Goat": {
+      "street": "2105 Dallas St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.749772,
+      "lng": -95.356537
+    },
+    "Chapman & Kirby": {
+      "street": "2118 Lamar St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.750358,
+      "lng": -95.355922
+    },
+    "Truck Yard Houston": {
+      "street": "2118 Lamar St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.750358,
+      "lng": -95.355922
+    },
+    "EaDough Pastries & Provisions": {
+      "street": "3204 Polk St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.743279,
+      "lng": -95.347853
+    },
+    "Pitch 25": {
+      "street": "2120 Walker St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.751839,
+      "lng": -95.354717
+    },
+    "Leeland House": {
+      "street": "2119 Leeland St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.746695,
+      "lng": -95.358803
+    },
+    "Brass Tacks": {
+      "street": "612 Live Oak St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.751605,
+      "lng": -95.348979
+    },
+    "True Anomaly Brewing": {
+      "street": "2012 Dallas St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.750151,
+      "lng": -95.357397
+    },
+    "8th Wonder Brewery": {
+      "street": "2202 Dallas St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Mon–Fri 3pm–10pm, Sat 12pm–10pm, Sun 12pm–6pm",
+      "lat": 29.749157,
+      "lng": -95.355773
+    },
+    "Lightnin's Good Times": {
+      "street": "1201 St Emanuel St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.749699,
+      "lng": -95.356641
+    },
+    "Little Woodrow's EaDo": {
+      "street": "801 St Emanuel St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.752676,
+      "lng": -95.354275
+    },
+    "Neil's Bahr": {
+      "street": "2006 Walker St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.75242,
+      "lng": -95.355663
+    },
+    "Nickel City": {
+      "street": "2910 McKinney St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Daily 12pm–2am",
+      "lat": 29.747012,
+      "lng": -95.348535
+    },
+    "Around the Corner": {
+      "street": "1510 Hutchins St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.746912,
+      "lng": -95.357715
+    },
+    "King's Court Bar & Kitchen": {
+      "street": "903 Hutchins St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.751403,
+      "lng": -95.354019
+    },
+    "Sunset Rooftop Lounge": {
+      "street": "2119 Dallas St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.749706,
+      "lng": -95.35643
+    },
+    "Kim Son": {
+      "street": "2001 Jefferson St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.745825,
+      "lng": -95.360976
+    },
+    "Cafe TH": {
+      "street": "2108 Pease St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.745915,
+      "lng": -95.359547
+    },
+    "The Secret Group": {
+      "street": "2101 Polk St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.749028,
+      "lng": -95.35715
+    },
+    "Lil' Danny Speedo's Go Fly a Kite Lounge": {
+      "street": "823 Dumble St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.739276,
+      "lng": -95.326678
+    },
+    "Moon Tower Inn": {
+      "street": "3004 Canal St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.754529,
+      "lng": -95.341098
+    },
+    "Eight Row Flint EaDo": {
+      "street": "3501 Harrisburg Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.747833,
+      "lng": -95.340411
+    },
+    "By The Wayside": {
+      "street": "5644 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Wed–Thu 4pm–12am, Fri 2pm–2am, Sat 11am–2am, Sun 11am–12am",
+      "lat": 29.747952,
+      "lng": -95.317337
     }
   }
 }

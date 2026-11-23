@@ -2,7 +2,7 @@ name: Refresh restaurant details and METRO stops
 on:
   workflow_dispatch:
   push:
-    paths: ['scripts/refresh.mjs', 'scripts/metro-static.mjs', 'scripts/osm-buildings.mjs', 'scripts/osm-streets.mjs', 'scripts/check-hours.mjs', 'scripts/events.mjs']
+    paths: ['scripts/refresh.mjs', 'scripts/metro-static.mjs', 'scripts/osm-buildings.mjs', 'scripts/osm-streets.mjs', 'scripts/check-hours.mjs', 'scripts/events.mjs', 'scripts/geocode.mjs']
   schedule:
     - cron: '17 11 * * *'   # daily, ~5am Houston
 permissions:
@@ -18,11 +18,12 @@ jobs:
       - run: node scripts/metro-static.mjs
       - run: node scripts/osm-buildings.mjs
       - run: node scripts/osm-streets.mjs
+      - run: node scripts/geocode.mjs || true
       - run: node scripts/check-hours.mjs || true
       - run: node scripts/events.mjs || true
       - name: Commit if changed
         run: |
           git config user.name "downtown-eats-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add public/places.json; git add public/metro-static.json public/buildings.json public/streets.json public/hours-check.json public/events.json 2>/dev/null || true
+          git add public/places.json; git add public/metro-static.json public/buildings.json public/streets.json public/hours-check.json public/events.json public/overrides.json 2>/dev/null || true
           git diff --cached --quiet || (git commit -m "Refresh restaurant details, METRO stops and buildings" && (git push || (git pull --rebase -X theirs && git push)))
