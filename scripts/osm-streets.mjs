@@ -3,7 +3,7 @@
 // with the real streets and to draw parks, the bayou and trees where they actually are.
 // Run: node scripts/osm-streets.mjs   (Node 20+, no dependencies). Map data © OpenStreetMap contributors, ODbL.
 import fs from 'fs';
-const BBOX = [29.7435, -95.3790, 29.7715, -95.3495];
+const BBOX = [29.7395, -95.3790, 29.7715, -95.3330];
 const Q = `[out:json][timeout:120];(
   way["highway"~"^(primary|secondary|tertiary|residential|unclassified|living_street|pedestrian|trunk|motorway|motorway_link|trunk_link)$"](${BBOX});
   way["railway"~"^(light_rail|tram)$"](${BBOX});

@@ -314,9 +314,10 @@
       "lat": 29.76858,
       "lng": -95.35612,
       "street": "1133 Providence St",
-      "source": "https://blackrestaurantweeks.com/venue/buried-seeds-wine-bar/",
+      "source": "https://www.instagram.com/buried.seeds/",
       "checked": "2026-11-23",
-      "notInDirectory": true
+      "notInDirectory": true,
+      "hours": "Tue–Fri 4pm–12am, Sat 2pm–12am, Sun 2pm–10pm"
     },
     "Roots Wine Bar": {
       "lat": 29.74795,
@@ -343,6 +344,16 @@
       "hours": "Thu–Mon 5pm–10pm",
       "source": "https://foodle.pro/restaurants/houston/theodore-rex",
       "checked": "2026-11-23"
+    },
+    "Nancy's Hustle": {
+      "lat": 29.745772,
+      "lng": -95.352201,
+      "street": "2704 Polk St",
+      "hours": "Tue–Sun 5pm–11pm",
+      "phone": "(346) 571-7931",
+      "source": "https://guide.michelin.com/us/en/texas/houston_2986624/restaurant/nancy-s-hustle",
+      "checked": "2026-11-23",
+      "notInDirectory": true
     }
   }
 }

@@ -380,7 +380,7 @@ export class CityMap {
       const pl = (l) => l.map(([la, ln]) => proj(la, ln));
       this.geo = {
         minor: (() => { const gA = this.avenues, gC = this.cross, X0 = Math.min(...gA.map((a) => a.x)) - 1, X1 = Math.max(...gA.map((a) => a.x)) + 1, Y0 = Math.min(...gC.map((c) => c.y)) - 1, Y1 = Math.max(...gC.map((c) => c.y)) + 1;   // streets off the downtown grid (the Warehouse District)
-          return SN.filter(([, k]) => /^(primary|secondary|tertiary|residential|unclassified|living_street)$/.test(k)).map(([n, k, l]) => ({ n, k, pts: pl(l) })).filter((g) => g.pts.every((q) => q[0] < X0 || q[0] > X1 || q[1] < Y0 || q[1] > Y1)); })(),
+          return SN.filter(([, k]) => /^(primary|secondary|tertiary|residential|unclassified|living_street)$/.test(k)).flatMap(([n, k, l]) => { const out = []; let run = []; for (const q of pl(l)) { if (q[0] < X0 || q[0] > X1 || q[1] < Y0 || q[1] > Y1) run.push(q); else { if (run.length > 1) out.push(run); run = []; } } if (run.length > 1) out.push(run); return out.map((pts) => ({ n, k, pts })); }); })(),   // keep the parts that run off the grid
         roads: SN.filter(([, k]) => /^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l, lanes, br, layer]) => ({ k, n, pts: pl(l), w: k === 'motorway' || k === 'trunk' ? 0.62 + Math.min(4, lanes || 3) * 0.17 : 0.55, z: br || layer > 0 ? 0.7 * Math.max(1, Math.min(3, layer || 1)) : 0 })),
         bridges: SN.filter(([, k, , , br]) => br && !/^(motorway|motorway_link|trunk|trunk_link)$/.test(k)).map(([n, k, l]) => ({ n, pts: pl(l), w: k === 'pedestrian' ? 0.35 : 0.9 })),
         paths: (SD.paths || []).map(([n, k, l, br]) => ({ n, k, pts: pl(l), br })),
@@ -405,7 +405,7 @@ export class CityMap {
     const groups = new Map();
     const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
     this.offMap = new Set();
-    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478]];   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
+    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335]];   // + EaDo east of US-59 (Roots, Nancy's Hustle)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
     const inExtra = (p) => EXTRA.some(([s0, w0, n0, e0]) => p.lat >= s0 && p.lat <= n0 && p.lng >= w0 && p.lng <= e0);
     for (const p of pts) {
       if (offMap(proj(p.lat, p.lng)) && !inExtra(p)) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)

@@ -5464,5 +5464,27 @@
   "type": "Tex-Mex",
   "note": "Warehouse District institution behind a red door — Tex-Mex, a funky patio and live music.",
   "tryit": "Green-chile-and-potato soup"
+ },
+ {
+  "id": 290,
+  "name": "Nancy's Hustle",
+  "address": "2704 Polk St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "New American",
+   "Wine Bar"
+  ],
+  "meals": [
+   "Dinner",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "date",
+   "group"
+  ],
+  "type": "New American",
+  "note": "EaDo bistro with a Michelin Bib Gourmand — natural wine, cider and bold small plates.",
+  "tryit": "Nancy Cakes, the burger"
  }
 ]

@@ -1115,7 +1115,7 @@ async function aboutPlace(r) {
       const food = (r.meals || []).some((x) => /breakfast|brunch|lunch|dinner|full service|fast casual/i.test(x)) || !(barish || /bars?\b|nightlife|brew/i.test(r.type || ''));   // a steakhouse or diner with no meal tags still serves food
       const barName = /\bbar\b|lounge|tavern|\bpub\b|saloon|moonshin|bottle|cellar|hearsay|speakeasy|club/i.test(r.name);
       r.night = r.bar && (barish || barName || !food);            // night map: bars, lounges, clubs
-      r.day = !(r.night && !food);                     // day map: anywhere that serves meals
+      r.day = !(r.night && !food) || /wine/i.test(r.type || '');   // day map: anywhere that serves meals (and wine bars, which open in the afternoon)
     });
     { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); window._openSheet = (id) => openSheet(id); window._B = () => BUILDINGS; }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
