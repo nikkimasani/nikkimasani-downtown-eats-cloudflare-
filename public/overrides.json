@@ -325,7 +325,8 @@
       "source": "https://lgbtq.visithoustontexas.com/listings/roots/31190/",
       "checked": "2026-11-23",
       "notInDirectory": true,
-      "geocode": true
+      "lat": 29.741651,
+      "lng": -95.350363
     },
     "Last Concert Cafe": {
       "lat": 29.76835,
@@ -391,10 +392,11 @@
     },
     "Brothers Taco House": {
       "street": "1604 Emancipation Ave",
-      "geocode": true,
       "checked": "2026-11-23",
       "notInDirectory": true,
-      "geoStreet": "1604 Dowling St"
+      "geoStreet": "1604 Dowling St",
+      "lat": 29.745189,
+      "lng": -95.356596
     },
     "Rodeo Goat": {
       "street": "2105 Dallas St",
