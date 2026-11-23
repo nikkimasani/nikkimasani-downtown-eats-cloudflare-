@@ -1,12 +1,7 @@
 {
  "checked": "2026-11-23",
- "sitesWithHours": 16,
+ "sitesWithHours": 15,
  "flags": {
-  "Artistry": {
-   "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
-   "url": "http://artistryhouston.com",
-   "slots": 134
-  },
   "Bungalow": {
    "site": "Sun 9am–5pm · Mon 9am–5pm · Tue 9am–5pm · Wed 9am–5pm · Thu 9am–5pm · Fri 9am–5pm · Sat 9am–5pm",
    "url": "https://bungalowdining.com/",
