@@ -69,8 +69,10 @@ const places = curated.map((c) => {
 });
 // listings that are new on the site since the curated list was made
 const dupe = (d) => places.some((p) => norm(p.name) === norm(d.name) && (!d.street || num(p.address) === num(d.street)));
+// a stable id from the listing's slug, well clear of the hand-curated ids (curated.length + i collided with spots added by hand)
+const slugId = (slug) => { let h = 2166136261; for (const ch of String(slug)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return 100000 + (h % 900000); };
 const extra = details.filter((d) => !used.has(d.slug) && !dupe(d)).map((d, i) => ({
-  id: curated.length + i, name: d.name, address: `${d.street}, Houston, TX`, tunnel: /tunnel/i.test(d.tags.join(' ')) ? 'Downtown Tunnel' : null, cuisines: d.cats.bar ? ['Bar'] : d.tags.slice(0, 1),
+  id: slugId(d.slug), name: d.name, address: `${d.street}, Houston, TX`, tunnel: /tunnel/i.test(d.tags.join(' ')) ? 'Downtown Tunnel' : null, cuisines: d.cats.bar ? ['Bar'] : d.tags.slice(0, 1),
   meals: [...(d.cats.hh ? ['Happy Hour'] : []), ...(d.cats.late ? ['Late Night'] : [])], price: 2, vibes: d.cats.bar ? ['nightlife'] : [],
   type: d.cats.bar ? (d.tags.find((t) => /bar|lounge|pub|club|brew|wine|night/i.test(t)) || 'Bar') : d.tags[0] || 'Restaurant',
   note: d.cats.bar ? 'On the Downtown Houston bars + nightlife list.' : 'New on the Downtown Houston directory.', tryit: '', official: d, isNew: !d.cats.bar,

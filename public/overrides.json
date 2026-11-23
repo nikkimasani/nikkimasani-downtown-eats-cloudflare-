@@ -437,8 +437,9 @@
       "street": "2119 Leeland St",
       "checked": "2026-11-23",
       "notInDirectory": true,
-      "lat": 29.746695,
-      "lng": -95.358803
+      "lat": 29.746455,
+      "lng": -95.358302,
+      "note2": "Corner of Leeland & Hutchins, next door to Around the Corner (user-confirmed)"
     },
     "Brass Tacks": {
       "street": "612 Live Oak St",
@@ -495,8 +496,9 @@
       "street": "1510 Hutchins St",
       "checked": "2026-11-23",
       "notInDirectory": true,
-      "lat": 29.746912,
-      "lng": -95.357715
+      "lat": 29.746476,
+      "lng": -95.35815,
+      "note2": "Corner of Hutchins & Leeland, next door to Leeland House (user-confirmed)"
     },
     "King's Court Bar & Kitchen": {
       "street": "903 Hutchins St",
@@ -561,6 +563,63 @@
       "hours": "Wed–Thu 4pm–12am, Fri 2pm–2am, Sat 11am–2am, Sun 11am–12am",
       "lat": 29.747952,
       "lng": -95.317337
+    },
+    "The Original Ninfa's on Navigation": {
+      "street": "2704 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.757228,
+      "lng": -95.342567
+    },
+    "El Tiempo Cantina Navigation": {
+      "street": "2814 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.75675,
+      "lng": -95.341793
+    },
+    "Jonathan's The Rub East End": {
+      "street": "2929 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.756274,
+      "lng": -95.340731
+    },
+    "Villa Arcos": {
+      "street": "3009 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.755844,
+      "lng": -95.340016
+    },
+    "Boo's Burgers": {
+      "street": "2510 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.758164,
+      "lng": -95.344147
+    },
+    "Merida": {
+      "street": "2509 Navigation Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.758267,
+      "lng": -95.344085
+    },
+    "How to Survive on Land and Sea": {
+      "street": "3401 Harrisburg Blvd",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Daily 4pm–2am",
+      "lat": 29.748342,
+      "lng": -95.341269
+    },
+    "Champ Burger": {
+      "street": "304 Sampson St",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "lat": 29.749786,
+      "lng": -95.340274
     }
   }
 }

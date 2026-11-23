@@ -6106,5 +6106,180 @@
   "type": "Cocktail Bar",
   "note": "Second Ward cocktail bar, live-music room and rotating art gallery.",
   "tryit": "A cocktail and the live set"
+ },
+ {
+  "id": 320,
+  "name": "The Original Ninfa's on Navigation",
+  "address": "2704 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "date"
+  ],
+  "type": "Tex-Mex",
+  "note": "Where Mama Ninfa popularized fajitas in 1973 — the East End's Tex-Mex landmark.",
+  "tryit": "Beef fajitas and the Ninfarita"
+ },
+ {
+  "id": 321,
+  "name": "El Tiempo Cantina Navigation",
+  "address": "2814 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "group",
+   "patio"
+  ],
+  "type": "Tex-Mex",
+  "note": "The Laurenzo family's cantina next to the Original Ninfa's.",
+  "tryit": "Fajitas and the beef-rib parrillada"
+ },
+ {
+  "id": 322,
+  "name": "Jonathan's The Rub East End",
+  "address": "2929 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "patio",
+   "group"
+  ],
+  "type": "American",
+  "note": "Steaks and Italian-American plates with a big patio and bar.",
+  "tryit": "A steak or the chicken parm"
+ },
+ {
+  "id": 323,
+  "name": "Villa Arcos",
+  "address": "3009 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex",
+   "Tacos"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick"
+  ],
+  "type": "Tacos",
+  "note": "Red-building breakfast-taco stand on Navigation.",
+  "tryit": "Potato, egg and bacon taco"
+ },
+ {
+  "id": 324,
+  "name": "Boo's Burgers",
+  "address": "2510 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "patio"
+  ],
+  "type": "Burgers",
+  "note": "Smash-burger kiosk on the Navigation Esplanade.",
+  "tryit": "A double smash"
+ },
+ {
+  "id": 325,
+  "name": "Merida",
+  "address": "2509 Navigation Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 1,
+  "vibes": [
+   "group"
+  ],
+  "type": "Mexican",
+  "note": "Family-run Yucatecan restaurant on Navigation.",
+  "tryit": "Cochinita pibil"
+ },
+ {
+  "id": 326,
+  "name": "How to Survive on Land and Sea",
+  "address": "3401 Harrisburg Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine Bar",
+   "Small Plates"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "date",
+   "nightlife",
+   "group"
+  ],
+  "type": "Wine Bar",
+  "note": "Laid-back warehouse wine bar from a 13 Celsius co-founder — most bottles $50 or less.",
+  "tryit": "A bottle off the chalkboard and the pasta"
+ },
+ {
+  "id": 327,
+  "name": "Champ Burger",
+  "address": "304 Sampson St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 1,
+  "vibes": [
+   "quick",
+   "patio"
+  ],
+  "type": "Burgers",
+  "note": "Walk-up burger window open since 1963.",
+  "tryit": "Champ cheeseburger with jalapeños"
  }
 ]

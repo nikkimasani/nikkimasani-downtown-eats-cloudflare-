@@ -405,7 +405,7 @@ export class CityMap {
     const groups = new Map();
     const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
     this.offMap = new Set();
-    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335]];   // + EaDo east of US-59 (Roots, Nancy's Hustle)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
+    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115]];   // + EaDo east of US-59 (Roots, Nancy's Hustle), + the East End / Second Ward along Navigation & Harrisburg (By The Wayside)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
     const inExtra = (p) => EXTRA.some(([s0, w0, n0, e0]) => p.lat >= s0 && p.lat <= n0 && p.lng >= w0 && p.lng <= e0);
     for (const p of pts) {
       if (offMap(proj(p.lat, p.lng)) && !inExtra(p)) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
@@ -1329,6 +1329,15 @@ export class CityMap {
     };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
     const MAT = { brick: ['#a35a44', '#9a5240', '#b0684e'], stone: ['#d3c4a3', '#cbb994'], limestone: ['#d8cbae'], sandstone: ['#d4b98e'], granite: ['#9d918a', '#8d8078'], marble: ['#e7e2d8'], concrete: ['#bfc2c4', '#b3b7ba'], metal: ['#9aa3ab'], steel: ['#8f99a3'], plaster: ['#e4d8c3'], stucco: ['#e2d3b9'], wood: ['#a5835b'], cement_block: ['#c4c2bc'] };
+    // outside the downtown grid (Warehouse District, EaDo, East End) most footprints carry no height or style, just the
+    // fetcher's 11 m / 16 m default; give them the neighbourhood's real look instead: bungalows and townhomes, warehouses, shops
+    const GXa = this.avenues.map((q) => q.x), GYc = this.cross.map((q) => q.y), GX0 = Math.min(...GXa) - this.blockW * 0.6, GX1 = Math.max(...GXa) + this.blockW * 0.6, GY0 = Math.min(...GYc) - this.blockD * 0.6, GY1 = Math.max(...GYc) + this.blockD * 0.6;
+    const HOUSE = ['#f2eee4', '#e9e2cf', '#d8e2e6', '#dfe6d4', '#efe3c4', '#e7d6c8', '#cfd8dc', '#f4efe6', '#c9d3bd', '#e8dcc0'];
+    const TOWN = ['#f1f0ec', '#3f4650', '#d9d6cf', '#5b6570', '#e8e3d8', '#8a9aa6', '#c8ccc6', '#2f3a45', '#ece7dc', '#a9b7a3'];
+    const SHINGLE = ['#5d5f63', '#6e6458', '#4f5358', '#7a6a58', '#585c66', '#8a7d6c'];
+    const WARE = ['#a8604a', '#b98b6a', '#c9c2b4', '#9aa5ad', '#b5ab98', '#8f5546', '#d6cfbf', '#7f8b93', '#c7b08a'];
+    const SHOP = ['#e6dccb', '#d9c8ad', '#c5d0d6', '#e9e4da', '#d4b896', '#b9c4b0', '#e2cfc0'];
+    const ar2 = (Q) => { let s2 = 0; for (let i = 0; i < Q.length; i++) { const a = Q[i], b = Q[(i + 1) % Q.length]; s2 += a[0] * b[1] - b[0] * a[1]; } return Math.abs(s2 / 2); };
     for (const [ring, hM, minM, type, name, colour, material, roofShape, roofColour, roofH, roofDir] of list) {
       let pts = ring.slice(0, -1).map(([la, ln]) => this.proj(la, ln)); if (pts.length < 3) continue;
       { // keep the part in whichever block holds most of the footprint (the fitted street grid can be a few metres off the real streets)
@@ -1355,11 +1364,23 @@ export class CityMap {
       if (type === 'parking') c = '#b9bcc2';
       const o = { pts, bb, h, z0, c, glass: isGlass, name, type, cx, cy, topM: hM >= 60 ? Math.round(hM) : 0 };
       if (/^#[0-9a-f]{6}$/i.test(roofColour || '')) o.roofC = roofColour; else if (/^(red|green|grey|gray|black|white|brown|blue)$/i.test(roofColour || '')) o.roofC = { red: '#a5463a', green: '#4f7a5a', grey: '#8a8f96', gray: '#8a8f96', black: '#3a3d42', white: '#eceae4', brown: '#7a5a44', blue: '#4a6c9a' }[roofColour.toLowerCase()];
-      const rs = String(roofShape || '').toLowerCase();
+      if ((cx < GX0 || cx > GX1 || cy < GY0 || cy > GY1) && !roofShape && !colour && !material && (hM === 11 || hM === 16 || hM === 0) && !minM && type !== 'parking') {
+        const m2 = ar2(pts) * 100, k2 = hash('h' + cx.toFixed(2) + cy.toFixed(2)), pick = (A) => A[Math.floor(k2 * A.length)];
+        if (/^(house|detached|semidetached_house|bungalow|residential|terrace)$/.test(type) || (type === 'yes' && m2 < 175)) {
+          if (type === 'yes' || type === 'terrace' || m2 < 95) {   // EaDo / East End townhomes: three storeys, flat or shed roofs, two-tone siding
+            o.h = 0.85 + k2 * 0.35; o.c = pick(TOWN); o.fac = 'house'; o.roofC = '#9a9ea4';
+            if (k2 > 0.62) { o._rs = 'gabled'; o.roofC = pick(SHINGLE); o.h -= 0.15; }
+          } else { o.h = 0.42 + k2 * 0.16; o.c = pick(HOUSE); o.fac = 'house'; o._rs = k2 > 0.45 ? 'gabled' : 'hipped'; o.roofC = pick(SHINGLE); }   // old Second Ward bungalows
+        } else if (/^(garage|garages|carport|roof|shed|hut|kiosk)$/.test(type)) { o.h = 0.32; o.c = '#c9c6bf'; o.roofC = '#9fa3a8'; }
+        else if (m2 > 900) { o.h = 0.6 + k2 * 0.4; o.c = pick(WARE); o.fac = 'ware'; o.roofC = k2 > 0.5 ? '#c3c6c9' : '#b2b6ba'; }   // brick and metal warehouses, many now bars and breweries
+        else { o.h = 0.42 + k2 * 0.45; o.c = pick(SHOP); o.fac = 'shop'; o.roofC = '#b9bcbf'; }   // one- and two-storey shops and offices
+        o.topM = 0;
+      }
+      const rs = String(roofShape || o._rs || '').toLowerCase();
       if (/^(pyramidal|hipped|gabled|dome|onion|round|half-hipped|skillion)$/.test(rs)) {
         const span = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0); o.roof = rs;
         // OpenStreetMap's height already includes the roof, so the walls stop where the roof begins
-        if (roofH && roofH / 10 < h * 0.9) { o.rh = roofH / 10; o.h = h - o.rh; } else o.rh = Math.min(h * 0.5, rs === 'dome' || rs === 'onion' || rs === 'round' ? span * 0.45 : rs === 'skillion' ? span * 0.15 : span * 0.32);
+        if (roofH && roofH / 10 < o.h * 0.9) { o.rh = roofH / 10; o.h = o.h - o.rh; } else o.rh = Math.min(o.h * 0.5, rs === 'dome' || rs === 'onion' || rs === 'round' ? span * 0.45 : rs === 'skillion' ? span * 0.15 : span * 0.32);
         // drop corner points that lie on a straight wall (left by clipping), so a box is four corners again
         const sp = pts.filter((p, i) => { const a = pts[(i + pts.length - 1) % pts.length], b = pts[(i + 1) % pts.length]; const cr = (p[0] - a[0]) * (b[1] - p[1]) - (p[1] - a[1]) * (b[0] - p[0]); return Math.abs(cr) > 0.02 * Math.hypot(p[0] - a[0], p[1] - a[1]) * Math.hypot(b[0] - p[0], b[1] - p[1]); });
         o.rp = sp.length >= 3 ? sp : pts;
@@ -1473,6 +1494,32 @@ export class CityMap {
       if ((o.type === 'parking' || o.type === 'garage' || /garage|parking/i.test(o.name || '')) && spx > 3) {   // parking garages: open floors, dark bands between concrete decks
         ctx.fillStyle = N ? 'rgba(255,214,140,.22)' : 'rgba(40,44,52,.42)'; const fh = 0.32;
         for (let z = z0 + 0.12; z < z1 - 0.12; z += fh) { const q = [v.p(...w.a, z + fh * 0.55), v.p(...w.b, z + fh * 0.55), v.p(...w.b, z + fh * 0.12), v.p(...w.a, z + fh * 0.12)]; ctx.beginPath(); ctx.moveTo(...q[0]); for (const k of q.slice(1)) ctx.lineTo(...k); ctx.closePath(); ctx.fill(); }
+        continue;
+      }
+      if (o.fac === 'house' && spx > 5) {   // houses and townhomes: a few framed windows per floor, a door on the long wall
+        const fl = Math.max(1, Math.round((z1 - z0) / 0.32)), nw = Math.max(1, Math.round(w.L / 0.55)), fh = (z1 - z0) / fl;
+        for (let f = 0; f < fl; f++) for (let i = 0; i < nw; i++) {
+          const t0 = (i + 0.3) / nw, t1 = (i + 0.7) / nw, za = z0 + f * fh + fh * 0.32, zb = z0 + f * fh + fh * 0.78, A = lerp2(w.a, w.b, t0), Bq = lerp2(w.a, w.b, t1);
+          const q = [v.p(...A, zb), v.p(...Bq, zb), v.p(...Bq, za), v.p(...A, za)];
+          poly(ctx, q, N ? (hash(o.cx.toFixed(1) + f + i) > 0.45 ? 'rgba(255,205,120,.75)' : 'rgba(20,24,30,.7)') : 'rgba(46,58,72,.62)');
+          if (!N && spx > 10) { ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...q[0]); for (const p2 of q.slice(1)) ctx.lineTo(...p2); ctx.closePath(); ctx.stroke(); }
+        }
+        if (w.L > 0.6 && w.shade < 0.2) { const A = lerp2(w.a, w.b, 0.12), Bq = lerp2(w.a, w.b, 0.12 + 0.12 / w.L); poly(ctx, [v.p(...A, z0 + 0.22), v.p(...Bq, z0 + 0.22), v.p(...Bq, z0), v.p(...A, z0)], N ? 'rgba(255,200,120,.5)' : 'rgba(90,60,40,.75)'); }
+        continue;
+      }
+      if (o.fac === 'ware' && spx > 3) {   // warehouses: corrugated / brick coursing, a clerestory strip, roll-up doors at the dock
+        ctx.strokeStyle = N ? 'rgba(0,0,0,.18)' : 'rgba(60,50,40,.13)'; ctx.lineWidth = 1; ctx.beginPath();
+        for (let z = z0 + 0.08; z < z1 - 0.04; z += 0.08) { ctx.moveTo(...v.p(...w.a, z)); ctx.lineTo(...v.p(...w.b, z)); } ctx.stroke();
+        const nw = Math.max(2, Math.round(w.L / 0.35)); ctx.fillStyle = N ? 'rgba(255,210,140,.55)' : 'rgba(40,50,62,.55)';
+        for (let i = 0; i < nw; i++) { const A = lerp2(w.a, w.b, (i + 0.25) / nw), Bq = lerp2(w.a, w.b, (i + 0.75) / nw); poly(ctx, [v.p(...A, z1 - 0.1), v.p(...Bq, z1 - 0.1), v.p(...Bq, z1 - 0.2), v.p(...A, z1 - 0.2)], ctx.fillStyle); }
+        const nd = Math.min(4, Math.floor(w.L / 0.9)); for (let i = 0; i < nd; i++) { const t = (i + 0.5) / nd, A = lerp2(w.a, w.b, t - 0.18 / w.L), Bq = lerp2(w.a, w.b, t + 0.18 / w.L); poly(ctx, [v.p(...A, z0 + 0.36), v.p(...Bq, z0 + 0.36), v.p(...Bq, z0), v.p(...A, z0)], N ? 'rgba(30,30,34,.7)' : 'rgba(150,154,158,.85)'); }
+        continue;
+      }
+      if (o.fac === 'shop' && spx > 4) {   // low shops: a glass storefront and awning at street level, small windows above
+        const A0 = lerp2(w.a, w.b, 0.08), B0 = lerp2(w.a, w.b, 0.92);
+        poly(ctx, [v.p(...A0, z0 + 0.27), v.p(...B0, z0 + 0.27), v.p(...B0, z0 + 0.03), v.p(...A0, z0 + 0.03)], N ? 'rgba(255,214,150,.6)' : 'rgba(70,96,120,.55)');
+        poly(ctx, [v.p(...A0, z0 + 0.33), v.p(...B0, z0 + 0.33), v.p(...B0, z0 + 0.28), v.p(...A0, z0 + 0.28)], ['#7a3b32', '#2f5d4a', '#36506e', '#8a6a3a'][Math.floor(hash(o.cx.toFixed(1)) * 4)]);
+        if (z1 - z0 > 0.6) { const nw = Math.max(1, Math.round(w.L / 0.4)); for (let i = 0; i < nw; i++) { const A = lerp2(w.a, w.b, (i + 0.3) / nw), Bq = lerp2(w.a, w.b, (i + 0.7) / nw); poly(ctx, [v.p(...A, z1 - 0.12), v.p(...Bq, z1 - 0.12), v.p(...Bq, z1 - 0.3), v.p(...A, z1 - 0.3)], N ? 'rgba(255,205,120,.5)' : 'rgba(46,58,72,.5)'); } }
         continue;
       }
       if (o.fac === 'ribs' && spx > 7) {   // deep vertical fins (One Shell's travertine tube): a shadow and a lit edge per fin

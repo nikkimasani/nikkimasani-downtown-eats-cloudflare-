@@ -2,7 +2,7 @@
 // and writes public/buildings.json for the map. Run: node scripts/osm-buildings.mjs   (Node 20+, no dependencies)
 // Map data © OpenStreetMap contributors, ODbL.
 import fs from 'fs';
-const BBOX = [29.7395, -95.3790, 29.7715, -95.3330];   // s, w, n, e — downtown inside I-45, I-10 and US-59
+const BBOX = [29.7380, -95.3790, 29.7715, -95.3100];   // s, w, n, e — downtown inside I-45, I-10 and US-59
 const Q = `[out:json][timeout:120];(way["building"](${BBOX});relation["building"](${BBOX});way["building:part"](${BBOX});way["amenity"="parking"](${BBOX}););out body geom;`;
 const EP = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
 let data = null;
