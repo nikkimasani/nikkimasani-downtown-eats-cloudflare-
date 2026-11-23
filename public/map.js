@@ -1430,7 +1430,7 @@ export class CityMap {
       walls.push({ a, b, L, nx, ny, sun: Math.max(0, -r / Math.SQRT2), shade: 0.125 + 0.105 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
     }
     walls.sort((p, q) => p.d - q.d);
-    const fancy = (v.s >= 0.3 && o.h > 1.2) || (v.s >= 0.18 && o.h > 6), warm = this._warm || 0;   // towers keep their detail when zoomed out: they are the skyline
+    const lite = this.busy || this.lowQ, fancy = !this.lowQ && ((v.s >= 0.3 && o.h > 1.2) || (v.s >= 0.18 && o.h > 6)), warm = this._warm || 0;   // fine detail pauses while you pan/zoom and switches off on slow phones
     for (const w of walls) {
       const quad = [v.p(w.a[0], w.a[1], z1), v.p(w.b[0], w.b[1], z1), v.p(w.b[0], w.b[1], z0), v.p(w.a[0], w.a[1], z0)];
       let base = darken(col, w.shade);
@@ -1446,21 +1446,21 @@ export class CityMap {
         ctx.strokeStyle = N ? 'rgba(0,0,0,.18)' : 'rgba(20,40,70,.12)'; ctx.lineWidth = 1; ctx.beginPath();
         const step = o.h > 15 ? 0.84 : 0.42; for (let z = z0 + step; z < z1 - 0.1; z += step) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
       }
-      if (v.s < (o.h > 6 ? 0.18 : 0.32) || w.L < (o.type === 'crown' ? 0.05 : 0.4)) continue;
+      if (lite || v.s < (o.h > 6 ? 0.18 : 0.32) || w.L < (o.type === 'crown' ? 0.05 : 0.4)) continue;
       const fz0 = o.type === 'crown' ? z0 : z0 + 0.45, sp = v.p(w.a[0], w.a[1], z0), sq = v.p(w.b[0], w.b[1], z0), spx = Math.hypot(sq[0] - sp[0], sq[1] - sp[1]) / w.L;   // screen px per unit along this wall
-      if (o.fac === 'ribs' && spx > 5) {   // deep vertical fins (One Shell's travertine tube): a shadow and a lit edge per fin
+      if (o.fac === 'ribs' && spx > 7) {   // deep vertical fins (One Shell's travertine tube): a shadow and a lit edge per fin
         const nv = Math.max(o.type === 'crown' ? 1 : 3, Math.round(w.L / 0.22)), sh = N ? 'rgba(0,0,0,.35)' : 'rgba(60,55,45,.22)', hl = N ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.55)';
         ctx.lineWidth = Math.max(1, spx * 0.05);
         ctx.strokeStyle = sh; ctx.beginPath(); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, (i + 0.18) / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); } ctx.stroke();
         ctx.strokeStyle = hl; ctx.beginPath(); for (let i = 1; i < nv; i++) { const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); } ctx.stroke();
         continue;
       }
-      if (o.fac === 'slots' && spx > 4) {   // tall ribbon windows between granite piers (JPMorgan Chase)
+      if (o.fac === 'slots' && spx > 6) {   // tall ribbon windows between granite piers (JPMorgan Chase)
         const nv = Math.max(3, Math.round(w.L / 0.3)); ctx.strokeStyle = N ? 'rgba(255,214,140,.25)' : 'rgba(28,36,48,.55)'; ctx.lineWidth = Math.max(1, spx * 0.12); ctx.beginPath();
         for (let i = 0; i < nv; i++) { const q = lerp2(w.a, w.b, (i + 0.5) / nv); ctx.moveTo(...v.p(q[0], q[1], fz0)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.12)); } ctx.stroke();
         continue;
       }
-      if (o.fac === 'punch' && spx > 4) {   // square punched windows in a stone grid (TC Energy, the brown towers)
+      if (o.fac === 'punch' && spx > 6) {   // square punched windows in a stone grid (TC Energy, the brown towers)
         const cols = Math.max(3, Math.round(w.L / 0.26)), seg = spx * w.L / cols, rows = Math.max(2, Math.round((z1 - fz0) / 0.37));
         ctx.setLineDash([seg * 0.5, seg * 0.5]); ctx.lineDashOffset = -seg * 0.25; ctx.strokeStyle = N ? 'rgba(255,210,130,.4)' : 'rgba(30,34,44,.6)'; ctx.lineWidth = Math.max(1, ZU * v.s * 0.17); ctx.beginPath();
         for (let r = 0; r < rows; r++) { const z = fz0 + (r + 0.5) * (z1 - 0.1 - fz0) / rows; ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset = 0;
@@ -1470,7 +1470,7 @@ export class CityMap {
         const r = hash(o.cx.toFixed(1) + w.a[0].toFixed(1)), t0 = 0.15 + r * 0.5, zt = z0 + o.h * (0.35 + r * 0.45), zb = zt - o.h * 0.35;
         const A = lerp2(w.a, w.b, t0), Bq = lerp2(w.a, w.b, Math.min(1, t0 + 0.28)), C2 = lerp2(w.a, w.b, Math.min(1, t0 + 0.5)), D2 = lerp2(w.a, w.b, Math.min(1, t0 + 0.22));
         ctx.globalAlpha = alpha * 0.16; poly(ctx, [v.p(...A, zt), v.p(...Bq, zt), v.p(...C2, Math.max(z0, zb)), v.p(...D2, Math.max(z0, zb))], '#ffffff'); ctx.globalAlpha = alpha;
-        if (spx > 9) {   // fine mullion grid when close
+        if (spx > 14) {   // fine mullion grid when close
           ctx.strokeStyle = 'rgba(15,30,45,.14)'; ctx.lineWidth = 1; ctx.beginPath(); const nv = Math.max(3, Math.round(w.L / 0.16));
           for (let i = 1; i < nv; i++) { if (i % 3 === 0) continue; const q = lerp2(w.a, w.b, i / nv); ctx.moveTo(...v.p(q[0], q[1], z0 + 0.3)); ctx.lineTo(...v.p(q[0], q[1], z1 - 0.05)); }
           for (let z = z0 + 0.4; z < z1 - 0.1; z += 0.37) { ctx.moveTo(...v.p(w.a[0], w.a[1], z)); ctx.lineTo(...v.p(w.b[0], w.b[1], z)); } ctx.stroke();
@@ -2220,7 +2220,14 @@ export class CityMap {
       if (a.t >= 1) this.anim = null;
     }
     this.stepNpcs(dt); this.stepTrains(dt); this.stepFollowNpc(dt);
-    if (!this.paused) this.draw(t);
+    // keep the phone responsive: while nothing is being dragged, redraw only as often as this device can afford,
+    // leaving the main thread free for taps; if drawing stays slow, drop facade detail and gradients
+    const moving = !!(this.pointers?.size || this.fling || this.zoomAnim || this.rotAnim || this.anim); this.busy = moving;
+    const gap = moving ? 0 : Math.max(33, (this.drawMs || 10) * 3);
+    if (this.paused || t - (this._lastDraw || 0) < gap) return;
+    this._lastDraw = t; const d0 = performance.now(); this.draw(t); const ms = performance.now() - d0;
+    this.drawMs = (this.drawMs ?? ms) * 0.9 + ms * 0.1;
+    this.slowQ = this.drawMs > 28 ? (this.slowQ || 0) + 1 : 0; if (!this.lowQ && this.slowQ > 40) this.lowQ = true;
   }
 
   draw(now) {
