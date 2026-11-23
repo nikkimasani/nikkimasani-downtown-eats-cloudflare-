@@ -297,7 +297,18 @@
       "notInDirectory": true
     },
     "Rosalie Italian Soul": {
-      "venue": "C. Baldwin"
+      "venue": "C. Baldwin",
+      "hours": "Mon–Thu 6:30am–10:30am, 11am–2pm, Fri 6:30am–10:30am, Sat–Sun 7am–11am",
+      "source": "https://www.opentable.com/restaurant/profile/220813",
+      "checked": "2026-11-22"
+    },
+    "Buena Vista Cuban Cafe - Downtown": {
+      "street": "800 Capitol St",
+      "venue": "Bank of America Tower",
+      "phone": "(713) 485-4565",
+      "source": "https://www.aaa.com/tripcanvas/restaurant/buena-vista-cuban-cafe-downtown-AA71497",
+      "checked": "2026-11-22",
+      "notInDirectory": true
     }
   }
 }

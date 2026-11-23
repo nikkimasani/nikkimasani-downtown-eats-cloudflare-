@@ -1319,6 +1319,7 @@ export class CityMap {
       'Annunciation Catholic Church': { c: '#cbbb9f', glass: false, roofC: '#6e6a66' },
       'Bob Casey United States Courthouse': { c: '#d9d3c7', glass: false, fac: 'slots' },
       'Marriott Marquis Houston': { c: '#d6dbe1', glass: true },
+      'POST Houston': { c: '#c9b9a0', glass: false, fac: 'punch', roofC: '#9fcf7c' },   // the old post office, Skylawn on the roof
       'C. Baldwin, Curio Collection by Hilton': { c: '#5f5249', glass: false, fac: 'slots', roofC: '#4a403a', pri: true },   // dark bronze-brown slab with tall window strips
     };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
@@ -2514,6 +2515,39 @@ export class CityMap {
           const a = tr.pts[k - 1], b = tr.pts[k], sl = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, q0 = lerp2(a, b, Math.min(1, d / sl)), off = (j - 1) * 0.28, q = [q0[0] - (b[1] - a[1]) / sl * off, q0[1] + (b[0] - a[0]) / sl * off]; if (!onScr(q[0], q[1])) continue;
           items.push({ k: v.depth(q[0], q[1]) + 0.5, fn: () => { const [x, y] = v.p(q[0], q[1]); drawPerson(ctx, x, y, Math.max(0.55, this.u() * 0.8), { ...JOG_LOOK, shirt: ['#ff6b6b', '#fcc419', '#4dabf7', '#69db7c', '#f783ac'][(ti + j) % 5] }, now / 70 + j, true, null, now, ''); } }); } });
     }
+    // POST Houston's Skylawn: a five-acre rooftop park; in the holidays, Winter Wonderlawn's two big trees, candy canes and string lights
+    const post = this._post ?? (this._post = (this.osm || []).filter((o) => o.name === 'POST Houston' && o.z0 < 0.5).sort((a, b) => b.h - a.h)[0] || (() => { const l = this.landmarks.find((x) => x.kind === 'post'); if (!l) return false;
+      return { pts: [[l.x, l.y], [l.x + l.w, l.y], [l.x + l.w, l.y + l.d], [l.x, l.y + l.d]], bb: { x0: l.x, x1: l.x + l.w, y0: l.y, y1: l.y + l.d }, cx: l.x + l.w / 2, cy: l.y + l.d / 2, h: l.h, lm: l }; })());
+    if (post && v.s >= 0.3 && onScr(post.cx, post.cy, 120)) {
+      const d = new Date(), md = (d.getMonth() + 1) * 100 + d.getDate(), xmas = md >= 1115 || md <= 106, z = post.h + (post.rh || 0) + 0.01, P = post.pts, cx = post.cx, cy = post.cy;
+      const inset = (k) => P.map((q) => [cx + (q[0] - cx) * k, cy + (q[1] - cy) * k]);
+      items.push({ k: (post.lm ? v.boxDepth(post.lm.x, post.lm.y, post.lm.w, post.lm.d) : this.osmDepth(post)) + 0.001, fn: () => {
+        poly(ctx, inset(0.86).map((q) => v.p(q[0], q[1], z)), N ? '#2a4a30' : '#9fd17e');   // the lawn, with paths
+        ctx.strokeStyle = N ? 'rgba(220,210,190,.25)' : 'rgba(240,232,214,.9)'; ctx.lineWidth = Math.max(1, v.s * 2); ctx.beginPath(); ctx.moveTo(...v.p(post.bb.x0 + 1, cy, z)); ctx.lineTo(...v.p(post.bb.x1 - 1, cy, z)); ctx.moveTo(...v.p(cx, post.bb.y0 + 1, z)); ctx.lineTo(...v.p(cx, post.bb.y1 - 1, z)); ctx.stroke();
+        if (!xmas) return;
+        const tw = (now / 400) | 0, ring = inset(0.78);   // string lights around the edge, twinkling
+        for (let k = 0; k < ring.length; k++) { const a2 = ring[k], b2 = ring[(k + 1) % ring.length], L = Math.hypot(b2[0] - a2[0], b2[1] - a2[1]); for (let t = 0; t < L; t += 0.35) { const q = lerp2(a2, b2, t / L), [x, y] = v.p(q[0], q[1], z + 0.25); const on = hash(k + ':' + t.toFixed(1) + ':' + (tw % 3)) > 0.25; circle(ctx, x, y, Math.max(1, v.s * (N ? 2.2 : 1.5)), on ? ['#ffd43b', '#ff6b6b', '#69db7c', '#74c0fc', '#fff'][Math.floor(hash(k + t) * 5)] : 'rgba(80,80,80,.5)'); } }
+        for (let i = 0; i < 14; i++) { const q = [cx + (hash(i + 'cc') - 0.5) * (post.bb.x1 - post.bb.x0) * 0.6, cy + (hash(i + 'cd') - 0.5) * (post.bb.y1 - post.bb.y0) * 0.6], [x, y] = v.p(q[0], q[1], z), [, yt] = v.p(q[0], q[1], z + 0.35);   // candy canes
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1.5, v.s * 2.4); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, yt); ctx.stroke(); ctx.strokeStyle = '#e03131'; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]); }
+        for (const sd of [-0.22, 0.22]) {   // the two 25-foot trees
+          const tx = cx + sd * (post.bb.x1 - post.bb.x0), ty = cy - sd * 0.5, base = v.p(tx, ty, z), top = v.p(tx, ty, z + 2.6), r = 0.95 * TW * v.s;
+          ctx.fillStyle = N ? '#2f7a44' : '#2b8a3e'; ctx.beginPath(); ctx.moveTo(top[0], top[1]); ctx.lineTo(base[0] + r, base[1]); ctx.lineTo(base[0] - r, base[1]); ctx.closePath(); ctx.fill();
+          for (let k = 0; k < 40; k++) { const t = hash(sd + 'l' + k), u = (hash(sd + 'u' + k) - 0.5) * 2 * t; const on = hash(k + sd + ':' + (tw % 4)) > 0.2; circle(ctx, top[0] + u * r, top[1] + (base[1] - top[1]) * t, Math.max(1, v.s * (N ? 2.4 : 1.6)), on ? ['#ffd43b', '#ff8787', '#ffffff', '#74c0fc'][k % 4] : '#2b4d33'); }
+          circle(ctx, top[0], top[1] - 2, Math.max(2, v.s * 4), '#ffd43b');
+          if (N) { const g = ctx.createRadialGradient(base[0], (base[1] + top[1]) / 2, 0, base[0], (base[1] + top[1]) / 2, r * 3); g.addColorStop(0, 'rgba(255,220,140,.35)'); g.addColorStop(1, 'rgba(255,220,140,0)'); ctx.fillStyle = g; ctx.fillRect(base[0] - r * 3, top[1] - r * 3, r * 6, base[1] - top[1] + r * 6); }
+        }
+      } });
+    }
+    // Theater District nights: show crowds outside the big halls before curtain and at the break (typical evening showtimes)
+    if (v.s >= 0.45 && !this.hide.people) { const H2 = h + (new Date().getMinutes() / 60) * 0, wd = new Date().getDay(), showNight = wd >= 4 || wd === 0 || wd === 2, pre = h >= 18.75 && h < 20, out = h >= 21.75 && h < 22.6;
+      if (showNight && (pre || out)) for (const nm of ['Jones Hall', 'Wortham Theatre Center', 'Alley Theatre', 'Hobby Center for the Performing Arts']) {
+        const o = (this.osm || []).find((u) => u.name === nm && u.z0 < 0.5); if (!o || !onScr(o.cx, o.cy, 100)) continue;
+        const E = o.pts.map((q, k) => { const b2 = o.pts[(k + 1) % o.pts.length], L = Math.hypot(b2[0] - q[0], b2[1] - q[1]); return { a: q, b: b2, L }; }).filter((e) => e.L > 1).sort((p1, p2) => v.depth((p2.a[0] + p2.b[0]) / 2, (p2.a[1] + p2.b[1]) / 2) - v.depth((p1.a[0] + p1.b[0]) / 2, (p1.a[1] + p1.b[1]) / 2))[0]; if (!E) continue;   // the side facing you
+        const nx = (E.b[1] - E.a[1]) / E.L, ny = -(E.b[0] - E.a[0]) / E.L, sgn = (nx * ((E.a[0] + E.b[0]) / 2 - o.cx) + ny * ((E.a[1] + E.b[1]) / 2 - o.cy)) > 0 ? 1 : -1;
+        for (let i = 0; i < 16; i++) { const t = 0.15 + hash(nm + i) * 0.7, dd = 0.35 + hash(nm + 'd' + i) * 0.9, q = lerp2(E.a, E.b, t), px = q[0] + nx * sgn * dd, py = q[1] + ny * sgn * dd;
+          items.push({ k: v.depth(px, py) + 0.5, fn: () => { const [x, y] = v.p(px, py); drawPerson(ctx, x, y, Math.max(0.55, this.u() * 0.8), { ...JOG_LOOK, skin: ['#8d5524', '#c68642', '#e0ac69', '#f1c27d', '#5c3a1e'][i % 5], hair: ['#2b1d14', '#a0522d', '#111', '#d6b370'][i % 4], shirt: ['#212529', '#7b2d26', '#1c3d6e', '#495057', '#e9ecef', '#5f3dc4'][i % 6], shorts: false, long: i % 3 === 0 }, out ? now / 90 + i : 0, out && i % 2 === 0, null, now, ''); } }); }
+        if (N) { const mq = lerp2(E.a, E.b, 0.5), [mx, my] = v.p(mq[0] + nx * sgn * 0.1, mq[1] + ny * sgn * 0.1, 0.8); items.push({ k: 1e8, fn: () => { const g = ctx.createRadialGradient(mx, my, 0, mx, my, 60 * Math.max(0.6, v.s)); g.addColorStop(0, 'rgba(255,214,140,.45)'); g.addColorStop(1, 'rgba(255,214,140,0)'); ctx.fillStyle = g; ctx.fillRect(mx - 90, my - 90, 180, 180); } }); }   // marquee glow
+      } }
     // game nights: a halo over the arena while the crowd is in
     const ev = this.eventNow, a = ev && area(ev.venue); if (a && N) { const [x, y] = v.p((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, 4); items.push({ k: 1e9, fn: () => { const g = ctx.createRadialGradient(x, y, 0, x, y, 140 * Math.max(0.5, v.s)); const pulse = 0.75 + 0.25 * Math.sin(now / 600); g.addColorStop(0, ev.team === 'Astros' ? `rgba(235,110,31,${0.55 * pulse})` : `rgba(230,30,70,${0.55 * pulse})`); g.addColorStop(0.5, ev.team === 'Astros' ? 'rgba(235,110,31,.15)' : 'rgba(230,30,70,.15)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - 220, y - 220, 440, 440);
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let k = 0; k < 4; k++) { const ang = -Math.PI / 2 + Math.sin(now / 1800 + k * 1.7) * 0.5, L = 260 * Math.max(0.6, v.s), bg = ctx.createLinearGradient(x, y, x + Math.cos(ang) * L, y + Math.sin(ang) * L); bg.addColorStop(0, 'rgba(255,240,210,.22)'); bg.addColorStop(1, 'rgba(255,240,210,0)'); ctx.fillStyle = bg; ctx.beginPath(); ctx.moveTo(x - 6, y); ctx.lineTo(x + Math.cos(ang - 0.06) * L, y + Math.sin(ang - 0.06) * L); ctx.lineTo(x + Math.cos(ang + 0.06) * L, y + Math.sin(ang + 0.06) * L); ctx.lineTo(x + 6, y); ctx.fill(); } ctx.restore(); } }); }   // searchlights sweep the sky on game nights

@@ -2903,9 +2903,8 @@
    "Pizza"
   ],
   "meals": [
+   "Breakfast",
    "Brunch",
-   "Dinner",
-   "Full Service",
    "Lunch"
   ],
   "price": 3,
@@ -2914,7 +2913,7 @@
    "comfort"
   ],
   "type": "Italian",
-  "note": "Red-sauce Italian at the C. Baldwin hotel.",
+  "note": "Italian at the C. Baldwin hotel — breakfast daily, weekday lunch, weekend brunch.",
   "tryit": "Lasagna, meatballs"
  },
  {
@@ -5372,5 +5371,29 @@
   "type": "Cocktail Bar",
   "note": "Speakeasy behind a secret door off the C. Baldwin's Lobby Bar — premium cocktails, champagne and caviar bites. Hours vary, so call ahead.",
   "tryit": "Champagne and truffled grilled cheese"
+ },
+ {
+  "id": 286,
+  "name": "Buena Vista Cuban Cafe - Downtown",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cuban",
+   "Latin American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour"
+  ],
+  "price": 2,
+  "vibes": [
+   "date",
+   "group",
+   "nightlife"
+  ],
+  "type": "Cuban",
+  "note": "Cuban café in the Bank of America Tower — Cubanos, ropa vieja, mojitos and live music some nights.",
+  "tryit": "Cubano, ropa vieja, mojito"
  }
 ]
