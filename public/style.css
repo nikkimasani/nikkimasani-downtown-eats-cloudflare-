@@ -405,7 +405,7 @@ header h1{padding-right:92px}
 .pollopt{position:relative}.pollopt span{flex:1;min-width:0}.pollopt .bar{display:block;height:5px;border-radius:3px;background:var(--accent);margin-top:5px;transition:width .4s;font-style:normal}.pollopt small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
 .pollopt.mine{border-color:var(--accent);outline:2px solid var(--accent)}
 .trainrow{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:14px}.trainrow:first-of-type{border-top:0}.trainrow i{width:10px;height:10px;border-radius:50%;flex:none}.trainrow span{flex:1}.trainrow b{font-variant-numeric:tabular-nums}
-/* Sims-style people: live stats chip and the person card */
+/* Houstonians: live stats chip and the person card */
 .simstats{font-size:12px;font-weight:700;max-width:min(360px,calc(100vw - 20px));text-align:left;white-space:normal;line-height:1.35}
 .simstats[aria-expanded=true]{display:flex;flex-direction:column;gap:2px;padding:9px 12px;border-radius:14px}
 .simstats span{font-weight:600;color:#495057}

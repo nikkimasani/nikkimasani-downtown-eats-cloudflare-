@@ -583,7 +583,7 @@ document.addEventListener('click', (e) => {
   const o = e.target.closest('.card [data-open], .card.tap[data-open]'); if (o && !o.closest('#nightList, #coffeeList')) openSheet(+o.dataset.open);
 });
 
-// ---------- Sims-style people on the map ----------
+// ---------- Houstonians: the little people on the map ----------
 let simN = null, simTimer = null;
 function renderSim() {
   const n = simN; if (!n || !city) return hideSim(); const i = city.npcInfo(n), b = $('#simCard');
@@ -606,7 +606,7 @@ function renderSimStats(s) {
   const people = s.walking + s.inside + s.inLine + s.under;
   b.hidden = false; b.setAttribute('aria-expanded', simOpen);
   b.innerHTML = simOpen
-    ? `<b>${s.phase}</b><span>👥 ${people} sims · 🚶 ${s.walking} walking · 🍽️ ${s.inside} inside${s.inLine ? ` · ⏳ ${s.inLine} in line` : ''}${s.under ? ` · 🚇 ${s.under} in tunnels` : ''}${s.hh ? ` · 🍹 ${s.hh} at happy hour` : ''}${s.riding ? ` · 🚕 ${s.riding} rides` : ''}</span>${s.busiest ? `<span>🔥 Busiest block: ${esc(s.busiest)}</span>` : ''}<em>A simulation: crowds follow the time of day, weather and what's open, not live counts</em>`
+    ? `<b>${s.phase}</b><span>👥 ${people} Houstonians · 🚶 ${s.walking} walking · 🍽️ ${s.inside} inside${s.inLine ? ` · ⏳ ${s.inLine} in line` : ''}${s.under ? ` · 🚇 ${s.under} in tunnels` : ''}${s.hh ? ` · 🍹 ${s.hh} at happy hour` : ''}${s.riding ? ` · 🚕 ${s.riding} rides` : ''}</span>${s.busiest ? `<span>🔥 Busiest block: ${esc(s.busiest)}</span>` : ''}<em>A simulation: crowds follow the time of day, weather and what's open, not live counts</em>`
     : `${s.phase.split(' ')[0]} 👥 ${people}${s.inLine ? ` · ⏳ ${s.inLine}` : ''}`;
 }
 $('#simStats').onclick = () => { simOpen = !simOpen; if (lastStats) renderSimStats(lastStats); };
