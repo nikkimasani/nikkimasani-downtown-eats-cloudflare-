@@ -94,36 +94,40 @@
       "lng": -95.363809,
       "street": "712 Main St",
       "venue": "The Finn",
-      "source": "https://whatnow.com/?p=352528",
-      "checked": "2026-11-17",
-      "notInDirectory": true
+      "source": "https://www.houstoniamag.com/articles/6-reasons-to-visit-finn-hall",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Mon–Thu 7am–9pm, Fri 7am–10pm, Sat 8am–10pm, Sun 8am–8pm"
     },
     "Hot Peckers": {
       "lat": 29.758677,
       "lng": -95.363809,
       "street": "712 Main St",
       "venue": "The Finn",
-      "source": "https://whatnow.com/?p=352528",
-      "checked": "2026-11-17",
-      "notInDirectory": true
+      "source": "https://www.houstoniamag.com/articles/6-reasons-to-visit-finn-hall",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Mon–Thu 7am–9pm, Fri 7am–10pm, Sat 8am–10pm, Sun 8am–8pm"
     },
     "Samurai Noodle": {
       "lat": 29.7633,
       "lng": -95.36479,
       "street": "411 Smith St",
       "venue": "Lyric Market",
-      "source": "https://www.pressreader.com/usa/houston-chronicle-sunday/20231210/282557317987125",
-      "checked": "2026-11-17",
-      "notInDirectory": true
+      "source": "https://www.papercitymag.com/ca4c",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Mon–Wed 8am–9pm, Thu 8am–10pm, Fri 8am–11pm, Sat 9am–11pm, Sun 9am–9pm"
     },
     "Lyric Bar": {
       "lat": 29.7633,
       "lng": -95.36479,
       "street": "411 Smith St",
       "venue": "Lyric Market",
-      "source": "https://www.pressreader.com/usa/houston-chronicle-sunday/20231210/282557317987125",
-      "checked": "2026-11-17",
-      "notInDirectory": true
+      "source": "https://www.papercitymag.com/ca4c",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Mon–Wed 8am–9pm, Thu 8am–10pm, Fri 8am–11pm, Sat 9am–11pm, Sun 9am–9pm"
     },
     "Figo Sugo": {
       "lat": 29.761613,
@@ -292,9 +296,10 @@
       "street": "400 Dallas St (behind the Lobby Bar)",
       "venue": "C. Baldwin",
       "website": "https://sagehospitalitygroup.com/our-places/our-portfolio/parlour-hideaway",
-      "source": "https://sagehospitalitygroup.com/our-places/our-portfolio/parlour-hideaway",
-      "checked": "2026-11-22",
-      "notInDirectory": true
+      "source": "https://meetingsmags.com/texas/tx_news/downtown-houston-hotels-speakeasy-inspired-event-venue/",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "status": "closed"
     },
     "Rosalie Italian Soul": {
       "venue": "C. Baldwin",
@@ -306,9 +311,10 @@
       "street": "800 Capitol St",
       "venue": "Bank of America Tower",
       "phone": "(713) 485-4565",
-      "source": "https://www.aaa.com/tripcanvas/restaurant/buena-vista-cuban-cafe-downtown-AA71497",
-      "checked": "2026-11-22",
-      "notInDirectory": true
+      "source": "https://joinpearl.co/restaurants/houston/buena-vista-cuban-cafe",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "hours": "Mon 11am–6pm, Tue–Sat 11am–9pm, Sun 11am–6pm"
     },
     "Buried Seeds Wine Bar": {
       "lat": 29.76858,
@@ -360,35 +366,45 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.748624,
-      "lng": -95.350985
+      "lng": -95.350985,
+      "hours": "Sun–Thu 4:45pm–10pm, Fri–Sat 4:45pm–11pm",
+      "source": "https://joinpearl.co/restaurants/houston/tiny-champions"
     },
     "East End Hardware": {
       "street": "3005 Leeland St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.742161,
-      "lng": -95.351221
+      "lng": -95.351221,
+      "hours": "Mon–Fri 4pm–11:45pm, Sat 12pm–11:45pm, Sun 2pm–11:45pm",
+      "source": "https://frankiapp.com/business/east-end-hardware-19724"
     },
     "J-Bar-M BBQ": {
       "street": "2201 Leeland St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.746268,
-      "lng": -95.358084
+      "lng": -95.358084,
+      "hours": "Tue–Sat 11am–9pm, Sun 11am–4pm",
+      "source": "https://guide.michelin.com/us/en/texas/houston_2986624/restaurant/j-bar-m-barbecue"
     },
     "Huynh Restaurant": {
       "street": "912 St Emanuel St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.751917,
-      "lng": -95.355043
+      "lng": -95.355043,
+      "hours": "Mon–Thu 11am–9pm, Fri–Sat 11am–10pm",
+      "source": "https://www.houstoniamag.com/restaurants/huynh"
     },
     "Koffeteria": {
       "street": "1110 Hutchins St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.749925,
-      "lng": -95.355357
+      "lng": -95.355357,
+      "hours": "Mon 8am–2pm, Wed–Sun 8am–2pm",
+      "source": "https://toast.app/r/koffeteria-original-location-1110-hutchins-street/order"
     },
     "Brothers Taco House": {
       "street": "1604 Emancipation Ave",
@@ -396,14 +412,18 @@
       "notInDirectory": true,
       "geoStreet": "1604 Dowling St",
       "lat": 29.745189,
-      "lng": -95.356596
+      "lng": -95.356596,
+      "hours": "Mon–Fri 5am–3pm",
+      "source": "https://abc13.com/post/breakfast-spot-in-eado-perfect-for-tacos-on-the-go/5856208/"
     },
     "Rodeo Goat": {
       "street": "2105 Dallas St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.749772,
-      "lng": -95.356537
+      "lng": -95.356537,
+      "hours": "Sun–Thu 11am–10pm, Fri–Sat 11am–11pm",
+      "source": "https://www.cityof.com/tx/houston/rodeo-goat-1147251"
     },
     "Chapman & Kirby": {
       "street": "2118 Lamar St",
@@ -417,7 +437,9 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.750358,
-      "lng": -95.355922
+      "lng": -95.355922,
+      "hours": "Mon–Wed 4pm–12am, Thu 12pm–12am, Fri–Sat 12pm–2am, Sun 12pm–12am",
+      "source": "https://truckyard.com/houston/"
     },
     "EaDough Pastries & Provisions": {
       "street": "3204 Polk St",
@@ -431,7 +453,9 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.751839,
-      "lng": -95.354717
+      "lng": -95.354717,
+      "hours": "Mon–Fri 3pm–12am, Sat–Sun 11am–12am",
+      "source": "https://frankiapp.com/business/pitch-25-beer-park-13034"
     },
     "Leeland House": {
       "street": "2119 Leeland St",
@@ -439,21 +463,27 @@
       "notInDirectory": true,
       "lat": 29.746455,
       "lng": -95.358302,
-      "note2": "Corner of Leeland & Hutchins, next door to Around the Corner (user-confirmed)"
+      "note2": "Corner of Leeland & Hutchins, next door to Around the Corner (user-confirmed)",
+      "hours": "Wed–Fri 8am–2pm, Sat–Sun 8am–3pm",
+      "source": "https://frankiapp.com/business/leeland-house-18652"
     },
     "Brass Tacks": {
       "street": "612 Live Oak St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.751605,
-      "lng": -95.348979
+      "lng": -95.348979,
+      "hours": "Sun–Thu 7am–10pm, Fri–Sat 7am–12am",
+      "source": "https://joe.coffee/locations/tx/houston/brass-tacks-houston"
     },
     "True Anomaly Brewing": {
       "street": "2012 Dallas St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.750151,
-      "lng": -95.357397
+      "lng": -95.357397,
+      "status": "closed",
+      "source": "https://whatnow.com/?p=384286"
     },
     "8th Wonder Brewery": {
       "street": "2202 Dallas St",
@@ -468,21 +498,26 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.749699,
-      "lng": -95.356641
+      "lng": -95.356641,
+      "hours": "Mon–Fri 2pm–2am, Sat–Sun 11am–2am",
+      "source": "https://secrethouston.com/lightnins-good-times-houston/"
     },
     "Little Woodrow's EaDo": {
       "street": "801 St Emanuel St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.752676,
-      "lng": -95.354275
+      "lng": -95.354275,
+      "hours": "Mon–Fri 2pm–2am, Sat–Sun 11am–2am",
+      "source": "https://littlewoodrows.com/locations/eado/"
     },
     "Neil's Bahr": {
-      "street": "2006 Walker St",
+      "street": "3409 McKinney St",
       "checked": "2026-11-23",
       "notInDirectory": true,
-      "lat": 29.75242,
-      "lng": -95.355663
+      "hours": "Mon–Fri 4pm–11:45pm, Sat 2pm–11:45pm, Sun 4pm–11:45pm",
+      "source": "https://frankiapp.com/business/neil-s-bahr-19332",
+      "geocode": true
     },
     "Nickel City": {
       "street": "2910 McKinney St",
@@ -505,35 +540,45 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.751403,
-      "lng": -95.354019
+      "lng": -95.354019,
+      "hours": "Daily 11am–2am",
+      "source": "https://www.houstoniamag.com/bars/king-s-court-bar-and-kitchen"
     },
     "Sunset Rooftop Lounge": {
       "street": "2119 Dallas St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.749706,
-      "lng": -95.35643
+      "lng": -95.35643,
+      "hours": "Mon–Fri 3pm–2am, Sat–Sun 11am–2am",
+      "source": "https://houston.culturemap.com/news/restaurants-bars/01-10-20-sunset-rooftop-lounge-new-bar-eado-dominic-moreau-cocktail-patio"
     },
     "Kim Son": {
       "street": "2001 Jefferson St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.745825,
-      "lng": -95.360976
+      "lng": -95.360976,
+      "status": "closed",
+      "source": "https://houston.culturemap.com/news/restaurants-bars/kim-son-restaurant-eado-closing/"
     },
     "Cafe TH": {
       "street": "2108 Pease St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.745915,
-      "lng": -95.359547
+      "lng": -95.359547,
+      "status": "closed",
+      "source": "https://www.airbnb.gy/things-to-do/places/711877"
     },
     "The Secret Group": {
       "street": "2101 Polk St",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.749028,
-      "lng": -95.35715
+      "lng": -95.35715,
+      "hours": "Daily 5pm–2am",
+      "source": "https://lgbtq.visithoustontexas.com/listings/the-secret-group-comedy-%26-music-venue/30143/"
     },
     "Lil' Danny Speedo's Go Fly a Kite Lounge": {
       "street": "823 Dumble St",
@@ -547,7 +592,9 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.754529,
-      "lng": -95.341098
+      "lng": -95.341098,
+      "hours": "Mon–Thu 11am–12am, Fri–Sat 11am–1am, Sun 11am–12am",
+      "source": "https://foodle.pro/restaurants/houston/moon-tower-inn"
     },
     "Eight Row Flint EaDo": {
       "street": "3501 Harrisburg Blvd",
@@ -569,7 +616,9 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.757228,
-      "lng": -95.342567
+      "lng": -95.342567,
+      "hours": "Mon–Thu 11am–10pm, Fri 11am–11pm, Sat 10am–11pm, Sun 10am–10pm",
+      "source": "https://www.timeout.com/houston/restaurants/ninfas-original-on-navigation"
     },
     "El Tiempo Cantina Navigation": {
       "street": "2814 Navigation Blvd",
@@ -583,28 +632,36 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.756274,
-      "lng": -95.340731
+      "lng": -95.340731,
+      "hours": "Mon–Thu 11am–9pm, Fri 11am–10pm, Sat 10am–10pm, Sun 10am–9pm",
+      "source": "https://ww2.aaa.com/tripcanvas/restaurant/jonathan's-the-rub-east-end-AA59957"
     },
     "Villa Arcos": {
       "street": "3009 Navigation Blvd",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.755844,
-      "lng": -95.340016
+      "lng": -95.340016,
+      "hours": "Mon–Sat 6am–2pm, Sun 8am–2pm",
+      "source": "https://autoreserve.com/en/restaurants/ZkthNStd4ipCMex3S6e7"
     },
     "Boo's Burgers": {
       "street": "2510 Navigation Blvd",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.758164,
-      "lng": -95.344147
+      "lng": -95.344147,
+      "hours": "Wed–Fri 11am–9pm, Sat 12pm–9pm, Sun 12pm–7pm",
+      "source": "https://frankiapp.com/business/boo-s-burgers-houston-774973"
     },
     "Merida": {
       "street": "2509 Navigation Blvd",
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.758267,
-      "lng": -95.344085
+      "lng": -95.344085,
+      "hours": "Mon 8am–3pm, Tue–Sun 8am–9pm",
+      "source": "https://www.enprimeurclub.com/restaurants/merida-houston-restaurant"
     },
     "How to Survive on Land and Sea": {
       "street": "3401 Harrisburg Blvd",
@@ -619,7 +676,64 @@
       "checked": "2026-11-23",
       "notInDirectory": true,
       "lat": 29.749786,
-      "lng": -95.340274
+      "lng": -95.340274,
+      "hours": "Mon–Fri 7am–4:30pm",
+      "source": "https://frankiapp.com/business/champ-burger-12146"
+    },
+    "Vinny's": {
+      "hours": "Daily 11am–2am",
+      "source": "https://www.houstoniamag.com/businesses/vinny-s",
+      "checked": "2026-11-23"
+    },
+    "Equal Parts Brewing": {
+      "status": "closed",
+      "source": "https://tablejourney.com/united-states/houston/breweries/equal-parts-brewing/",
+      "checked": "2026-11-23"
+    },
+    "Saint Arnold": {
+      "hours": "Mon–Thu 11am–10pm, Fri 11am–11pm, Sat 10am–11pm, Sun 10am–10pm",
+      "source": "https://tablejourney.com/united-states/houston/breweries/equal-parts-brewing/",
+      "checked": "2026-11-23"
+    },
+    "Tavern By Hearsay": {
+      "hours": "Mon–Thu 11am–11pm, Fri 11am–12am, Sat 10am–12am, Sun 10am–10pm",
+      "source": "https://opentable.com/r/tavern-by-hearsay-houston",
+      "checked": "2026-11-23"
+    },
+    "Warren's Inn": {
+      "hours": "Mon–Fri 11am–2am, Sat 12pm–2am, Sun 12pm–12am",
+      "source": "https://www.houstoniamag.com/bars/warrens-inn",
+      "checked": "2026-11-23"
+    },
+    "Concrete Rose": {
+      "hours": "Sun–Wed 5pm–1am, Thu–Sat 5pm–2am",
+      "source": "https://www.opentable.co.uk/r/concrete-rose-houston",
+      "checked": "2026-11-23"
+    },
+    "Zaranda": {
+      "hours": "Mon–Thu 11:30am–9pm, Fri–Sat 11:30am–10:30pm, Sun 11am–9pm",
+      "source": "https://restaurantguru.com/Zaranda-Houston",
+      "checked": "2026-11-23"
+    },
+    "Nyam Nyam": {
+      "hours": "Mon–Thu 7am–9pm, Fri 7am–10pm, Sat 8am–10pm, Sun 8am–8pm",
+      "source": "https://www.houstoniamag.com/articles/6-reasons-to-visit-finn-hall",
+      "checked": "2026-11-23"
+    },
+    "Guadalajara": {
+      "hours": "Mon 11am–2pm, Tue–Thu 11am–9pm, Fri 11am–10pm, Sat 4pm–10pm",
+      "source": "https://opentable.co.uk/r/guadalajara-del-centro-houston",
+      "checked": "2026-11-23"
+    },
+    "The District7 Restaurant": {
+      "hours": "Mon–Wed 10:30am–9pm, Thu–Sat 10:30am–10pm, Sun 10am–9pm",
+      "source": "https://lgbtq.visithoustontexas.com/listings/cellar7/30245/",
+      "checked": "2026-11-23"
+    },
+    "Bubble Boba": {
+      "hours": "Mon–Fri 10am–6:30pm",
+      "source": "https://www.ubereats.com/store/bubble-boba-houston/p8iA0qU5VkG6rvA0IP5oMA",
+      "checked": "2026-11-23"
     }
   }
 }

@@ -1128,8 +1128,9 @@ export class CityMap {
     };
     for (const f of this.fill) if (!f.lot) add(f.x, f.y, f.w, f.d, f.h);
     for (const l of this.landmarks) add(l.x, l.y, l.w, l.d, l.h);
+    const nbLow = v.s < 0.55 || this.busy || this.lowQ;
     for (const o of this.osm || []) {
-      if (o.h < 0.5) continue; const top = o.z0 + o.h, [cx, cy] = v.p(o.cx + sv[0] * top / 2, o.cy + sv[1] * top / 2), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0) + top * 3) * TW * 0.5 * v.s; if (cx < -r || cx > W + r || cy < -r || cy > H + r) continue;
+      if (o.h < 0.5 || (o.nb && nbLow)) continue; const top = o.z0 + o.h, [cx, cy] = v.p(o.cx + sv[0] * top / 2, o.cy + sv[1] * top / 2), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0) + top * 3) * TW * 0.5 * v.s; if (cx < -r || cx > W + r || cy < -r || cy > H + r) continue;
       const pts = hull([...o.pts, ...o.pts.map((p) => [p[0] + sv[0] * top, p[1] + sv[1] * top])].map((q) => v.p(q[0], q[1])));
       pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath();
     }
@@ -1374,7 +1375,7 @@ export class CityMap {
         } else if (/^(garage|garages|carport|roof|shed|hut|kiosk)$/.test(type)) { o.h = 0.32; o.c = '#c9c6bf'; o.roofC = '#9fa3a8'; }
         else if (m2 > 900) { o.h = 0.6 + k2 * 0.4; o.c = pick(WARE); o.fac = 'ware'; o.roofC = k2 > 0.5 ? '#c3c6c9' : '#b2b6ba'; }   // brick and metal warehouses, many now bars and breweries
         else { o.h = 0.42 + k2 * 0.45; o.c = pick(SHOP); o.fac = 'shop'; o.roofC = '#b9bcbf'; }   // one- and two-storey shops and offices
-        o.topM = 0;
+        o.topM = 0; o.nb = true;
       }
       const rs = String(roofShape || o._rs || '').toLowerCase();
       if (/^(pyramidal|hipped|gabled|dome|onion|round|half-hipped|skillion)$/.test(rs)) {
@@ -1465,6 +1466,8 @@ export class CityMap {
     let m = -Infinity; for (const p of o.pts) { const d = this.v.depth(p[0], p[1]); if (d > m) m = d; } return m; }
   drawOsm(o, N, alpha) {
     const ctx = this.ctx, v = this.v, P = o.pts, n = P.length, z0 = o.z0, z1 = o.z0 + o.h;
+    const nbLow = o.nb && (v.s < 0.55 || this.busy || this.lowQ);   // neighbourhood houses/warehouses: cheap boxes when zoomed out or moving
+    if (o.nb && v.s < 0.5 && ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * v.s < 5) return;   // too small to see
     ctx.globalAlpha = alpha;
     const col = N ? darken(o.c, 0.5) : o.c, walls = [];
     if (!(v.s < 0.3 && o.h < 1.5)) for (let i = 0; i < n; i++) {
@@ -1473,7 +1476,7 @@ export class CityMap {
       walls.push({ a, b, L, nx, ny, sun: Math.max(0, -r / Math.SQRT2), shade: 0.125 + 0.105 * r / Math.SQRT2, d: v.depth((a[0] + b[0]) / 2, (a[1] + b[1]) / 2) });
     }
     walls.sort((p, q) => p.d - q.d);
-    const lite = this.busy || this.lowQ, fancy = !this.lowQ && ((v.s >= 0.3 && o.h > 1.2) || (v.s >= 0.18 && o.h > 6)), warm = this._warm || 0;   // fine detail pauses while you pan/zoom and switches off on slow phones
+    const lite = this.busy || this.lowQ || nbLow, fancy = !nbLow && !this.lowQ && ((v.s >= 0.3 && o.h > 1.2) || (v.s >= 0.18 && o.h > 6)), warm = this._warm || 0;   // fine detail pauses while you pan/zoom and switches off on slow phones
     for (const w of walls) {
       const quad = [v.p(w.a[0], w.a[1], z1), v.p(w.b[0], w.b[1], z1), v.p(w.b[0], w.b[1], z0), v.p(w.a[0], w.a[1], z0)];
       let base = darken(col, w.shade);
@@ -1496,22 +1499,24 @@ export class CityMap {
         for (let z = z0 + 0.12; z < z1 - 0.12; z += fh) { const q = [v.p(...w.a, z + fh * 0.55), v.p(...w.b, z + fh * 0.55), v.p(...w.b, z + fh * 0.12), v.p(...w.a, z + fh * 0.12)]; ctx.beginPath(); ctx.moveTo(...q[0]); for (const k of q.slice(1)) ctx.lineTo(...k); ctx.closePath(); ctx.fill(); }
         continue;
       }
-      if (o.fac === 'house' && spx > 5) {   // houses and townhomes: a few framed windows per floor, a door on the long wall
+      if (o.fac === 'house' && spx > 8) {   // houses and townhomes: a few framed windows per floor (one batched fill), a door on the long wall
         const fl = Math.max(1, Math.round((z1 - z0) / 0.32)), nw = Math.max(1, Math.round(w.L / 0.55)), fh = (z1 - z0) / fl;
+        ctx.beginPath();
         for (let f = 0; f < fl; f++) for (let i = 0; i < nw; i++) {
-          const t0 = (i + 0.3) / nw, t1 = (i + 0.7) / nw, za = z0 + f * fh + fh * 0.32, zb = z0 + f * fh + fh * 0.78, A = lerp2(w.a, w.b, t0), Bq = lerp2(w.a, w.b, t1);
-          const q = [v.p(...A, zb), v.p(...Bq, zb), v.p(...Bq, za), v.p(...A, za)];
-          poly(ctx, q, N ? (hash(o.cx.toFixed(1) + f + i) > 0.45 ? 'rgba(255,205,120,.75)' : 'rgba(20,24,30,.7)') : 'rgba(46,58,72,.62)');
-          if (!N && spx > 10) { ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...q[0]); for (const p2 of q.slice(1)) ctx.lineTo(...p2); ctx.closePath(); ctx.stroke(); }
+          const za = z0 + f * fh + fh * 0.32, zb = z0 + f * fh + fh * 0.78, A = lerp2(w.a, w.b, (i + 0.3) / nw), Bq = lerp2(w.a, w.b, (i + 0.7) / nw);
+          const q0 = v.p(...A, zb), q1 = v.p(...Bq, zb), q2 = v.p(...Bq, za), q3 = v.p(...A, za); ctx.moveTo(...q0); ctx.lineTo(...q1); ctx.lineTo(...q2); ctx.lineTo(...q3); ctx.closePath();
         }
+        ctx.fillStyle = N ? 'rgba(255,205,120,.6)' : 'rgba(46,58,72,.62)'; ctx.fill();
+        if (!N && spx > 16) { ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.stroke(); }
         if (w.L > 0.6 && w.shade < 0.2) { const A = lerp2(w.a, w.b, 0.12), Bq = lerp2(w.a, w.b, 0.12 + 0.12 / w.L); poly(ctx, [v.p(...A, z0 + 0.22), v.p(...Bq, z0 + 0.22), v.p(...Bq, z0), v.p(...A, z0)], N ? 'rgba(255,200,120,.5)' : 'rgba(90,60,40,.75)'); }
         continue;
       }
-      if (o.fac === 'ware' && spx > 3) {   // warehouses: corrugated / brick coursing, a clerestory strip, roll-up doors at the dock
+      if (o.fac === 'ware' && spx > 5) {   // warehouses: corrugated / brick coursing, a clerestory strip, roll-up doors at the dock
         ctx.strokeStyle = N ? 'rgba(0,0,0,.18)' : 'rgba(60,50,40,.13)'; ctx.lineWidth = 1; ctx.beginPath();
-        for (let z = z0 + 0.08; z < z1 - 0.04; z += 0.08) { ctx.moveTo(...v.p(...w.a, z)); ctx.lineTo(...v.p(...w.b, z)); } ctx.stroke();
-        const nw = Math.max(2, Math.round(w.L / 0.35)); ctx.fillStyle = N ? 'rgba(255,210,140,.55)' : 'rgba(40,50,62,.55)';
-        for (let i = 0; i < nw; i++) { const A = lerp2(w.a, w.b, (i + 0.25) / nw), Bq = lerp2(w.a, w.b, (i + 0.75) / nw); poly(ctx, [v.p(...A, z1 - 0.1), v.p(...Bq, z1 - 0.1), v.p(...Bq, z1 - 0.2), v.p(...A, z1 - 0.2)], ctx.fillStyle); }
+        for (let z = z0 + 0.12; z < z1 - 0.04; z += spx > 14 ? 0.08 : 0.16) { ctx.moveTo(...v.p(...w.a, z)); ctx.lineTo(...v.p(...w.b, z)); } ctx.stroke();
+        const nw = Math.max(2, Math.round(w.L / 0.35)); ctx.beginPath();
+        for (let i = 0; i < nw; i++) { const A = lerp2(w.a, w.b, (i + 0.25) / nw), Bq = lerp2(w.a, w.b, (i + 0.75) / nw); ctx.moveTo(...v.p(...A, z1 - 0.1)); ctx.lineTo(...v.p(...Bq, z1 - 0.1)); ctx.lineTo(...v.p(...Bq, z1 - 0.2)); ctx.lineTo(...v.p(...A, z1 - 0.2)); ctx.closePath(); }
+        ctx.fillStyle = N ? 'rgba(255,210,140,.55)' : 'rgba(40,50,62,.55)'; ctx.fill();
         const nd = Math.min(4, Math.floor(w.L / 0.9)); for (let i = 0; i < nd; i++) { const t = (i + 0.5) / nd, A = lerp2(w.a, w.b, t - 0.18 / w.L), Bq = lerp2(w.a, w.b, t + 0.18 / w.L); poly(ctx, [v.p(...A, z0 + 0.36), v.p(...Bq, z0 + 0.36), v.p(...Bq, z0), v.p(...A, z0)], N ? 'rgba(30,30,34,.7)' : 'rgba(150,154,158,.85)'); }
         continue;
       }
@@ -1610,7 +1615,7 @@ export class CityMap {
           prism(ctx, v, o.cx - w2 / 2 + (k - 0.5) * sx * 0.2, o.cy - d2 / 2, w2, d2, z1, [hh, hh, hh, hh], N ? darken(col, 0.2) : mixC(col, '#d9dde2', 0.5), N ? darken(col, 0.05) : mixC(lighten(col, 0.1), '#e8ebee', 0.5)); }
       }
     }
-    if (o.roof) this.drawRoof(o, N);
+    if (o.roof && !(nbLow && v.s < 0.45)) this.drawRoof(o, N);
     if (o.terrace && v.s > 0.4) this.drawTerrace(o, N);
     if (o.ant) {   // rooftop mast with a blinking red light
       const b = v.p(o.cx, o.cy, z1), t = v.p(o.cx, o.cy, z1 + o.ant); ctx.strokeStyle = N ? '#9aa1ad' : '#7d838b'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); ctx.beginPath(); ctx.moveTo(...b); ctx.lineTo(...t); ctx.stroke();
@@ -2790,6 +2795,7 @@ export class CityMap {
       let sx0 = 1e9, sx1 = -1e9, sy0 = 1e9, sy1 = -1e9; for (const [x, y] of [[bb[0], bb[1]], [bb[2], bb[1]], [bb[2], bb[3]], [bb[0], bb[3]]]) { const [a, b] = v.p(x, y); if (a < sx0) sx0 = a; if (a > sx1) sx1 = a; if (b < sy0) sy0 = b; if (b > sy1) sy1 = b; }
       return sx1 < -M || sx0 > W + M || sy1 < -M || sy0 > H + M; };   // off screen: skip it (EaDo and the Warehouse District add thousands of shapes)
     const path = (pts) => { ctx.beginPath(); if (off(pts)) return; pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1])) : ctx.moveTo(...v.p(p[0], p[1])))); };
+    const sub = (pts) => { if (off(pts)) return; pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1])) : ctx.moveTo(...v.p(p[0], p[1])))); };   // add to the current path: one stroke for many lines
     const strokeW = (w) => Math.max(1, w * TW * v.s * 0.72);
     ctx.lineCap = ctx.lineJoin = 'round';
     // parks & plazas
@@ -2800,14 +2806,16 @@ export class CityMap {
     for (const r of G.rivers) { path(r.pts); ctx.strokeStyle = N ? '#1c3a57' : '#7fbbd9'; ctx.lineWidth = strokeW(r.w); ctx.stroke(); }
     if (v.s > 0.25) for (const r of G.rivers.filter((x) => /buffalo/i.test(x.n))) { ctx.strokeStyle = N ? 'rgba(165,216,255,.35)' : 'rgba(255,255,255,.7)'; ctx.lineWidth = Math.max(1, v.s * 1.4); ctx.setLineDash([3 * v.s + 2, 14 * v.s + 6]); ctx.lineDashOffset = -now / 60; path(r.pts); ctx.stroke(); ctx.setLineDash([]); }
     // trails along the bayous and through the parks
-    if (v.s > 0.35) { ctx.strokeStyle = N ? 'rgba(214,196,160,.45)' : '#d9c9a5'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); for (const p of G.paths || []) { path(p.pts); ctx.stroke(); } }
+    if (v.s > 0.35) { ctx.strokeStyle = N ? 'rgba(214,196,160,.45)' : '#d9c9a5'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); ctx.beginPath(); if (!this.busy) for (const p of G.paths || []) sub(p.pts); ctx.stroke(); }
     // street bridges over the bayou: deck with white railings
     for (const b of G.bridges || []) { path(b.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#c9ccd1'; ctx.lineWidth = strokeW(b.w) + 3; ctx.stroke(); path(b.pts); ctx.strokeStyle = N ? '#2b303c' : '#a3a9b2'; ctx.lineWidth = strokeW(b.w); ctx.stroke(); }
     // freeways and ramps, as mapped — bridges and flyovers lifted on piers, with their shadow underneath
     const road = N ? '#2b303c' : '#b7bcc4', edge = N ? '#1b1f29' : '#9aa1aa';
     const pathZ = (pts, z) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1], z)) : ctx.moveTo(...v.p(p[0], p[1], z)))); };
-    for (const g of G.minor || []) { path(g.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#d8d2c6'; ctx.lineWidth = strokeW(g.k === 'residential' || g.k === 'unclassified' ? 1.15 : 1.5) + 3; ctx.stroke(); }   // sidewalks
-    for (const g of G.minor || []) { path(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(g.k === 'residential' || g.k === 'unclassified' ? 0.8 : 1.1); ctx.stroke(); }
+    { const small = (g) => g.k === 'residential' || g.k === 'unclassified';   // off-grid streets, batched: one stroke per width
+      for (const [sw, rw, pick] of [[1.15, 0.8, true], [1.5, 1.1, false]]) {
+        ctx.beginPath(); for (const g of G.minor || []) if (small(g) === pick) sub(g.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#d8d2c6'; ctx.lineWidth = strokeW(sw) + 3; ctx.stroke();   // sidewalks
+        ctx.beginPath(); for (const g of G.minor || []) if (small(g) === pick) sub(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(rw); ctx.stroke(); } }
     if (v.s > 0.55) { ctx.font = `700 ${Math.round(9 + v.s * 2)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const seen = new Set();
       for (const g of G.minor || []) { if (!g.n || seen.has(g.n) || g.pts.length < 2) continue; const a = v.p(...g.pts[0]), b = v.p(...g.pts[g.pts.length - 1]); if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 70) continue; seen.add(g.n); const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; let ang = Math.atan2(b[1] - a[1], b[0] - a[0]); if (ang > Math.PI / 2) ang -= Math.PI; if (ang < -Math.PI / 2) ang += Math.PI;
         ctx.save(); ctx.translate(mx, my); ctx.rotate(ang); ctx.fillStyle = N ? 'rgba(230,230,230,.75)' : 'rgba(70,70,70,.8)'; ctx.fillText(g.n.replace(/ Street$/, ' St'), 0, 0); ctx.restore(); } }
