@@ -600,6 +600,21 @@ $('#simCard').onclick = (e) => {
   if (a === 'follow') { city.followNpc(city.followN === simN ? null : simN); renderSim(); return; }
   if (a === 'place') { const p = city.npcInfo(simN).place; if (p) openSheet(p.id); }
 };
+// tap a building or a rail station: what it is, and what's inside or when the next trains come
+function showBldg(l) {
+  simN = null; clearInterval(simTimer); $('#mapFound')?.classList.remove('on'); const b = $('#simCard');
+  let body = '';
+  if (l.station) {
+    const nt = l.ll ? nextTrains({ lat: l.ll[0], lng: l.ll[1] }) : null;
+    body = nt && nt.arr.length ? `<div class="sc-doing">${nt.arr.map((a) => `<span class="sc-tr"><i style="background:${a.color}"></i>${esc(a.line)} → ${esc(a.toward)} · <b>${a.min <= 0 ? 'now' : a.min + ' min'}</b></span>`).join('')}</div>` : `<div class="sc-doing">Live arrival times show here when METRO's live feed is connected.</div>`;
+  } else {
+    const facts = [l.h ? `${l.h} m tall` : '', l.year ? `built ${l.year}` : ''].filter(Boolean).join(' · ');
+    body = `<div class="sc-doing">${esc(facts || 'Downtown building')}</div>` + (l.places?.length ? `<div class="sc-acts">${l.places.slice(0, 6).map((p) => `<button data-bp="${p.id}">${esc(p.name)} ›</button>`).join('')}</div>` : `<div class="sc-doing" style="opacity:.7">No restaurants or bars listed inside.</div>`);
+  }
+  b.innerHTML = `<div class="sc-top"><span class="sc-av">${l.station ? '🚊' : l.type === 'parking' || l.type === 'garage' ? '🅿️' : l.type === 'hotel' ? '🏨' : l.type === 'church' ? '⛪' : '🏙️'}</span><div class="sc-who"><b>${esc(l.station ? l.sname + ' Station' : l.n)}</b><small>${esc(l.station ? l.n.replace(/^🚊 [^·]+· /, '') : (l.places?.length ? `${l.places.length} place${l.places.length > 1 ? 's' : ''} inside` : 'Tap a pin to see a restaurant'))}</small></div><button class="sc-x" data-sim="x" aria-label="Close">✕</button></div>${body}`;
+  b.hidden = false; buzz(6);
+}
+$('#simCard').addEventListener('click', (e) => { const id = e.target.closest('[data-bp]')?.dataset.bp; if (id != null) { openSheet(+id); } const x = e.target.closest('[data-sim="x"]'); if (x && !simN) $('#simCard').hidden = true; });
 let simOpen = false, lastStats = null;
 function renderSimStats(s) {
   lastStats = s; const b = $('#simStats'); if (!b || VIEW?.hide?.people) { if (b) b.hidden = true; return; }
@@ -622,12 +637,12 @@ function initMap() {
     isOpen: (p) => isOpen(p) !== false,
     onSelect: (all, spot) => { const places = all.filter((p) => city.sceneOk(p)); return places.length === 1 ? openSheet(places[0].id) : listSheet(places, spot.label); },
     onNpc: (n) => showSim(n),
-    hhNow: (p) => !!hhNow(p),
+    hhNow: (p) => !!hhNow(p), isOpen: (p) => isOpen(p) !== false,
     onStats: (s) => renderSimStats(s),
     onNpcGone: (n) => { toast(`👋 ${n.name} left downtown`); hideSim(); },
     onNpcFollow: (on) => { if (!on && simN) renderSim(); },
     onHistory: (n) => $('#mapBack').classList.toggle('show', n > 0),
-    onLandmark: (l) => toast(l.station ? l.n : `🏙️ ${l.n}`),
+    onLandmark: (l) => (l.bldg || l.station ? showBldg(l) : toast(`🏙️ ${l.n}`)),
     onCorner: (c, near) => showFound(c.label, near),
     onRotate: (a) => { $('#needle').style.transform = `rotate(${a}rad)`; },
     onNav: (st) => { lastNav = st; renderNav(st); },
