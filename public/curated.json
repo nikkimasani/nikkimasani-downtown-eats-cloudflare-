@@ -12784,5 +12784,107 @@
   "type": "Restaurant",
   "note": "Smash burgers restaurant.",
   "tryit": ""
+ },
+ {
+  "id": 643,
+  "name": "Simone on Sunset",
+  "address": "2418 Sunset Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Global"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Global restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 644,
+  "name": "Hidden Bar HTX",
+  "address": "2715 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Speakeasy inside Norigami"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Speakeasy inside Norigami.",
+  "tryit": ""
+ },
+ {
+  "id": 645,
+  "name": "Dutch Bros Coffee Rice Village",
+  "address": "2301 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Drive-thru coffee"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Drive-thru coffee.",
+  "tryit": ""
+ },
+ {
+  "id": 646,
+  "name": "Jollibee",
+  "address": "8001 S Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Filipino fried chicken"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Filipino fried chicken restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 647,
+  "name": "Olive Garden Kirby",
+  "address": "2929 Southwest Freeway, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
  }
 ]

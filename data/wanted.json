@@ -1629,7 +1629,8 @@
 {
 "n": "Simone on Sunset",
 "k": "rest",
-"c": "Global"
+"c": "Global",
+"a": "2418 Sunset Blvd"
 },
 {
 "n": "Johnny's Gold Brick",
@@ -1706,6 +1707,40 @@
 "k": "rest",
 "c": "Smash burgers",
 "a": "6100 Main St"
+},
+{
+"n": "Hidden Bar HTX",
+"k": "bar",
+"c": "Speakeasy inside Norigami",
+"a": "2715 Bissonnet St"
+},
+{
+"n": "Dutch Bros Coffee Rice Village",
+"k": "coffee",
+"c": "Drive-thru coffee",
+"a": "2301 University Blvd"
+},
+{
+"n": "Oishii",
+"k": "rest",
+"c": "Japanese & sushi",
+"a": "3764 Richmond Ave"
+},
+{
+"n": "Jollibee",
+"k": "rest",
+"c": "Filipino fried chicken",
+"a": "8001 S Main St"
+},
+{
+"n": "Olive Garden Kirby",
+"k": "rest",
+"c": "Italian"
+},
+{
+"n": "Trellis",
+"k": "rest",
+"c": "Restaurant"
 }
 ]
 }

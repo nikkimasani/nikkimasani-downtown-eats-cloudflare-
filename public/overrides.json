@@ -3278,6 +3278,46 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Simone on Sunset": {
+      "street": "2418 Sunset Blvd",
+      "lat": 29.723098,
+      "lng": -95.415359,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hidden Bar HTX": {
+      "street": "2715 Bissonnet St",
+      "lat": 29.725372,
+      "lng": -95.420879,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Dutch Bros Coffee Rice Village": {
+      "street": "2301 University Blvd",
+      "lat": 29.715048,
+      "lng": -95.412735,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Jollibee": {
+      "street": "8001 S Main St",
+      "lat": 29.693757,
+      "lng": -95.414845,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Olive Garden Kirby": {
+      "street": "2929 Southwest Freeway",
+      "lat": 29.729519,
+      "lng": -95.424915,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
