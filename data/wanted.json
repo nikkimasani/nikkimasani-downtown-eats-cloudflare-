@@ -1741,6 +1741,96 @@
 "n": "Trellis",
 "k": "rest",
 "c": "Restaurant"
+},
+{
+"n": "The Savoy",
+"k": "bar",
+"c": "Bar & grill with heated patio",
+"a": "4402 Emancipation Ave"
+},
+{
+"n": "DBar Houston",
+"k": "bar",
+"c": "Lounge",
+"a": "4409 Emancipation Ave"
+},
+{
+"n": "Esther's Cajun Cafe & Soul Food",
+"k": "rest",
+"c": "Cajun & soul food",
+"a": "3010 Emancipation Ave"
+},
+{
+"n": "Leighton's House of Lamb + Ramen",
+"k": "rest",
+"c": "Lamb & ramen",
+"a": "4405 Emancipation Ave"
+},
+{
+"n": "Lula Mae's Garden",
+"k": "rest",
+"c": "Southern",
+"a": "2020 Emancipation Ave"
+},
+{
+"n": "Caribbean Jerk Palace",
+"k": "rest",
+"c": "Caribbean jerk",
+"a": "3803 Emancipation Ave"
+},
+{
+"n": "The Doshi House",
+"k": "coffee",
+"c": "Coffeehouse & vegetarian kitchen",
+"a": "3419 Emancipation Ave"
+},
+{
+"n": "The Bar at 4212",
+"k": "bar",
+"c": "Cocktail lounge, 30+",
+"a": "4212 Emancipation Ave"
+},
+{
+"n": "The Spot 3rd Ward",
+"k": "bar",
+"c": "Neighborhood dive bar",
+"a": "4709 Emancipation Ave"
+},
+{
+"n": "The Spot EaDo",
+"k": "bar",
+"c": "Bar & lounge",
+"a": "2003 Emancipation Ave"
+},
+{
+"n": "The Weekend Bar & Lounge",
+"k": "bar",
+"c": "Cocktail bar",
+"a": "2222 Emancipation Ave"
+},
+{
+"n": "Quad HTX Sports Lounge",
+"k": "bar",
+"c": "Southern food & sports lounge",
+"a": "4608 Almeda Rd"
+},
+{
+"n": "Day and Night Almeda",
+"k": "rest",
+"c": "24-hour breakfast & brunch, full bar",
+"a": "5101 Almeda Rd"
+},
+{
+"n": "The Tipsy Lounge",
+"k": "bar",
+"c": "Lounge with DJs",
+"a": "4806 Almeda Rd"
+},
+{
+"n": "BLVD Park",
+"k": "bar",
+"c": "Heights bar & game-day hangout",
+"a": "1119 W 20th St"
 }
 ]
 }

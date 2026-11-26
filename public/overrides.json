@@ -3303,19 +3303,123 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
-    "Jollibee": {
-      "street": "8001 S Main St",
-      "lat": 29.693757,
-      "lng": -95.414845,
-      "source": "US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
-    },
     "Olive Garden Kirby": {
       "street": "2929 Southwest Freeway",
       "lat": 29.729519,
       "lng": -95.424915,
       "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Spot EaDo": {
+      "street": "2003 Emancipation Ave",
+      "lat": 29.735827,
+      "lng": -95.303528,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Quad HTX Sports Lounge": {
+      "street": "4608 Almeda Rd",
+      "lat": 29.7285,
+      "lng": -95.376879,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Day and Night Almeda": {
+      "street": "5101 Almeda Rd",
+      "lat": 29.723569,
+      "lng": -95.378415,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Tipsy Lounge": {
+      "street": "4806 Almeda Rd",
+      "lat": 29.726753,
+      "lng": -95.377474,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Savoy": {
+      "street": "4402 Emancipation Ave",
+      "lat": 29.726917,
+      "lng": -95.371067,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "DBar Houston": {
+      "street": "4409 Emancipation Ave",
+      "lat": 29.726819,
+      "lng": -95.370984,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Esther's Cajun Cafe & Soul Food": {
+      "street": "3010 Emancipation Ave",
+      "lat": 29.735318,
+      "lng": -95.364408,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Leighton's House of Lamb + Ramen": {
+      "street": "4405 Emancipation Ave",
+      "lat": 29.726841,
+      "lng": -95.370967,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lula Mae's Garden": {
+      "street": "2020 Emancipation Ave",
+      "lat": 29.742101,
+      "lng": -95.35904,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Caribbean Jerk Palace": {
+      "street": "3803 Emancipation Ave",
+      "lat": 29.730613,
+      "lng": -95.367984,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Bar at 4212": {
+      "street": "4212 Emancipation Ave",
+      "lat": 29.728097,
+      "lng": -95.370121,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Spot 3rd Ward": {
+      "street": "4709 Emancipation Ave",
+      "lat": 29.72493,
+      "lng": -95.372477,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Weekend Bar & Lounge": {
+      "street": "2222 Emancipation Ave",
+      "lat": 29.7406,
+      "lng": -95.360213,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "BLVD Park": {
+      "street": "1119 W 20th St",
+      "lat": 29.803785,
+      "lng": -95.418484,
+      "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
     }

@@ -12849,26 +12849,6 @@
  },
  {
   "id": 646,
-  "name": "Jollibee",
-  "address": "8001 S Main St, Houston, TX",
-  "tunnel": null,
-  "cuisines": [
-   "Filipino fried chicken"
-  ],
-  "meals": [
-   "Lunch",
-   "Dinner"
-  ],
-  "price": 2,
-  "vibes": [
-   "casual"
-  ],
-  "type": "Restaurant",
-  "note": "Filipino fried chicken restaurant.",
-  "tryit": ""
- },
- {
-  "id": 647,
   "name": "Olive Garden Kirby",
   "address": "2929 Southwest Freeway, Houston, TX",
   "tunnel": null,
@@ -12885,6 +12865,295 @@
   ],
   "type": "Restaurant",
   "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 647,
+  "name": "The Spot EaDo",
+  "address": "2003 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar & lounge"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Bar & lounge.",
+  "tryit": ""
+ },
+ {
+  "id": 648,
+  "name": "Quad HTX Sports Lounge",
+  "address": "4608 Almeda Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Southern food & sports lounge"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Southern food & sports lounge.",
+  "tryit": ""
+ },
+ {
+  "id": 649,
+  "name": "Day and Night Almeda",
+  "address": "5101 Almeda Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "24-hour breakfast & brunch, full bar"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "24-hour breakfast & brunch, full bar restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 650,
+  "name": "The Tipsy Lounge",
+  "address": "4806 Almeda Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lounge with DJs"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Lounge with DJs.",
+  "tryit": ""
+ },
+ {
+  "id": 651,
+  "name": "The Savoy",
+  "address": "4402 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar & grill with heated patio"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Bar & grill with heated patio.",
+  "tryit": ""
+ },
+ {
+  "id": 652,
+  "name": "DBar Houston",
+  "address": "4409 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lounge"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Lounge.",
+  "tryit": ""
+ },
+ {
+  "id": 653,
+  "name": "Esther's Cajun Cafe & Soul Food",
+  "address": "3010 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun & soul food"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Cajun & soul food restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 654,
+  "name": "Leighton's House of Lamb + Ramen",
+  "address": "4405 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lamb & ramen"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Lamb & ramen restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 655,
+  "name": "Lula Mae's Garden",
+  "address": "2020 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Southern"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Southern restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 656,
+  "name": "Caribbean Jerk Palace",
+  "address": "3803 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Caribbean jerk"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Caribbean jerk restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 657,
+  "name": "The Bar at 4212",
+  "address": "4212 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail lounge, 30+"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail lounge, 30+.",
+  "tryit": ""
+ },
+ {
+  "id": 658,
+  "name": "The Spot 3rd Ward",
+  "address": "4709 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Neighborhood dive bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Neighborhood dive bar.",
+  "tryit": ""
+ },
+ {
+  "id": 659,
+  "name": "The Weekend Bar & Lounge",
+  "address": "2222 Emancipation Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 660,
+  "name": "BLVD Park",
+  "address": "1119 W 20th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Heights bar & game-day hangout"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Heights bar & game-day hangout.",
   "tryit": ""
  }
 ]

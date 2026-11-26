@@ -9,11 +9,18 @@ const OF = JSON.parse(fs.readFileSync('public/overrides.json', 'utf8')); const O
 const P = JSON.parse(fs.readFileSync('public/places.json', 'utf8'));
 const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’']/g, '').replace(/&/g, 'and').replace(/\b(the|houston|htx|bar|lounge|restaurant|kitchen|and)\b/g, '').replace(/[^a-z0-9]/g, '');
 const have = new Set([...C.map((c) => norm(c.name)), ...P.places.map((p) => norm(p.name))]);
-const BOX = { s: 29.645, w: -95.495, n: 29.815, e: -95.300 };   // the inner loop, out to the Galleria
+const BOX = { s: 29.645, w: -95.495, n: 29.815, e: -95.262 };   // the whole 610 Loop, out to the Galleria, Bellaire and Meyerland
 const inBox = (la, lo) => la > BOX.s && la < BOX.n && lo > BOX.w && lo < BOX.e;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const UA = { 'user-agent': 'downtown-eats personal dining map (github.com/nikkimasani/nikkimasani-downtown-eats)' };
+// Emancipation Ave was Dowling St until 2017 and the Census street file still uses the old name in places
+const OLD_NAMES = [[/\bEmancipation Ave(nue)?\b/i, 'Dowling St']];
 async function census(street) {
+  const g = await census1(street); if (g) return g;
+  for (const [re, old] of OLD_NAMES) if (re.test(street)) { const h = await census1(street.replace(re, old)); if (h) return h; }
+  return null;
+}
+async function census1(street) {
   try {
     const u = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?benchmark=Public_AR_Current&format=json&address=' + encodeURIComponent(/,/.test(street) ? `${street}, TX` : `${street}, Houston, TX`);
     const c = (await (await fetch(u, { signal: AbortSignal.timeout(20000) })).json())?.result?.addressMatches?.[0]?.coordinates;
