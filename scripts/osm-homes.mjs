@@ -6,7 +6,7 @@ import fs from 'fs';
 // the full detail boxes (scripts/osm-buildings.mjs); anything inside them is already drawn, except the Heights' houses
 const BOXES = [[29.7380, -95.3790, 29.7715, -95.3100], [29.7580, -95.3480, 29.7740, -95.3200], [29.7640, -95.3860, 29.7735, -95.3760], [29.7675, -95.4000, 29.7725, -95.3950], [29.7540, -95.4130, 29.7650, -95.3770], [29.7310, -95.3890, 29.7480, -95.3600]];
 // where to fill: the ring of neighbourhoods around them (Fourth Ward, Montrose north, Rice Military, Sixth Ward, Midtown/Third Ward edge, Fifth Ward edge) and the Heights
-const FILL = [[29.7300, -95.4150, 29.7745, -95.3100], [29.7745, -95.4200, 29.8100, -95.3700], [29.7525, -95.3890, 29.7605, -95.3745], [29.7330, -95.4100, 29.7530, -95.3890], [29.7080, -95.4050, 29.7330, -95.3800], [29.7050, -95.3800, 29.7400, -95.3350], [29.7200, -95.4450, 29.7620, -95.4100], [29.7250, -95.4800, 29.7700, -95.4450]];
+const FILL = [[29.7300, -95.4150, 29.7745, -95.3100], [29.7745, -95.4200, 29.8100, -95.3700], [29.7525, -95.3890, 29.7605, -95.3745], [29.7330, -95.4100, 29.7530, -95.3890], [29.7080, -95.4050, 29.7330, -95.3800], [29.7050, -95.3800, 29.7400, -95.3350], [29.7200, -95.4450, 29.7620, -95.4100], [29.7250, -95.4800, 29.7700, -95.4450], [29.7080, -95.4300, 29.7200, -95.4050]];
 const FILTERED = FILL.slice(1);   // osm-buildings.mjs keeps only the non-houses here
 const T = 0.004;   // tile size in degrees (~440 m)
 const EPS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];

@@ -169,6 +169,7 @@
       <button data-m="tunnel" class="tun">🚇 Tunnels</button>
     </div>
     <button class="pill" id="areaBtn" aria-expanded="false" title="Jump to an area">📍<span class="lbl"> Area</span></button>
+    <button class="pill" id="listBtn" aria-pressed="false" title="See this area as a list">📋<span class="lbl"> List</span></button>
     <button class="pill gamechip" id="gameChip" hidden></button>
     <button class="pill simstats" id="simStats" hidden aria-expanded="false"></button>
     <button class="pill" id="moreBtn" aria-expanded="false" title="More options">☰<span class="lbl"> More</span></button>
@@ -197,6 +198,18 @@
       </div>
     </div>
 
+  </div>
+  <div class="arealist" id="areaView" hidden aria-label="Places in this area">
+    <div class="al-head">
+      <div class="al-areas" id="alAreas" role="group" aria-label="Area"></div>
+      <div class="al-row">
+        <div class="seg" id="alKind" role="group" aria-label="Kind"><button data-k="all" class="on">All</button><button data-k="food">🍽️ Food</button><button data-k="bar">🍸 Bars</button><button data-k="coffee">☕ Coffee</button></div>
+        <button class="pill" id="alOpen" aria-pressed="false">🟢 Open now</button>
+        <button class="pill" id="alMap">🗺️ Map</button>
+      </div>
+      <div class="al-count" id="alCount"></div>
+    </div>
+    <div class="al-body" id="alBody"></div>
   </div>
   <div class="findbox" id="findBox"><div id="findList"></div></div>
   <div class="mapchips" id="mapChips"></div>

@@ -2389,6 +2389,304 @@
       "source": "OpenStreetMap n3638003786; address and phone from Atly/OpenTable listings",
       "checked": "2026-11-25",
       "notInDirectory": true
+    },
+    "Cyclone Anaya's Rice Village": {
+      "street": "5214 Morningside Dr",
+      "lat": 29.71894,
+      "lng": -95.415022,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cafe Rabelais": {
+      "street": "2442 Times Blvd",
+      "lat": 29.716725,
+      "lng": -95.415693,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Navy Blue": {
+      "street": "2445 Times Blvd",
+      "lat": 29.716611,
+      "lng": -95.415725,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kasra Persian Grill": {
+      "street": "2514 Times Blvd",
+      "lat": 29.716718,
+      "lng": -95.416973,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Duck N Bao Rice Village": {
+      "street": "5215 Kelvin Dr",
+      "lat": 29.718897,
+      "lng": -95.416636,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Roma": {
+      "street": "2347 University Blvd",
+      "lat": 29.715026,
+      "lng": -95.414237,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hungry's Rice Village": {
+      "street": "2356 Rice Blvd",
+      "lat": 29.717529,
+      "lng": -95.413935,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Upstairs at Hungry's": {
+      "street": "2356 Rice Blvd",
+      "lat": 29.717529,
+      "lng": -95.413935,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Coppa Osteria": {
+      "street": "5210 Morningside Dr",
+      "lat": 29.718959,
+      "lng": -95.415022,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hamsa": {
+      "street": "5555 Morningside Dr",
+      "lat": 29.716245,
+      "lng": -95.41486,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hudson House Rice Village": {
+      "street": "2414 University Blvd",
+      "lat": 29.715128,
+      "lng": -95.415205,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Milton's": {
+      "street": "5117 Kelvin Dr",
+      "lat": 29.71968,
+      "lng": -95.416638,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Istanbul Grill & Deli": {
+      "street": "5613 Morningside Dr",
+      "lat": 29.715742,
+      "lng": -95.414848,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Goode Company BBQ Kirby": {
+      "street": "5109 Kirby Dr",
+      "lat": 29.727084,
+      "lng": -95.418536,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Rice Box Rice Village": {
+      "street": "5504 Morningside Dr",
+      "lat": 29.716585,
+      "lng": -95.415003,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Local Foods Rice Village": {
+      "street": "2424 Dunstan Rd",
+      "lat": 29.719118,
+      "lng": -95.415422,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lee's Den": {
+      "street": "2424 Dunstan Rd",
+      "lat": 29.719118,
+      "lng": -95.415422,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Sixty Vines Rice Village": {
+      "street": "2540 University Blvd",
+      "lat": 29.715114,
+      "lng": -95.417382,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Sushi by Hidden": {
+      "street": "5216 Morningside Dr",
+      "lat": 29.718931,
+      "lng": -95.415021,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Salento Bistrot": {
+      "street": "2407 Rice Blvd",
+      "lat": 29.717415,
+      "lng": -95.415095,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mana Thai Kitchen": {
+      "street": "2512 Rice Blvd",
+      "lat": 29.717506,
+      "lng": -95.416944,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Ginger Man": {
+      "street": "5607 Morningside Dr",
+      "lat": 29.715785,
+      "lng": -95.414848,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Little Woodrow's Rice Village": {
+      "street": "5611 Morningside Dr",
+      "lat": 29.715756,
+      "lng": -95.414848,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Brian O'Neill's": {
+      "street": "5555 Morningside Dr",
+      "lat": 29.716245,
+      "lng": -95.41486,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kelvin Arms": {
+      "street": "2424 Dunstan Rd",
+      "lat": 29.719118,
+      "lng": -95.415422,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Benjy's Rice Village": {
+      "street": "2424 Dunstan Rd",
+      "lat": 29.719118,
+      "lng": -95.415422,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "FRNDS Restaurant & Lounge": {
+      "street": "2441 University Blvd",
+      "lat": 29.71501,
+      "lng": -95.415634,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "D'Amico's Italian Market Cafe": {
+      "street": "5510 Morningside Dr",
+      "lat": 29.716544,
+      "lng": -95.415002,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Sweet Paris Creperie Rice Village": {
+      "street": "2420 Rice Blvd",
+      "lat": 29.717526,
+      "lng": -95.415327,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Helen Greek Food & Wine": {
+      "street": "2429 Rice Blvd",
+      "lat": 29.71741,
+      "lng": -95.415457,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "El Meson": {
+      "street": "2425 University Blvd",
+      "lat": 29.715012,
+      "lng": -95.415369,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kubo's Sushi": {
+      "street": "2414 University Blvd",
+      "lat": 29.715128,
+      "lng": -95.415205,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Coco Crepes Rice Village": {
+      "street": "2339 University Blvd",
+      "lat": 29.715027,
+      "lng": -95.414145,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Black Walnut Cafe Rice Village": {
+      "street": "5510 Morningside Drive",
+      "lat": 29.715694,
+      "lng": -95.415292,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fancy's HTX": {
+      "street": "1947 W Gray St Suite 200",
+      "geoStreet": "1947 W Gray St",
+      "lat": 29.75302,
+      "lng": -95.40665,
+      "hours": "Wed 5pm–12am, Thu–Fri 5pm–2am, Sat 7pm–2am",
+      "source": "OpenTable listing; pin placed beside 1971 W Gray (Cocody) on the same block",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Winfield's Chocolate Bar Rice Village": {
+      "street": "2531 University Blvd",
+      "lat": 29.715,
+      "lng": -95.417218,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Shake Shack Rice Village": {
+      "street": "6205 Kirby Dr",
+      "lat": 29.715766,
+      "lng": -95.41835,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }

@@ -405,7 +405,7 @@ export class CityMap {
     const groups = new Map();
     const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
     this.offMap = new Set();
-    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115], [29.7580, -95.3480, 29.7740, -95.3200], [29.7640, -95.3860, 29.7735, -95.3760], [29.7675, -95.4000, 29.7725, -95.3950], [29.7540, -95.4130, 29.7650, -95.3770], [29.7310, -95.3890, 29.7525, -95.3745], [29.7310, -95.3745, 29.7480, -95.3600], [29.7620, -95.3770, 29.7745, -95.3600], [29.7745, -95.4200, 29.8100, -95.3700], [29.7525, -95.3890, 29.7605, -95.3745], [29.7330, -95.4100, 29.7530, -95.3890], [29.7080, -95.4050, 29.7330, -95.3800], [29.7050, -95.3800, 29.7400, -95.3350], [29.7200, -95.4450, 29.7620, -95.4100], [29.7250, -95.4800, 29.7700, -95.4450], [29.7620, -95.4250, 29.7745, -95.3950]];   // + East River across the bayou (City Cellars, Birdies), + Sawyer Yards (Tejas Brewery)   // + EaDo east of US-59 (Roots, Nancy's Hustle), + the East End / Second Ward along Navigation & Harrisburg (By The Wayside)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
+    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115], [29.7580, -95.3480, 29.7740, -95.3200], [29.7640, -95.3860, 29.7735, -95.3760], [29.7675, -95.4000, 29.7725, -95.3950], [29.7540, -95.4130, 29.7650, -95.3770], [29.7310, -95.3890, 29.7525, -95.3745], [29.7310, -95.3745, 29.7480, -95.3600], [29.7620, -95.3770, 29.7745, -95.3600], [29.7745, -95.4200, 29.8100, -95.3700], [29.7525, -95.3890, 29.7605, -95.3745], [29.7330, -95.4100, 29.7530, -95.3890], [29.7080, -95.4050, 29.7330, -95.3800], [29.7050, -95.3800, 29.7400, -95.3350], [29.7200, -95.4450, 29.7620, -95.4100], [29.7250, -95.4800, 29.7700, -95.4450], [29.7080, -95.4300, 29.7200, -95.4050], [29.7620, -95.4250, 29.7745, -95.3950]];   // + East River across the bayou (City Cellars, Birdies), + Sawyer Yards (Tejas Brewery)   // + EaDo east of US-59 (Roots, Nancy's Hustle), + the East End / Second Ward along Navigation & Harrisburg (By The Wayside)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
     const inExtra = (p) => EXTRA.some(([s0, w0, n0, e0]) => p.lat >= s0 && p.lat <= n0 && p.lng >= w0 && p.lng <= e0);
     for (const p of pts) {
       if (offMap(proj(p.lat, p.lng)) && !inExtra(p)) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
@@ -2369,9 +2369,9 @@ export class CityMap {
     // if this device can't keep up, draw at a slightly lower resolution so panning stays smooth
     if (raw > 0 && raw < 0.5 && !document.hidden) {
       this.ema = (this.ema ?? 0.016) * 0.95 + raw * 0.05; this.slowFor = this.ema > 0.034 ? (this.slowFor || 0) + raw : 0;
-      if (this.slowFor > 1.5 && (this.maxDpr || 2) > 1) { this.maxDpr = Math.max(1, (this.maxDpr || 2) - 0.5); this.slowFor = 0; this.resize(); }
+      if (this.slowFor > 1.5 && (this.maxDpr || 2) > 1 && !this.gesturing()) { this.maxDpr = Math.max(1, (this.maxDpr || 2) - 0.5); this.slowFor = 0; this.resize(); }
     }
-    { const far = this.farRes ? this.v.s < 0.5 : this.v.s < 0.42; if (far !== !!this.farRes) { this.farRes = far; this.resize(); } }
+    if (!this.gesturing()) { const far = this.farRes ? this.v.s < 0.5 : this.v.s < 0.42; if (far !== !!this.farRes) { this.farRes = far; this.resize(); } }
     if (this.zoomAnim) { const z = this.zoomAnim, step = Math.min(z.k - z.done, z.k * dt * 5) || 0; if (Math.abs(z.k - z.done) < 1e-3 || !step) this.zoomAnim = null; else { this.zoomAt(z.sx, z.sy, Math.exp(step)); z.done += step; } }
     if (this.fling) { const f = this.fling, k = Math.min(3, dt * 60); this.v.ox += f.vx * k; this.v.oy += f.vy * k; f.vx *= Math.pow(0.92, k); f.vy *= Math.pow(0.92, k); if (Math.hypot(f.vx, f.vy) < 0.3) this.fling = null; }
     if (!this.pointers?.size && !this.anim) this.keepInBounds();
@@ -2395,14 +2395,31 @@ export class CityMap {
     const moving = !!(this.pointers?.size || this.fling || this.zoomAnim || this.rotAnim || this.anim); this.busy = moving;
     const gap = moving ? 0 : Math.max(33, (this.drawMs || 10) * 3);
     if (this.paused || t - (this._lastDraw || 0) < gap) return;
-    this._lastDraw = t; const d0 = performance.now(); this.draw(t); const ms = performance.now() - d0;
+    if (moving && this.snapOk()) { const k = this.v.s / this.snapV.s, stale = t - this.snapV.t;
+      if (k > 0.6 && k < 1.7 && stale < Math.max(160, (this.drawMs || 10) * 6)) { this.blitSnap(); this._lastDraw = t; return; } }
+    this._lastDraw = t; const d0 = performance.now(); this.draw(t); const ms = performance.now() - d0; this.takeSnap(t);
     this.drawMs = (this.drawMs ?? ms) * 0.9 + ms * 0.1;
     this.slowQ = this.drawMs > 28 ? (this.slowQ || 0) + 1 : 0; if (!this.lowQ && this.slowQ > 40) this.lowQ = true;
   }
 
+  gesturing() { return !!(this.pointers?.size || this.zoomAnim || this.anim || this.fling || this.rotAnim); }
+  // Zoom smoothing: every full frame is copied to a snapshot. While a pinch, double-tap or cluster zoom is moving, the
+  // snapshot is scaled to the new zoom (the projection is a uniform scale + offset, so it lines up exactly) and the
+  // whole city is only redrawn a few times a second, then once more, sharp, when the fingers stop.
+  snapOk() { const S = this.snapV, v = this.v; return !!(S && this.snap && S.w === this.cv.width && S.h === this.cv.height && S.r === v.r && S.cx === v.cx && S.cy === v.cy && S.mode === this.mode && Math.abs(S.s - v.s) > 1e-6); }
+  takeSnap(t) {
+    const c = this.cv; let sn = this.snap; if (!sn || sn.width !== c.width || sn.height !== c.height) { sn = this.snap = document.createElement('canvas'); sn.width = c.width; sn.height = c.height; }
+    const g = sn.getContext('2d'); g.globalCompositeOperation = 'copy'; g.drawImage(c, 0, 0);
+    const v = this.v; this.snapV = { t, s: v.s, ox: v.ox, oy: v.oy, r: v.r, cx: v.cx, cy: v.cy, mode: this.mode, w: c.width, h: c.height, bg: this._bgCol || '#e9eef3' };
+  }
+  blitSnap() {
+    const ctx = this.ctx, S = this.snapV, v = this.v, k = v.s / S.s, dpr = this.cv.width / this.W;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = S.bg; ctx.fillRect(0, 0, this.cv.width, this.cv.height);
+    ctx.setTransform(k, 0, 0, k, (v.ox - S.ox * k) * dpr, (v.oy - S.oy * k) * dpr); ctx.imageSmoothingEnabled = true; ctx.drawImage(this.snap, 0, 0); ctx.restore();
+  }
   draw(now) {
     const ctx = this.ctx, v = this.v, B = this.bounds, night = this.nightAmount(), mode = this.mode, lod = this.lod(), N = night > 0.5;
-    ctx.fillStyle = mode === 'tunnel' ? '#121624' : N ? '#1d2338' : '#e9eef3'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = this._bgCol = mode === 'tunnel' ? '#121624' : N ? '#1d2338' : '#e9eef3'; ctx.fillRect(0, 0, this.W, this.H);
     this._dusk = night; this._wxNow = this.wxState();
     { const h = this.clockH(), we = this.isWeekend(); this._officeLit = h >= 5 && h < 17.5 ? 1 : h < 19 ? 0.85 : h < 21 ? 0.6 : h < 23 ? 0.42 : 0.28; if (we) this._officeLit *= 0.7; } const sky = mode === 'tunnel' ? null : this.skyColors(night, this._warm || 0);
     if (sky) { const g = ctx.createLinearGradient(0, 0, 0, this.H); g.addColorStop(0, sky[0]); g.addColorStop(0.45, sky[1]); g.addColorStop(1, N ? '#1d2338' : '#e9eef3'); ctx.fillStyle = g; ctx.fillRect(0, 0, this.W, this.H); }

@@ -47,6 +47,7 @@ const AREAS = [
   { k: 'thirdward', l: 'Third Ward & Almeda', e: '🎓', b: [29.7050, -95.3800, 29.7400, -95.3350] },
   { k: 'upperkirby', l: 'Upper Kirby & River Oaks', e: '🌿', b: [29.7200, -95.4450, 29.7620, -95.4100] },
   { k: 'uptown', l: 'Uptown, Galleria & Post Oak', e: '🛍️', b: [29.7250, -95.4800, 29.7700, -95.4450] },
+  { k: 'ricevillage', l: 'Rice Village & West U', e: '🛒', b: [29.7080, -95.4300, 29.7200, -95.4050] },
 ];
 const inGrid = (r) => { let c = null; try { c = city; } catch (e) { return null; } if (!c?.avenues) return null; const [x, y] = city.proj(r.lat, r.lng), A = city.avenues.map((a) => a.x), C = city.cross.map((c) => c.y); return x >= Math.min(...A) && x <= Math.max(...A) && y >= Math.min(...C) && y <= Math.max(...C); };
 const areaOf = (r) => { if (r.lat == null) return null; if (r._area !== undefined && r._areaK === r.lat + r.lng) return r._area; const g = inGrid(r); const v = g ? 'downtown' : areaBox(r, g === null); if (g !== null) { r._area = v; r._areaK = r.lat + r.lng; } return v; };
@@ -1131,7 +1132,7 @@ function show(v) {
   if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee(); if (v === 'steak') renderSteak();
   if (v === 'map' && !GEO_READY && !city) { GEO_P.then(() => { if ($('#v-map').classList.contains('on')) show('map'); }); return; }
   if (v === 'map') { initMap(); city.resize(); if (city._bgBuilt) { city._bgBuilt = false; city.anim = null; city.fit(); } }
-  if (city) city.paused = v !== 'map';
+  if (city) city.paused = v !== 'map' || !$('#areaView').hidden;
   if (v !== 'map') window.scrollTo(0, 0);
   try { history.replaceState(null, '', '#' + v); } catch (e) {}
 }
@@ -1261,3 +1262,32 @@ $('#areaList').onclick = (e) => {
   chip = 'area:' + mapArea; renderChips(); applyChip();
 };
 renderAreaMenu();
+
+// ---------- the map's list view: every spot in one area, as cards ----------
+let alArea = null, alKind = 'all', alOpenOnly = false;
+const alKindOk = (r) => alKind === 'all' || (alKind === 'coffee' ? isCoffee(r) : alKind === 'bar' ? (r.bar || r.night) && !isCoffee(r) : r.day !== false && !isCoffee(r) && !(r.bar && !r.day));
+function centerArea() { try { const c = city.screenCenter(), ll = city.unproj?.(c.x, c.y); if (ll) return areaBox({ lat: ll[0], lng: ll[1] }, true); } catch (e) {} return null; }
+function renderAreaView() {
+  const counts = {}; for (const r of DATA) { const a = areaOf(r); if (a) counts[a] = (counts[a] || 0) + 1; }
+  if (!alArea) alArea = mapArea || centerArea() || 'downtown';
+  $('#alAreas').innerHTML = AREAS.filter((a) => counts[a.k]).map((a) => `<button class="chip ${a.k === alArea ? 'on' : ''}" data-al="${a.k}">${a.e} ${esc(a.l.split(/,| &/)[0])}<small>${counts[a.k]}</small></button>`).join('');
+  $('#alKind').querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.k === alKind));
+  $('#alOpen').classList.toggle('on', alOpenOnly); $('#alOpen').setAttribute('aria-pressed', alOpenOnly);
+  const list = DATA.filter((r) => areaOf(r) === alArea && alKindOk(r) && (!alOpenOnly || openLabel(r).open))
+    .map((r) => ({ r, o: openLabel(r), hh: hhNow(r) }))
+    .sort((a, b) => (b.o.open === true) - (a.o.open === true) || !!b.hh - !!a.hh || a.r.name.localeCompare(b.r.name));
+  const A = AREAS.find((a) => a.k === alArea);
+  $('#alCount').textContent = `${list.length} ${list.length === 1 ? 'place' : 'places'} in ${A ? A.l : 'this area'}${alOpenOnly ? ' open now' : ''} · open ones first`;
+  $('#alBody').innerHTML = list.length ? list.map((x) => card(x.r)).join('') : `<div class="al-empty">Nothing here${alOpenOnly ? ' is open right now' : ' for that filter'}. Try another area or turn off a filter.</div>`;
+  const on = $('#alAreas .on'); if (on) on.scrollIntoView({ block: 'nearest', inline: 'center' });
+}
+function showAreaView(on) {
+  $('#areaView').hidden = !on; $('#listBtn').classList.toggle('on', on); $('#listBtn').setAttribute('aria-pressed', on);
+  if (city) city.paused = on;   // nothing to draw behind the list: give the phone a rest
+  if (on) { alArea = mapArea || centerArea() || alArea || 'downtown'; renderAreaView(); $('#alBody').scrollTop = 0; }
+}
+$('#listBtn').onclick = () => showAreaView($('#areaView').hidden);
+$('#alMap').onclick = () => { showAreaView(false); if (alArea && alArea !== mapArea && city) { mapArea = alArea; renderAreaMenu(); chip = 'area:' + mapArea; renderChips(); applyChip(); } };
+$('#alAreas').onclick = (e) => { const b = e.target.closest('[data-al]'); if (!b) return; alArea = b.dataset.al; renderAreaView(); $('#alBody').scrollTop = 0; };
+$('#alKind').onclick = (e) => { const b = e.target.closest('[data-k]'); if (!b) return; alKind = b.dataset.k; renderAreaView(); };
+$('#alOpen').onclick = () => { alOpenOnly = !alOpenOnly; renderAreaView(); };

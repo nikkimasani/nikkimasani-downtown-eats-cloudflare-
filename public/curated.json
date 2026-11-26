@@ -10484,5 +10484,761 @@
   "type": "Bar",
   "note": "Pink-and-green Cajun-Creole bar on Main St with one of Midtown's best patios. Houston Press Best Bar; trivia, drag brunch, karaoke and a holiday Miracle pop-up. Card only.",
   "tryit": "Fried-chicken Crunchwrap 2.0, lemon pepper wings or a shrimp po-boy; brunch on weekends."
+ },
+ {
+  "id": 532,
+  "name": "Cyclone Anaya's Rice Village",
+  "address": "5214 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Tex-Mex restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 533,
+  "name": "Cafe Rabelais",
+  "address": "2442 Times Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "French"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "French restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 534,
+  "name": "Navy Blue",
+  "address": "2445 Times Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Seafood"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Seafood restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 535,
+  "name": "Kasra Persian Grill",
+  "address": "2514 Times Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Persian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Persian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 536,
+  "name": "Duck N Bao Rice Village",
+  "address": "5215 Kelvin Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Chinese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Chinese restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 537,
+  "name": "Roma",
+  "address": "2347 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 538,
+  "name": "Hungry's Rice Village",
+  "address": "2356 Rice Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American cafe"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "American cafe restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 539,
+  "name": "Upstairs at Hungry's",
+  "address": "2356 Rice Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Rooftop terrace"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Rooftop Bar",
+  "note": "Rooftop terrace.",
+  "tryit": ""
+ },
+ {
+  "id": 540,
+  "name": "Coppa Osteria",
+  "address": "5210 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 541,
+  "name": "Hamsa",
+  "address": "5555 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Israeli"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Israeli restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 542,
+  "name": "Hudson House Rice Village",
+  "address": "2414 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Seafood & burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Seafood & burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 543,
+  "name": "Milton's",
+  "address": "5117 Kelvin Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 544,
+  "name": "Istanbul Grill & Deli",
+  "address": "5613 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Turkish"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Turkish restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 545,
+  "name": "Goode Company BBQ Kirby",
+  "address": "5109 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "BBQ restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 546,
+  "name": "Rice Box Rice Village",
+  "address": "5504 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Chinese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Chinese restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 547,
+  "name": "Local Foods Rice Village",
+  "address": "2424 Dunstan Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sandwiches & salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sandwiches & salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 548,
+  "name": "Lee's Den",
+  "address": "2424 Dunstan Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine & cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Wine & cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 549,
+  "name": "Sixty Vines Rice Village",
+  "address": "2540 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine bar & American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Wine bar & American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 550,
+  "name": "Sushi by Hidden",
+  "address": "5216 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sushi omakase"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sushi omakase restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 551,
+  "name": "Salento Bistrot",
+  "address": "2407 Rice Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian bistro"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian bistro restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 552,
+  "name": "Mana Thai Kitchen",
+  "address": "2512 Rice Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Thai"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Thai restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 553,
+  "name": "The Ginger Man",
+  "address": "5607 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Craft beer pub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Craft beer pub.",
+  "tryit": ""
+ },
+ {
+  "id": 554,
+  "name": "Little Woodrow's Rice Village",
+  "address": "5611 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sports bar & patio"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Sports bar & patio.",
+  "tryit": ""
+ },
+ {
+  "id": 555,
+  "name": "Brian O'Neill's",
+  "address": "5555 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Irish pub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Irish pub.",
+  "tryit": ""
+ },
+ {
+  "id": 556,
+  "name": "Kelvin Arms",
+  "address": "2424 Dunstan Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Scottish pub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Scottish pub.",
+  "tryit": ""
+ },
+ {
+  "id": 557,
+  "name": "Benjy's Rice Village",
+  "address": "2424 Dunstan Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "New American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "New American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 558,
+  "name": "FRNDS Restaurant & Lounge",
+  "address": "2441 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lounge & restaurant"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Lounge & restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 559,
+  "name": "D'Amico's Italian Market Cafe",
+  "address": "5510 Morningside Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 560,
+  "name": "Sweet Paris Creperie Rice Village",
+  "address": "2420 Rice Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Crepes & café"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Crepes & café.",
+  "tryit": ""
+ },
+ {
+  "id": 561,
+  "name": "Helen Greek Food & Wine",
+  "address": "2429 Rice Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Greek"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Greek restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 562,
+  "name": "El Meson",
+  "address": "2425 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cuban & Tex-Mex"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Cuban & Tex-Mex restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 563,
+  "name": "Kubo's Sushi",
+  "address": "2414 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sushi"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sushi restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 564,
+  "name": "Coco Crepes Rice Village",
+  "address": "2339 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Crepes & café"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Crepes & café.",
+  "tryit": ""
+ },
+ {
+  "id": 565,
+  "name": "Black Walnut Cafe Rice Village",
+  "address": "5510 Morningside Drive, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American cafe"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "American cafe restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 566,
+  "name": "Fancy's HTX",
+  "address": "1947 W Gray St Suite 200, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American",
+   "Sushi"
+  ],
+  "meals": [
+   "Dinner",
+   "Late Night",
+   "Full Service"
+  ],
+  "price": 3,
+  "vibes": [
+   "drinks",
+   "nightlife",
+   "date",
+   "upscale",
+   "music"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Upscale River Oaks cocktail lounge and dinner spot upstairs on W Gray, from the Off The Record team: live musicians, DJs and a dressy crowd. Wed–Sat nights; formal attire.",
+  "tryit": "The \"Oh You Fancy Huh?\" cocktail; book ahead for Wednesday nights."
+ },
+ {
+  "id": 567,
+  "name": "Winfield's Chocolate Bar Rice Village",
+  "address": "2531 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Dessert café"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Dessert café.",
+  "tryit": ""
+ },
+ {
+  "id": 568,
+  "name": "Shake Shack Rice Village",
+  "address": "6205 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
  }
 ]

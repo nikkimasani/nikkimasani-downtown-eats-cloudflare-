@@ -644,3 +644,19 @@ body.navving #v-map .mapchips,body.navving #v-map .backpill,body.navving #v-map 
 .zonesel.on{background:#e8590c !important;color:#fff !important}
 /* the area picker sits first in each filter row, compact */
 .zonesel{flex:0 0 auto;max-width:128px;font-size:13px !important;padding:6px 22px 6px 10px !important;min-height:0;height:32px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+
+/* area list view on the map tab */
+.arealist{position:absolute;inset:0;z-index:7;background:var(--bg);display:flex;flex-direction:column;padding-top:calc(env(safe-area-inset-top) + 8px)}
+.arealist[hidden]{display:none}
+.al-head{padding:6px 12px 8px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.al-areas{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.al-areas::-webkit-scrollbar{display:none}
+.al-areas .chip{flex:0 0 auto;white-space:nowrap}
+.al-areas .chip small{opacity:.65;font-weight:600;margin-left:3px}
+.al-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.al-row .seg button{padding:6px 10px;font-size:13px}
+.al-row .pill{padding:6px 12px;font-size:13px}
+.al-row #alMap{margin-left:auto}
+.al-count{font-size:12px;color:var(--muted)}
+.al-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 12px calc(env(safe-area-inset-bottom) + 96px);display:flex;flex-direction:column;gap:10px}
+.al-body .al-empty{color:var(--muted);text-align:center;padding:40px 10px}
+#listBtn.on{background:var(--accent);color:#fff}

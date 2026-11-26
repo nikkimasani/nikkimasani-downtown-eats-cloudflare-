@@ -1027,6 +1027,245 @@
 "k": "rest",
 "c": "Soul Food",
 "a": "2712 Blodgett St"
+},
+{
+"n": "Fancy's HTX",
+"k": "bar",
+"c": "Upscale cocktail lounge",
+"a": "1947 W Gray St"
+},
+{
+"n": "Cyclone Anaya's Rice Village",
+"k": "rest",
+"c": "Tex-Mex",
+"a": "5214 Morningside Dr"
+},
+{
+"n": "Cafe Rabelais",
+"k": "rest",
+"c": "French",
+"a": "2442 Times Blvd"
+},
+{
+"n": "Navy Blue",
+"k": "rest",
+"c": "Seafood",
+"a": "2445 Times Blvd"
+},
+{
+"n": "Kasra Persian Grill",
+"k": "rest",
+"c": "Persian",
+"a": "2514 Times Blvd"
+},
+{
+"n": "Duck N Bao Rice Village",
+"k": "rest",
+"c": "Chinese",
+"a": "5215 Kelvin Dr"
+},
+{
+"n": "Roma",
+"k": "rest",
+"c": "Italian",
+"a": "2347 University Blvd"
+},
+{
+"n": "Hungry's Rice Village",
+"k": "rest",
+"c": "American cafe",
+"a": "2356 Rice Blvd"
+},
+{
+"n": "Upstairs at Hungry's",
+"k": "bar",
+"c": "Rooftop terrace",
+"a": "2356 Rice Blvd"
+},
+{
+"n": "Coppa Osteria",
+"k": "rest",
+"c": "Italian",
+"a": "5210 Morningside Dr"
+},
+{
+"n": "Hamsa",
+"k": "rest",
+"c": "Israeli",
+"a": "5555 Morningside Dr"
+},
+{
+"n": "Hudson House Rice Village",
+"k": "rest",
+"c": "Seafood & burgers",
+"a": "2414 University Blvd"
+},
+{
+"n": "Milton's",
+"k": "rest",
+"c": "Italian",
+"a": "5117 Kelvin Dr"
+},
+{
+"n": "Istanbul Grill & Deli",
+"k": "rest",
+"c": "Turkish",
+"a": "5613 Morningside Dr"
+},
+{
+"n": "Goode Company BBQ Kirby",
+"k": "rest",
+"c": "BBQ",
+"a": "5109 Kirby Dr"
+},
+{
+"n": "Under the Volcano",
+"k": "bar",
+"c": "Tiki & cocktail bar",
+"a": "2349 Bissonnet St"
+},
+{
+"n": "Rice Box Rice Village",
+"k": "rest",
+"c": "Chinese",
+"a": "5504 Morningside Dr"
+},
+{
+"n": "Local Foods Rice Village",
+"k": "rest",
+"c": "Sandwiches & salads",
+"a": "2424 Dunstan Rd"
+},
+{
+"n": "Lee's Den",
+"k": "bar",
+"c": "Wine & cocktail bar",
+"a": "2424 Dunstan Rd"
+},
+{
+"n": "Island Grill",
+"k": "rest",
+"c": "Caribbean",
+"a": "2365 Rice Blvd"
+},
+{
+"n": "Sixty Vines Rice Village",
+"k": "rest",
+"c": "Wine bar & American",
+"a": "2540 University Blvd"
+},
+{
+"n": "Sushi by Hidden",
+"k": "rest",
+"c": "Sushi omakase",
+"a": "5216 Morningside Dr"
+},
+{
+"n": "Salento Bistrot",
+"k": "rest",
+"c": "Italian bistro",
+"a": "2407 Rice Blvd"
+},
+{
+"n": "Mana Thai Kitchen",
+"k": "rest",
+"c": "Thai",
+"a": "2512 Rice Blvd"
+},
+{
+"n": "The Ginger Man",
+"k": "bar",
+"c": "Craft beer pub",
+"a": "5607 Morningside Dr"
+},
+{
+"n": "Little Woodrow's Rice Village",
+"k": "bar",
+"c": "Sports bar & patio",
+"a": "5611 Morningside Dr"
+},
+{
+"n": "Brian O'Neill's",
+"k": "bar",
+"c": "Irish pub",
+"a": "5555 Morningside Dr"
+},
+{
+"n": "Kelvin Arms",
+"k": "bar",
+"c": "Scottish pub",
+"a": "2424 Dunstan Rd"
+},
+{
+"n": "Benjy's Rice Village",
+"k": "rest",
+"c": "New American",
+"a": "2424 Dunstan Rd"
+},
+{
+"n": "Valhalla",
+"k": "bar",
+"c": "Campus pub",
+"a": "6100 Main St"
+},
+{
+"n": "FRNDS Restaurant & Lounge",
+"k": "bar",
+"c": "Lounge & restaurant",
+"a": "2441 University Blvd"
+},
+{
+"n": "D'Amico's Italian Market Cafe",
+"k": "rest",
+"c": "Italian",
+"a": "5510 Morningside Dr"
+},
+{
+"n": "Sweet Paris Creperie Rice Village",
+"k": "coffee",
+"c": "Crepes & café",
+"a": "2420 Rice Blvd"
+},
+{
+"n": "Helen Greek Food & Wine",
+"k": "rest",
+"c": "Greek",
+"a": "2429 Rice Blvd"
+},
+{
+"n": "El Meson",
+"k": "rest",
+"c": "Cuban & Tex-Mex",
+"a": "2425 University Blvd"
+},
+{
+"n": "Kubo's Sushi",
+"k": "rest",
+"c": "Sushi",
+"a": "2414 University Blvd"
+},
+{
+"n": "Coco Crepes Rice Village",
+"k": "coffee",
+"c": "Crepes & café",
+"a": "2339 University Blvd"
+},
+{
+"n": "Black Walnut Cafe Rice Village",
+"k": "rest",
+"c": "American cafe"
+},
+{
+"n": "Winfield's Chocolate Bar Rice Village",
+"k": "coffee",
+"c": "Dessert café",
+"a": "2531 University Blvd"
+},
+{
+"n": "Shake Shack Rice Village",
+"k": "rest",
+"c": "Burgers",
+"a": "6205 Kirby Dr"
 }
 ]
 }
