@@ -2143,6 +2143,30 @@
 "k": "rest",
 "c": "American, brunch & happy hour",
 "a": "5000 Westheimer Rd"
+},
+{
+"n": "The Audrey",
+"k": "rest",
+"c": "Hollywood-glam American",
+"a": "1616 Post Oak Blvd"
+},
+{
+"n": "il Bracco",
+"k": "rest",
+"c": "Upscale everyday Italian",
+"a": "1705 Post Oak Blvd"
+},
+{
+"n": "Bloom & Bee",
+"k": "rest",
+"c": "Brunch & American at The Post Oak Hotel",
+"a": "1600 West Loop S"
+},
+{
+"n": "Lombardi Cucina Italiana",
+"k": "rest",
+"c": "Italian",
+"a": "1101 Uptown Park Blvd"
 }
 ]
 }

@@ -3827,6 +3827,38 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "The Audrey": {
+      "street": "1616 Post Oak Blvd",
+      "lat": 29.750683,
+      "lng": -95.461239,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "il Bracco": {
+      "street": "1705 Post Oak Blvd",
+      "lat": 29.749968,
+      "lng": -95.461228,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bloom & Bee": {
+      "street": "1600 West Loop S",
+      "lat": 29.751531,
+      "lng": -95.456152,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lombardi Cucina Italiana": {
+      "street": "1101 Uptown Park Blvd",
+      "lat": 29.758152,
+      "lng": -95.456054,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
