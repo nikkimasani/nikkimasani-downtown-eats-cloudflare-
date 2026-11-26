@@ -13666,5 +13666,25 @@
   "type": "Coffee Shop",
   "note": "Gelato.",
   "tryit": ""
+ },
+ {
+  "id": 686,
+  "name": "Oru",
+  "address": "746 W 24th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese a la carte sushi"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Japanese a la carte sushi restaurant.",
+  "tryit": ""
  }
 ]

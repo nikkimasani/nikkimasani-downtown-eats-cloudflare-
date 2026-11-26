@@ -3622,6 +3622,14 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Oru": {
+      "street": "746 W 24th St",
+      "lat": 29.807788,
+      "lng": -95.411216,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
