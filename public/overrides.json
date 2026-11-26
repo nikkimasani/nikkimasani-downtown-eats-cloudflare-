@@ -2247,12 +2247,17 @@
       "notInDirectory": true
     },
     "Frosty's Christmas Bar": {
-      "street": "2106 Dallas St",
+      "street": "2106 Dallas St Suite 100",
       "lat": 29.74967,
       "lng": -95.356599,
-      "source": "US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
+      "source": "Secret Houston / CultureMap: two-story Christmas pop-up, Nov 15–Dec 30 (2025 dates); 2026 dates not yet published",
+      "checked": "2026-11-25",
+      "notInDirectory": true,
+      "popup": {
+        "from": "11-15",
+        "to": "12-30",
+        "label": "Holiday pop-up"
+      }
     },
     "The Litterbox": {
       "street": "4455 University Dr",
@@ -2372,6 +2377,17 @@
       "lng": -95.392072,
       "source": "US Census geocoder",
       "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Winnie's": {
+      "street": "3622 Main St Suite A",
+      "geoStreet": "3622 Main St",
+      "lat": 29.7388028,
+      "lng": -95.3795223,
+      "phone": "(713) 520-0660",
+      "website": "https://www.winnieshouston.com/",
+      "source": "OpenStreetMap n3638003786; address and phone from Atly/OpenTable listings",
+      "checked": "2026-11-25",
       "notInDirectory": true
     }
   }

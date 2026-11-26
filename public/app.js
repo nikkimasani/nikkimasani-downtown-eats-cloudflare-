@@ -206,7 +206,7 @@ function weightedPick(list, avoid = new Set()) {
 // ---------- cards ----------
 function statusTags(r) {
   const o = openLabel(r), hh = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
-  return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
+  return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${popupOn(r) ? `<span class="tag open">🎄 ${esc(r.popup.label || 'Pop-up')} · thru ${esc(popupEnd(r))}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
 }
 const tile = (r) => `<span class="ctile" style="--tc:${styleFor(r).color || '#e8590c'}">${styleFor(r).emoji}</span>`;
 // where a place sits on the street grid: nearest corner + a tiny block map (needs the city model, built in the background)
@@ -893,7 +893,7 @@ function barCard(r) {
   <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
   <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
   <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div></div></div>
-  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${steakTonight(r) ? `<span class="tag open">🥩 Steak night ${esc(steakTonight(r).price || '')}</span>` : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
+  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${popupOn(r) ? `<span class="tag open">🎄 ${esc(r.popup.label || 'Pop-up')} · thru ${esc(popupEnd(r))}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${steakTonight(r) ? `<span class="tag open">🥩 Steak night ${esc(steakTonight(r).price || '')}</span>` : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
   ${h ? `<div class="hhbox ${hn ? 'on' : ''}"><b>🍹 ${hn ? 'Happy hour now' + (hn.closesAt ? ' · till ' + esc(hn.closesAt) : '') : esc(h.when)}</b><span>${esc(h.deals)}</span>${h.confidence === 'verify' ? '<em>Double-check before you go</em>' : ''}</div>`
       : r.hhListed ? `<div class="hhbox"><b>🍹 Listed for happy hour</b><span>Times and prices aren't published yet — check with the bar.</span></div>` : ''}
   <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`;
@@ -951,6 +951,9 @@ let STEAK = null, steakDay = 'today';
 const snorm = (s) => String(s || '').toLowerCase().replace(/[’']/g, '').replace(/&/g, 'and').replace(/[^a-z0-9]/g, '');
 const steakSpot = (n) => { const k = snorm(n); return DATA.find((r) => snorm(r.name) === k) || null; };
 const steakToday = () => SDAYS[new Date().getDay()];
+// Seasonal pop-ups: overrides carry popup {from:'MM-DD', to:'MM-DD', label}. popupOn → true in season, false out of season, null if not a pop-up.
+function popupOn(r) { const p = r && r.popup; if (!p) return null; const t = new Date(), md = String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); return p.from <= p.to ? md >= p.from && md <= p.to : md >= p.from || md <= p.to; }
+function popupEnd(r) { const [m, d] = r.popup.to.split('-').map(Number); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m - 1] + ' ' + d; }
 function steakTonight(r) { if (!STEAK) return null; const d = steakToday(), k = snorm(r.name); return STEAK.nights.find((x) => snorm(x.n) === k && x.days.includes(d)) || null; }
 async function loadSteak() { if (STEAK) return STEAK; try { STEAK = await (await fetch('steak-nights.json')).json(); } catch { STEAK = { nights: [] }; } return STEAK; }
 async function renderSteak() {
@@ -1187,9 +1190,9 @@ async function aboutPlace(r) {
       const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
       if (fix) { Object.assign(o, fix); if (fix.hours) o.corrected = fix.source; o.aliases = fix.aliases || []; o.extraSource = fix.notInDirectory ? fix.source : null; }
       const cats = (p.official && p.official.cats) || {};
-      return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
+      return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource, popup: o.popup || null };
     });
-    DATA = DATA.filter((r) => r.status !== 'closed').map((r, i) => ({ ...r, id: i }));
+    DATA = DATA.filter((r) => r.status !== 'closed' && popupOn(r) !== false).map((r, i) => ({ ...r, id: i }));
     loadSteak().then(() => { if ($('#v-night').classList.contains('on')) renderNight(); });
     for (const r of DATA) if (HFIX[r.name]) { r.hours = HFIX[r.name]; r.corrected = 'your fix'; }   // fixes you chose in the hours review   // closed for good: drop, then renumber
     DATA.forEach((r) => {

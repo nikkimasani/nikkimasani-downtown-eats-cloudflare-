@@ -10121,7 +10121,7 @@
  {
   "id": 515,
   "name": "Frosty's Christmas Bar",
-  "address": "2106 Dallas St, Houston, TX",
+  "address": "2106 Dallas St Suite 100, Houston, TX",
   "tunnel": null,
   "cuisines": [
    "Bar"
@@ -10133,11 +10133,13 @@
   "price": 2,
   "vibes": [
    "drinks",
-   "nightlife"
+   "nightlife",
+   "group",
+   "date"
   ],
   "type": "Bar",
-  "note": "Bar.",
-  "tryit": ""
+  "note": "Two-story Christmas pop-up in EaDo: 3 bars, a dance floor and photo ops everywhere. Tickets/reservations through its website; seasonal only.",
+  "tryit": "Go early on a weeknight for the photo ops before the dance-floor crowd."
  },
  {
   "id": 516,
@@ -10451,5 +10453,36 @@
   "type": "Restaurant",
   "note": "Chinese restaurant.",
   "tryit": ""
+ },
+ {
+  "id": 531,
+  "name": "Winnie's",
+  "address": "3622 Main St Suite A, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cajun",
+   "Southern"
+  ],
+  "meals": [
+   "Brunch",
+   "Lunch",
+   "Dinner",
+   "Happy Hour",
+   "Late Night",
+   "Full Service",
+   "Patio"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife",
+   "patio",
+   "group",
+   "comfort",
+   "casual"
+  ],
+  "type": "Bar",
+  "note": "Pink-and-green Cajun-Creole bar on Main St with one of Midtown's best patios. Houston Press Best Bar; trivia, drag brunch, karaoke and a holiday Miracle pop-up. Card only.",
+  "tryit": "Fried-chicken Crunchwrap 2.0, lemon pepper wings or a shrimp po-boy; brunch on weekends."
  }
 ]
