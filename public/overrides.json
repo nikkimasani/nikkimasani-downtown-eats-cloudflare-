@@ -2229,6 +2229,150 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Fairfax": {
+      "street": "81 Drew St",
+      "lat": 29.748929,
+      "lng": -95.382963,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "PDA": {
+      "street": "3030 Travis St",
+      "lat": 29.743172,
+      "lng": -95.377203,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Frosty's Christmas Bar": {
+      "street": "2106 Dallas St",
+      "lat": 29.74967,
+      "lng": -95.356599,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Litterbox": {
+      "street": "4455 University Dr",
+      "lat": 29.719612,
+      "lng": -95.340892,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Room 808": {
+      "street": "201 Roberts St",
+      "lat": 29.751029,
+      "lng": -95.340418,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Iykyk Nightclub": {
+      "street": "1008 Prairie St",
+      "lat": 29.760631,
+      "lng": -95.36186,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Say Less": {
+      "street": "509 Main St",
+      "lat": 29.760613,
+      "lng": -95.361965,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hull and Oak": {
+      "street": "1070 Dallas St",
+      "lat": 29.755047,
+      "lng": -95.365543,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Beez Kneez": {
+      "street": "1015 W 19th St",
+      "lat": 29.802778,
+      "lng": -95.416366,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Muldoon's the Patio": {
+      "street": "2611 Augusta Dr",
+      "lat": 29.738891,
+      "lng": -95.482422,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Riot Cafe & Bar": {
+      "street": "1925 Washington Ave",
+      "lat": 29.767764,
+      "lng": -95.377507,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "East End Brew": {
+      "street": "7011 Capitol St",
+      "lat": 29.734417,
+      "lng": -95.30244,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "La'Verg Bar & Patio": {
+      "street": "4817 Canal St",
+      "lat": 29.747395,
+      "lng": -95.324712,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Kickback Bar": {
+      "street": "4401 Harrisburg Blvd",
+      "lat": 29.74425,
+      "lng": -95.332249,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Stephanie's Icehouse": {
+      "street": "5434 Lawndale St",
+      "lat": 29.727333,
+      "lng": -95.320116,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Mill On Milby": {
+      "street": "310 Milby St",
+      "lat": 29.74759,
+      "lng": -95.337632,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Second Slice Sandwich Shop": {
+      "street": "711 Milby St",
+      "lat": 29.745034,
+      "lng": -95.339482,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mapo Mama": {
+      "street": "920 Studemont St",
+      "lat": 29.76785,
+      "lng": -95.392072,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
