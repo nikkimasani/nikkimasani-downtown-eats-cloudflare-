@@ -12663,5 +12663,126 @@
   "type": "Sports Bar",
   "note": "Sports bar.",
   "tryit": ""
+ },
+ {
+  "id": 637,
+  "name": "Killer Burger Sawyer Heights",
+  "address": "1909 Taylor St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 638,
+  "name": "Johnny's Gold Brick",
+  "address": "2518 Yale St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 639,
+  "name": "Del Frisco's Double Eagle Steakhouse",
+  "address": "5061 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Steakhouse restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 640,
+  "name": "Morton's The Steakhouse Galleria",
+  "address": "5000 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Steakhouse restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 641,
+  "name": "Confessions",
+  "address": "3200 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Southern & lounge"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Southern & lounge restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 642,
+  "name": "Trill Burgers Rice University",
+  "address": "6100 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Smash burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Smash burgers restaurant.",
+  "tryit": ""
  }
 ]

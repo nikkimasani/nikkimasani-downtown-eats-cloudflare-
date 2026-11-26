@@ -3230,6 +3230,54 @@
       "source": "OpenStreetMap Nominatim",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Killer Burger Sawyer Heights": {
+      "street": "1909 Taylor St",
+      "lat": 29.774746,
+      "lng": -95.381534,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Johnny's Gold Brick": {
+      "street": "2518 Yale St",
+      "lat": 29.809736,
+      "lng": -95.399289,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Del Frisco's Double Eagle Steakhouse": {
+      "street": "5061 Westheimer Rd",
+      "lat": 29.740678,
+      "lng": -95.461901,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Morton's The Steakhouse Galleria": {
+      "street": "5000 Westheimer Rd",
+      "lat": 29.740959,
+      "lng": -95.460977,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Confessions": {
+      "street": "3200 Kirby Dr",
+      "lat": 29.736215,
+      "lng": -95.418776,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Trill Burgers Rice University": {
+      "street": "6100 Main St",
+      "lat": 29.720622,
+      "lng": -95.393747,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }

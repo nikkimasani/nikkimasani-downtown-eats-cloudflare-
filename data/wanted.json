@@ -901,7 +901,7 @@
 "n": "Hearsay at Levy Park",
 "k": "rest",
 "c": "American",
-"a": "3801 Eastside St"
+"a": "3728 Wakeforest St"
 },
 {
 "n": "a'Bouzy",
@@ -1623,7 +1623,8 @@
 {
 "n": "Killer Burger Sawyer Heights",
 "k": "rest",
-"c": "Burgers"
+"c": "Burgers",
+"a": "1909 Taylor St"
 },
 {
 "n": "Simone on Sunset",
@@ -1633,7 +1634,8 @@
 {
 "n": "Johnny's Gold Brick",
 "k": "bar",
-"c": "Cocktail bar"
+"c": "Cocktail bar",
+"a": "2518 Yale St"
 },
 {
 "n": "Slowpokes Upper Kirby",
@@ -1680,6 +1682,30 @@
 "n": "Prospect Park Midtown",
 "k": "bar",
 "c": "Sports bar"
+},
+{
+"n": "Del Frisco's Double Eagle Steakhouse",
+"k": "rest",
+"c": "Steakhouse",
+"a": "5061 Westheimer Rd"
+},
+{
+"n": "Morton's The Steakhouse Galleria",
+"k": "rest",
+"c": "Steakhouse",
+"a": "5000 Westheimer Rd"
+},
+{
+"n": "Confessions",
+"k": "rest",
+"c": "Southern & lounge",
+"a": "3200 Kirby Dr"
+},
+{
+"n": "Trill Burgers Rice University",
+"k": "rest",
+"c": "Smash burgers",
+"a": "6100 Main St"
 }
 ]
 }
