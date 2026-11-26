@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-25",
+ "checked": "2026-11-26",
  "sitesWithHours": 29,
  "flags": {
   "Artistry": {
@@ -67,15 +67,15 @@
    "url": "https://isamatcha.com/",
    "slots": 14
   },
-  "Eureka Heights Brewing Company": {
-   "site": "Sun 12pm–8pm · Mon closed · Tue 5pm–9pm · Wed 4pm–10pm · Thu 4pm–10pm · Fri 3pm–10pm · Sat 12pm–10pm",
-   "url": "https://www.eurekaheights.com/",
-   "slots": 6
-  },
   "Brennan's": {
    "site": "Sun 10am–8pm · Mon 11am–8pm · Tue 11am–9pm · Wed 11am–9pm · Thu 11am–9pm · Fri 11am–10pm · Sat 11am–10pm",
    "url": "https://www.brennanshouston.com/",
    "slots": 70
+  },
+  "Eureka Heights Brewing Company": {
+   "site": "Sun 12pm–8pm · Mon closed · Tue 5pm–9pm · Wed 4pm–10pm · Thu 4pm–10pm · Fri 3pm–10pm · Sat 12pm–10pm",
+   "url": "https://www.eurekaheights.com/",
+   "slots": 6
   },
   "Ripcord": {
    "site": "Sun 12pm–2am · Mon 1pm–2am · Tue 1pm–2am · Wed 1pm–2am · Thu 1pm–2am · Fri 1pm–2am · Sat 12pm–2am",
