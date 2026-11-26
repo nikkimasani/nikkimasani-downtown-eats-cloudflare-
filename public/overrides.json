@@ -4804,14 +4804,6 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
-    "The Den": {
-      "street": "4835 Calhoun Rd",
-      "lat": 29.72002,
-      "lng": -95.338548,
-      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
-    },
     "Casa Kenji": {
       "street": "3201 Allen Pkwy",
       "lat": 29.760983,
@@ -5164,14 +5156,6 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
-    "Jax Grill": {
-      "street": "1613 Shepherd Dr",
-      "lat": 29.774979,
-      "lng": -95.409612,
-      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
-    },
     "Zen Japanese Izakaya": {
       "street": "2015 S Shepherd Dr",
       "lat": 29.747912,
@@ -5332,26 +5316,10 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
-    "Gaspachos Mexican Bites": {
-      "street": "3709 Eastside St",
-      "lat": 29.73318,
-      "lng": -95.424393,
-      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
-    },
     "Shan Dong": {
       "street": "4464 Montrose Blvd",
       "lat": 29.732855,
       "lng": -95.391164,
-      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
-    },
-    "Bb's Cafe": {
-      "street": "3139 Richmond Ave",
-      "lat": 29.733973,
-      "lng": -95.424844,
       "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
@@ -5796,14 +5764,6 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
-    "Fusion Taco": {
-      "street": "302 Fairview Ave",
-      "lat": 29.748271,
-      "lng": -95.385778,
-      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
-      "checked": "2026-11-26",
-      "notInDirectory": true
-    },
     "Stick Talk Hibachi": {
       "street": "502 Elgin St",
       "lat": 29.744141,
@@ -6216,6 +6176,950 @@
       "street": "5506 Bellaire Blvd",
       "lat": 29.705667,
       "lng": -95.477169,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Jax Grill|1613": {
+      "street": "1613 Shepherd Dr",
+      "lat": 29.774979,
+      "lng": -95.409612,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Den|4835": {
+      "street": "4835 Calhoun Rd",
+      "lat": 29.72002,
+      "lng": -95.338548,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Gaspachos Mexican Bites|3709": {
+      "street": "3709 Eastside St",
+      "lat": 29.73318,
+      "lng": -95.424393,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bb's Cafe|3139": {
+      "street": "3139 Richmond Ave",
+      "lat": 29.733973,
+      "lng": -95.424844,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fusion Taco|302": {
+      "street": "302 Fairview Ave",
+      "lat": 29.748271,
+      "lng": -95.385778,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pappasito's Cantina|2515": {
+      "street": "2515 S Loop W",
+      "lat": 29.677392,
+      "lng": -95.415209,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Torchy's Tacos|5885": {
+      "street": "5885 San Felipe St",
+      "lat": 29.749825,
+      "lng": -95.485053,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Island Grill & Juice Bar|5709": {
+      "street": "5709 Woodway Dr",
+      "lat": 29.763695,
+      "lng": -95.478278,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Island Grill|2365": {
+      "street": "2365 Rice Blvd",
+      "lat": 29.717414,
+      "lng": -95.41415,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "El Tiempo Briargrove|6100": {
+      "street": "6100 Westiemer Rd",
+      "lat": 29.737883,
+      "lng": -95.488625,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "El Tiempo Cantina|3130": {
+      "street": "3130 Richmond Ave",
+      "lat": 29.734089,
+      "lng": -95.424779,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Shandy's Heights|315": {
+      "street": "315 W 19th St",
+      "lat": 29.802961,
+      "lng": -95.40177,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Taqueria Arandas|4601": {
+      "street": "4601 Irvington Blvd",
+      "lat": 29.801746,
+      "lng": -95.361144,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pappas Bros Steakhouse|5839": {
+      "street": "5839 Westheimer Rd",
+      "lat": 29.737705,
+      "lng": -95.482117,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Nickel Bar & Grill|3905": {
+      "street": "3905 Liberty Rd",
+      "lat": 29.784967,
+      "lng": -95.331465,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Alamo Tamales In The Heights Limited Liability Com|2520": {
+      "street": "2520 Airline Dr",
+      "lat": 29.810072,
+      "lng": -95.381947,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Black Walnut Cafe|5512": {
+      "street": "5512 Memorial Dr",
+      "lat": 29.761434,
+      "lng": -95.417713,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Los Tios|5192": {
+      "street": "5192 Buffalo Speedway",
+      "lat": 29.726682,
+      "lng": -95.427856,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Happy Go Lucky Club|4016": {
+      "street": "4016 Telephone Rd",
+      "lat": 29.705957,
+      "lng": -95.308425,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Adair Kitchen|5161": {
+      "street": "5161 San Felipe St",
+      "lat": 29.750119,
+      "lng": -95.46542,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Taco Stand|1503": {
+      "street": "1503 Westheimer Rd",
+      "lat": 29.742744,
+      "lng": -95.39771,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Torchy's Tacos|350": {
+      "street": "350 W 19th St",
+      "lat": 29.802838,
+      "lng": -95.402531,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Guadalajara Mexican Grille|2925": {
+      "street": "2925 Southwest Fwy",
+      "lat": 29.730045,
+      "lng": -95.424354,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Gypsy Poet|1050": {
+      "street": "1050 Studewood St",
+      "lat": 29.790214,
+      "lng": -95.387759,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lupe Tortillas|2414": {
+      "street": "2414 Southwest Fwy",
+      "lat": 29.731096,
+      "lng": -95.415466,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Spaghetti Western Italian Cafe|1608": {
+      "street": "1608 Shepherd Dr",
+      "lat": 29.774954,
+      "lng": -95.40948,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kira|2800": {
+      "street": "2800 Kirby Dr",
+      "lat": 29.740874,
+      "lng": -95.418837,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pacific Coast Tacos|3101": {
+      "street": "3101 S Shepherd Dr",
+      "lat": 29.738497,
+      "lng": -95.410626,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hopdoddy Burger Bar|5510": {
+      "street": "5510 Morningside Dr",
+      "lat": 29.716544,
+      "lng": -95.415002,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Velvet Taco Montrose|907": {
+      "street": "907 Westheimer Rd",
+      "lat": 29.744616,
+      "lng": -95.390624,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "First Watch Daytime Cafe|2799": {
+      "street": "2799 Katy Fwy",
+      "lat": 29.776532,
+      "lng": -95.388668,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "El Tiempo Cantina|2360": {
+      "street": "2360 S Loop W",
+      "lat": 29.678342,
+      "lng": -95.414024,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Grand Heights|605": {
+      "street": "605 W 19th St",
+      "lat": 29.802864,
+      "lng": -95.408171,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Los Tios 4|4840": {
+      "street": "4840 Beechnut St",
+      "lat": 29.689236,
+      "lng": -95.462536,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Federal American Grill|2400": {
+      "street": "2400 Mid Ln",
+      "lat": 29.743103,
+      "lng": -95.450207,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mcintyre's|1235": {
+      "street": "1235 W 19th St",
+      "lat": 29.802767,
+      "lng": -95.420904,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Liberty Kitchen|5212": {
+      "street": "5212 Morningside Dr",
+      "lat": 29.71895,
+      "lng": -95.415022,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "La Tapatia Mexican Cafe|5591": {
+      "street": "5591 Richmond Ave",
+      "lat": 29.731452,
+      "lng": -95.476182,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Duck N Bao|5535": {
+      "street": "5535 Memorial Dr",
+      "lat": 29.761318,
+      "lng": -95.417866,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Long Weekend|2044": {
+      "street": "2044 E T C Jester Blvd",
+      "lat": 29.804153,
+      "lng": -95.428287,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Eight Row Flint|1039": {
+      "street": "1039 Yale St",
+      "lat": 29.789968,
+      "lng": -95.399027,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Ra Sushi|3908": {
+      "street": "3908 Westheimer Rd",
+      "lat": 29.741772,
+      "lng": -95.443628,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Osaka|500": {
+      "street": "500 Westheimer Rd",
+      "lat": 29.744592,
+      "lng": -95.387298,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Velvet Taco - Washington|4819": {
+      "street": "4819 Washington Ave",
+      "lat": 29.770403,
+      "lng": -95.409707,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Atlas Heights|729": {
+      "street": "729 W 19th St",
+      "lat": 29.80283,
+      "lng": -95.410755,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hopdoddy Burger Bar|4444": {
+      "street": "4444 Westheimer Rd",
+      "lat": 29.741468,
+      "lng": -95.452041,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Olive Garden|1010": {
+      "street": "1010 Old Spanish Trl",
+      "lat": 29.691639,
+      "lng": -95.415772,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "El Centro|901": {
+      "street": "901 Commerce St",
+      "lat": 29.764316,
+      "lng": -95.360342,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Teotihuacan Mexican Cafe|4624": {
+      "street": "4624 Irvington Blvd",
+      "lat": 29.802814,
+      "lng": -95.36088,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Snooze|718": {
+      "street": "718 W 18th St",
+      "lat": 29.801692,
+      "lng": -95.410541,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Nettbar Shady Acres|1717": {
+      "street": "1717 W 22nd St",
+      "lat": 29.80569,
+      "lng": -95.429631,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Buffalo Heights Biergarten|3905": {
+      "street": "3905 Washington Ave",
+      "lat": 29.769741,
+      "lng": -95.399379,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pappadeaux Seafood Kitchen|6015": {
+      "street": "6015 Westheimer Rd",
+      "lat": 29.737628,
+      "lng": -95.487913,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Torchy's Tacos|2411": {
+      "street": "2411 S Shepherd Dr",
+      "lat": 29.744513,
+      "lng": -95.410574,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cecil's|2405": {
+      "street": "2405 Genesee St",
+      "lat": 29.74825,
+      "lng": -95.383907,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Katz's|5930": {
+      "street": "5930 Westheimer Rd",
+      "lat": 29.737927,
+      "lng": -95.485211,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Snooze|3217": {
+      "street": "3217 Montrose Blvd",
+      "lat": 29.744437,
+      "lng": -95.391186,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "La Tapatia Mexican Cafe|5710": {
+      "street": "5710 Bellaire Blvd",
+      "lat": 29.705652,
+      "lng": -95.480717,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Bistro|2900": {
+      "street": "2900 Sage Rd",
+      "lat": 29.737,
+      "lng": -95.466834,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pico's Restaurant|3736": {
+      "street": "3736 Westheimer Rd",
+      "lat": 29.741738,
+      "lng": -95.439923,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Torchy's Tacos - West U|5537": {
+      "street": "5537 Weslayan St",
+      "lat": 29.721876,
+      "lng": -95.441215,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Heights Social|1213": {
+      "street": "1213 W 20th St",
+      "lat": 29.803783,
+      "lng": -95.420465,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Velvet Taco Galleria|2626": {
+      "street": "2626 West Loop S",
+      "lat": 29.740692,
+      "lng": -95.45882,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Encore Midtown|2301": {
+      "street": "2301 Main St",
+      "lat": 29.747178,
+      "lng": -95.37259,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tago|1120": {
+      "street": "1120 Dennis St",
+      "lat": 29.743963,
+      "lng": -95.373575,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pinkerton's Barbecue|3801": {
+      "street": "3801 Farnham St",
+      "lat": 29.732783,
+      "lng": -95.411451,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Katz's Deli & Bar|2200": {
+      "street": "2200 N Shepherd Dr",
+      "lat": 29.805882,
+      "lng": -95.410113,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Adair Kitchen|5176": {
+      "street": "5176 Buffalo Speedway",
+      "lat": 29.726997,
+      "lng": -95.427876,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Gckc Heights|1801": {
+      "street": "1801 Yale St",
+      "lat": 29.801966,
+      "lng": -95.399252,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lotus De Bleu Bistro|3995": {
+      "street": "3995 Richmond Ave",
+      "lat": 29.73259,
+      "lng": -95.441363,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Izakaya|318": {
+      "street": "318 Gray St",
+      "lat": 29.752196,
+      "lng": -95.377276,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hungry's Cafe & Bistro|5750": {
+      "street": "5750 Woodway Dr",
+      "lat": 29.763645,
+      "lng": -95.478993,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Velvet Taco Heights|2001": {
+      "street": "2001 N Shepherd Dr",
+      "lat": 29.803867,
+      "lng": -95.410215,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cyclone Anaya's Mexican Kitchen|309": {
+      "street": "309 Gray St",
+      "lat": 29.752336,
+      "lng": -95.377275,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Chopnblok Montrose|507": {
+      "street": "507 Westheimer Rd",
+      "lat": 29.744476,
+      "lng": -95.387386,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tacos A Go Go|1102": {
+      "street": "1102 Yale St",
+      "lat": 29.790776,
+      "lng": -95.398907,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tacos A Go-Go|3704": {
+      "street": "3704 Main St",
+      "lat": 29.738447,
+      "lng": -95.379655,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pimlico|2307": {
+      "street": "2307 Ella Blvd",
+      "lat": 29.806768,
+      "lng": -95.429285,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Houston Club|910": {
+      "street": "910 Louisiana St",
+      "lat": 29.759184,
+      "lng": -95.367067,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Saltgrass Steakhouse|1803": {
+      "street": "1803 Shepherd Dr",
+      "lat": 29.776371,
+      "lng": -95.409637,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Clearwater At The Heights|1245": {
+      "street": "1245 W 18th St",
+      "lat": 29.801742,
+      "lng": -95.421109,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mccormick & Schmick Restaurant|1151": {
+      "street": "1151 Uptown Park Blvd",
+      "lat": 29.755802,
+      "lng": -95.45764,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "A Tony's Mexican Restaurant & Cantina|2222": {
+      "street": "2222 Ella Blvd",
+      "lat": 29.805897,
+      "lng": -95.429125,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tepatitlan|4720": {
+      "street": "4720 N Main St",
+      "lat": 29.797939,
+      "lng": -95.382482,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bungalow Heights|1919": {
+      "street": "1919 Beall St",
+      "lat": 29.802936,
+      "lng": -95.418094,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mcelroy's Pub|3607": {
+      "street": "3607 S Sandman St",
+      "lat": 29.73412,
+      "lng": -95.411389,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Domain Heights|401": {
+      "street": "401 W 25th St",
+      "lat": 29.808918,
+      "lng": -95.403782,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cafe Ginger|1574": {
+      "street": "1574 W Gray St",
+      "lat": 29.75325,
+      "lng": -95.400486,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Maison Pucha Bistro|1001": {
+      "street": "1001 Studewood St",
+      "lat": 29.789042,
+      "lng": -95.387872,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Spice In Heights|1111": {
+      "street": "1111 Studewood St",
+      "lat": 29.790945,
+      "lng": -95.387896,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bb's Cafe|6154": {
+      "street": "6154 Westheimer Rd",
+      "lat": 29.737835,
+      "lng": -95.491909,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Gaspachos Mexican Bites|2103": {
+      "street": "2103 Lyons Ave",
+      "lat": 29.771651,
+      "lng": -95.347925,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pluckers Wing Bar|8731": {
+      "street": "8731 West Loop S",
+      "lat": 29.68673,
+      "lng": -95.458457,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Crawfish Cafe Heights|1026": {
+      "street": "1026 N Shepherd Dr",
+      "lat": 29.789521,
+      "lng": -95.409805,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tacos A Go Go Greenway|3773": {
+      "street": "3773 Richmond Ave",
+      "lat": 29.732643,
+      "lng": -95.437176,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Chili's Grill & Bar|3215": {
+      "street": "3215 Southwest Fwy",
+      "lat": 29.729252,
+      "lng": -95.42922,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Wicklow Heights|1027": {
+      "street": "1027 W 19th St",
+      "lat": 29.802777,
+      "lng": -95.416594,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Brasil|2604": {
+      "street": "2604 Dunlavy St",
+      "lat": 29.742699,
+      "lng": -95.402132,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "George|617": {
+      "street": "617 Fairview Ave",
+      "lat": 29.74811,
+      "lng": -95.388247,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tonys Corner Pocket|817": {
+      "street": "817 W Dallas St",
+      "lat": 29.7577,
+      "lng": -95.376403,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Sushi By The Heights|1111": {
+      "street": "1111 Studewood St",
+      "lat": 29.790945,
+      "lng": -95.387896,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Cellar Bar|3140": {
+      "street": "3140 Richmond Ave",
+      "lat": 29.734087,
+      "lng": -95.424864,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kirby Ice House|1421": {
+      "street": "1421 North Loop W",
+      "lat": 29.814433,
+      "lng": -95.380763,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Christian's Tailgate Bar & Grill|2820": {
+      "street": "2820 White Oak Dr",
+      "lat": 29.78166,
+      "lng": -95.389279,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cheba Hut Houston|2150": {
+      "street": "2150 Edwards St",
+      "lat": 29.770753,
+      "lng": -95.379527,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Taqueria Arandas|920": {
+      "street": "920 N Shepherd Dr",
+      "lat": 29.787738,
+      "lng": -95.409759,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Betelgeuse Betelgeuse II|4500": {
+      "street": "4500 Montrose Blvd",
+      "lat": 29.732506,
+      "lng": -95.391159,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "On The Kirb|5004": {
+      "street": "5004 Kirby Dr",
+      "lat": 29.727579,
+      "lng": -95.418671,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pearl Lounge|2811": {
+      "street": "2811 Washington Ave",
+      "lat": 29.768617,
+      "lng": -95.38769,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "La Calle Tacos, Cantina|401": {
+      "street": "401 Gray St",
+      "lat": 29.751862,
+      "lng": -95.376493,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Ruggles|2245": {
+      "street": "2245 W Alabama St",
+      "lat": 29.738482,
+      "lng": -95.413718,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Federal American Grill|510": {
+      "street": "510 Shepherd Dr",
+      "lat": 29.766931,
+      "lng": -95.409339,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Boheme|307": {
+      "street": "307 Fairview Ave",
+      "lat": 29.748154,
+      "lng": -95.385775,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Post Oak Ice House|5610": {
+      "street": "5610 Richmond Ave",
+      "lat": 29.731569,
+      "lng": -95.477252,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fusion Taco|4706": {
+      "street": "4706 N Main St",
+      "lat": 29.797896,
+      "lng": -95.382425,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cana Lounge|5310": {
+      "street": "5310 Washington Ave",
+      "lat": 29.770586,
+      "lng": -95.415434,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Heights Food Truck Garden|1306": {
+      "street": "1306 W 20th St C/O Incl 1308-1309",
+      "lat": 29.803445,
+      "lng": -95.423498,
+      "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Crave|516": {
+      "street": "516 Westheimer Rd",
+      "lat": 29.744588,
+      "lng": -95.38754,
       "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
