@@ -1,6 +1,6 @@
 {
  "checked": "2026-11-26",
- "sitesWithHours": 30,
+ "sitesWithHours": 31,
  "flags": {
   "Artistry": {
    "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
@@ -92,10 +92,20 @@
    "url": "https://hkgeneralstore.com/",
    "slots": 11
   },
+  "Applebee's": {
+   "site": "Sun 11am–2am · Mon 11am–2am · Tue 11am–2am · Wed 11am–2am · Thu 11am–11pm · Fri 11am–2am · Sat 11am–2am",
+   "url": "https://restaurants.applebees.com/en-us/tx/houston/2959-north-loop-west-80023",
+   "slots": 6
+  },
   "McGonigel's Mucky Duck": {
    "site": "Sun closed · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–12am · Sat 11am–12am",
    "url": "https://www.mcgonigels.com",
    "slots": 24
+  },
+  "Red Lion Pub": {
+   "site": "Sun 11am–12am · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–2am · Sat 11am–2am",
+   "url": "https://redlionpubhouston.com/",
+   "slots": 38
   },
   "Hobbit Cafe": {
    "site": "Sun 11am–9pm · Mon 11am–9pm · Tue 11am–9pm · Wed 11am–9pm · Thu 11am–9pm · Fri 11am–10pm · Sat 11am–10pm",
