@@ -1987,6 +1987,84 @@
 "k": "coffee",
 "c": "Gelato",
 "a": "4721 N Main St"
+},
+{
+"n": "Harold's Chicken & Sports Bar",
+"k": "bar",
+"c": "Chicago-style fried chicken & sports bar",
+"a": "5334 Washington Ave"
+},
+{
+"n": "Eureka Heights Brew Co",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "941 W 18th St"
+},
+{
+"n": "Platypus Brewing",
+"k": "bar",
+"c": "Brewery & kitchen",
+"a": "1902 Washington Ave"
+},
+{
+"n": "Elder Son Brewing",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "946 N Shepherd Dr"
+},
+{
+"n": "Lucky's Pub Heights",
+"k": "bar",
+"c": "Sports pub",
+"a": "2520 Houston Ave"
+},
+{
+"n": "Down House",
+"k": "rest",
+"c": "Heights brunch & bar",
+"a": "1801 Yale St"
+},
+{
+"n": "Postino Heights",
+"k": "bar",
+"c": "Wine cafe",
+"a": "642 Yale St"
+},
+{
+"n": "Baileson Brewing",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "2322 Bissonnet St"
+},
+{
+"n": "Bad Astronaut Brewing",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "1519 Fulton St"
+},
+{
+"n": "Black Page Brewing",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "210 Glen Park St"
+},
+{
+"n": "New Magnolia Brewing",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "1616 Bevis St"
+},
+{
+"n": "Leemoo Health Bar",
+"k": "coffee",
+"c": "Smoothies, acai & healthy bites",
+"a": "908 Westheimer Rd"
+},
+{
+"n": "La La Land Kind Cafe MKT",
+"k": "coffee",
+"c": "Coffee & feel-good cafe",
+"a": "600 N Shepherd Dr"
 }
 ]
 }

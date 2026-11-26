@@ -790,9 +790,12 @@
       "notInDirectory": true
     },
     "Platypus Brewing": {
-      "status": "closed",
-      "source": "https://www.houstoniamag.com/eat-and-drink/houston-restaurant-bar-brewery-closings-june-2026/",
-      "checked": "2026-11-23"
+      "street": "1902 Washington Ave",
+      "lat": 29.767852,
+      "lng": -95.37727,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     },
     "Loft 18": {
       "status": "closed",
@@ -3487,6 +3490,14 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
+    "Oru": {
+      "street": "746 W 24th St",
+      "lat": 29.807788,
+      "lng": -95.411216,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
     "Lo-Lo's Chicken & Waffles": {
       "street": "3611 Gulf Fwy",
       "lat": 29.735456,
@@ -3623,10 +3634,98 @@
       "checked": "2026-11-26",
       "notInDirectory": true
     },
-    "Oru": {
-      "street": "746 W 24th St",
-      "lat": 29.807788,
-      "lng": -95.411216,
+    "Harold's Chicken & Sports Bar": {
+      "street": "5334 Washington Ave",
+      "lat": 29.770603,
+      "lng": -95.415663,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Eureka Heights Brew Co": {
+      "street": "941 W 18th St",
+      "lat": 29.801771,
+      "lng": -95.415673,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Elder Son Brewing": {
+      "street": "946 N Shepherd Dr",
+      "lat": 29.788299,
+      "lng": -95.409777,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lucky's Pub Heights": {
+      "street": "2520 Houston Ave",
+      "lat": 29.77925,
+      "lng": -95.372392,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Down House": {
+      "street": "1801 Yale St",
+      "lat": 29.801966,
+      "lng": -95.399252,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Postino Heights": {
+      "street": "642 Yale St",
+      "lat": 29.782252,
+      "lng": -95.398739,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Baileson Brewing": {
+      "street": "2322 Bissonnet St",
+      "lat": 29.7256,
+      "lng": -95.413333,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bad Astronaut Brewing": {
+      "street": "1519 Fulton St",
+      "lat": 29.774051,
+      "lng": -95.356172,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Black Page Brewing": {
+      "street": "210 Glen Park St",
+      "lat": 29.786559,
+      "lng": -95.36672,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "New Magnolia Brewing": {
+      "street": "1616 Bevis St",
+      "lat": 29.79985,
+      "lng": -95.42221,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Leemoo Health Bar": {
+      "street": "908 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.390787,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "La La Land Kind Cafe MKT": {
+      "street": "600 N Shepherd Dr",
+      "lat": 29.78157,
+      "lng": -95.40913,
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true

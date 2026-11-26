@@ -13320,6 +13320,26 @@
  },
  {
   "id": 669,
+  "name": "Oru",
+  "address": "746 W 24th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese a la carte sushi"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Japanese a la carte sushi restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 670,
   "name": "Lo-Lo's Chicken & Waffles",
   "address": "3611 Gulf Fwy, Houston, TX",
   "tunnel": null,
@@ -13339,7 +13359,7 @@
   "tryit": ""
  },
  {
-  "id": 670,
+  "id": 671,
   "name": "The Address",
   "address": "3333 Raleigh St, Houston, TX",
   "tunnel": null,
@@ -13360,7 +13380,7 @@
   "tryit": ""
  },
  {
-  "id": 671,
+  "id": 672,
   "name": "Ray's Real Pit BBQ Shack",
   "address": "3929 Old Spanish Trl, Houston, TX",
   "tunnel": null,
@@ -13380,7 +13400,7 @@
   "tryit": ""
  },
  {
-  "id": 672,
+  "id": 673,
   "name": "Kenneally's Irish Pub",
   "address": "2111 S Shepherd Dr, Houston, TX",
   "tunnel": null,
@@ -13401,7 +13421,7 @@
   "tryit": ""
  },
  {
-  "id": 673,
+  "id": 674,
   "name": "Rumi's Kitchen",
   "address": "1801 Post Oak Blvd, Houston, TX",
   "tunnel": null,
@@ -13421,7 +13441,7 @@
   "tryit": ""
  },
  {
-  "id": 674,
+  "id": 675,
   "name": "Holler Brewing",
   "address": "2206 Edwards St, Houston, TX",
   "tunnel": null,
@@ -13442,7 +13462,7 @@
   "tryit": ""
  },
  {
-  "id": 675,
+  "id": 676,
   "name": "Mala Sichuan Montrose",
   "address": "1201 Westheimer Rd, Houston, TX",
   "tunnel": null,
@@ -13462,7 +13482,7 @@
   "tryit": ""
  },
  {
-  "id": 676,
+  "id": 677,
   "name": "Mala Sichuan Heights",
   "address": "600 N Shepherd Dr, Houston, TX",
   "tunnel": null,
@@ -13482,7 +13502,7 @@
   "tryit": ""
  },
  {
-  "id": 677,
+  "id": 678,
   "name": "Marfreless",
   "address": "2006 Peden St, Houston, TX",
   "tunnel": null,
@@ -13503,7 +13523,7 @@
   "tryit": ""
  },
  {
-  "id": 678,
+  "id": 679,
   "name": "Fluff Bake Bar",
   "address": "1701 W 15th St, Houston, TX",
   "tunnel": null,
@@ -13524,7 +13544,7 @@
   "tryit": ""
  },
  {
-  "id": 679,
+  "id": 680,
   "name": "Hughie's Tavern & Viet Grill",
   "address": "1802 W 18th St, Houston, TX",
   "tunnel": null,
@@ -13544,7 +13564,7 @@
   "tryit": ""
  },
  {
-  "id": 680,
+  "id": 681,
   "name": "Hughie's Heights",
   "address": "4721 N Main St, Houston, TX",
   "tunnel": null,
@@ -13564,7 +13584,7 @@
   "tryit": ""
  },
  {
-  "id": 681,
+  "id": 682,
   "name": "Monkey's Tail",
   "address": "5802 Fulton St, Houston, TX",
   "tunnel": null,
@@ -13585,7 +13605,7 @@
   "tryit": ""
  },
  {
-  "id": 682,
+  "id": 683,
   "name": "Clarkwood",
   "address": "3201 Allen Pkwy, Houston, TX",
   "tunnel": null,
@@ -13606,7 +13626,7 @@
   "tryit": ""
  },
  {
-  "id": 683,
+  "id": 684,
   "name": "Mr. Peeples Seafood + Steak",
   "address": "1911 Bagby St, Houston, TX",
   "tunnel": null,
@@ -13626,7 +13646,7 @@
   "tryit": ""
  },
  {
-  "id": 684,
+  "id": 685,
   "name": "MAM's House of Ice",
   "address": "1040 W Cavalcade St, Houston, TX",
   "tunnel": null,
@@ -13647,7 +13667,7 @@
   "tryit": ""
  },
  {
-  "id": 685,
+  "id": 686,
   "name": "Dolce Neve",
   "address": "4721 N Main St, Houston, TX",
   "tunnel": null,
@@ -13668,12 +13688,117 @@
   "tryit": ""
  },
  {
-  "id": 686,
-  "name": "Oru",
-  "address": "746 W 24th St, Houston, TX",
+  "id": 687,
+  "name": "Harold's Chicken & Sports Bar",
+  "address": "5334 Washington Ave, Houston, TX",
   "tunnel": null,
   "cuisines": [
-   "Japanese a la carte sushi"
+   "Chicago-style fried chicken & sports bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Chicago-style fried chicken & sports bar.",
+  "tryit": ""
+ },
+ {
+  "id": 688,
+  "name": "Eureka Heights Brew Co",
+  "address": "941 W 18th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 689,
+  "name": "Platypus Brewing",
+  "address": "1902 Washington Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery & kitchen"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery & kitchen.",
+  "tryit": ""
+ },
+ {
+  "id": 690,
+  "name": "Elder Son Brewing",
+  "address": "946 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 691,
+  "name": "Lucky's Pub Heights",
+  "address": "2520 Houston Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sports pub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Sports pub.",
+  "tryit": ""
+ },
+ {
+  "id": 692,
+  "name": "Down House",
+  "address": "1801 Yale St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Heights brunch & bar"
   ],
   "meals": [
    "Lunch",
@@ -13684,7 +13809,154 @@
    "casual"
   ],
   "type": "Restaurant",
-  "note": "Japanese a la carte sushi restaurant.",
+  "note": "Heights brunch & bar restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 693,
+  "name": "Postino Heights",
+  "address": "642 Yale St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine cafe"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Wine Bar",
+  "note": "Wine cafe.",
+  "tryit": ""
+ },
+ {
+  "id": 694,
+  "name": "Baileson Brewing",
+  "address": "2322 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 695,
+  "name": "Bad Astronaut Brewing",
+  "address": "1519 Fulton St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 696,
+  "name": "Black Page Brewing",
+  "address": "210 Glen Park St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 697,
+  "name": "New Magnolia Brewing",
+  "address": "1616 Bevis St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 698,
+  "name": "Leemoo Health Bar",
+  "address": "908 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Smoothies, acai & healthy bites"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Smoothies, acai & healthy bites.",
+  "tryit": ""
+ },
+ {
+  "id": 699,
+  "name": "La La Land Kind Cafe MKT",
+  "address": "600 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & feel-good cafe"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Coffee & feel-good cafe.",
   "tryit": ""
  }
 ]
