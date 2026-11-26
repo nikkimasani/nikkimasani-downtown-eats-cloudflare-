@@ -1831,6 +1831,162 @@
 "k": "bar",
 "c": "Heights bar & game-day hangout",
 "a": "1119 W 20th St"
+},
+{
+"n": "Baso",
+"k": "rest",
+"c": "Basque live-fire",
+"a": "633 W 19th St"
+},
+{
+"n": "Camaraderie",
+"k": "rest",
+"c": "Refined American",
+"a": "608 W 11th St"
+},
+{
+"n": "Koyo Hand Roll Bar Heights",
+"k": "rest",
+"c": "Hand roll sushi",
+"a": "1835 N Shepherd Dr"
+},
+{
+"n": "Love Croissants Heights",
+"k": "coffee",
+"c": "Croissant bakery & drive-thru",
+"a": "801 W 16th St"
+},
+{
+"n": "Love Croissants Midtown",
+"k": "coffee",
+"c": "Croissant bakery",
+"a": "2808 Caroline St"
+},
+{
+"n": "Mack Allen's",
+"k": "rest",
+"c": "Steaks, sushi & seafood",
+"a": "4400 Post Oak Pkwy"
+},
+{
+"n": "Johnny Ritas Cocina y Cantina",
+"k": "rest",
+"c": "Mesquite-fired Mexican",
+"a": "5602 Fulton St"
+},
+{
+"n": "Hypsi",
+"k": "rest",
+"c": "Italian at Hotel Daphne",
+"a": "347 W 20th St"
+},
+{
+"n": "Oru",
+"k": "rest",
+"c": "Japanese a la carte sushi",
+"a": "746 W 24th St"
+},
+{
+"n": "Lo-Lo's Chicken & Waffles",
+"k": "rest",
+"c": "Chicken & waffles",
+"a": "3611 Gulf Fwy"
+},
+{
+"n": "The Address",
+"k": "bar",
+"c": "Restaurant, sports bar & pool",
+"a": "3333 Raleigh St"
+},
+{
+"n": "Ray's Real Pit BBQ Shack",
+"k": "rest",
+"c": "BBQ & soul food",
+"a": "3929 Old Spanish Trl"
+},
+{
+"n": "Kenneally's Irish Pub",
+"k": "bar",
+"c": "Irish pub & thin-crust pizza",
+"a": "2111 S Shepherd Dr"
+},
+{
+"n": "Rumi's Kitchen",
+"k": "rest",
+"c": "Persian",
+"a": "1801 Post Oak Blvd"
+},
+{
+"n": "Holler Brewing",
+"k": "bar",
+"c": "Brewery taproom",
+"a": "2206 Edwards St"
+},
+{
+"n": "Mala Sichuan Montrose",
+"k": "rest",
+"c": "Sichuan",
+"a": "1201 Westheimer Rd"
+},
+{
+"n": "Mala Sichuan Heights",
+"k": "rest",
+"c": "Sichuan",
+"a": "600 N Shepherd Dr"
+},
+{
+"n": "Marfreless",
+"k": "bar",
+"c": "Hidden lounge behind the blue door",
+"a": "2006 Peden St"
+},
+{
+"n": "Fluff Bake Bar",
+"k": "coffee",
+"c": "Bakery & dessert bar",
+"a": "1701 W 15th St"
+},
+{
+"n": "Hughie's Tavern & Viet Grill",
+"k": "rest",
+"c": "Vietnamese-American tavern",
+"a": "1802 W 18th St"
+},
+{
+"n": "Hughie's Heights",
+"k": "rest",
+"c": "Vietnamese-American tavern",
+"a": "4721 N Main St"
+},
+{
+"n": "Monkey's Tail",
+"k": "bar",
+"c": "Mexican-American bar",
+"a": "5802 Fulton St"
+},
+{
+"n": "Clarkwood",
+"k": "bar",
+"c": "Wine & cocktail bar",
+"a": "3201 Allen Pkwy"
+},
+{
+"n": "Mr. Peeples Seafood + Steak",
+"k": "rest",
+"c": "Seafood & steaks",
+"a": "1911 Bagby St"
+},
+{
+"n": "MAM's House of Ice",
+"k": "coffee",
+"c": "New Orleans snoballs",
+"a": "1040 W Cavalcade St"
+},
+{
+"n": "Dolce Neve",
+"k": "coffee",
+"c": "Gelato",
+"a": "4721 N Main St"
 }
 ]
 }

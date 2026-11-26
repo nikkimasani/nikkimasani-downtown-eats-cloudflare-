@@ -3422,6 +3422,206 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Baso": {
+      "street": "633 W 19th St",
+      "lat": 29.802857,
+      "lng": -95.408733,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Camaraderie": {
+      "street": "608 W 11th St",
+      "lat": 29.790559,
+      "lng": -95.4035,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Koyo Hand Roll Bar Heights": {
+      "street": "1835 N Shepherd Dr",
+      "lat": 29.802129,
+      "lng": -95.410182,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Love Croissants Heights": {
+      "street": "801 W 16th St",
+      "lat": 29.742759,
+      "lng": -95.372788,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Love Croissants Midtown": {
+      "street": "2808 Caroline St",
+      "lat": 29.742809,
+      "lng": -95.372376,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mack Allen's": {
+      "street": "4400 Post Oak Pkwy",
+      "lat": 29.747584,
+      "lng": -95.451158,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Johnny Ritas Cocina y Cantina": {
+      "street": "5602 Fulton St",
+      "lat": 29.810118,
+      "lng": -95.369619,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hypsi": {
+      "street": "347 W 20th St",
+      "lat": 29.803973,
+      "lng": -95.40247,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lo-Lo's Chicken & Waffles": {
+      "street": "3611 Gulf Fwy",
+      "lat": 29.735456,
+      "lng": -95.346294,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Address": {
+      "street": "3333 Raleigh St",
+      "lat": 29.701912,
+      "lng": -95.373445,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Ray's Real Pit BBQ Shack": {
+      "street": "3929 Old Spanish Trl",
+      "lat": 29.70256,
+      "lng": -95.357058,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kenneally's Irish Pub": {
+      "street": "2111 S Shepherd Dr",
+      "lat": 29.746766,
+      "lng": -95.410592,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Rumi's Kitchen": {
+      "street": "1801 Post Oak Blvd",
+      "lat": 29.747314,
+      "lng": -95.461116,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Holler Brewing": {
+      "street": "2206 Edwards St",
+      "lat": 29.770746,
+      "lng": -95.380165,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mala Sichuan Montrose": {
+      "street": "1201 Westheimer Rd",
+      "lat": 29.744325,
+      "lng": -95.393849,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mala Sichuan Heights": {
+      "street": "600 N Shepherd Dr",
+      "lat": 29.78157,
+      "lng": -95.40913,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Marfreless": {
+      "street": "2006 Peden St",
+      "lat": 29.752376,
+      "lng": -95.408478,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fluff Bake Bar": {
+      "street": "1701 W 15th St",
+      "lat": 29.797895,
+      "lng": -95.413297,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hughie's Tavern & Viet Grill": {
+      "street": "1802 W 18th St",
+      "lat": 29.801571,
+      "lng": -95.431758,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hughie's Heights": {
+      "street": "4721 N Main St",
+      "lat": 29.797734,
+      "lng": -95.382412,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Monkey's Tail": {
+      "street": "5802 Fulton St",
+      "lat": 29.81169,
+      "lng": -95.369647,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Clarkwood": {
+      "street": "3201 Allen Pkwy",
+      "lat": 29.760983,
+      "lng": -95.400651,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mr. Peeples Seafood + Steak": {
+      "street": "1911 Bagby St",
+      "lat": 29.753206,
+      "lng": -95.375428,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "MAM's House of Ice": {
+      "street": "1040 W Cavalcade St",
+      "lat": 29.804012,
+      "lng": -95.385143,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Dolce Neve": {
+      "street": "4721 N Main St",
+      "lat": 29.797734,
+      "lng": -95.382412,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }

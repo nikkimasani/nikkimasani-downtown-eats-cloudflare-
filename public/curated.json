@@ -13155,5 +13155,516 @@
   "type": "Bar",
   "note": "Heights bar & game-day hangout.",
   "tryit": ""
+ },
+ {
+  "id": 661,
+  "name": "Baso",
+  "address": "633 W 19th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Basque live-fire"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Basque live-fire restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 662,
+  "name": "Camaraderie",
+  "address": "608 W 11th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Refined American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Refined American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 663,
+  "name": "Koyo Hand Roll Bar Heights",
+  "address": "1835 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Hand roll sushi"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Hand roll sushi restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 664,
+  "name": "Love Croissants Heights",
+  "address": "801 W 16th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Croissant bakery & drive-thru"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Bakery & Café",
+  "note": "Croissant bakery & drive-thru.",
+  "tryit": ""
+ },
+ {
+  "id": 665,
+  "name": "Love Croissants Midtown",
+  "address": "2808 Caroline St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Croissant bakery"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Bakery & Café",
+  "note": "Croissant bakery.",
+  "tryit": ""
+ },
+ {
+  "id": 666,
+  "name": "Mack Allen's",
+  "address": "4400 Post Oak Pkwy, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steaks, sushi & seafood"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Steaks, sushi & seafood restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 667,
+  "name": "Johnny Ritas Cocina y Cantina",
+  "address": "5602 Fulton St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mesquite-fired Mexican"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Mesquite-fired Mexican restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 668,
+  "name": "Hypsi",
+  "address": "347 W 20th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian at Hotel Daphne"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian at Hotel Daphne restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 669,
+  "name": "Lo-Lo's Chicken & Waffles",
+  "address": "3611 Gulf Fwy, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Chicken & waffles"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Chicken & waffles restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 670,
+  "name": "The Address",
+  "address": "3333 Raleigh St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Restaurant, sports bar & pool"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Restaurant, sports bar & pool.",
+  "tryit": ""
+ },
+ {
+  "id": 671,
+  "name": "Ray's Real Pit BBQ Shack",
+  "address": "3929 Old Spanish Trl, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ & soul food"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "BBQ & soul food restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 672,
+  "name": "Kenneally's Irish Pub",
+  "address": "2111 S Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Irish pub & thin-crust pizza"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Irish pub & thin-crust pizza.",
+  "tryit": ""
+ },
+ {
+  "id": 673,
+  "name": "Rumi's Kitchen",
+  "address": "1801 Post Oak Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Persian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Persian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 674,
+  "name": "Holler Brewing",
+  "address": "2206 Edwards St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Brewery taproom"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Brewery taproom.",
+  "tryit": ""
+ },
+ {
+  "id": 675,
+  "name": "Mala Sichuan Montrose",
+  "address": "1201 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sichuan"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sichuan restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 676,
+  "name": "Mala Sichuan Heights",
+  "address": "600 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sichuan"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sichuan restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 677,
+  "name": "Marfreless",
+  "address": "2006 Peden St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Hidden lounge behind the blue door"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Hidden lounge behind the blue door.",
+  "tryit": ""
+ },
+ {
+  "id": 678,
+  "name": "Fluff Bake Bar",
+  "address": "1701 W 15th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery & dessert bar"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Bakery & Café",
+  "note": "Bakery & dessert bar.",
+  "tryit": ""
+ },
+ {
+  "id": 679,
+  "name": "Hughie's Tavern & Viet Grill",
+  "address": "1802 W 18th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Vietnamese-American tavern"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Vietnamese-American tavern restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 680,
+  "name": "Hughie's Heights",
+  "address": "4721 N Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Vietnamese-American tavern"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Vietnamese-American tavern restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 681,
+  "name": "Monkey's Tail",
+  "address": "5802 Fulton St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican-American bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Mexican-American bar.",
+  "tryit": ""
+ },
+ {
+  "id": 682,
+  "name": "Clarkwood",
+  "address": "3201 Allen Pkwy, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine & cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Wine & cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 683,
+  "name": "Mr. Peeples Seafood + Steak",
+  "address": "1911 Bagby St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Seafood & steaks"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Seafood & steaks restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 684,
+  "name": "MAM's House of Ice",
+  "address": "1040 W Cavalcade St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "New Orleans snoballs"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "New Orleans snoballs.",
+  "tryit": ""
+ },
+ {
+  "id": 685,
+  "name": "Dolce Neve",
+  "address": "4721 N Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Gelato"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Gelato.",
+  "tryit": ""
  }
 ]
