@@ -2699,7 +2699,9 @@
       "website": "https://madhouston.com",
       "hours": "Mon–Thu 5pm–10pm, Fri–Sun 11am–2pm, Fri–Sat 4:30pm–12am, Sun 5pm–9pm",
       "source": "OpenTable listing",
-      "checked": "2026-11-25"
+      "checked": "2026-11-25",
+      "lat": 29.74225,
+      "lng": -95.45455
     },
     "iPic Houston": {
       "street": "4444 Westheimer Rd Suite G100",
@@ -3726,6 +3728,102 @@
       "street": "600 N Shepherd Dr",
       "lat": 29.78157,
       "lng": -95.40913,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Dimassi's Mediterranean Buffet Medical Center": {
+      "street": "8236 Kirby Dr",
+      "lat": 29.688517,
+      "lng": -95.41257,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Dimassi's Mediterranean Buffet Downtown": {
+      "street": "919 Milam St",
+      "lat": 29.758541,
+      "lng": -95.366152,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Salata Heights": {
+      "street": "185 Heights Blvd",
+      "lat": 29.773545,
+      "lng": -95.39742,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Salata Greenway": {
+      "street": "3651 Weslayan St",
+      "lat": 29.733874,
+      "lng": -95.441444,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Salata River Oaks": {
+      "street": "1440 W Gray St",
+      "lat": 29.753264,
+      "lng": -95.399512,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Salata Medical Center": {
+      "street": "6620 Fannin St",
+      "lat": 29.708521,
+      "lng": -95.401901,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cafe Lili": {
+      "street": "5757 Westheimer Rd",
+      "lat": 29.737705,
+      "lng": -95.479587,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pasha": {
+      "street": "2325 University Blvd",
+      "lat": 29.715031,
+      "lng": -95.41379,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Abdallah's Lebanese Cafe": {
+      "street": "2795 Katy Fwy",
+      "lat": 29.776543,
+      "lng": -95.388263,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Herand's Kitchen": {
+      "street": "2601 Baylor St",
+      "lat": 29.810763,
+      "lng": -95.385023,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fadi's Eatery": {
+      "street": "1801 Binz St",
+      "lat": 29.721689,
+      "lng": -95.38269,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "AL Quick Stop": {
+      "street": "2002 Waugh Dr",
+      "lat": 29.750271,
+      "lng": -95.396644,
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true

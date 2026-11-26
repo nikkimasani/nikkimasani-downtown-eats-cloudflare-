@@ -2065,6 +2065,84 @@
 "k": "coffee",
 "c": "Coffee & feel-good cafe",
 "a": "600 N Shepherd Dr"
+},
+{
+"n": "Dimassi's Mediterranean Buffet Medical Center",
+"k": "rest",
+"c": "Mediterranean buffet",
+"a": "8236 Kirby Dr"
+},
+{
+"n": "Dimassi's Mediterranean Buffet Downtown",
+"k": "rest",
+"c": "Mediterranean buffet",
+"a": "919 Milam St"
+},
+{
+"n": "Salata Heights",
+"k": "rest",
+"c": "Build-your-own salads",
+"a": "185 Heights Blvd"
+},
+{
+"n": "Salata Greenway",
+"k": "rest",
+"c": "Build-your-own salads",
+"a": "3651 Weslayan St"
+},
+{
+"n": "Salata River Oaks",
+"k": "rest",
+"c": "Build-your-own salads",
+"a": "1440 W Gray St"
+},
+{
+"n": "Salata Medical Center",
+"k": "rest",
+"c": "Build-your-own salads",
+"a": "6620 Fannin St"
+},
+{
+"n": "Cafe Lili",
+"k": "rest",
+"c": "Lebanese",
+"a": "5757 Westheimer Rd"
+},
+{
+"n": "Pasha",
+"k": "rest",
+"c": "Turkish & Mediterranean",
+"a": "2325 University Blvd"
+},
+{
+"n": "Abdallah's Lebanese Cafe",
+"k": "rest",
+"c": "Lebanese cafe & bakery",
+"a": "2795 Katy Fwy"
+},
+{
+"n": "Herand's Kitchen",
+"k": "rest",
+"c": "Persian & Greek",
+"a": "2601 Baylor St"
+},
+{
+"n": "Fadi's Eatery",
+"k": "rest",
+"c": "Lebanese & Mediterranean",
+"a": "1801 Binz St"
+},
+{
+"n": "AL Quick Stop",
+"k": "rest",
+"c": "Mediterranean & Mexican",
+"a": "2002 Waugh Dr"
+},
+{
+"n": "Moxies",
+"k": "rest",
+"c": "American, brunch & happy hour",
+"a": "5000 Westheimer Rd"
 }
 ]
 }

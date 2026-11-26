@@ -13958,5 +13958,245 @@
   "type": "Coffee Shop",
   "note": "Coffee & feel-good cafe.",
   "tryit": ""
+ },
+ {
+  "id": 700,
+  "name": "Dimassi's Mediterranean Buffet Medical Center",
+  "address": "8236 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mediterranean buffet"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Mediterranean buffet restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 701,
+  "name": "Dimassi's Mediterranean Buffet Downtown",
+  "address": "919 Milam St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mediterranean buffet"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Mediterranean buffet restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 702,
+  "name": "Salata Heights",
+  "address": "185 Heights Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Build-your-own salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Build-your-own salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 703,
+  "name": "Salata Greenway",
+  "address": "3651 Weslayan St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Build-your-own salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Build-your-own salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 704,
+  "name": "Salata River Oaks",
+  "address": "1440 W Gray St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Build-your-own salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Build-your-own salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 705,
+  "name": "Salata Medical Center",
+  "address": "6620 Fannin St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Build-your-own salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Build-your-own salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 706,
+  "name": "Cafe Lili",
+  "address": "5757 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lebanese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Lebanese restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 707,
+  "name": "Pasha",
+  "address": "2325 University Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Turkish & Mediterranean"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Turkish & Mediterranean restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 708,
+  "name": "Abdallah's Lebanese Cafe",
+  "address": "2795 Katy Fwy, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lebanese cafe & bakery"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Lebanese cafe & bakery restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 709,
+  "name": "Herand's Kitchen",
+  "address": "2601 Baylor St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Persian & Greek"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Persian & Greek restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 710,
+  "name": "Fadi's Eatery",
+  "address": "1801 Binz St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lebanese & Mediterranean"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Lebanese & Mediterranean restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 711,
+  "name": "AL Quick Stop",
+  "address": "2002 Waugh Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mediterranean & Mexican"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Mediterranean & Mexican restaurant.",
+  "tryit": ""
  }
 ]
