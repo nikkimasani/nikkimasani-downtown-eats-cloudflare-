@@ -48,6 +48,8 @@ const AREAS = [
   { k: 'upperkirby', l: 'Upper Kirby & River Oaks', e: '🌿', b: [29.7200, -95.4450, 29.7620, -95.4100] },
   { k: 'uptown', l: 'Uptown, Galleria & Post Oak', e: '🛍️', b: [29.7250, -95.4800, 29.7700, -95.4450] },
   { k: 'ricevillage', l: 'Rice Village & West U', e: '🛒', b: [29.7080, -95.4300, 29.7200, -95.4050] },
+  { k: 'bellaire', l: 'Bellaire', e: '🌼', b: [29.6900, -95.4950, 29.7200, -95.4300] },
+  { k: 'meyerland', l: 'Meyerland', e: '🏘️', b: [29.6450, -95.4950, 29.6900, -95.4300] },
 ];
 const inGrid = (r) => { let c = null; try { c = city; } catch (e) { return null; } if (!c?.avenues) return null; const [x, y] = city.proj(r.lat, r.lng), A = city.avenues.map((a) => a.x), C = city.cross.map((c) => c.y); return x >= Math.min(...A) && x <= Math.max(...A) && y >= Math.min(...C) && y <= Math.max(...C); };
 const areaOf = (r) => { if (r.lat == null) return null; if (r._area !== undefined && r._areaK === r.lat + r.lng) return r._area; const g = inGrid(r); const v = g ? 'downtown' : areaBox(r, g === null); if (g !== null) { r._area = v; r._areaK = r.lat + r.lng; } return v; };

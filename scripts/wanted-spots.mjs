@@ -9,13 +9,13 @@ const OF = JSON.parse(fs.readFileSync('public/overrides.json', 'utf8')); const O
 const P = JSON.parse(fs.readFileSync('public/places.json', 'utf8'));
 const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’']/g, '').replace(/&/g, 'and').replace(/\b(the|houston|htx|bar|lounge|restaurant|kitchen|and)\b/g, '').replace(/[^a-z0-9]/g, '');
 const have = new Set([...C.map((c) => norm(c.name)), ...P.places.map((p) => norm(p.name))]);
-const BOX = { s: 29.700, w: -95.485, n: 29.815, e: -95.300 };   // the inner loop, out to the Galleria
+const BOX = { s: 29.645, w: -95.495, n: 29.815, e: -95.300 };   // the inner loop, out to the Galleria
 const inBox = (la, lo) => la > BOX.s && la < BOX.n && lo > BOX.w && lo < BOX.e;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const UA = { 'user-agent': 'downtown-eats personal dining map (github.com/nikkimasani/nikkimasani-downtown-eats)' };
 async function census(street) {
   try {
-    const u = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?benchmark=Public_AR_Current&format=json&address=' + encodeURIComponent(`${street}, Houston, TX`);
+    const u = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?benchmark=Public_AR_Current&format=json&address=' + encodeURIComponent(/,/.test(street) ? `${street}, TX` : `${street}, Houston, TX`);
     const c = (await (await fetch(u, { signal: AbortSignal.timeout(20000) })).json())?.result?.addressMatches?.[0]?.coordinates;
     return c ? { lat: +c.y.toFixed(6), lng: +c.x.toFixed(6) } : null;
   } catch { return null; }
@@ -40,7 +40,7 @@ for (const w of W) {
   let g = w.a ? await census(w.a) : null; if (g) g.street = w.a; else g = await nominatim(w.n);
   if (!g || !inBox(g.lat, g.lng)) { misses.push(w.n); console.log('not found', w.n); continue; }
   const street = w.a || g.street || '';
-  const rec = { id: ++id, name: w.n, address: street ? `${street}, Houston, TX` : 'Houston, TX', tunnel: null, cuisines: [w.c], meals: w.k === 'bar' ? ['Happy Hour', 'Late Night'] : w.k === 'coffee' ? ['Breakfast', 'Lunch'] : ['Lunch', 'Dinner'], price: 2,
+  const rec = { id: ++id, name: w.n, address: street ? (/,/.test(street) ? `${street}, TX` : `${street}, Houston, TX`) : 'Houston, TX', tunnel: null, cuisines: [w.c], meals: w.k === 'bar' ? ['Happy Hour', 'Late Night'] : w.k === 'coffee' ? ['Breakfast', 'Lunch'] : ['Lunch', 'Dinner'], price: 2,
     vibes: w.k === 'bar' ? ['drinks', 'nightlife'] : w.k === 'coffee' ? ['coffee', 'work'] : ['casual'], type: TYPE[w.k](w.c), note: `${w.c}${w.k === 'rest' ? ' restaurant' : ''}.`, tryit: '' };
   C.push(rec); P.places.push({ ...rec, official: null });
   O[w.n] = { ...(street ? { street } : {}), lat: g.lat, lng: g.lng, source: w.a ? 'US Census geocoder' : 'OpenStreetMap Nominatim', checked: new Date().toISOString().slice(0, 10), notInDirectory: true };

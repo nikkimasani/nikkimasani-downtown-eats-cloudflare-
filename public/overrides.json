@@ -2706,6 +2706,530 @@
       "source": "River Oaks District; pinned at the west end of the district",
       "checked": "2026-11-25",
       "notInDirectory": true
+    },
+    "Uchi": {
+      "street": "904 Westheimer Rd",
+      "lat": 29.7449366,
+      "lng": -95.3907278,
+      "source": "OpenStreetMap",
+      "checked": "2026-11-25"
+    },
+    "Aiko": {
+      "street": "1902 Washington Ave",
+      "lat": 29.7679696,
+      "lng": -95.3775437,
+      "source": "OpenStreetMap",
+      "checked": "2026-11-25"
+    },
+    "Kirby Ice House": {
+      "street": "3333 Eastside St",
+      "lat": 29.7358093,
+      "lng": -95.4245071,
+      "source": "OpenStreetMap",
+      "checked": "2026-11-25"
+    },
+    "Local Foods": {
+      "street": "714 Yale St",
+      "lat": 29.7836351,
+      "lng": -95.3986181,
+      "source": "OpenStreetMap",
+      "checked": "2026-11-25"
+    },
+    "Haii Keii": {
+      "street": "3300 Kirby Dr",
+      "lat": 29.735652,
+      "lng": -95.418762,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Se7en": {
+      "street": "3300 Kirby Dr",
+      "lat": 29.735652,
+      "lng": -95.418762,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Verandah": {
+      "street": "3300 Kirby Dr",
+      "lat": 29.735652,
+      "lng": -95.418762,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "French Country Wines": {
+      "street": "3300 Kirby Dr",
+      "lat": 29.735652,
+      "lng": -95.418762,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Becks Prime Kirby": {
+      "street": "2902 Kirby Dr",
+      "lat": 29.74,
+      "lng": -95.418805,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Loro Asian Smokehouse Kirby": {
+      "street": "5333 Kirby Dr",
+      "lat": 29.724523,
+      "lng": -95.418488,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Norigami": {
+      "street": "2715 Bissonnet St",
+      "lat": 29.725372,
+      "lng": -95.420879,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Silk Road Asian Tapas Bar": {
+      "street": "2929 Westpark Dr",
+      "lat": 29.728626,
+      "lng": -95.424042,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Feges BBQ Greenway": {
+      "street": "3 Greenway Plaza",
+      "lat": 29.732457,
+      "lng": -95.4314,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Local Foods Upper Kirby": {
+      "street": "2555 Kirby Dr",
+      "lat": 29.743127,
+      "lng": -95.418717,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Upper Kirby Bistro": {
+      "street": "2736 Virginia St",
+      "lat": 29.741225,
+      "lng": -95.421195,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Christian's Tailgate Kirby": {
+      "street": "5114 Kirby Dr",
+      "lat": 29.72704,
+      "lng": -95.418668,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "First Watch Kirby": {
+      "street": "3029 Kirby Dr",
+      "lat": 29.73806,
+      "lng": -95.418673,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Little Taco Shop Kirby": {
+      "street": "3027 Kirby Dr",
+      "lat": 29.738086,
+      "lng": -95.418673,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "PostScript": {
+      "street": "2800 Kirby Dr",
+      "lat": 29.740874,
+      "lng": -95.418837,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "George's Bistro & Bar": {
+      "street": "2715 Bissonnet St",
+      "lat": 29.725372,
+      "lng": -95.420879,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pinstripes Houston": {
+      "street": "3300 Kirby Dr",
+      "lat": 29.735652,
+      "lng": -95.418762,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Loch Bar": {
+      "street": "4444 Westheimer Rd",
+      "lat": 29.741468,
+      "lng": -95.452041,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Uchiko Houston": {
+      "street": "1801 Post Oak Blvd",
+      "lat": 29.747314,
+      "lng": -95.461116,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Grotto": {
+      "street": "4715 Westheimer Rd",
+      "lat": 29.741159,
+      "lng": -95.45508,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Exodus Bar & Grill": {
+      "street": "80 Braeswood Square",
+      "lat": 29.69816,
+      "lng": -95.413289,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cafe Piquet": {
+      "street": "5757 Bissonnet St",
+      "lat": 29.700091,
+      "lng": -95.481926,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Dandelion Cafe Bellaire": {
+      "street": "5405 Bellaire Blvd",
+      "lat": 29.705145,
+      "lng": -95.474548,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "KP's Kitchen": {
+      "street": "5427 Bissonnet St",
+      "lat": 29.703815,
+      "lng": -95.475271,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Molina's Cantina Bellaire": {
+      "street": "3801 Bellaire Blvd",
+      "lat": 29.705968,
+      "lng": -95.437253,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tapester's Grill": {
+      "street": "4520 Beechnut St",
+      "lat": 29.689263,
+      "lng": -95.452284,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Watershed": {
+      "street": "4820 W Bellfort Ave",
+      "lat": 29.671376,
+      "lng": -95.459556,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Three Brothers Bakery": {
+      "street": "4036 S Braeswood Blvd",
+      "lat": 29.6898,
+      "lng": -95.441815,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Coltivare": {
+      "street": "3320 White Oak Dr",
+      "lat": 29.781592,
+      "lng": -95.393192,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Understory": {
+      "street": "800 Capitol St",
+      "lat": 29.760169,
+      "lng": -95.364876,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kanomwan": {
+      "street": "736 Telephone Rd",
+      "lat": 29.734745,
+      "lng": -95.330722,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Anvil Bar & Refuge": {
+      "street": "1424 Westheimer Rd",
+      "lat": 29.743006,
+      "lng": -95.396775,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "51fifteen": {
+      "street": "5175 Westheimer Rd",
+      "lat": 29.740583,
+      "lng": -95.463732,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mariposa at Neiman Marcus": {
+      "street": "2600 Post Oak Blvd",
+      "lat": 29.740709,
+      "lng": -95.460924,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Peli Peli Galleria": {
+      "street": "5085 Westheimer Rd",
+      "lat": 29.740671,
+      "lng": -95.462286,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Ten Sushi + Cocktail Bar": {
+      "street": "4200 Westheimer Rd",
+      "lat": 29.74163,
+      "lng": -95.449217,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Burger Joint Heights": {
+      "street": "2002 N Shepherd Dr",
+      "lat": 29.803886,
+      "lng": -95.410083,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Burger Joint West U": {
+      "street": "5403 Kirby Dr",
+      "lat": 29.723836,
+      "lng": -95.418475,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Aya Sushi": {
+      "street": "5407 Bellaire Blvd, Bellaire",
+      "lat": 29.705569,
+      "lng": -95.474266,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Betsy's at Evelyn's Park": {
+      "street": "4400 Bellaire Blvd, Bellaire",
+      "lat": 29.705951,
+      "lng": -95.449507,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Blood Bros BBQ": {
+      "street": "5425 Bellaire Blvd, Bellaire",
+      "lat": 29.705566,
+      "lng": -95.474402,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lankford's Bellaire": {
+      "street": "5208 Bissonnet St, Bellaire",
+      "lat": 29.706392,
+      "lng": -95.470509,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "ZOA Moroccan Kitchen Bellaire": {
+      "street": "6700 S Rice Ave, Bellaire",
+      "lat": 29.706936,
+      "lng": -95.468009,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Enoteca Rossa": {
+      "street": "4566 Bissonnet St, Bellaire",
+      "lat": 29.714481,
+      "lng": -95.454611,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Rossa Room": {
+      "street": "4566 Bissonnet St, Bellaire",
+      "lat": 29.714481,
+      "lng": -95.454611,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Costa Brava Bistro": {
+      "street": "5115 Bellaire Blvd, Bellaire",
+      "lat": 29.705668,
+      "lng": -95.468295,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "JOEY Uptown": {
+      "street": "5045 Westheimer Rd",
+      "lat": 29.740688,
+      "lng": -95.461644,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Capone's Oven & Bar": {
+      "street": "2303 Richmond Ave",
+      "lat": 29.734126,
+      "lng": -95.415182,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Stone's Throw": {
+      "street": "1417 Westheimer Rd",
+      "lat": 29.742965,
+      "lng": -95.396585,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fedora Lounge": {
+      "street": "2726 Bissonnet St",
+      "lat": 29.725487,
+      "lng": -95.421047,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Burger-chan Heights": {
+      "street": "506 Yale St",
+      "lat": 29.77979,
+      "lng": -95.398695,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Greenway Coffee": {
+      "street": "3 Greenway Plaza",
+      "lat": 29.732457,
+      "lng": -95.4314,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Burger Bodega": {
+      "street": "4520 Washington Ave",
+      "lat": 29.770555,
+      "lng": -95.406392,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Jodas": {
+      "street": "1000 Main St",
+      "lat": 29.756945,
+      "lng": -95.365008,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Slowpokes Upper Kirby": {
+      "street": "2925 Richmond Ave",
+      "lat": 29.733972,
+      "lng": -95.422491,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Slowpokes West U": {
+      "street": "6725 Stella Link Rd",
+      "lat": 29.707058,
+      "lng": -95.440161,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Dish Society Heights": {
+      "street": "11th St Bikeway",
+      "lat": 29.790498,
+      "lng": -95.398727,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Eagle Houston": {
+      "street": "611 Hyde Park Blvd",
+      "lat": 29.747426,
+      "lng": -95.388198,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bar 5015": {
+      "street": "5015 Almeda Rd",
+      "lat": 29.723859,
+      "lng": -95.378319,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Axelrad": {
+      "street": "1517 Alabama St",
+      "lat": 29.735242,
+      "lng": -95.37545,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Blacksmith": {
+      "street": "1018 Westheimer Rd",
+      "lat": 29.744721,
+      "lng": -95.392021,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Prospect Park Midtown": {
+      "street": "3100 Fountain View Drive",
+      "lat": 29.732721,
+      "lng": -95.484639,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }

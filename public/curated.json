@@ -8901,19 +8901,25 @@
   "address": "3807 Montrose Blvd, Houston, TX",
   "tunnel": null,
   "cuisines": [
-   "Seafood"
+   "Seafood",
+   "Oysters"
   ],
   "meals": [
    "Lunch",
-   "Dinner"
+   "Dinner",
+   "Happy Hour",
+   "Full Service",
+   "Patio"
   ],
-  "price": 2,
+  "price": 3,
   "vibes": [
-   "casual"
+   "date",
+   "drinks",
+   "upscale"
   ],
-  "type": "Restaurant",
-  "note": "Seafood restaurant.",
-  "tryit": ""
+  "type": "Seafood",
+  "note": "Breezy East-Coast-style oyster bar on Montrose Blvd from the Austin team: raw bar, lobster rolls and martinis.",
+  "tryit": "A dozen oysters, the lobster roll and a martini."
  },
  {
   "id": 456,
@@ -10006,15 +10012,19 @@
   ],
   "meals": [
    "Lunch",
-   "Dinner"
+   "Dinner",
+   "Happy Hour",
+   "Full Service"
   ],
   "price": 2,
   "vibes": [
-   "casual"
+   "casual",
+   "date",
+   "drinks"
   ],
-  "type": "Restaurant",
-  "note": "American restaurant.",
-  "tryit": ""
+  "type": "Seafood",
+  "note": "East-Coast-style neighborhood seafood and burger spot on W Gray: lobster rolls, raw bar, strong martinis.",
+  "tryit": "Lobster roll and fries with a martini."
  },
  {
   "id": 510,
@@ -10696,15 +10706,19 @@
   ],
   "meals": [
    "Lunch",
-   "Dinner"
+   "Dinner",
+   "Happy Hour",
+   "Full Service"
   ],
   "price": 2,
   "vibes": [
-   "casual"
+   "casual",
+   "date",
+   "drinks"
   ],
-  "type": "Restaurant",
-  "note": "Seafood & burgers restaurant.",
-  "tryit": ""
+  "type": "Seafood",
+  "note": "Rice Village outpost of the East-Coast-style seafood and burger spot: lobster rolls, raw bar and martinis.",
+  "tryit": "Lobster roll and fries with a martini."
  },
  {
   "id": 543,
@@ -10715,16 +10729,17 @@
    "Italian"
   ],
   "meals": [
-   "Lunch",
-   "Dinner"
+   "Dinner",
+   "Full Service"
   ],
-  "price": 2,
+  "price": 3,
   "vibes": [
-   "casual"
+   "date",
+   "group"
   ],
   "type": "Restaurant",
-  "note": "Italian restaurant.",
-  "tryit": ""
+  "note": "Red-sauce Italian date-night spot in Rice Village: fried gulf shrimp and calamari, bolognese and a chicken parm buried in marinara.",
+  "tryit": "Chicken parm and the bolognese to share."
  },
  {
   "id": 544,
@@ -10803,8 +10818,8 @@
    "casual"
   ],
   "type": "Restaurant",
-  "note": "Sandwiches & salads restaurant.",
-  "tryit": ""
+  "note": "Rice Village original of the farm-to-table sandwich and salad spot, with Lee's Den wine and cocktail bar upstairs.",
+  "tryit": "Crunchy chicken sandwich, then a glass upstairs at Lee's."
  },
  {
   "id": 548,
@@ -10818,14 +10833,15 @@
    "Happy Hour",
    "Late Night"
   ],
-  "price": 2,
+  "price": 3,
   "vibes": [
    "drinks",
+   "date",
    "nightlife"
   ],
   "type": "Cocktail Bar",
-  "note": "Wine & cocktail bar.",
-  "tryit": ""
+  "note": "Speakeasy-style wine and cocktail bar upstairs at Local Foods in Rice Village; 21+, pasta specials Wednesdays and steak night Thursdays. Named one of Bon Appétit's 2025 Best Bars in America.",
+  "tryit": "Thursday steak night or a martini at the bar."
  },
  {
   "id": 549,
@@ -11289,5 +11305,1363 @@
   "type": "Spanish",
   "note": "Modern Spanish tapas in River Oaks District from the team behind Michelin-starred BCN, known for its gin & tonics and paella.",
   "tryit": "Seafood paella and a gin & tonic; weekend brunch Fri–Sun."
+ },
+ {
+  "id": 571,
+  "name": "Uchi",
+  "address": "904 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese",
+   "Sushi"
+  ],
+  "meals": [
+   "Dinner",
+   "Happy Hour",
+   "Full Service"
+  ],
+  "price": 4,
+  "vibes": [
+   "date",
+   "upscale",
+   "adventurous"
+  ],
+  "type": "Sushi",
+  "note": "Tyson Cole's modern Japanese flagship in a converted Montrose house: inventive raw plates, nigiri and tasting menus.",
+  "tryit": "Happy hour 'sake social' early; the hama chili and a chef's tasting."
+ },
+ {
+  "id": 572,
+  "name": "Aiko",
+  "address": "1902 Washington Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese",
+   "Sushi"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Happy Hour",
+   "Full Service"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "upscale"
+  ],
+  "type": "Sushi",
+  "note": "Modern Japanese sushi bar and omakase on Washington Ave from chefs Patrick Pham and Daniel Lee (Kokoro, Handies Douzo).",
+  "tryit": "Hamachi crudo, spicy tuna handroll and saketoro aburi nigiri."
+ },
+ {
+  "id": 573,
+  "name": "Kirby Ice House",
+  "address": "3333 Eastside St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night",
+   "Patio",
+   "Pet Friendly"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "group",
+   "sports",
+   "casual"
+  ],
+  "type": "Beer Garden",
+  "note": "Big Upper Kirby icehouse with a huge backyard, local beers on tap, TVs for games and food trucks.",
+  "tryit": "A local draft in the backyard on game day."
+ },
+ {
+  "id": 574,
+  "name": "Local Foods",
+  "address": "714 Yale St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sandwiches",
+   "Salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner",
+   "Fast Casual"
+  ],
+  "price": 2,
+  "vibes": [
+   "quick",
+   "healthy",
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Heights location of the farm-to-table sandwich and salad favorite.",
+  "tryit": "The crunchy chicken sandwich and a side of the market salads."
+ },
+ {
+  "id": 575,
+  "name": "Haii Keii",
+  "address": "3300 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Japanese restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 576,
+  "name": "Se7en",
+  "address": "3300 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail lounge"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail lounge.",
+  "tryit": ""
+ },
+ {
+  "id": 577,
+  "name": "Verandah",
+  "address": "3300 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Indian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Indian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 578,
+  "name": "French Country Wines",
+  "address": "3300 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Wine bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Wine Bar",
+  "note": "Wine bar.",
+  "tryit": ""
+ },
+ {
+  "id": 579,
+  "name": "Becks Prime Kirby",
+  "address": "2902 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 580,
+  "name": "Loro Asian Smokehouse Kirby",
+  "address": "5333 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Asian BBQ restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 581,
+  "name": "Norigami",
+  "address": "2715 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sushi handrolls"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sushi handrolls restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 582,
+  "name": "Silk Road Asian Tapas Bar",
+  "address": "2929 Westpark Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Asian tapas"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Asian tapas restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 583,
+  "name": "Feges BBQ Greenway",
+  "address": "3 Greenway Plaza, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "BBQ restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 584,
+  "name": "Local Foods Upper Kirby",
+  "address": "2555 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sandwiches & salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sandwiches & salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 585,
+  "name": "Upper Kirby Bistro",
+  "address": "2736 Virginia St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bistro"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Bistro restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 586,
+  "name": "Christian's Tailgate Kirby",
+  "address": "5114 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sports bar & burgers"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Sports bar & burgers.",
+  "tryit": ""
+ },
+ {
+  "id": 587,
+  "name": "First Watch Kirby",
+  "address": "3029 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Breakfast & brunch"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Breakfast & brunch restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 588,
+  "name": "Little Taco Shop Kirby",
+  "address": "3027 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tacos"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Tacos restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 589,
+  "name": "PostScript",
+  "address": "2800 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 590,
+  "name": "George's Bistro & Bar",
+  "address": "2715 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bistro"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Bistro restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 591,
+  "name": "Pinstripes Houston",
+  "address": "3300 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian, bowling & bocce"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian, bowling & bocce restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 592,
+  "name": "Loch Bar",
+  "address": "4444 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Seafood & whiskey bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Seafood & whiskey bar.",
+  "tryit": ""
+ },
+ {
+  "id": 593,
+  "name": "Uchiko Houston",
+  "address": "1801 Post Oak Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Japanese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Japanese restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 594,
+  "name": "Grotto",
+  "address": "4715 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 595,
+  "name": "Exodus Bar & Grill",
+  "address": "80 Braeswood Square, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse & grill"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Steakhouse & grill restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 596,
+  "name": "Cafe Piquet",
+  "address": "5757 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cuban"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Cuban restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 597,
+  "name": "Dandelion Cafe Bellaire",
+  "address": "5405 Bellaire Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Café, breakfast & lunch"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Café, breakfast & lunch.",
+  "tryit": ""
+ },
+ {
+  "id": 598,
+  "name": "KP's Kitchen",
+  "address": "5427 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American bistro"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "American bistro restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 599,
+  "name": "Molina's Cantina Bellaire",
+  "address": "3801 Bellaire Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tex-Mex"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Tex-Mex restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 600,
+  "name": "Tapester's Grill",
+  "address": "4520 Beechnut St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American comfort food"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "American comfort food restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 601,
+  "name": "Watershed",
+  "address": "4820 W Bellfort Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar & grill"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Bar & grill.",
+  "tryit": ""
+ },
+ {
+  "id": 602,
+  "name": "Three Brothers Bakery",
+  "address": "4036 S Braeswood Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bakery"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Bakery & Café",
+  "note": "Bakery.",
+  "tryit": ""
+ },
+ {
+  "id": 603,
+  "name": "Coltivare",
+  "address": "3320 White Oak Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian & pizza"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian & pizza restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 604,
+  "name": "Understory",
+  "address": "800 Capitol St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Food hall"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Food hall restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 605,
+  "name": "Kanomwan",
+  "address": "736 Telephone Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Thai"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Thai restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 606,
+  "name": "Anvil Bar & Refuge",
+  "address": "1424 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 607,
+  "name": "51fifteen",
+  "address": "5175 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Contemporary American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Contemporary American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 608,
+  "name": "Mariposa at Neiman Marcus",
+  "address": "2600 Post Oak Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Contemporary American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Contemporary American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 609,
+  "name": "Peli Peli Galleria",
+  "address": "5085 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "South African"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "South African restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 610,
+  "name": "Ten Sushi + Cocktail Bar",
+  "address": "4200 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sushi & pan-Asian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sushi & pan-Asian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 611,
+  "name": "The Burger Joint Heights",
+  "address": "2002 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 612,
+  "name": "The Burger Joint West U",
+  "address": "5403 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 613,
+  "name": "Aya Sushi",
+  "address": "5407 Bellaire Blvd, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sushi omakase"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sushi omakase restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 614,
+  "name": "Betsy's at Evelyn's Park",
+  "address": "4400 Bellaire Blvd, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Breakfast tacos & American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Breakfast tacos & American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 615,
+  "name": "Blood Bros BBQ",
+  "address": "5425 Bellaire Blvd, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "BBQ restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 616,
+  "name": "Lankford's Bellaire",
+  "address": "5208 Bissonnet St, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 617,
+  "name": "ZOA Moroccan Kitchen Bellaire",
+  "address": "6700 S Rice Ave, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Moroccan"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Moroccan restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 618,
+  "name": "Enoteca Rossa",
+  "address": "4566 Bissonnet St, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Italian"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Italian restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 619,
+  "name": "Rossa Room",
+  "address": "4566 Bissonnet St, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail bar & patio"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail bar & patio.",
+  "tryit": ""
+ },
+ {
+  "id": 620,
+  "name": "Costa Brava Bistro",
+  "address": "5115 Bellaire Blvd, Bellaire, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Spanish"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Spanish restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 621,
+  "name": "JOEY Uptown",
+  "address": "5045 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 622,
+  "name": "Capone's Oven & Bar",
+  "address": "2303 Richmond Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Pizza, cocktails & live jazz"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Pizza, cocktails & live jazz.",
+  "tryit": ""
+ },
+ {
+  "id": 623,
+  "name": "Stone's Throw",
+  "address": "1417 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 624,
+  "name": "Fedora Lounge",
+  "address": "2726 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Lounge"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Lounge",
+  "note": "Lounge.",
+  "tryit": ""
+ },
+ {
+  "id": 625,
+  "name": "Burger-chan Heights",
+  "address": "506 Yale St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 626,
+  "name": "Greenway Coffee",
+  "address": "3 Greenway Plaza, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Coffee.",
+  "tryit": ""
+ },
+ {
+  "id": 627,
+  "name": "Burger Bodega",
+  "address": "4520 Washington Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers & chopped cheese"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers & chopped cheese restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 628,
+  "name": "Jodas",
+  "address": "1000 Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 629,
+  "name": "Slowpokes Upper Kirby",
+  "address": "2925 Richmond Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & café"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Coffee & café.",
+  "tryit": ""
+ },
+ {
+  "id": 630,
+  "name": "Slowpokes West U",
+  "address": "6725 Stella Link Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & café"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Coffee & café.",
+  "tryit": ""
+ },
+ {
+  "id": 631,
+  "name": "Dish Society Heights",
+  "address": "11th St Bikeway, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Farm-to-table American"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Farm-to-table American restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 632,
+  "name": "Eagle Houston",
+  "address": "611 Hyde Park Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Gay bar & nightclub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Nightclub",
+  "note": "Gay bar & nightclub.",
+  "tryit": ""
+ },
+ {
+  "id": 633,
+  "name": "Bar 5015",
+  "address": "5015 Almeda Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Bar & patio"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Bar & patio.",
+  "tryit": ""
+ },
+ {
+  "id": 634,
+  "name": "Axelrad",
+  "address": "1517 Alabama St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Beer garden & hammocks"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Beer Garden",
+  "note": "Beer garden & hammocks.",
+  "tryit": ""
+ },
+ {
+  "id": 635,
+  "name": "Blacksmith",
+  "address": "1018 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Coffee & breakfast"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Coffee & breakfast.",
+  "tryit": ""
+ },
+ {
+  "id": 636,
+  "name": "Prospect Park Midtown",
+  "address": "3100 Fountain View Drive, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sports bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Sports bar.",
+  "tryit": ""
  }
 ]
