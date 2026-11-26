@@ -2167,6 +2167,36 @@
 "k": "rest",
 "c": "Italian",
 "a": "1101 Uptown Park Blvd"
+},
+{
+"n": "Cactus Club Cafe",
+"k": "rest",
+"c": "Canadian \"elevated casual\" — sushi to burgers",
+"a": "1700 Post Oak Blvd"
+},
+{
+"n": "Casa Nomad",
+"k": "rest",
+"c": "Mexican cocktails & dinner",
+"a": "600 N Shepherd Dr"
+},
+{
+"n": "Buttermilk Baby",
+"k": "coffee",
+"c": "Soft-serve, pie & fried chicken sandwiches",
+"a": "600 N Shepherd Dr"
+},
+{
+"n": "Mendocino Farms MKT",
+"k": "rest",
+"c": "Sandwiches & salads",
+"a": "600 N Shepherd Dr"
+},
+{
+"n": "sweetgreen MKT",
+"k": "rest",
+"c": "Salads & bowls",
+"a": "600 N Shepherd Dr"
 }
 ]
 }

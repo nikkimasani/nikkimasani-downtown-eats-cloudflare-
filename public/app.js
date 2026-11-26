@@ -217,7 +217,7 @@ function weightedPick(list, avoid = new Set()) {
 // ---------- cards ----------
 function statusTags(r) {
   const o = openLabel(r), hh = hhFor(r), hn = hhNow(r), w = walkMinsTo(r);
-  return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${popupOn(r) ? `<span class="tag open">🎄 ${esc(r.popup.label || 'Pop-up')} · thru ${esc(popupEnd(r))}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
+  return `${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${popupOn(r) ? `<span class="tag open">🎄 ${esc(r.popup.label || 'Pop-up')} · thru ${esc(popupEnd(r))}</span>` : ''}${r.soon ? `<span class="tag soon">🚧 ${esc(r.soon)}</span>` : ''}${hn ? `<span class="tag hh on">🍹 Happy hour now${hn.closesAt ? ' · till ' + esc(hn.closesAt) : ''}</span>` : hh ? '<span class="tag hh">🍹 Happy hour</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${r.tunnel ? `<span class="tag t">🚇 ${esc(r.tunnel)}</span>` : ''}`;
 }
 const tile = (r) => `<span class="ctile" style="--tc:${styleFor(r).color || '#e8590c'}">${styleFor(r).emoji}</span>`;
 // where a place sits on the street grid: nearest corner + a tiny block map (needs the city model, built in the background)
@@ -656,7 +656,9 @@ function showBldg(l) {
     body = nt && nt.arr.length ? `<div class="sc-doing">${nt.arr.map((a) => `<span class="sc-tr"><i style="background:${a.color}"></i>${esc(a.line)} → ${esc(a.toward)} · <b>${a.min <= 0 ? 'now' : a.min + ' min'}</b></span>`).join('')}</div>` : `<div class="sc-doing">Live arrival times show here when METRO's live feed is connected.</div>`;
   } else {
     const facts = [l.h ? `${l.h} m tall` : '', l.year ? `built ${l.year}` : ''].filter(Boolean).join(' · ');
+    const ABOUT = { 'Williams Tower': 'Philip Johnson’s Uptown landmark — its rooftop beacon sweeps the sky every night', 'The Waterwall': '64-ft horseshoe fountain in Gerald D. Hines Waterwall Park, right below Williams Tower' }, ab = Object.keys(ABOUT).find((k) => (l.n || '').startsWith(k));
     body = `<div class="sc-doing">${esc(facts || 'Downtown building')}</div>` + (l.places?.length ? `<div class="sc-acts">${l.places.slice(0, 6).map((p) => `<button data-bp="${p.id}">${esc(p.name)} ›</button>`).join('')}</div>` : `<div class="sc-doing" style="opacity:.7">No restaurants or bars listed inside.</div>`);
+    if (ab) body += `<div class="sc-doing">${esc(ABOUT[ab])}</div>`;
   }
   b.innerHTML = `<div class="sc-top"><span class="sc-av">${l.station ? '🚊' : l.type === 'parking' || l.type === 'garage' ? '🅿️' : l.type === 'hotel' ? '🏨' : l.type === 'church' ? '⛪' : '🏙️'}</span><div class="sc-who"><b>${esc(l.station ? l.sname + ' Station' : l.n)}</b><small>${esc(l.station ? l.n.replace(/^🚊 [^·]+· /, '') : (l.places?.length ? `${l.places.length} place${l.places.length > 1 ? 's' : ''} inside` : 'Tap a pin to see a restaurant'))}</small></div><button class="sc-x" data-sim="x" aria-label="Close">✕</button></div>${body}`;
   b.hidden = false; buzz(6);
@@ -774,7 +776,9 @@ function findSuggestions(q) {
 function runFind(item) {
   $('#findBox').classList.remove('on'); $('#findIn').blur();
   if (item.st) { const res = city.goTo(item.st); if (res) showFound(item.st.label, res.near); else toast("Couldn't place that on the map"); }
-  else if (item.r) { $('#mapFound').classList.remove('on'); if (!city.sceneOk(item.r)) setScene(item.r.day ? 'day' : 'night', true); city.setPick(item.r.id); lastFound = item.r; $('#findIn').value = item.r.name; toast(`📍 ${item.r.name} — tap ROUTE for walking directions`); }
+  else if (item.r) { const r = item.r; $('#mapFound').classList.remove('on'); lastFound = r; $('#findIn').value = r.name;
+    if (city.offMap?.has(r.id) || !city.spots.some((s) => s.places.some((p) => p.id === r.id))) { openSheet(r.id); toast(`${r.name} is past the edge of the drawn map — opening its card`); return; }
+    if (!city.sceneOk(r)) setScene(r.day ? 'day' : 'night', true); city.setPick(r.id); toast(`📍 ${r.name} — tap the bouncing pin, or ROUTE for walking directions`); }
 }
 $('#mapFind').onclick = () => { $('#moreBtn').click(); $('#findIn').focus(); };
 $('#findIn').addEventListener('focus', () => { $('#findBox').classList.add('on'); renderFind(); });
@@ -904,7 +908,7 @@ function barCard(r) {
   <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
   <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
   <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div></div></div>
-  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${popupOn(r) ? `<span class="tag open">🎄 ${esc(r.popup.label || 'Pop-up')} · thru ${esc(popupEnd(r))}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${steakTonight(r) ? `<span class="tag open">🥩 Steak night ${esc(steakTonight(r).price || '')}</span>` : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
+  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${popupOn(r) ? `<span class="tag open">🎄 ${esc(r.popup.label || 'Pop-up')} · thru ${esc(popupEnd(r))}</span>` : ''}${r.soon ? `<span class="tag soon">🚧 ${esc(r.soon)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${steakTonight(r) ? `<span class="tag open">🥩 Steak night ${esc(steakTonight(r).price || '')}</span>` : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
   ${h ? `<div class="hhbox ${hn ? 'on' : ''}"><b>🍹 ${hn ? 'Happy hour now' + (hn.closesAt ? ' · till ' + esc(hn.closesAt) : '') : esc(h.when)}</b><span>${esc(h.deals)}</span>${h.confidence === 'verify' ? '<em>Double-check before you go</em>' : ''}</div>`
       : r.hhListed ? `<div class="hhbox"><b>🍹 Listed for happy hour</b><span>Times and prices aren't published yet — check with the bar.</span></div>` : ''}
   <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`;
@@ -1201,7 +1205,7 @@ async function aboutPlace(r) {
       const fix = (oj.spots || {})[p.name + '|' + ((p.address || '').match(/^\d+/) || [''])[0]] || (oj.spots || {})[p.name];
       if (fix) { Object.assign(o, fix); if (fix.hours) o.corrected = fix.source; o.aliases = fix.aliases || []; o.extraSource = fix.notInDirectory ? fix.source : null; }
       const cats = (p.official && p.official.cats) || {};
-      return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource, popup: o.popup || null };
+      return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource, popup: o.popup || null, soon: o.soon || null };
     });
     DATA = DATA.filter((r) => r.status !== 'closed' && popupOn(r) !== false).map((r, i) => ({ ...r, id: i }));
     loadSteak().then(() => { if ($('#v-night').classList.contains('on')) renderNight(); });

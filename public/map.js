@@ -87,7 +87,7 @@ const SIG_TOPS = {
 const BUILT = { 'JPMorgan Chase Tower': 1982, 'Wells Fargo Plaza': 1983, 'Heritage Plaza': 1987, 'TC Energy Center': 1983, 'Pennzoil Place': 1976, 'One Shell Plaza': 1971, 'Two Shell Plaza': 1972, '609 Main': 2017, 'Texas Tower': 2021, 'Bank of America Tower': 2019,
   'Niels Esperson Building': 1927, 'Mellie Esperson Building': 1941, 'City Hall': 1939, 'Julia Ideson Building': 1926, '1910 Courthouse': 1910, 'Christ Church Cathedral': 1893, 'Annunciation Catholic Church': 1871, 'Rice Hotel Lofts': 1913, 'Hilton Americas-Houston': 2003,
   'Marriott Marquis Houston': 2016, 'Jones Hall': 1966, 'Alley Theatre': 1968, 'Wortham Theatre Center': 1987, 'Hobby Center for the Performing Arts': 2002, '1884 Houston Cotton Exchange Building': 1884, 'C. Baldwin Hotel': 1981, 'Kinder Morgan Building': 1963, 'Union Station': 1911,
-  'Toyota Center': 2003, 'Daikin Park': 2000, 'George R. Brown Convention Center': 1987 };
+  'Toyota Center': 2003, 'Daikin Park': 2000, 'George R. Brown Convention Center': 1987, 'Williams Tower': 1983, 'The Waterwall': 1985 };
 const RENAME = { 'C. Baldwin, Curio Collection by Hilton': 'C. Baldwin Hotel', '1 Houston Center': 'LyondellBasell Tower', '1400 Smith Street': '1400 Smith', '1500 Louisiana Street': '1500 Louisiana' };
 const STYLE_FIX = [{ at: [29.75412, -95.36274], name: 'Four Seasons Hotel', c: '#cdb59a', grid: '#6b5646', minH: 80 }];
 const SUFFIX = (n) => n === 'Texas' ? 'Texas Ave' : n + ' St';
@@ -1374,6 +1374,8 @@ export class CityMap {
       'Bob Casey United States Courthouse': { c: '#d9d3c7', glass: false, fac: 'slots' },
       'Marriott Marquis Houston': { c: '#d6dbe1', glass: true },
       'POST Houston': { c: '#c9b9a0', glass: false, fac: 'punch', roofC: '#9fcf7c' },   // the old post office, Skylawn on the roof
+      'Williams Tower': { c: '#6d879c', glass: true, pri: true, pyr: 1.8, roofC: '#8ea6b8', beacon: true },   // Philip Johnson's 64-storey glass tower in Uptown: setbacks, a pyramid cap and a sweeping rooftop beacon
+      'The Waterwall': { c: '#9fb2ba', glass: false, pri: true, water: true },   // 64-ft horseshoe fountain: water sheets down both faces into a pool
       'C. Baldwin, Curio Collection by Hilton': { c: '#5f5249', glass: false, fac: 'slots', roofC: '#4a403a', pri: true },   // dark bronze-brown slab with tall window strips
     };
     const CROWNS = { 'Wells Fargo Plaza': [[0.9, 0.04], [0.78, 0.035], [0.62, 0.03]], 'JPMorgan Chase Tower': [[0.82, 0.03, '#a9adb3']], 'One Shell Plaza': [[0.7, 0.02, '#e6e1d6']], 'Fulbright Tower': [[0.8, 0.03]], '1400 Smith Street': [[0.75, 0.04]] };
@@ -1444,7 +1446,12 @@ export class CityMap {
       if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
       if (type === 'stadium' && !name) { const sp = this.proj(29.7522, -95.3523); if (Math.hypot(sp[0] - cx, sp[1] - cy) < 6) { o.name = 'Shell Energy Stadium'; o.c = '#d2cbbe'; o.glass = false; o.h = Math.max(o.h, 2.6); o.pri = true; o.bowl = true; } }   // Dynamo & Dash soccer stadium in EaDo: concrete bowl around a green pitch
-      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; if (ls.fac) o.fac = ls.fac; if (ls.pri) o.pri = true; }
+      const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; if (ls.fac) o.fac = ls.fac; if (ls.pri) o.pri = true;
+        if (ls.pyr && o.h > ls.pyr * 2) { o.roof = 'pyramidal'; o.rh = ls.pyr; o.h -= ls.pyr; o.rp = pts; }
+        if (ls.beacon) o.beacon = true;
+        if (ls.water) { o.water = true; const hull = (Q) => { const S = [...Q].sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o2, a, b) => (a[0] - o2[0]) * (b[1] - o2[1]) - (a[1] - o2[1]) * (b[0] - o2[0]), lo = [], up = []; for (const q of S) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); } for (const q of S.reverse()) { while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); } return lo.slice(0, -1).concat(up.slice(0, -1)); };
+          o.poolPts = hull(pts).map((q) => [cx + (q[0] - cx) * 1.25, cy + (q[1] - cy) * 1.25]); }
+      }
       this.osm.push(o);
       const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
         for (const [s, f, cc] of cr) { const q = pts.map((p) => [cx + (p[0] - cx) * s, cy + (p[1] - cy) * s]), qx = q.map((p) => p[0]), qy = q.map((p) => p[1]); this.osm.push({ pts: q, bb: { x0: Math.min(...qx), x1: Math.max(...qx), y0: Math.min(...qy), y1: Math.max(...qy) }, h: f * h, z0: top, c: cc || o.c, glass: o.glass, name: '', type: 'crown', cx, cy }); top += f * h; } }
@@ -1540,6 +1547,7 @@ export class CityMap {
   drawOsm(o, N, alpha) {
     if (o.bowl) return this.drawBowl(o, N, alpha);
     const ctx = this.ctx, v = this.v, P = o.pts, n = P.length, z0 = o.z0, z1 = o.z0 + o.h;
+    if (o.poolPts) { poly(ctx, o.poolPts.map((q) => v.p(q[0], q[1], 0.02)), N ? '#1c4a6e' : '#5fb7e8', N ? '#0f2f47' : '#3b8fbf', 1); const t = performance.now() / 700; ctx.strokeStyle = N ? 'rgba(150,210,255,.35)' : 'rgba(255,255,255,.55)'; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k < 3; k++) { const f = 0.35 + 0.25 * ((t + k / 3) % 1); const Q = o.poolPts.map((q) => v.p(o.cx + (q[0] - o.cx) * f, o.cy + (q[1] - o.cy) * f, 0.03)); ctx.moveTo(...Q[0]); for (const q of Q) ctx.lineTo(...q); ctx.closePath(); } ctx.stroke(); }
     const nbLow = o.nb && (v.s < 0.55 || this.busy || this.lowQ);   // neighbourhood houses/warehouses: cheap boxes when zoomed out or moving
     if (o.nb && v.s < 0.5 && ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * v.s < 5) return;   // too small to see
     ctx.globalAlpha = alpha;
@@ -1695,6 +1703,20 @@ export class CityMap {
       const b = v.p(o.cx, o.cy, z1), t = v.p(o.cx, o.cy, z1 + o.ant); ctx.strokeStyle = N ? '#9aa1ad' : '#7d838b'; ctx.lineWidth = Math.max(1.2, v.s * 2.2); ctx.beginPath(); ctx.moveTo(...b); ctx.lineTo(...t); ctx.stroke();
       ctx.lineWidth = Math.max(1, v.s * 1.2); ctx.beginPath(); for (const f of [0.3, 0.55, 0.8]) { const q = v.p(o.cx, o.cy, z1 + o.ant * f); ctx.moveTo(q[0] - 3 * v.s, q[1]); ctx.lineTo(q[0] + 3 * v.s, q[1]); } ctx.stroke();
       if (Math.floor(performance.now() / 900) % 2 === 0 || N) circle(ctx, t[0], t[1], Math.max(1.6, v.s * 2.4), '#ff3b3b');
+    }
+    if (o.water && v.s > 0.25) {   // sheets of water sliding down the Water Wall
+      const t = performance.now() / 260; ctx.lineWidth = Math.max(1, v.s * 1.6);
+      for (let i = 0; i < n; i++) { const q = P[i], a = 0.25 + 0.35 * (0.5 + 0.5 * Math.sin(t + i * 1.7)); const top = v.p(q[0], q[1], z1 - 0.05), bot = v.p(q[0], q[1], z0 + 0.05), m = ((t * 0.18 + i * 0.13) % 1);
+        ctx.strokeStyle = N ? `rgba(160,215,255,${a})` : `rgba(235,248,255,${a + 0.2})`; ctx.beginPath(); ctx.moveTo(...top); ctx.lineTo(...bot); ctx.stroke();
+        circle(ctx, top[0] + (bot[0] - top[0]) * m, top[1] + (bot[1] - top[1]) * m, Math.max(1, v.s * 1.4), N ? 'rgba(200,235,255,.8)' : 'rgba(255,255,255,.9)'); }
+      const b0 = v.p(o.cx, o.cy, 0); for (let k = 0; k < 4; k++) { const ph = ((performance.now() / 900 + k / 4) % 1); ctx.strokeStyle = `rgba(255,255,255,${(1 - ph) * 0.5})`; ctx.beginPath(); ctx.ellipse(b0[0], b0[1], (4 + ph * 14) * v.s, (2 + ph * 7) * v.s, 0, 0, Math.PI * 2); ctx.stroke(); }   // spray rings at the base
+    }
+    if (o.beacon) {   // the rotating beacon on top of Williams Tower, sweeping the sky all night
+      const top = o.z0 + o.h + (o.rh || 0) + 0.2, [bx, by] = v.p(o.cx, o.cy, top), ang = performance.now() / 1400, L = (N ? 260 : 120) * Math.max(0.5, v.s);
+      ctx.save(); ctx.globalCompositeOperation = N ? 'lighter' : 'source-over';
+      for (const da of [0, Math.PI]) { const a = ang + da, ex = bx + Math.cos(a) * L, ey = by + Math.sin(a) * L * 0.35, sp = 0.07, g = ctx.createLinearGradient(bx, by, ex, ey); g.addColorStop(0, N ? 'rgba(255,250,220,.55)' : 'rgba(255,255,240,.28)'); g.addColorStop(1, 'rgba(255,250,220,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + Math.cos(a - sp) * L, by + Math.sin(a - sp) * L * 0.35); ctx.lineTo(bx + Math.cos(a + sp) * L, by + Math.sin(a + sp) * L * 0.35); ctx.closePath(); ctx.fill(); }
+      ctx.restore(); circle(ctx, bx, by, Math.max(2, v.s * 3), N ? '#fff8d6' : '#fff3bf');
     }
     if (o.pool && v.s > 0.3) {   // rooftop pool deck
       const cx = o.cx, cy = o.cy, s2 = Math.min(o.bb.x1 - o.bb.x0, o.bb.y1 - o.bb.y0) * 0.22;
@@ -2288,7 +2310,20 @@ export class CityMap {
   // Day map = food spots; Night map = bars, lounges and clubs only
   sceneOk(p) { return this.scene === 'night' ? !!p.night : p.day !== false; }
   setScene(sc) { this.scene = sc; this.themeNight = sc === 'night'; this.pinCache?.clear?.(); }
-  visibleSpots(under) { return this.spots.filter((s) => s.tunnel === under && s.places.some((p) => this.sceneOk(p)) && (!this.highlight || s.places.some((p) => this.highlight.has(p.id)))); }
+  visibleSpots(under) { const pk = this.pick; return this.spots.filter((s) => s.tunnel === under && ((pk != null && s.places.some((p) => p.id === pk)) || (s.places.some((p) => this.sceneOk(p)) && (!this.highlight || s.places.some((p) => this.highlight.has(p.id)))))); }
+  // pins that would sit on top of each other on screen fan out around their real spot, on a thin leader line
+  fanOut(list, z, lift, r) {
+    const v = this.v, P = list.map((s) => { const [x, y] = v.p(s.x, s.y, z); return { s, x, y, px: x, py: y - lift }; }), min = r * 2.1, off = new Map();
+    if (list.length < 2 || list.length > 900 || v.s < 0.5) { this.pinOff = off; return off; }
+    const cell = new Map(), key = (a, b) => a + ',' + b; for (const q of P) { const k = key(Math.floor(q.px / min), Math.floor(q.py / min)); (cell.get(k) || cell.set(k, []).get(k)).push(q); }
+    for (let it = 0; it < 6; it++) { let moved = false;
+      for (const q of P) { const gx = Math.floor(q.px / min), gy = Math.floor(q.py / min);
+        for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (const o of cell.get(key(gx + i, gy + j)) || []) { if (o === q) continue; let dx = q.px - o.px, dy = q.py - o.py, d = Math.hypot(dx, dy); if (d >= min) continue;
+          if (d < 0.01) { const a = (P.indexOf(q) * 2.399) % (Math.PI * 2); dx = Math.cos(a); dy = Math.sin(a); d = 1; } const push = (min - d) / 2; q.px += dx / d * push; q.py += dy / d * push; o.px -= dx / d * push; o.py -= dy / d * push; moved = true; } }
+      if (!moved) break; }
+    for (const q of P) { const dx = q.px - q.x, dy = q.py - (q.y - lift); if (Math.abs(dx) > 1 || Math.abs(dy) > 1) off.set(q.s, [Math.max(-r * 4, Math.min(r * 4, dx)), Math.max(-r * 4, Math.min(r * 4, dy))]); }
+    this.pinOff = off; return off;
+  }
   clusters(under) {
     const k = this.clusterSpan(), vis = this.visibleSpots(under), key0 = `${under}|${k}|${vis.length}|${this.mode}|${(performance.now() / 2000) | 0}`;   // open counts re-check every couple of seconds, not every frame
     const ck = (this._clC || (this._clC = {}))[under ? 1 : 0]; if (ck && ck.key === key0 && ck.vis === vis.length) return ck.out;
@@ -2319,7 +2354,7 @@ export class CityMap {
       if (lod === 'cluster') {
         for (const c of this.clusters(under)) { const [x, y] = this.v.p(c.x, c.y, c.z); const r = 8 + Math.min(9, Math.sqrt(c.n) * 2.2); const d = Math.hypot(sx - x, sy - (y - r - 4)); if (d < r + 8 && d < bd) { bd = d; best = { cluster: c }; } }
       } else {
-        for (const s of this.visibleSpots(under)) { const [x, y] = this.v.p(s.x, s.y, under ? this.tunnelZ() : 0); const d = Math.hypot(sx - x, sy - (y - this.pinLift())); if (d < 18 && d < bd) { bd = d; best = { spot: s }; } }
+        for (const s of this.visibleSpots(under)) { const [x0, y] = this.v.p(s.x, s.y, under ? this.tunnelZ() : 0), fo = this.pinOff?.get(s) || [0, 0], x = x0 + fo[0]; const d = Math.hypot(sx - x, sy - (y - this.pinLift() + fo[1])); if (d < 18 && d < bd) { bd = d; best = { spot: s }; } }
       }
     }
     if (!best && this.mode !== 'tunnel') for (const st of this.rail?.stations || []) {
@@ -3018,10 +3053,13 @@ export class CityMap {
       return;
     }
     const lift = this.pinLift(), list = this.visibleSpots(under).sort((a, b) => v.depth(a.x, a.y) - v.depth(b.x, b.y)), lbl = new Map();
+    const lab = (s) => { const pk = this.pick != null && s.places.find((p) => p.id === this.pick); return pk ? pk.name : s.label; };
+    const fo = this.fanOut(list, z, lift, lod === 'label' ? 12 : 10), at = (s) => { const [x, y] = v.p(s.x, s.y, z), f = fo.get(s); return f ? [x + f[0], y + f[1]] : [x, y]; };
+    if (fo.size) { ctx.beginPath(); for (const [s2, f] of fo) { const [x, y] = v.p(s2.x, s2.y, z); ctx.moveTo(x, y); ctx.lineTo(x + f[0], y + f[1]); } ctx.strokeStyle = 'rgba(33,37,41,.45)'; ctx.lineWidth = 1; ctx.setLineDash([3, 2]); ctx.stroke(); ctx.setLineDash([]); for (const [s2] of fo) { const [x, y] = v.p(s2.x, s2.y, z); circle(ctx, x, y, 2, 'rgba(33,37,41,.6)'); } }
     if (TAKEN) {
       const rr = lod === 'label' ? 12 : 10;
-      for (const s of list) { const [x, y] = v.p(s.x, s.y, z); fits(x - rr, y - lift - rr, x + rr, y - lift + rr, true); }
-      for (let k = list.length - 1; k >= 0; k--) { const s = list[k]; if (!((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s)) continue; const [x, y] = v.p(s.x, s.y, z), t = s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label; ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(t).width + 10, yy = y - lift - rr - 12;
+      for (const s of list) { const [x, y] = at(s); fits(x - rr, y - lift - rr, x + rr, y - lift + rr, true); }
+      for (let k = list.length - 1; k >= 0; k--) { const s = list[k]; if (!((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s || (this.pick != null && s.places.some((p) => p.id === this.pick)))) continue; const [x, y] = at(s), t = lab(s).length > 24 ? lab(s).slice(0, 23) + '…' : lab(s); ctx.font = '600 11px system-ui, sans-serif'; const w = ctx.measureText(t).width + 10, yy = y - lift - rr - 12;
         if (this.hover?.spot === s || this.pick != null && s.places.some((p) => p.id === this.pick)) { fits(x - w / 2, yy - 9, x + w / 2, yy + 9, true); lbl.set(s, 0); continue; }
         // try above the pin, then below it, then to either side
         const tries = [[0, yy], [0, y - lift + rr + 12], [w / 2 + rr + 4, y - lift], [-(w / 2 + rr + 4), y - lift]];
@@ -3029,17 +3067,17 @@ export class CityMap {
     }
     {   // every pin's stem and ground shadow in two batched draws (hundreds of pins once the whole map is in view)
       const r0 = lod === 'label' ? 12 : 10; ctx.beginPath();
-      for (const s of list) { const [x, y] = v.p(s.x, s.y, z); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r0); }
+      for (const s of list) { const [x, y] = at(s); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r0); }
       ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.stroke(); ctx.beginPath();
-      for (const s of list) { const [x, y] = v.p(s.x, s.y, z); ctx.moveTo(x + 3, y); ctx.ellipse(x, y, 3, 1.5, 0, 0, Math.PI * 2); }
+      for (const s of list) { const [x, y] = at(s); ctx.moveTo(x + 3, y); ctx.ellipse(x, y, 3, 1.5, 0, 0, Math.PI * 2); }
       ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fill();
     }
     for (const s of list) {
-      const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
+      const [x, y] = at(s), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
       if (this.highlight && s.places.some((p) => this.highlight.has(p.id))) { const pulse = 0.55 + 0.45 * Math.sin(performance.now() / 320 + s.x), g = ctx.createRadialGradient(x, y - lift, r * 0.6, x, y - lift, r * 2.4); g.addColorStop(0, hexA(s.style.color, 0.55 * pulse)); g.addColorStop(1, hexA(s.style.color, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - lift, r * 2.4, 0, 7); ctx.fill(); }
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }
-      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s) && (!TAKEN || lbl.has(s))) { const off = lbl.get(s) || [0, 0]; pill(ctx, x + off[0], y - lift - r - 12 + off[1], s.label.length > 24 ? s.label.slice(0, 23) + '…' : s.label, 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529'); }
+      if (((lod === 'label' && !this.hide.pinNames) || this.hover?.spot === s || (this.pick != null && s.places.some((p) => p.id === this.pick))) && (!TAKEN || lbl.has(s))) { const off = lbl.get(s) || [0, 0]; pill(ctx, x + off[0], y - lift - r - 12 + off[1], lab(s).length > 24 ? lab(s).slice(0, 23) + '…' : lab(s), 11, under ? 'rgba(18,184,134,.92)' : 'rgba(255,255,255,.94)', under ? '#fff' : '#212529'); }
     }
   }
 
@@ -3085,7 +3123,7 @@ export class CityMap {
   drawPickBeacon(now) {
     if (this.pick == null) return;
     const s = this.spots.find((s) => s.places.some((p) => p.id === this.pick)); if (!s || (s.tunnel && this.mode === 'street') || (!s.tunnel && this.mode === 'tunnel')) return;
-    const z = s.tunnel ? this.tunnelZ() : 0, [x, y] = this.v.p(s.x, s.y, z);
+    const z = s.tunnel ? this.tunnelZ() : 0, [x0, y0] = this.v.p(s.x, s.y, z), fo = this.pinOff?.get(s) || [0, 0], x = x0 + fo[0], y = y0 + fo[1];
     const py = y - this.pinLift() - 34 + Math.sin(now / 300) * 4, w = 9 * (0.5 + 0.5 * Math.abs(Math.cos(now / 500)));
     const ctx = this.ctx; ctx.shadowColor = '#69db7c'; ctx.shadowBlur = 14;
     poly(ctx, [[x, py - 15], [x + w, py], [x, py + 15], [x - w, py]], '#51cf66', '#2b8a3e', 1.5); ctx.shadowBlur = 0;

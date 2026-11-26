@@ -660,3 +660,5 @@ body.navving #v-map .mapchips,body.navving #v-map .backpill,body.navving #v-map 
 .al-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 12px calc(env(safe-area-inset-bottom) + 96px);display:flex;flex-direction:column;gap:10px}
 .al-body .al-empty{color:var(--muted);text-align:center;padding:40px 10px}
 #listBtn.on{background:var(--accent);color:#fff}
+
+.tag.soon{background:#fff3d6;color:#8a5a00;border-color:#f0d08a}

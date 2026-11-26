@@ -22555,5 +22555,106 @@
   "type": "Bar",
   "note": "Bar with a Texas mixed-beverage permit.",
   "tryit": ""
+ },
+ {
+  "id": 1127,
+  "name": "Cactus Club Cafe",
+  "address": "1700 Post Oak Blvd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Canadian \"elevated casual\" — sushi to burgers"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Canadian \"elevated casual\" — sushi to burgers restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 1128,
+  "name": "Casa Nomad",
+  "address": "600 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Mexican cocktails & dinner"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Mexican cocktails & dinner restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 1129,
+  "name": "Buttermilk Baby",
+  "address": "600 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Soft-serve, pie & fried chicken sandwiches"
+  ],
+  "meals": [
+   "Breakfast",
+   "Lunch"
+  ],
+  "price": 2,
+  "vibes": [
+   "coffee",
+   "work"
+  ],
+  "type": "Coffee Shop",
+  "note": "Soft-serve, pie & fried chicken sandwiches.",
+  "tryit": ""
+ },
+ {
+  "id": 1130,
+  "name": "Mendocino Farms MKT",
+  "address": "600 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sandwiches & salads"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sandwiches & salads restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 1131,
+  "name": "sweetgreen MKT",
+  "address": "600 N Shepherd Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Salads & bowls"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Salads & bowls restaurant.",
+  "tryit": ""
  }
 ]

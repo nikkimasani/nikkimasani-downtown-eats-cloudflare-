@@ -7123,6 +7123,47 @@
       "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Cactus Club Cafe": {
+      "street": "1700 Post Oak Blvd",
+      "lat": 29.748844,
+      "lng": -95.461334,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true,
+      "soon": "Opening 2027"
+    },
+    "Casa Nomad": {
+      "street": "600 N Shepherd Dr",
+      "lat": 29.78157,
+      "lng": -95.40913,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Buttermilk Baby": {
+      "street": "600 N Shepherd Dr",
+      "lat": 29.78157,
+      "lng": -95.40913,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mendocino Farms MKT": {
+      "street": "600 N Shepherd Dr",
+      "lat": 29.78157,
+      "lng": -95.40913,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "sweetgreen MKT": {
+      "street": "600 N Shepherd Dr",
+      "lat": 29.78157,
+      "lng": -95.40913,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
