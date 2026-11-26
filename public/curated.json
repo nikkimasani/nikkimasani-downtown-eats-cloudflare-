@@ -22656,5 +22656,25 @@
   "type": "Restaurant",
   "note": "Salads & bowls restaurant.",
   "tryit": ""
+ },
+ {
+  "id": 1132,
+  "name": "STK Steakhouse",
+  "address": "5251 Westheimer Rd, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Steakhouse with a DJ, lounge vibe"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Steakhouse with a DJ, lounge vibe restaurant.",
+  "tryit": ""
  }
 ]

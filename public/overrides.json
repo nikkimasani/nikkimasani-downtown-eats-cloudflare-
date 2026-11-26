@@ -7164,6 +7164,14 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "STK Steakhouse": {
+      "street": "5251 Westheimer Rd",
+      "lat": 29.740016,
+      "lng": -95.467888,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
