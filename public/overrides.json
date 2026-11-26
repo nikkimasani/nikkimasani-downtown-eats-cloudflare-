@@ -1991,11 +1991,13 @@
       "notInDirectory": true
     },
     "Aperitivo": {
-      "street": "4110 Loretto Dr",
-      "lat": 29.735942,
-      "lng": -95.397966,
-      "source": "US Census geocoder",
-      "checked": "2026-11-26",
+      "street": "2940 Riverby Rd Suite F-500",
+      "geoStreet": "2940 Riverby Rd",
+      "lat": 29.76372,
+      "lng": -95.33945,
+      "phone": "(832) 551-0360",
+      "source": "East River (fifth floor of 2940 Riverby Rd, inside Le Tesserae); pinned beside La Calle at 2920 Riverby",
+      "checked": "2026-11-25",
       "notInDirectory": true
     },
     "Turkey Leg Hut": {
@@ -2686,6 +2688,23 @@
       "lng": -95.41835,
       "source": "US Census geocoder",
       "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "MAD": {
+      "street": "4444 Westheimer Rd Suite C180",
+      "phone": "(281) 888-2770",
+      "website": "https://madhouston.com",
+      "hours": "Mon–Thu 5pm–10pm, Fri–Sun 11am–2pm, Fri–Sat 4:30pm–12am, Sun 5pm–9pm",
+      "source": "OpenTable listing",
+      "checked": "2026-11-25"
+    },
+    "iPic Houston": {
+      "street": "4444 Westheimer Rd Suite G100",
+      "geoStreet": "4444 Westheimer Rd",
+      "lat": 29.74225,
+      "lng": -95.45455,
+      "source": "River Oaks District; pinned at the west end of the district",
+      "checked": "2026-11-25",
       "notInDirectory": true
     }
   }

@@ -9465,7 +9465,7 @@
  {
   "id": 483,
   "name": "Aperitivo",
-  "address": "4110 Loretto Dr, Houston, TX",
+  "address": "2940 Riverby Rd Suite F-500, Houston, TX",
   "tunnel": null,
   "cuisines": [
    "Italian Bistro"
@@ -9478,9 +9478,9 @@
   "vibes": [
    "casual"
   ],
-  "type": "Restaurant",
-  "note": "Italian Bistro restaurant.",
-  "tryit": ""
+  "type": "Rooftop Bar",
+  "note": "Italian-leaning rooftop cocktail terrace on the fifth floor at East River, with big downtown skyline and Buffalo Bayou views. Lunch Mon–Sat, dinner and spritzes into the evening.",
+  "tryit": "A spritz on the terrace at sunset; truffle fries or a pizza to share."
  },
  {
   "id": 484,
@@ -11240,5 +11240,54 @@
   "type": "Restaurant",
   "note": "Burgers restaurant.",
   "tryit": ""
+ },
+ {
+  "id": 569,
+  "name": "iPic Houston",
+  "address": "4444 Westheimer Rd Suite G100, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "American"
+  ],
+  "meals": [
+   "Dinner",
+   "Late Night",
+   "Full Service"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "drinks",
+   "group"
+  ],
+  "type": "Dine-in Cinema",
+  "note": "Luxury dine-in movie theater in River Oaks District: recliners with full-service food and cocktails at your seat, plus a bar for before or after the film.",
+  "tryit": "Book a premium pod and order before the trailers end."
+ },
+ {
+  "id": 570,
+  "name": "MAD",
+  "address": "4444 Westheimer Rd Suite C180, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Spanish",
+   "Tapas"
+  ],
+  "meals": [
+   "Brunch",
+   "Dinner",
+   "Late Night",
+   "Full Service"
+  ],
+  "price": 3,
+  "vibes": [
+   "date",
+   "drinks",
+   "group",
+   "upscale"
+  ],
+  "type": "Spanish",
+  "note": "Modern Spanish tapas in River Oaks District from the team behind Michelin-starred BCN, known for its gin & tonics and paella.",
+  "tryit": "Seafood paella and a gin & tonic; weekend brunch Fri–Sun."
  }
 ]
