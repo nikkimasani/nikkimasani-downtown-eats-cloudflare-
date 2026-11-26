@@ -1,0 +1,24 @@
+name: Pin wanted spots
+# Quick run when data/wanted.json changes: find and pin new spots without redoing the whole map refresh.
+on:
+  workflow_dispatch:
+  push:
+    paths: ['data/wanted.json', 'scripts/wanted-spots.mjs']
+permissions:
+  contents: write
+concurrency: { group: wanted-spots, cancel-in-progress: false }
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/wanted-spots.mjs || true
+      - run: node scripts/geocode.mjs || true
+      - name: Commit if changed
+        run: |
+          git config user.name "downtown-eats-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/places.json public/curated.json public/overrides.json data/wanted-misses.json 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Pin wanted spots" && (git push || (git pull --rebase -X theirs && git push)))

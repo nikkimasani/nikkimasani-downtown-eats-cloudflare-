@@ -405,7 +405,7 @@ export class CityMap {
     const groups = new Map();
     const XA = this.avenues, XC = this.cross, offMap = ([x, y]) => x < XA[0].x - this.blockW * 2.4 || x > XA[XA.length - 1].x + this.blockW * 1.8 || y < XC[0].y - this.blockD * 3 || y > XC[XC.length - 1].y + this.blockD * 1.4;
     this.offMap = new Set();
-    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115]];   // + EaDo east of US-59 (Roots, Nancy's Hustle), + the East End / Second Ward along Navigation & Harrisburg (By The Wayside)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
+    const EXTRA = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115], [29.7580, -95.3480, 29.7740, -95.3200], [29.7640, -95.3860, 29.7735, -95.3760], [29.7675, -95.4000, 29.7725, -95.3950], [29.7540, -95.4130, 29.7650, -95.3770], [29.7310, -95.3890, 29.7525, -95.3745], [29.7310, -95.3745, 29.7480, -95.3600], [29.7620, -95.3770, 29.7745, -95.3600], [29.7745, -95.4200, 29.8100, -95.3700], [29.7525, -95.3890, 29.7605, -95.3745], [29.7330, -95.4100, 29.7530, -95.3890], [29.7080, -95.4050, 29.7330, -95.3800], [29.7050, -95.3800, 29.7400, -95.3350], [29.7200, -95.4450, 29.7620, -95.4100], [29.7250, -95.4800, 29.7700, -95.4450], [29.7620, -95.4250, 29.7745, -95.3950]];   // + East River across the bayou (City Cellars, Birdies), + Sawyer Yards (Tejas Brewery)   // + EaDo east of US-59 (Roots, Nancy's Hustle), + the East End / Second Ward along Navigation & Harrisburg (By The Wayside)   // the Warehouse District north of the bayou (Nance & Providence: Theodore Rex, Buried Seeds, Last Concert Cafe)
     const inExtra = (p) => EXTRA.some(([s0, w0, n0, e0]) => p.lat >= s0 && p.lat <= n0 && p.lng >= w0 && p.lng <= e0);
     for (const p of pts) {
       if (offMap(proj(p.lat, p.lng)) && !inExtra(p)) { this.offMap.add(p.id); continue; }   // beyond the edge of the map: no pin (the app sends you to Maps instead)
@@ -826,6 +826,51 @@ export class CityMap {
     }
   }
   // ---------- live METRO (from /api/metro): real positions, or positions estimated from predicted stop times ----------
+  // ---------- the neighbourhoods around the districts (public/homes.json), built a tile at a time when they come into view ----------
+  setHomes(j) {
+    if (!j?.tiles) return; const T = j.tile || 0.004;
+    this.homeTiles = Object.entries(j.tiles).map(([k, rows]) => { const [i, jj] = k.split(',').map(Number), [x, y] = this.proj((i + 0.5) * T, (jj + 0.5) * T); return { x, y, rows, objs: null }; });
+    this.homeR = T * 110850 / 10 * 0.75;   // tile half-diagonal in world units
+  }
+  homeObjs(t) {
+    if (t.objs) return t.objs;
+    const hash = (n) => { n = (n ^ 61) ^ (n >>> 16); n = (n + (n << 3)) | 0; n ^= n >>> 4; n = Math.imul(n, 0x27d4eb2d); n ^= n >>> 15; return (n >>> 0) / 4294967296; };
+    const HOUSE = ['#f2eee4', '#e9e2cf', '#d8e2e6', '#dfe6d4', '#efe3c4', '#e7d6c8', '#cfd8dc', '#f4efe6', '#c9d3bd', '#e8dcc0', '#b8c7d3', '#f0d9c4'];
+    const TOWN = ['#f1f0ec', '#3f4650', '#d9d6cf', '#5b6570', '#e8e3d8', '#8a9aa6', '#c8ccc6', '#2f3a45', '#ece7dc', '#a9b7a3'];
+    const SHINGLE = ['#5d5f63', '#6e6458', '#4f5358', '#7a6a58', '#585c66', '#8a7d6c', '#6b4f45'];
+    const APT = ['#d9cbb4', '#c9b7a0', '#e3dccf', '#b9a58c', '#cfd3d6', '#a8796a'];
+    const WARE = ['#a8604a', '#b98b6a', '#c9c2b4', '#9aa5ad', '#b5ab98', '#d6cfbf'];
+    t.objs = [];
+    for (const r of t.rows) {
+      const [kind, hM, la0, ln0] = r, pts = [this.proj(la0 / 1e5, ln0 / 1e5)];
+      for (let i = 4; i + 1 < r.length; i += 2) pts.push(this.proj((la0 + r[i]) / 1e5, (ln0 + r[i + 1]) / 1e5));
+      if (pts.length < 3) continue;
+      const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]), bb = { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
+      const cx = xs.reduce((a, b) => a + b, 0) / xs.length, cy = ys.reduce((a, b) => a + b, 0) / ys.length, k = hash((la0 * 7 + ln0) | 0), pick = (A) => A[Math.floor(k * A.length)];
+      let a2 = 0; for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length]; a2 += a[0] * b[1] - b[0] * a[1]; } const m2 = Math.abs(a2 / 2) * 100;
+      const o = { pts, bb, cx, cy, z0: 0, glass: false, name: '', type: 'home', nb: true, topM: 0, home: true };
+      if (kind === 'g') { o.h = 0.3; o.c = '#c9c6bf'; o.roofC = '#9fa3a8'; }
+      else if (kind === 'c') { o.h = hM ? hM / 10 : 0.9; o.c = '#d3c4a3'; o.roof = 'gabled'; o.roofC = '#6d7378'; }
+      else if (kind === 'w') { o.h = hM ? hM / 10 : 0.5 + k * 0.4; o.c = pick(WARE); o.fac = m2 > 900 ? 'ware' : 'shop'; o.roofC = '#b9bcbf'; }
+      else if (kind === 'a') { o.h = hM ? hM / 10 : 1.1 + k * 0.9; o.c = pick(APT); o.fac = 'house'; o.roofC = '#a9adb2'; }
+      else if (m2 < 95 || hM > 8) { o.h = hM ? hM / 10 : 0.85 + k * 0.35; o.c = pick(TOWN); o.fac = 'house'; o.roofC = '#9a9ea4'; if (k > 0.6) { o._rs = 'gabled'; o.roofC = pick(SHINGLE); o.h -= 0.15; } }   // townhomes
+      else { o.h = hM ? hM / 10 : 0.42 + k * 0.16; o.c = pick(HOUSE); o.fac = 'house'; o._rs = k > 0.45 ? 'gabled' : 'hipped'; o.roofC = pick(SHINGLE); }   // bungalows and cottages
+      if (o._rs || o.roof) { const rs = o._rs || o.roof, span = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0); o.roof = rs; o.rh = Math.min(o.h * 0.5, span * 0.32);
+        const sp = pts.filter((q, i) => { const a = pts[(i + pts.length - 1) % pts.length], b = pts[(i + 1) % pts.length]; const cr = (q[0] - a[0]) * (b[1] - q[1]) - (q[1] - a[1]) * (b[0] - q[0]); return Math.abs(cr) > 0.02 * Math.hypot(q[0] - a[0], q[1] - a[1]) * Math.hypot(b[0] - q[0], b[1] - q[1]); });
+        o.rp = sp.length >= 3 ? sp : pts; if (o.roof === 'gabled' && o.rp.length !== 4) o.roof = 'hipped'; }
+      if (kind === 'h' && k < 0.55) o.yard = [cx + (k - 0.27) * 3.2, cy + (0.27 - k) * 2.6 + 1.1, 0.55 + k * 0.5];   // a shade tree in most yards (oaks line the Heights and Montrose)
+      t.objs.push(o);
+    }
+    return t.objs;
+  }
+  offGridXY(x, y) { const A = this.avenues, C = this.cross, m = this.blockW * 0.6; return x < Math.min(...A.map((a) => a.x)) - m || x > Math.max(...A.map((a) => a.x)) + m || y < Math.min(...C.map((c) => c.y)) - m || y > Math.max(...C.map((c) => c.y)) + m; }
+  nearestRoad(x, y) {   // closest point on a mapped street (within ~60 m), with the street's direction
+    const segs = this._roadSegs ?? (this._roadSegs = [...(this.geo?.minor || []).filter((g) => !/residential|unclassified|living/.test(g.k)), ...(this.geo?.roads || [])].flatMap((g) => g.pts.slice(1).map((b, i) => [g.pts[i], b])));
+    let best = null, bd = 36;
+    for (const [a, b] of segs) { const ex = b[0] - a[0], ey = b[1] - a[1], L2 = ex * ex + ey * ey || 1e-9; let t = ((x - a[0]) * ex + (y - a[1]) * ey) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
+      const px = a[0] + ex * t, py = a[1] + ey * t, d = (px - x) ** 2 + (py - y) ** 2; if (d < bd) { const L = Math.sqrt(L2); bd = d; best = [px, py, ex / L, ey / L]; } }
+    return best;
+  }
   setLive(data, stat) { this.liveData = data; this.liveStat = stat || this.liveStat; if (!data) this.liveCars = []; }
   computeLive() {
     const L = this.liveData; if (!L) { this.liveCars = []; return; }
@@ -859,6 +904,9 @@ export class CityMap {
       const nm = (ri[0] + ' ' + ri[3]).toLowerCase(), onMain = /red/.test(nm) || (!/green|purple/.test(nm) && R2 && Math.abs(x - R2.x) < Math.min(Math.abs(y - R2.capY), Math.abs(y - R2.ruskY)));
       if (kind === 'train' && R2 && onMain && Math.abs(x - R2.x) < 8) { dy = hy >= 0 ? 1 : -1; x = R2.x + (dy > 0 ? 0.32 : -0.32); }
       else if (kind === 'train' && R2 && !onMain && Math.min(Math.abs(y - R2.capY), Math.abs(y - R2.ruskY)) < 8) { dx = hx >= 0 ? 1 : -1; y = dx > 0 ? R2.capY : R2.ruskY; }
+      else if (kind === 'bus' && this.offGridXY(x, y)) {   // outside the downtown grid: onto the nearest mapped street, not the grid line extended across a park
+        const q = this.nearestRoad(x, y); if (q) { x = q[0]; y = q[1]; dx = q[2]; dy = q[3]; if (dx * hx + dy * hy < 0) { dx = -dx; dy = -dy; } }
+      }
       else {
         const na = A.reduce((b, a) => (Math.abs(a.x - x) < Math.abs(b.x - x) ? a : b)), nc = C.reduce((b, c) => (Math.abs(c.y - y) < Math.abs(b.y - y) ? c : b));
         const lane = this.streetW * 0.5;
@@ -1395,6 +1443,7 @@ export class CityMap {
       }
       if (type === 'church' || type === 'cathedral') { o.c = o.c === c ? (MAT[mat]?.[0] || '#d3c4a3') : o.c; if (!o.roof) { o.roof = 'gabled'; o.rh = Math.min(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.3; o.roofC = o.roofC || '#6d7378'; } }
       const fx = fixes.find((f) => hM >= (f.minH || 0) && (inPoly(f.p[0], f.p[1], pts) || Math.hypot(f.p[0] - cx, f.p[1] - cy) < 0.6)); if (fx) { o.c = fx.c; o.grid = fx.grid; o.glass = false; if (o.h > 6) o.name = fx.name; if (fx.pool && o.h < 7 && o.h > 1.5) o.pool = true; }
+      if (type === 'stadium' && !name) { const sp = this.proj(29.7522, -95.3523); if (Math.hypot(sp[0] - cx, sp[1] - cy) < 6) { o.name = 'Shell Energy Stadium'; o.c = '#d2cbbe'; o.glass = false; o.h = Math.max(o.h, 2.6); o.pri = true; o.bowl = true; } }   // Dynamo & Dash soccer stadium in EaDo: concrete bowl around a green pitch
       const ls = LOOK[o.name]; if (ls) { if (ls.c) o.c = ls.c; if (ls.glass != null) o.glass = ls.glass; if (ls.ant) o.ant = ls.ant; if (ls.roofC) o.roofC = ls.roofC; if (ls.fac) o.fac = ls.fac; if (ls.pri) o.pri = true; }
       this.osm.push(o);
       const cr = CROWNS[o.name]; if (cr) { let top = o.z0 + o.h; o.h -= cr.reduce((a, [, f]) => a + f * h, 0); top = o.z0 + o.h;
@@ -1463,8 +1512,33 @@ export class CityMap {
     return true;
   }
   osmDepth(o) { if (o.base) return this.osmDepth(o.base) + o.z0 * 1e-4;   // tops draw right after the tower they sit on, never behind it
-    let m = -Infinity; for (const p of o.pts) { const d = this.v.depth(p[0], p[1]); if (d > m) m = d; } return m; }
+    const v = this.v, A = v.c + v.sn, B = v.c - v.sn;   // depth is linear in x,y: cache the farthest corner per rotation, then just shift by the view centre
+    if (o._dA !== A || o._dB !== B) { let m = -Infinity; for (const p of o.pts) { const d = p[0] * A + p[1] * B; if (d > m) m = d; } o._dA = A; o._dB = B; o._dm = m; }
+    return o._dm - (v.cx * A + v.cy * B); }
+  drawBowl(o, N, alpha) {   // an open-air stadium: the pitch on the ground, stands rising around it, no roof
+    const ctx = this.ctx, v = this.v, P = o.pts.slice(0, -1).length > 2 ? o.pts : o.pts, cx = o.cx, cy = o.cy, h = o.h;
+    const ring = (k, z) => P.map((q) => v.p(cx + (q[0] - cx) * k, cy + (q[1] - cy) * k, z));
+    const fillPts = (pts, c) => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.fillStyle = c; ctx.fill(); };
+    ctx.globalAlpha = alpha;
+    // outer wall: the side faces toward the viewer
+    const out0 = ring(1, 0), out1 = ring(1, h);
+    for (let i = 0; i < P.length - 1; i++) { const a0 = out0[i], b0 = out0[i + 1], a1 = out1[i], b1 = out1[i + 1]; if ((b0[0] - a0[0]) * (a1[1] - a0[1]) - (b0[1] - a0[1]) * (a1[0] - a0[0]) > 0) continue;
+      fillPts([a0, b0, b1, a1], N ? '#2a2e38' : (i % 2 ? '#bdb6a8' : '#c9c2b5')); }
+    // the seating bowl sloping down from the rim to the pitch, then the pitch itself
+    const inner = ring(0.72, 0.15);
+    ctx.beginPath(); out1.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); inner.slice().reverse().forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath();
+    ctx.fillStyle = N ? '#3b2a2a' : '#c1532f'; ctx.fill('evenodd');   // Dynamo orange seats
+    const pitch = ring(0.62, 0.16); fillPts(pitch, N ? '#24452a' : '#4f9a48');
+    if (v.s > 0.35) {   // mowing stripes and the touchlines / halfway line
+      const pa = ring(0.62, 0.17), mid = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+      ctx.strokeStyle = N ? 'rgba(255,255,255,.35)' : 'rgba(255,255,255,.85)'; ctx.lineWidth = Math.max(1, v.s * 1.6);
+      ctx.beginPath(); pa.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.stroke();
+      const [c0, c1] = [v.p(cx, cy, 0.17), v.p(cx, cy, 0.17)]; ctx.beginPath(); ctx.ellipse(c0[0], c0[1], 0.9 * TW * v.s, 0.45 * TW * v.s, 0, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
   drawOsm(o, N, alpha) {
+    if (o.bowl) return this.drawBowl(o, N, alpha);
     const ctx = this.ctx, v = this.v, P = o.pts, n = P.length, z0 = o.z0, z1 = o.z0 + o.h;
     const nbLow = o.nb && (v.s < 0.55 || this.busy || this.lowQ);   // neighbourhood houses/warehouses: cheap boxes when zoomed out or moving
     if (o.nb && v.s < 0.5 && ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * v.s < 5) return;   // too small to see
@@ -1728,10 +1802,10 @@ export class CityMap {
       ctx.strokeStyle = '#666'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke(); ctx.fillStyle = cols[i % cols.length]; ctx.beginPath(); ctx.ellipse(tx, ty, r, r * 0.5, 0, Math.PI, 0); ctx.fill(); }
     if (N || (this._dusk || 0) > 0.3) { ctx.fillStyle = '#ffd27a'; const P = [[x0, y0], [x0 + w, y0], [x0 + w, y0 + d], [x0, y0 + d]]; for (let i = 0; i < 4; i++) { const a = P[i], b = P[(i + 1) % 4]; for (let t = 0; t <= 1; t += 0.12) { const q = lerp2(a, b, t), [px, py] = v.p(q[0], q[1], z + 0.22 - Math.sin(t * Math.PI) * 0.06); ctx.beginPath(); ctx.arc(px, py, Math.max(1, v.s * 1.6), 0, 7); ctx.fill(); } } }
   }
-  // game days: crowds stream toward Toyota Center or Daikin Park from 3 hours before the start until an hour after
+  // game days: crowds stream toward Toyota Center or Daikin Park from 3 hours before the start until the game lets out
   setEvents(list) { this.events = list || []; this.checkEvent(); }
   checkEvent() {
-    const now = Date.now(), e = (this.events || []).find((x) => { const t = Date.parse(x.start); return now > t - 3 * 3600e3 && now < t + 3600e3; }) || null;
+    const now = Date.now(), e = (this.events || []).find((x) => { const t = Date.parse(x.start); return now > t - 3 * 3600e3 && now < t + 3.5 * 3600e3; }) || null;
     if ((e && e.start) === (this.eventNow && this.eventNow.start)) return; this.eventNow = e;
     for (const n of this.npcs || []) if (n.fan) { if (n.atSpot) n.atSpot.inn = Math.max(0, (n.atSpot.inn || 0) - 1); this.leaveQueue(n); if (this.followN === n) this.followN = null; }
     this.npcs = (this.npcs || []).filter((n) => !n.fan);
@@ -2064,7 +2138,7 @@ export class CityMap {
 
   // ---------- view / input ----------
   resize() {
-    const r = this.cv.getBoundingClientRect(), dpr = Math.min(this.maxDpr || 2, window.devicePixelRatio || 1);
+    const r = this.cv.getBoundingClientRect(), dpr = Math.min(this.maxDpr || 2, window.devicePixelRatio || 1) * (this.farRes ? 0.6 : 1);   // zoomed far out: fewer pixels, the city is tiny anyway
     this.W = r.width; this.H = r.height; this.cv.width = r.width * dpr; this.cv.height = r.height * dpr; this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   centerOn(x, y, z = 0, fy = 0.55) { const [px, py] = this.v.p(x, y, z); this.v.ox += this.W / 2 - px; this.v.oy += this.H * fy - py; }
@@ -2216,13 +2290,16 @@ export class CityMap {
   setScene(sc) { this.scene = sc; this.themeNight = sc === 'night'; this.pinCache?.clear?.(); }
   visibleSpots(under) { return this.spots.filter((s) => s.tunnel === under && s.places.some((p) => this.sceneOk(p)) && (!this.highlight || s.places.some((p) => this.highlight.has(p.id)))); }
   clusters(under) {
-    const m = new Map(), k = this.clusterSpan();
-    for (const s of this.visibleSpots(under)) {
+    const k = this.clusterSpan(), vis = this.visibleSpots(under), key0 = `${under}|${k}|${vis.length}|${this.mode}|${(performance.now() / 2000) | 0}`;   // open counts re-check every couple of seconds, not every frame
+    const ck = (this._clC || (this._clC = {}))[under ? 1 : 0]; if (ck && ck.key === key0 && ck.vis === vis.length) return ck.out;
+    const m = new Map();
+    for (const s of vis) {
       const [i, j] = this.cellIdx(s.x, s.y), key = Math.floor(i / k) + ':' + Math.floor(j / k);
       const c = m.get(key) || { n: 0, x: 0, y: 0, open: 0 };
       c.n += s.places.length; c.x += s.x * s.places.length; c.y += s.y * s.places.length; c.open += s.places.filter((p) => this.openC(p)).length; m.set(key, c);
     }
-    return [...m.values()].map((c) => ({ ...c, x: c.x / c.n, y: c.y / c.n, z: under && this.mode !== 'street' ? this.tunnelZ() : 0 }));
+    const out = [...m.values()].map((c) => ({ ...c, x: c.x / c.n, y: c.y / c.n, z: under && this.mode !== 'street' ? this.tunnelZ() : 0 }));
+    this._clC[under ? 1 : 0] = { key: key0, vis: vis.length, out }; return out;
   }
   layers() { return this.mode === 'tunnel' ? [true] : this.mode === 'both' ? [true, false] : [false]; }
   hit(sx, sy) {
@@ -2294,6 +2371,7 @@ export class CityMap {
       this.ema = (this.ema ?? 0.016) * 0.95 + raw * 0.05; this.slowFor = this.ema > 0.034 ? (this.slowFor || 0) + raw : 0;
       if (this.slowFor > 1.5 && (this.maxDpr || 2) > 1) { this.maxDpr = Math.max(1, (this.maxDpr || 2) - 0.5); this.slowFor = 0; this.resize(); }
     }
+    { const far = this.farRes ? this.v.s < 0.5 : this.v.s < 0.42; if (far !== !!this.farRes) { this.farRes = far; this.resize(); } }
     if (this.zoomAnim) { const z = this.zoomAnim, step = Math.min(z.k - z.done, z.k * dt * 5) || 0; if (Math.abs(z.k - z.done) < 1e-3 || !step) this.zoomAnim = null; else { this.zoomAt(z.sx, z.sy, Math.exp(step)); z.done += step; } }
     if (this.fling) { const f = this.fling, k = Math.min(3, dt * 60); this.v.ox += f.vx * k; this.v.oy += f.vy * k; f.vx *= Math.pow(0.92, k); f.vy *= Math.pow(0.92, k); if (Math.hypot(f.vx, f.vy) < 0.3) this.fling = null; }
     if (!this.pointers?.size && !this.anim) this.keepInBounds();
@@ -2371,16 +2449,28 @@ export class CityMap {
     const items = [];
     for (const f of this.fill) if (!f.lot) items.push({ k: v.boxDepth(f.x, f.y, f.w, f.d), f });
     for (const l of this.landmarks) items.push({ k: v.boxDepth(l.x, l.y, l.w, l.d), l });
-    for (const o of this.osm || []) { const [sx, sy] = v.p(o.cx, o.cy), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20, up = (o.z0 + o.h) * ZU * v.s; if (sx < -r || sx > this.W + r || sy + r < 0 || sy - up - r > this.H) continue; items.push({ k: this.osmDepth(o), o }); }
+    const nbFlat = v.s < 0.42 && !this.osmOutline, nbB = [];   // city scale: the thousands of small neighbourhood buildings go in one batched draw
+    for (const o of this.osm || []) { const [sx, sy] = v.p(o.cx, o.cy), r = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20, up = (o.z0 + o.h) * ZU * v.s; if (sx < -r || sx > this.W + r || sy + r < 0 || sy - up - r > this.H) continue; if (nbFlat && o.nb) { nbB.push(o); continue; } items.push({ k: this.osmDepth(o), o }); }
+    if (this.homeTiles && v.s >= 0.16) for (const t of this.homeTiles) {   // the neighbourhood tiles in view: flat with the rest at city scale, full houses closer in
+      const [tx, ty] = v.p(t.x, t.y), r = this.homeR * TW * v.s * 1.2 + 30; if (tx < -r || tx > this.W + r || ty < -r || ty > this.H + r) continue;
+      for (const o of this.homeObjs(t)) { const [sx, sy] = v.p(o.cx, o.cy), rr = ((o.bb.x1 - o.bb.x0) + (o.bb.y1 - o.bb.y0)) * TW * 0.5 * v.s + 20; if (sx < -rr || sx > this.W + rr || sy + rr < 0 || sy - (o.h * ZU * v.s) - rr > this.H) continue;
+        if (nbFlat) nbB.push(o); else { items.push({ k: this.osmDepth(o), o }); if (o.yard && v.s > 0.45) items.push({ k: v.depth(o.yard[0], o.yard[1]), yard: o.yard }); } }
+    }
+    if (nbB.length) { const N2 = N;   // a dark footprint for the walls, then the roof lifted to its height: two fills for all of them
+      ctx.beginPath(); for (const o of nbB) { o.pts.forEach((q, i) => (i ? ctx.lineTo(...v.p(q[0], q[1], 0)) : ctx.moveTo(...v.p(q[0], q[1], 0)))); ctx.closePath(); } ctx.fillStyle = N2 ? '#1f232d' : '#a7a49c'; ctx.fill();
+      ctx.beginPath(); for (const o of nbB) { const z = o.z0 + o.h; o.pts.forEach((q, i) => (i ? ctx.lineTo(...v.p(q[0], q[1], z)) : ctx.moveTo(...v.p(q[0], q[1], z)))); ctx.closePath(); } ctx.fillStyle = N2 ? '#3a3f4b' : '#d3cfc6'; ctx.fill(); }
     for (const a of this.areas) if (['ballpark', 'arena', 'grb'].includes(a.kind)) items.push({ k: v.boxDepth(a.r.x0, a.r.y0, a.r.x1 - a.r.x0, a.r.y1 - a.r.y0), a });
-    if (!this.hide.people) { for (const n of this.npcs) if (!n.under && n.inside <= 0 && !n.gone) items.push({ k: v.depth(n.x, n.y) + 0.5, n }); for (const r of this.rides || []) { const [rx, ry] = this.ridePos(r); items.push({ k: v.depth(rx, ry) + 0.4, rd: r }); } }
+    if (!this.hide.people && v.s >= 0.3) { for (const n of this.npcs) if (!n.under && n.inside <= 0 && !n.gone) items.push({ k: v.depth(n.x, n.y) + 0.5, n }); for (const r of this.rides || []) { const [rx, ry] = this.ridePos(r); items.push({ k: v.depth(rx, ry) + 0.4, rd: r }); } }
     if (!this._stTrees) { const T = [], sw = this.streetW, A = this.avenues, C = this.cross, mapped = this.geo?.trees || [];
-      const near = (x, y) => mapped.some(([a, b]) => Math.abs(a - x) < 1.2 && Math.abs(b - y) < 1.2);
+      const MG = new Map(); for (const q of mapped) { const k = Math.floor(q[0] / 2) * 100003 + Math.floor(q[1] / 2); (MG.get(k) || MG.set(k, []).get(k)).push(q); }
+      const near = (x, y) => { const i0 = Math.floor(x / 2), j0 = Math.floor(y / 2); for (let i = i0 - 1; i <= i0 + 1; i++) for (let j = j0 - 1; j <= j0 + 1; j++) for (const [a, b] of MG.get(i * 100003 + j) || []) if (Math.abs(a - x) < 1.2 && Math.abs(b - y) < 1.2) return true; return false; };
       for (const a of A) for (const sd of [-1, 1]) for (let j = 0; j < C.length - 1; j++) for (let y = C[j].y + sw + 1; y < C[j + 1].y - sw - 0.6; y += 2.4) { const x = a.x + sd * (sw + 0.16); if (hash(x + '|' + y) < (a.n === 'Main' ? 0.95 : 0.6) && !near(x, y)) T.push([x, y]); }
       for (const c of C) for (const sd of [-1, 1]) for (let i = 0; i < A.length - 1; i++) for (let x = A[i].x + sw + 1; x < A[i + 1].x - sw - 0.6; x += 2.4) { const y = c.y + sd * (sw + 0.16); if (hash(x + '~' + y) < 0.6 && !near(x, y)) T.push([x, y]); }
       for (const pk of this.geo?.parks || []) { if (pk.k === 'plaza' || pk.k === 'dog_park') continue; const xs = pk.pts.map((q) => q[0]), ys = pk.pts.map((q) => q[1]), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys); if ((x1 - x0) * (y1 - y0) > 900) continue;
         for (let x = x0 + 0.5; x < x1; x += 1.25) for (let y = y0 + 0.5; y < y1; y += 1.25) { const jx = x + (hash(x + 'px' + y) - 0.5) * 0.9, jy = y + (hash(y + 'py' + x) - 0.5) * 0.9; if (hash(jx + 'pk' + jy) < 0.55 && ptIn(jx, jy, pk.pts) && !(this.geo.water || []).some((w) => ptIn(jx, jy, w)) && !near(jx, jy)) T.push([jx, jy]); } }   // parks get real canopy
-      this._stTrees = T.filter(([x, y]) => !(this.osm || []).some((o) => x > o.bb.x0 && x < o.bb.x1 && y > o.bb.y0 && y < o.bb.y1 && ptIn(x, y, o.pts))); }
+      const G = new Map(), cs = 4, key = (i, j) => i * 100003 + j;   // bucket buildings by 40 m cells so each tree only checks its neighbours
+      for (const o of this.osm || []) for (let i = Math.floor(o.bb.x0 / cs); i <= Math.floor(o.bb.x1 / cs); i++) for (let j = Math.floor(o.bb.y0 / cs); j <= Math.floor(o.bb.y1 / cs); j++) { const k = key(i, j); (G.get(k) || G.set(k, []).get(k)).push(o); }
+      this._stTrees = T.filter(([x, y]) => !(G.get(key(Math.floor(x / cs), Math.floor(y / cs))) || []).some((o) => x > o.bb.x0 && x < o.bb.x1 && y > o.bb.y0 && y < o.bb.y1 && ptIn(x, y, o.pts))); }
     if (v.s > 0.5) for (const [x, y] of this._stTrees) { const [sx, sy] = v.p(x, y); if (sx < -30 || sx > this.W + 30 || sy < -10 || sy > this.H + 60) continue; items.push({ k: v.depth(x, y) + 0.4, tr: [x, y] }); }
     if (this.geo?.trees && v.s > 0.4) for (const [x, y] of this.geo.trees) { const [sx, sy] = v.p(x, y); if (sx < -30 || sx > this.W + 30 || sy < -10 || sy > this.H + 60) continue; items.push({ k: v.depth(x, y) + 0.4, tr: [x, y] }); }
     const live = !!this.liveData, liveRail = live && (this.liveCars || []).some((c) => c.kind === 'train') || this.liveRailSeen;
@@ -2406,6 +2496,7 @@ export class CityMap {
       else if (it.l) this.drawLandmark(it.l, N, ghost);
       else if (it.a) this.drawArea(it.a, N, '3d', ghost);
       else if (it.o) this.drawOsm(it.o, N, xray(it.o) ? Math.min(ghost, 0.32) : ghost);
+      else if (it.yard) this.drawStreetTree(it.yard[0], it.yard[1], N, ghost);
       else if (it.t) this.drawTrain(it.t, N, ghost);
       else if (it.c) this.drawCar(it.c, N, ghost, now);
       else if (it.tr) this.drawStreetTree(it.tr[0], it.tr[1], N, ghost);
@@ -2483,7 +2574,7 @@ export class CityMap {
       if (x1 < -20 || x0 > W + 20 || y1 < -20 || y0 > H + 20) continue; vis.push(L); ctx.moveTo(...sp[0]); for (const q of sp.slice(1)) ctx.lineTo(...q); ctx.closePath();
     }
     ctx.fillStyle = N ? '#262b36' : '#9ea4ab'; ctx.fill(); if (!N) { ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; ctx.stroke(); }
-    if (v.s < 0.22) return;
+    if (v.s < 0.3) return;   // zoomed out: just the asphalt
     if (v.s >= 0.4) { ctx.strokeStyle = N ? 'rgba(255,255,255,.18)' : 'rgba(255,255,255,.8)'; ctx.lineWidth = 1; ctx.beginPath(); for (const L of vis) for (const [a, b] of L.rows) { ctx.moveTo(...v.p(a[0], a[1], 0.02)); ctx.lineTo(...v.p(b[0], b[1], 0.02)); } ctx.stroke(); }
     if (v.s < 0.55) {   // zoomed out: parked cars as coloured dots, one path per colour
       const r = Math.max(1.2, v.s * 3.2), by = {}; for (const L of vis) for (const c of L.cars) { if (c.k > lim) continue; const [sx, sy] = v.p(c.x, c.y); if (sx < -5 || sx > W + 5 || sy < -5 || sy > H + 5) continue; (by[c.c] || (by[c.c] = [])).push(sx, sy); }
@@ -2814,7 +2905,7 @@ export class CityMap {
     const pathZ = (pts, z) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...v.p(p[0], p[1], z)) : ctx.moveTo(...v.p(p[0], p[1], z)))); };
     { const small = (g) => g.k === 'residential' || g.k === 'unclassified';   // off-grid streets, batched: one stroke per width
       for (const [sw, rw, pick] of [[1.15, 0.8, true], [1.5, 1.1, false]]) {
-        ctx.beginPath(); for (const g of G.minor || []) if (small(g) === pick) sub(g.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#d8d2c6'; ctx.lineWidth = strokeW(sw) + 3; ctx.stroke();   // sidewalks
+        if (v.s > 0.4) { ctx.beginPath(); for (const g of G.minor || []) if (small(g) === pick) sub(g.pts); ctx.strokeStyle = N ? '#3a3f4c' : '#d8d2c6'; ctx.lineWidth = strokeW(sw) + 3; ctx.stroke(); }   // sidewalks
         ctx.beginPath(); for (const g of G.minor || []) if (small(g) === pick) sub(g.pts); ctx.strokeStyle = road; ctx.lineWidth = strokeW(rw); ctx.stroke(); } }
     if (v.s > 0.55) { ctx.font = `700 ${Math.round(9 + v.s * 2)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const seen = new Set();
       for (const g of G.minor || []) { if (!g.n || seen.has(g.n) || g.pts.length < 2) continue; const a = v.p(...g.pts[0]), b = v.p(...g.pts[g.pts.length - 1]); if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 70) continue; seen.add(g.n); const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; let ang = Math.atan2(b[1] - a[1], b[0] - a[0]); if (ang > Math.PI / 2) ang -= Math.PI; if (ang < -Math.PI / 2) ang += Math.PI;
@@ -2919,10 +3010,15 @@ export class CityMap {
         const tries = [[0, yy], [0, y - lift + rr + 12], [w / 2 + rr + 4, y - lift], [-(w / 2 + rr + 4), y - lift]];
         for (const [dx, ty] of tries) if (fits(x + dx - w / 2 - 2, ty - 10, x + dx + w / 2 + 2, ty + 10)) { lbl.set(s, [dx, ty - yy]); break; } }
     }
+    {   // every pin's stem and ground shadow in two batched draws (hundreds of pins once the whole map is in view)
+      const r0 = lod === 'label' ? 12 : 10; ctx.beginPath();
+      for (const s of list) { const [x, y] = v.p(s.x, s.y, z); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r0); }
+      ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.stroke(); ctx.beginPath();
+      for (const s of list) { const [x, y] = v.p(s.x, s.y, z); ctx.moveTo(x + 3, y); ctx.ellipse(x, y, 3, 1.5, 0, 0, Math.PI * 2); }
+      ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fill();
+    }
     for (const s of list) {
       const [x, y] = v.p(s.x, s.y, z), open = s.places.some((p) => this.openC(p)), r = lod === 'label' ? 12 : 10;
-      ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - lift + r); ctx.stroke();
-      ellipse(ctx, x, y, 3, 1.5, 'rgba(0,0,0,.25)');
       if (this.highlight && s.places.some((p) => this.highlight.has(p.id))) { const pulse = 0.55 + 0.45 * Math.sin(performance.now() / 320 + s.x), g = ctx.createRadialGradient(x, y - lift, r * 0.6, x, y - lift, r * 2.4); g.addColorStop(0, hexA(s.style.color, 0.55 * pulse)); g.addColorStop(1, hexA(s.style.color, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - lift, r * 2.4, 0, 7); ctx.fill(); }
       const spr = pinSprite(open ? s.style.color : '#adb5bd', s.style.emoji, r, under ? '#c3fae8' : '#fff'); ctx.drawImage(spr, x - spr.css / 2, y - lift - spr.css / 2, spr.css, spr.css);
       if (s.places.length > 1) { circle(ctx, x + r * 0.85, y - lift - r * 0.8, 7, '#212529'); ctx.fillStyle = '#fff'; ctx.font = '700 9px system-ui, sans-serif'; ctx.fillText(String(s.places.length), x + r * 0.85, y - lift - r * 0.8 + 0.5); }

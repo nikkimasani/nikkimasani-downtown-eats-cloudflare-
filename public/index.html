@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#d9481e">
 <meta name="description" content="Pick where to eat in downtown Houston — mood picker, live hours, happy hours, a weekly plan and an isometric city map with street-level and tunnel layers.">
-<title>Downtown Eats — Houston</title>
+<title>Inner Loop Eats — Houston</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Downtown Eats">
+<meta name="apple-mobile-web-app-title" content="Inner Loop Eats">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -22,7 +22,7 @@
 <header id="top">
   <button class="themebtn" id="themeBtn" aria-label="Theme">🌓</button>
   <button class="themebtn textbtn" id="textBtn" aria-label="Text size">A</button>
-  <h1>Downtown Eats 🍽️</h1>
+  <h1>Inner Loop Eats 🍽️</h1>
   <p id="hdr">Loading downtown Houston spots…</p>
 </header>
 
@@ -36,6 +36,8 @@
     <div class="chips" id="budget"></div>
     <h3>Diet <small class="meta">— stays on · best guess from listings</small></h3>
     <div class="chips" id="diet"></div>
+    <h3>Area <small class="meta">— e.g. somewhere you can walk to from the office</small></h3>
+    <div class="chips" id="area"></div>
     <h3>Extras</h3>
     <div class="chips" id="extras"></div>
   </details>
@@ -79,12 +81,13 @@
 </section>
 
 <section class="view" id="v-night">
-  <div class="subtabs"><button data-v="browse" class="">🍽️ Food</button><button data-v="coffee" class="">☕ Coffee</button><button data-v="night" class="on">🌙 Bars</button></div>
-  <h2>Tonight downtown 🌙</h2>
+  <div class="subtabs"><button data-v="browse" class="">🍽️ Food</button><button data-v="coffee" class="">☕ Coffee</button><button data-v="night" class="on">🌙 Bars</button><button data-v="steak" class="">🥩 Steak</button></div>
+  <h2>Tonight in the inner loop 🌙</h2>
   <p class="sub" id="nightSub"></p>
   <div id="hhNowRow"></div>
   <div class="chips" id="nightChips" style="margin-top:10px"></div>
   <div class="row" style="margin-top:10px;align-items:center">
+    <select class="chip zonesel" id="nArea" aria-label="Area"></select>
     <select class="chip" id="nightSort"><option value="now">Best right now</option><option value="near">Closest to me</option><option value="az">A–Z</option></select>
     <button class="chip" id="nightMap">🗺️ Bars on the map</button>
     <button class="chip clearf" id="nClear" hidden>✕ Clear</button>
@@ -95,11 +98,12 @@
 </section>
 
 <section class="view" id="v-coffee">
-  <div class="subtabs"><button data-v="browse" class="">🍽️ Food</button><button data-v="coffee" class="on">☕ Coffee</button><button data-v="night" class="">🌙 Bars</button></div>
-  <h2>Coffee downtown ☕</h2>
+  <div class="subtabs"><button data-v="browse" class="">🍽️ Food</button><button data-v="coffee" class="on">☕ Coffee</button><button data-v="night" class="">🌙 Bars</button><button data-v="steak" class="">🥩 Steak</button></div>
+  <h2>Coffee in the inner loop ☕</h2>
   <p class="sub" id="coffeeSub"></p>
   <div class="chips" id="coffeeChips"></div>
   <div class="row" style="margin-top:10px;align-items:center">
+    <select class="chip zonesel" id="cArea" aria-label="Area"></select>
     <select class="chip" id="coffeeSort"><option value="now">Open first</option><option value="near">Closest to me</option><option value="az">A–Z</option></select>
     <button class="chip" id="coffeeMap">🗺️ Coffee on the map</button>
     <button class="chip clearf" id="cClear" hidden>✕ Clear</button>
@@ -109,11 +113,26 @@
   <p class="disclaim">From the Downtown Houston directory, refreshed daily. Tunnel cafés usually keep weekday office hours.</p>
 </section>
 
+<section class="view" id="v-steak">
+  <div class="subtabs"><button data-v="browse" class="">🍽️ Food</button><button data-v="coffee" class="">☕ Coffee</button><button data-v="night" class="">🌙 Bars</button><button data-v="steak" class="on">🥩 Steak</button></div>
+  <h2>Steak nights 🥩</h2>
+  <p class="sub" id="steakSub"></p>
+  <div class="chips" id="steakDays"></div>
+  <div class="row" style="margin-top:10px;align-items:center">
+    <select class="chip zonesel" id="sArea" aria-label="Area"></select>
+    <button class="chip" id="steakMap">🗺️ On the map</button>
+    <span class="count" id="steakCount" style="margin:0 0 0 auto"></span>
+  </div>
+  <div id="steakList" style="margin-top:10px"></div>
+  <p class="disclaim" id="steakNote"></p>
+</section>
+
 <section class="view" id="v-browse">
-  <div class="subtabs"><button data-v="browse" class="on">🍽️ Food</button><button data-v="coffee" class="">☕ Coffee</button><button data-v="night" class="">🌙 Bars</button></div>
-  <h2>All downtown spots</h2>
+  <div class="subtabs"><button data-v="browse" class="on">🍽️ Food</button><button data-v="coffee" class="">☕ Coffee</button><button data-v="night" class="">🌙 Bars</button><button data-v="steak" class="">🥩 Steak</button></div>
+  <h2>All inner loop spots</h2>
   <input class="search" id="q" placeholder="Search name, cuisine, dish, street, tunnel…">
   <div class="row" style="margin-top:10px">
+    <select class="chip zonesel" id="bArea" aria-label="Area"></select>
     <button class="chip clearf" id="bClear" hidden>✕ Clear</button>
     <button class="chip" id="toggleF">Filters ▾</button>
     <button class="chip" id="openOnly">🟢 Open now</button>
@@ -149,8 +168,11 @@
       <button data-m="both">Both</button>
       <button data-m="tunnel" class="tun">🚇 Tunnels</button>
     </div>
+    <button class="pill" id="areaBtn" aria-expanded="false" title="Jump to an area">📍<span class="lbl"> Area</span></button>
+    <button class="pill gamechip" id="gameChip" hidden></button>
     <button class="pill simstats" id="simStats" hidden aria-expanded="false"></button>
     <button class="pill" id="moreBtn" aria-expanded="false" title="More options">☰<span class="lbl"> More</span></button>
+    <div class="hud-more" id="areaMenu" hidden><div class="hm-row" id="areaList"></div></div>
     <div class="hud-more" id="hudMore" hidden>
       <div class="hm-row">
         <button class="pill" id="walkView">🧭 Follow me</button>

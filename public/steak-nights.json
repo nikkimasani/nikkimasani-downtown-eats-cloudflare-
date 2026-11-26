@@ -1,0 +1,311 @@
+{
+ "note": "Weekly steak nights in and around downtown, checked by hand. 'as' is the date of the source; anything marked verify is from an older or undated source, so call or check their Instagram first. Deals change often.",
+ "checked": "2026-11-25",
+ "nights": [
+  {
+   "n": "EZ's Liquor Lounge",
+   "days": [
+    "Mon"
+   ],
+   "time": "6pm",
+   "deal": "12-oz strip, salad, mashed potatoes",
+   "price": "$32",
+   "src": "CultureMap",
+   "url": "https://houston.culturemap.com/news/restaurants-bars/12-houston-steak-nights-2026/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Jethro's Cocktail Lounge",
+   "days": [
+    "Mon"
+   ],
+   "time": "7pm",
+   "deal": "Houston Prime pop-up: 12-oz ribeye, green beans, mashed potatoes · happy hour all day",
+   "price": "$30",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Christian's Tailgate",
+   "days": [
+    "Mon"
+   ],
+   "time": "5pm till sold out",
+   "deal": "12-oz ribeye with two sides (all Christian's locations)",
+   "price": "$20",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Christian's Tailgate Midtown",
+   "addr": "2000 Bagby St",
+   "days": [
+    "Mon"
+   ],
+   "time": "5pm till sold out",
+   "deal": "12-oz ribeye with two sides (all Christian's locations)",
+   "price": "$20",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Henderson & Kane",
+   "days": [
+    "Mon"
+   ],
+   "time": "5–9pm, dine-in",
+   "deal": "44 Farms sirloin, strip or ribeye with spinach, garlic mash · featured wines 20% off",
+   "price": "$20–38",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "El Big Bad",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Premium and wagyu cuts with greens and potatoes",
+   "src": "Central Houston",
+   "url": "https://centralhouston.org/post/its-whats-dinner",
+   "verify": true
+  },
+  {
+   "n": "Moon Rabbit",
+   "days": [
+    "Tue"
+   ],
+   "time": "5pm till sold out",
+   "deal": "NY strip or ribeye with two rotating sides",
+   "price": "$31 / $35",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Plume",
+   "addr": "1100 W 23rd St",
+   "days": [
+    "Tue"
+   ],
+   "time": "6–11pm",
+   "deal": "Steak and surf & turf with chef Jason \"Big Sexy\" Hill",
+   "src": "Eventbrite (Plume)",
+   "url": "https://www.eventbrite.com/e/steak-night-and-surf-turf-tuesdays-6pm-to-11pm-tickets-1487348221569",
+   "verify": true
+  },
+  {
+   "n": "Front Porch Pub",
+   "addr": "217 Gray St",
+   "days": [
+    "Tue",
+    "Thu"
+   ],
+   "time": "6–10pm",
+   "deal": "16-oz ribeye and baked potato, grilled on the deck",
+   "price": "$15",
+   "src": "The Buzz Magazines",
+   "url": "https://thebuzzmagazines.com/node/8736",
+   "as": "2026-01"
+  },
+  {
+   "n": "Pimlico",
+   "days": [
+    "Tue",
+    "Wed",
+    "Thu"
+   ],
+   "time": "6:30–11pm",
+   "deal": "Prime 12-oz ribeye, rack of lamb or pork chops · cash only, one-drink minimum",
+   "price": "Market",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Better Luck Tomorrow",
+   "days": [
+    "Wed"
+   ],
+   "time": "dinner",
+   "deal": "Bistro steak, potato purée, onion rings, truffle gravy",
+   "price": "$28",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Dan Electro's Guitar Bar",
+   "days": [
+    "Wed"
+   ],
+   "time": "~7pm",
+   "deal": "Steak, mashed potatoes, green beans with Whiskey Wednesday · cash only",
+   "price": "~$30",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "On the Kirb",
+   "days": [
+    "Wed"
+   ],
+   "time": "dinner",
+   "deal": "Grass-fed filet, mashed potatoes, seasonal veg · $5 house wine",
+   "price": "$30",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Axelrad Beer Garden",
+   "days": [
+    "Wed"
+   ],
+   "time": "6–10pm",
+   "deal": "Amexicun steak pop-up",
+   "src": "Amexicun (Facebook)",
+   "url": "https://www.facebook.com/Amexicun/",
+   "verify": true
+  },
+  {
+   "n": "Xochi",
+   "days": [
+    "Wed"
+   ],
+   "time": "dinner",
+   "deal": "Wood-grilled ribeye with mole and two sides",
+   "src": "Central Houston",
+   "url": "https://centralhouston.org/post/its-whats-dinner",
+   "verify": true
+  },
+  {
+   "n": "Daley Sports Club",
+   "addr": "922 Holman St",
+   "days": [
+    "Wed"
+   ],
+   "time": "evening",
+   "deal": "Steak night at this Midtown sports bar",
+   "src": "Wanderlog reviews",
+   "url": "https://wanderlog.com/place/details/12113146/daley-sports-club",
+   "verify": true
+  },
+  {
+   "n": "Lincoln Bar & Kitchen",
+   "days": [
+    "Wed"
+   ],
+   "time": "evening",
+   "deal": "Ribeye from Crooked Road Catering",
+   "src": "Houston Press",
+   "url": "https://www.houstonpress.com/restaurants/nine-steak-nights-not-to-miss-in-houston-8996385",
+   "verify": true
+  },
+  {
+   "n": "MKT BAR",
+   "days": [
+    "Thu"
+   ],
+   "time": "dinner",
+   "deal": "Chef's-choice steak with chimichurri, MKT salad, twice-baked potato or veg",
+   "price": "$24",
+   "src": "MKT Bar",
+   "url": "https://mktbar.com/specials/steak-night/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Jonathan's The Rub East End",
+   "days": [
+    "Thu"
+   ],
+   "time": "dinner",
+   "deal": "16-oz NY strip, potatoes, green beans, J1 sauce",
+   "price": "$30–35",
+   "src": "CultureMap",
+   "url": "https://houston.culturemap.com/news/restaurants-bars/12-houston-steak-nights-2026/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Starduster Lounge",
+   "addr": "3921 N Main St",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak, butter-poached potatoes, veg with cowboy butter · +$5 margarita",
+   "price": "$30",
+   "src": "CultureMap",
+   "url": "https://houston.culturemap.com/news/restaurants-bars/12-houston-steak-nights-2026/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Lankford's Grocery & Market",
+   "addr": "88 Dennis St",
+   "days": [
+    "Thu"
+   ],
+   "time": "all day",
+   "deal": "Chicken-fried steak, loaded mashed potatoes, cream gravy",
+   "price": "$19",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Almost Famous",
+   "days": [
+    "Fri"
+   ],
+   "time": "evening",
+   "deal": "Amexicun pop-up: sirloin up to a shareable tomahawk",
+   "price": "$30–125",
+   "src": "DiningOut",
+   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
+   "as": "2026-08"
+  },
+  {
+   "n": "Around the Corner",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening, till sold out",
+   "deal": "Big ribeye with potatoes and salad on the EaDo patio · happy hour before 7",
+   "price": "$25",
+   "src": "Corner (diner posts)",
+   "url": "https://www.corner.inc/place/p4G1dNZ9K2sA",
+   "as": "2026-06"
+  },
+  {
+   "n": "Moon Tower Inn",
+   "days": [
+    "Thu"
+   ],
+   "time": "7pm",
+   "deal": "Grilled steaks with 66 drafts — went on hiatus after May 7, 2026; check their Instagram for a return",
+   "src": "Moon Tower Inn events",
+   "url": "https://ma.to/venue/moontowerinn",
+   "as": "2026-05",
+   "verify": true,
+   "hiatus": true
+  },
+  {
+   "n": "The Hideaway on Dunvale",
+   "addr": "3122 Dunvale Rd (outside the loop)",
+   "days": [
+    "Tue",
+    "Sat"
+   ],
+   "time": "evening",
+   "deal": "Classic bar steak night, long-time Houston Press winner",
+   "src": "Houston Press",
+   "url": "https://www.houstonpress.com/?p=277019",
+   "verify": true
+  }
+ ]
+}

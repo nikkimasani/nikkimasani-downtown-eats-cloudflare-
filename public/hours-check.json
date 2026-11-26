@@ -1,6 +1,6 @@
 {
  "checked": "2026-11-25",
- "sitesWithHours": 18,
+ "sitesWithHours": 29,
  "flags": {
   "Artistry": {
    "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
@@ -56,6 +56,51 @@
    "site": "Sun 2pm–11pm · Mon 4pm–10pm · Tue 4pm–10pm · Wed 4pm–10pm · Thu 4pm–10pm · Fri 4pm–2am · Sat 3pm–2am",
    "url": "https://sohogardenhtx.com/",
    "slots": 84
+  },
+  "Honeychild's": {
+   "site": "Sun 12pm–6pm · Mon closed · Tue 12pm–10pm · Wed 12pm–10pm · Thu 12pm–10pm · Fri 12pm–10pm · Sat 12pm–10pm",
+   "url": "https://www.honeychildssweetcreams.com/",
+   "slots": 20
+  },
+  "Isa Matcha": {
+   "site": "Sun 10am–5pm · Mon 10am–5pm · Tue closed · Wed closed · Thu closed · Fri 10am–5pm · Sat 10am–5pm",
+   "url": "https://isamatcha.com/",
+   "slots": 14
+  },
+  "Eureka Heights Brewing Company": {
+   "site": "Sun 12pm–8pm · Mon closed · Tue 5pm–9pm · Wed 4pm–10pm · Thu 4pm–10pm · Fri 3pm–10pm · Sat 12pm–10pm",
+   "url": "https://www.eurekaheights.com/",
+   "slots": 6
+  },
+  "Brennan's": {
+   "site": "Sun 10am–8pm · Mon 11am–8pm · Tue 11am–9pm · Wed 11am–9pm · Thu 11am–9pm · Fri 11am–10pm · Sat 11am–10pm",
+   "url": "https://www.brennanshouston.com/",
+   "slots": 70
+  },
+  "Ripcord": {
+   "site": "Sun 12pm–2am · Mon 1pm–2am · Tue 1pm–2am · Wed 1pm–2am · Thu 1pm–2am · Fri 1pm–2am · Sat 12pm–2am",
+   "url": "https://theripcord.com/",
+   "slots": 28
+  },
+  "Henderson & Kane": {
+   "site": "Sun 8am–7:30pm · Mon 8am–8:30pm · Tue 8am–8:30pm · Wed 8am–8:30pm · Thu 8am–8:30pm · Fri 8am–8:30pm · Sat 8am–8:30pm",
+   "url": "https://hkgeneralstore.com/",
+   "slots": 11
+  },
+  "McGonigel's Mucky Duck": {
+   "site": "Sun closed · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–12am · Sat 11am–12am",
+   "url": "https://www.mcgonigels.com",
+   "slots": 24
+  },
+  "Red Lion Pub": {
+   "site": "Sun 11am–12am · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–2am · Sat 11am–2am",
+   "url": "https://redlionpubhouston.com/",
+   "slots": 38
+  },
+  "Hobbit Cafe": {
+   "site": "Sun 11am–9pm · Mon 11am–9pm · Tue 11am–9pm · Wed 11am–9pm · Thu 11am–9pm · Fri 11am–10pm · Sat 11am–10pm",
+   "url": "https://hobbitcafehtx.com/",
+   "slots": 8
   }
  }
 }

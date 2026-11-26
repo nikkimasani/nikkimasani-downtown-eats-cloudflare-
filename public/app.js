@@ -30,8 +30,33 @@ const MOODS = [
 const MEALS = ['Any', 'Breakfast', 'Brunch', 'Lunch', 'Dinner', 'Happy Hour', 'Late Night'];
 const BUDGET = [{ k: 0, l: 'Any' }, { k: 1, l: 'Under $15' }, { k: 2, l: 'Under $30' }, { k: 3, l: 'Under $60' }];
 const EXTRAS = [{ k: 'open', l: '🟢 Open now' }, { k: 'tunnel', l: '🚇 In the tunnels' }, { k: 'street', l: '🏙️ Street level' }, { k: 'Patio', l: '☀️ Patio' }, { k: 'Pet Friendly', l: '🐶 Pet friendly' }, { k: 'Food Hall', l: '🏛️ Food hall' }, { k: 'Full Service', l: '🍽️ Sit-down' }, { k: 'notfav', l: '🆕 Somewhere new' }];
+// neighbourhoods, as lat/lng boxes [south, west, north, east]; the first box a spot falls in wins
+const AREAS = [
+  { k: 'downtown', l: 'Central downtown', e: '🏙️', b: [29.7480, -95.3745, 29.7672, -95.3580] },
+  { k: 'warehouse', l: 'Warehouse District', e: '🏭', b: [29.7640, -95.3640, 29.7745, -95.3478] },
+  { k: 'eado', l: 'EaDo', e: '⚽', b: [29.7380, -95.3610, 29.7610, -95.3420] },
+  { k: 'eastend', l: 'East End', e: '🌮', b: [29.7370, -95.3420, 29.7605, -95.3080] },
+  { k: 'eastriver', l: 'East River', e: '⛳', b: [29.7605, -95.3478, 29.7745, -95.3180] },
+  { k: 'washington', l: 'Washington Ave, Sixth Ward & Sawyer Yards', e: '🎨', b: [29.7620, -95.4250, 29.7745, -95.3640] },
+  { k: 'fourthward', l: 'Fourth Ward', e: '🕊️', b: [29.7545, -95.3890, 29.7605, -95.3745] },
+  { k: 'allen', l: 'Allen Pkwy & Regent Square', e: '🌳', b: [29.7530, -95.4140, 29.7650, -95.3745] },
+  { k: 'midtown', l: 'Midtown', e: '🍸', b: [29.7300, -95.3900, 29.7525, -95.3610] },
+  { k: 'heights', l: 'The Heights', e: '🏡', b: [29.7745, -95.4200, 29.8100, -95.3700] },
+  { k: 'montrose', l: 'Montrose', e: '🎭', b: [29.7330, -95.4100, 29.7530, -95.3890] },
+  { k: 'museum', l: 'Museum District & Hermann Park', e: '🏛️', b: [29.7080, -95.4050, 29.7330, -95.3800] },
+  { k: 'thirdward', l: 'Third Ward & Almeda', e: '🎓', b: [29.7050, -95.3800, 29.7400, -95.3350] },
+  { k: 'upperkirby', l: 'Upper Kirby & River Oaks', e: '🌿', b: [29.7200, -95.4450, 29.7620, -95.4100] },
+  { k: 'uptown', l: 'Uptown, Galleria & Post Oak', e: '🛍️', b: [29.7250, -95.4800, 29.7700, -95.4450] },
+];
+const inGrid = (r) => { let c = null; try { c = city; } catch (e) { return null; } if (!c?.avenues) return null; const [x, y] = city.proj(r.lat, r.lng), A = city.avenues.map((a) => a.x), C = city.cross.map((c) => c.y); return x >= Math.min(...A) && x <= Math.max(...A) && y >= Math.min(...C) && y <= Math.max(...C); };
+const areaOf = (r) => { if (r.lat == null) return null; if (r._area !== undefined && r._areaK === r.lat + r.lng) return r._area; const g = inGrid(r); const v = g ? 'downtown' : areaBox(r, g === null); if (g !== null) { r._area = v; r._areaK = r.lat + r.lng; } return v; };
+// US-59 is the line between downtown and EaDo / Midtown; the convention-center blocks (GRB, Avenida, Discovery Green hotels) sit just inside it
+const DT_EDGE = [29.7522, -95.3600, 29.7600, -95.3557];
+const areaBox = (r, useDowntownBox) => { { const [s0, w0, n0, e0] = DT_EDGE; if (r.lat >= s0 && r.lat <= n0 && r.lng >= w0 && r.lng <= e0) return 'downtown'; } for (const a of AREAS) { if (a.k === 'downtown' && !useDowntownBox) continue; const [s0, w0, n0, e0] = a.b; if (r.lat >= s0 && r.lat <= n0 && r.lng >= w0 && r.lng <= e0) return a.k; } return null; };
+const areaTag = (r) => { const a = AREAS.find((x) => x.k === areaOf(r)); return a ? `${a.e} ${a.l.split(/,| &/)[0]}` : ''; };
+const AREA_OPTS = [{ k: 'any', l: '📍 Anywhere' }, ...AREAS.map((a) => ({ k: a.k, l: `${a.e} ${a.l}` }))];
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-const st = { moods: new Set(store.get('moods', [])), meal: store.get('meal', 'Any'), budget: store.get('budget', 0), extras: new Set(store.get('extras', [])) };
+const st = { moods: new Set(store.get('moods', [])), meal: store.get('meal', 'Any'), budget: store.get('budget', 0), extras: new Set(store.get('extras', [])), area: store.get('area', 'any') };
 let favs = new Set(store.get('favs', [])), visits = store.get('visits', {});
 let week = store.get('week', { slot: 'Lunch', days: {} });
 let SYNC = store.get('syncKey', null), _syncT = null;
@@ -49,7 +74,7 @@ async function syncPull() {
 const SB = 'https://bazjlrualnmbanmhiuau.supabase.co', SBK = 'sb_publishable_ez3TVctnbFIUHqr_dMOUeQ_5WpsYEHs', VAPID = 'BCJegSVrwj6kYQkAfHScuzrJlWI6srf_3uKYobxu7nZ_u1ozmTSWNpX3zHckkxYVYD61hXbUsm-OxU-Gq0FpX-M';
 async function sb(path, opt = {}) { const r = await fetch(SB + '/rest/v1/' + path, { ...opt, headers: { apikey: SBK, 'content-type': 'application/json', ...(opt.headers || {}) } }); if (!r.ok) throw new Error(await r.text()); const t = await r.text(); return t ? JSON.parse(t) : null; }
 const rpc = (fn, args) => sb('rpc/' + fn, { method: 'POST', body: JSON.stringify(args) });
-const save = () => { store.set('moods', [...st.moods]); store.set('meal', st.meal); store.set('budget', st.budget); store.set('extras', [...st.extras]); store.set('favs', [...favs]); store.set('visits', visits); store.set('week', week); syncSoon(); };
+const save = () => { store.set('moods', [...st.moods]); store.set('meal', st.meal); store.set('budget', st.budget); store.set('extras', [...st.extras]); store.set('area', st.area); store.set('favs', [...favs]); store.set('visits', visits); store.set('week', week); syncSoon(); };
 
 const hhFor = (r) => HH.spots[r.name] || null;
 // is happy hour on right now? (the "when" text uses the same day/time grammar as opening hours)
@@ -91,6 +116,7 @@ function matches(r, opt = {}) {
     else if (!r.meals.length && ['Breakfast', 'Brunch', 'Late Night', 'Happy Hour'].includes(meal)) return false;
   }
   if (st.budget && r.price > st.budget) return false;
+  if (st.area && st.area !== 'any' && areaOf(r) !== st.area) return false;
   for (const x of st.extras) {
     if (x === 'tunnel') { if (!r.tunnel) return false; }
     else if (x === 'street') { if (r.tunnel) return false; }
@@ -116,8 +142,10 @@ let WX = null;   // { temp °F, rain mm, code } for downtown Houston, from Open-
 const wxBad = () => WX && (WX.rain > 0.1 || WX.code >= 51 || WX.temp >= 93 || WX.temp <= 45);
 const wxNice = () => WX && !wxBad() && WX.temp >= 62 && WX.temp <= 86;
 const weatherFit = (r) => !WX ? 0 : wxBad() ? (r.tunnel ? 1 : 0) - (isPatio(r) ? 0.8 : 0) : wxNice() && isPatio(r) ? 0.8 : 0;
+const gameLive = (e, d = new Date()) => { const t = Date.parse(e.start); return d.getTime() >= t && d.getTime() < t + 2.75 * 3600e3; };   // an NBA/MLB game runs about 2.5–3 hours
 function eventLine(d = new Date()) {   // a home game today: warn about crowds around the venue
-  const e = EVENTS.find((x) => { const t = new Date(x.start); return t.toDateString() === d.toDateString() && t.getTime() + 3600e3 > d.getTime(); }); if (!e) return '';
+  const e = EVENTS.find((x) => { const t = new Date(x.start); return t.toDateString() === d.toDateString() && t.getTime() + 3 * 3600e3 > d.getTime(); }); if (!e) return '';
+  if (gameLive(e, d)) return `🔴 ${e.emoji} ${e.team}${e.vs ? ' vs ' + e.vs.replace(/^.* /, '') : ''} on now at ${e.venue} — crowds and traffic until it lets out`;
   const t = new Date(e.start), tm = t.toLocaleTimeString('en-US', { hour: 'numeric', minute: t.getMinutes() ? '2-digit' : undefined, timeZone: 'America/Chicago' }).toLowerCase().replace(' ', '');
   return `${e.emoji} ${e.team}${e.vs ? ' vs ' + e.vs.replace(/^.* /, '') : ''} at ${tm} — busy around ${e.venue}`;
 }
@@ -203,7 +231,7 @@ function card(r, hero, map) {
   return `<div class="card tap ${hero ? 'hero spin' : ''}" data-open="${r.id}">
   <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
   <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
-  <div class="meta"><span class="price" title="${PRICE_TXT[r.price] || ''} per person">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}</div></div></div>
+  <div class="meta"><span class="price" title="${PRICE_TXT[r.price] || ''} per person">${$$(r.price)}</span> · ${esc(r.type)} · ${esc(r.address.replace(', Houston, TX', ''))}${areaTag(r) ? ` · <span class="zone">${esc(areaTag(r))}</span>` : ''}</div></div></div>
   ${map && miniMap(r) ? `<div class="locrow">${miniMap(r)}<div>${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}<div class="corner">📍 ${esc(cornerTxt(r))}${r.tunnel ? ' · 🚇 tunnel level' : ''}</div></div></div>` : r.note ? `<p class="note">${esc(r.note)}</p>` : ''}
   ${hero && r.tryit ? `<p class="try">Try: ${esc(r.tryit)}</p>` : ''}
   <div class="tags">${statusTags(r)}</div>
@@ -232,10 +260,11 @@ function renderPick() {
   chipRow($('#meal'), MEALS, (x) => x === st.meal, (x) => (st.meal = x));
   chipRow($('#budget'), BUDGET, (x) => x.k === st.budget, (x) => (st.budget = x.k));
   $('#diet').innerHTML = DIETS.map((d) => `<button class="chip ${DIET.has(d.k) ? 'on' : ''}" data-diet="${d.k}">${d.l}</button>`).join('');
+  chipRow($('#area'), AREA_OPTS, (x) => x.k === st.area, (x) => (st.area = x.k));
   chipRow($('#extras'), EXTRAS, (x) => st.extras.has(x.k), (x) => (st.extras.has(x.k) ? st.extras.delete(x.k) : st.extras.add(x.k)));
   const ex0 = DIET.size ? ` · ${[...DIET].map((k) => DIETS.find((d) => d.k === k).l.split(' ').pop()).join(', ')}` : '';
-  const ex = ex0 + (st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '');
-  $('#pickClear').hidden = !(st.moods.size || st.meal !== 'Any' || st.budget || DIET.size || st.extras.size);
+  const ex = ex0 + (st.area !== 'any' ? ` · ${AREAS.find((a) => a.k === st.area)?.l || ''}` : '') + (st.extras.size ? ` · ${st.extras.size} extra${st.extras.size > 1 ? 's' : ''}` : '');
+  $('#pickClear').hidden = !(st.moods.size || st.meal !== 'Any' || st.budget || DIET.size || st.extras.size || st.area !== 'any');
   const bl = (BUDGET.find((b) => b.k === st.budget) || {}).l; $('#filtSum').textContent = `${st.meal === 'Any' ? 'Any time' : st.meal} · ${!bl || bl === 'Any' ? 'Any budget' : bl}${ex}`;
   const list = ranked();
   $('#matchCount').textContent = list.length ? `${list.length} spots match — best for right now first` : '';
@@ -248,17 +277,18 @@ function renderPick() {
     const tryWith = (label, set, undo) => { set(); const extra = ranked().filter(([r]) => !have.has(r.id)); undo(); if (extra.length) tries.push({ label, extra }); };
     if (st.budget) { const b = st.budget; tryWith('Any budget', () => (st.budget = 0), () => (st.budget = b)); }
     if (st.meal !== 'Any') { const m = st.meal; tryWith('Any time', () => (st.meal = 'Any'), () => (st.meal = m)); }
+    if (st.area !== 'any') { const a = st.area; tryWith('Any area', () => (st.area = 'any'), () => (st.area = a)); }
     if (st.extras.size) { const e = new Set(st.extras); tryWith('No extras', () => st.extras.clear(), () => e.forEach((x) => st.extras.add(x))); }
     if (st.moods.size) { const mo = new Set(st.moods); tryWith('Any mood', () => st.moods.clear(), () => mo.forEach((x) => st.moods.add(x))); }
     if (tries.length) {
       const seen = new Set(), near = []; for (const t of tries.sort((a, b) => a.extra.length - b.extra.length)) for (const [r] of t.extra) if (!seen.has(r.id) && near.length < 6) { seen.add(r.id); near.push(r); }
       $('#matches').insertAdjacentHTML('beforeend', `<div class="nearbox"><h3>Close matches</h3><div class="chips sm">${tries.map((t, i) => `<button class="chip" data-relax="${i}">${t.label} <b>+${t.extra.length}</b></button>`).join('')}</div></div>` + near.map((r) => card(r)).join(''));
-      $('#matches').querySelectorAll('[data-relax]').forEach((b) => (b.onclick = (e) => { e.stopPropagation(); const t = tries[+b.dataset.relax].label; if (t === 'Any budget') st.budget = 0; else if (t === 'Any time') st.meal = 'Any'; else if (t === 'No extras') st.extras.clear(); else st.moods.clear(); save(); renderPick(); }));
+      $('#matches').querySelectorAll('[data-relax]').forEach((b) => (b.onclick = (e) => { e.stopPropagation(); const t = tries[+b.dataset.relax].label; if (t === 'Any budget') st.budget = 0; else if (t === 'Any time') st.meal = 'Any'; else if (t === 'No extras') st.extras.clear(); else if (t === 'Any area') st.area = 'any'; else st.moods.clear(); save(); renderPick(); }));
     }
   }
   if (city) city.setHighlight(mapMatch ? new Set(list.map(([r]) => r.id)) : null);
 }
-$('#pickClear').onclick = (e) => { e.preventDefault(); e.stopPropagation(); st.moods.clear(); st.meal = 'Any'; st.budget = 0; st.extras.clear(); DIET.clear(); store.set('diet', []); save(); renderPick(); };
+$('#pickClear').onclick = (e) => { e.preventDefault(); e.stopPropagation(); st.moods.clear(); st.meal = 'Any'; st.budget = 0; st.extras.clear(); st.area = 'any'; DIET.clear(); store.set('diet', []); save(); renderPick(); };
 $('#diet').onclick = (e) => { const b = e.target.closest('[data-diet]'); if (!b) return; const k = b.dataset.diet; DIET.has(k) ? DIET.delete(k) : DIET.add(k); store.set('diet', [...DIET]); renderPick(); };
 $('#moods').onclick = (e) => { const b = e.target.closest('[data-m]'); if (!b) return; const k = b.dataset.m; st.moods.has(k) ? st.moods.delete(k) : st.moods.add(k); save(); renderPick(); };
 let lastPick = null;
@@ -356,18 +386,18 @@ function didYouMean(q) {
 }
 
 // ---------- Browse ----------
-let bq = '', fav1 = false, tun1 = false, open1 = false, hh1 = false, fc = new Set(), sortBy = 'name';
+let barea = store.get('barea', 'any'), bq = '', fav1 = false, tun1 = false, open1 = false, hh1 = false, fc = new Set(), sortBy = 'name';
 function renderBrowse() {
   const cuis = [...new Set(FOOD.flatMap((r) => r.cuisines))].sort();
   $('#fCuisine').innerHTML = cuis.map((c) => `<button class="chip ${fc.has(c) ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
   const t = bq.trim();
   const sc = new Map();
-  let list = (t ? DATA : FOOD).filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
+  let list = (t ? DATA : FOOD).filter((r) => { if (!((!fav1 || favs.has(r.name)) && (!tun1 || r.tunnel) && (!open1 || isOpen(r)) && (!hh1 || hhFor(r)) && (!fc.size || r.cuisines.some((c) => fc.has(c))) && (barea === 'any' || areaOf(r) === barea))) return false; if (!t) return true; const v = searchScore(r, t); sc.set(r, v); return v > 0; });
   list.sort(sortBy === 'name' ? (a, b) => (t ? sc.get(b) - sc.get(a) : 0) || a.name.localeCompare(b.name) : sortBy === 'price' ? (a, b) => a.price - b.price : (a, b) => b.price - a.price);
   $('#bCount').textContent = t ? `${list.length} match${list.length === 1 ? '' : 'es'} across all of downtown — food, coffee and bars` : `${list.length} of ${FOOD.length} spots`;
   if (!list.length && t) {
     const sug = didYouMean(t).filter((n) => fold(n) !== fold(t));
-    $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
+    $('#browse').innerHTML = `<div class="empty">No exact matches for “${esc(t)}”.${sug.length ? `<div style="margin-top:10px">Did you mean ${sug.map((n) => `<button class="chip" data-sug="${esc(n)}">${esc(n)}</button>`).join(' ')}</div>` : ''}${fav1 || tun1 || open1 || hh1 || fc.size || barea !== 'any' ? '<div class="meta" style="margin-top:8px">Some filters are on — try turning them off.</div>' : ''}</div>`;
   } else $('#browse').innerHTML = list.map((r) => card(r, false, true)).join('') || '<div class="empty">No results.</div>';
   const nflag = Object.keys(HCHK).length;
   if (nflag && !t) $('#browse').insertAdjacentHTML('afterbegin', `<details class="card review-card"><summary>⚠️ ${nflag} place${nflag > 1 ? 's' : ''} show different hours on their website <span>Review</span></summary><div class="meta">Tap one to compare, then keep ours or switch to theirs.</div><div class="chips sm" style="margin-top:8px">${Object.keys(HCHK).map((n) => { const x = DATA.find((r) => r.name === n); return x ? `<button class="chip" data-review="${x.id}">${esc(n)}</button>` : ''; }).join('')}</div></details>`);
@@ -375,16 +405,21 @@ function renderBrowse() {
   if (stq) $('#browse').insertAdjacentHTML('afterbegin', `<div class="card corner-card"${stq.kind === 'parallel' ? '' : ' data-corner="1"'}><h3>📍 ${esc(stq.label)}</h3><div class="meta">${stq.kind === 'parallel' ? 'Pick one street from each direction, like Main & Texas.' : 'Tap to see it on the map with every spot within a block'}</div></div>`);
   if (stq && !list.length) $('#bCount').textContent = 'Street search';
   for (const [id, on] of [['#favOnly', fav1], ['#tunOnly', tun1], ['#openOnly', open1], ['#hhOnly', hh1]]) $(id).classList.toggle('on', on);
-  $('#bClear').hidden = !(t || fav1 || tun1 || open1 || hh1 || fc.size || sortBy !== 'name');
+  $('#bClear').hidden = !(t || fav1 || tun1 || open1 || hh1 || fc.size || barea !== 'any' || sortBy !== 'name'); $('#bArea').value = barea; $('#bArea').classList.toggle('on', barea !== 'any');
 }
 $('#q').oninput = (e) => { bq = e.target.value; renderBrowse(); };
 $('#browse').addEventListener('click', (e) => {
   const rv = e.target.closest('[data-review]'); if (rv) { openSheet(+rv.dataset.review); return; }
   if (e.target.closest('[data-corner]')) { const q = parseStreetQuery(bq); show('map'); setTimeout(() => runFind({ st: q }), 60); return; }
   const b = e.target.closest('[data-sug]'); if (b) { $('#q').value = bq = b.dataset.sug; renderBrowse(); } });
-$('#bClear').onclick = () => { bq = ''; $('#q').value = ''; fav1 = tun1 = open1 = hh1 = false; fc.clear(); sortBy = 'name'; $('#sort').value = 'name'; renderBrowse(); };
+$('#bClear').onclick = () => { bq = ''; $('#q').value = ''; fav1 = tun1 = open1 = hh1 = false; fc.clear(); barea = 'any'; store.set('barea', barea); sortBy = 'name'; $('#sort').value = 'name'; renderBrowse(); };
 $('#toggleF').onclick = () => $('#filters').classList.toggle('on');
 $('#favOnly').onclick = () => { fav1 = !fav1; renderBrowse(); };
+for (const id of ['#bArea', '#nArea', '#cArea', '#sArea']) { $(id).innerHTML = AREA_OPTS.map((a) => `<option value="${a.k}">${esc(a.k === 'any' ? '📍 All areas' : a.l.replace(/^(\S+) (.*?)(,| &| \().*$/, '$1 $2'))}</option>`).join(''); $(id).value = barea; }
+$('#bArea').onchange = (e) => { barea = e.target.value; store.set('barea', barea); renderBrowse(); };
+$('#nArea').onchange = (e) => { barea = e.target.value; store.set('barea', barea); renderNight(); };
+$('#sArea').onchange = (e) => { barea = e.target.value; store.set('barea', barea); renderSteak(); };
+$('#cArea').onchange = (e) => { barea = e.target.value; store.set('barea', barea); renderCoffee(); };
 $('#tunOnly').onclick = () => { tun1 = !tun1; renderBrowse(); };
 $('#openOnly').onclick = () => { open1 = !open1; renderBrowse(); };
 $('#hhOnly').onclick = () => { hh1 = !hh1; renderBrowse(); };
@@ -431,7 +466,7 @@ function downloadIcs(file, items) {
   const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''), esc2 = (s) => String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
   const ev = items.map(({ r, start, mins }) => { const w = walkMinsTo(r), s = new Date(start.getTime() - (w || 0) * 60e3), e = new Date(start.getTime() + mins * 60e3);
     return ['BEGIN:VEVENT', 'UID:' + start.getTime() + '-' + r.id + '@downtown-eats', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(s), 'DTEND:' + z(e), 'SUMMARY:' + esc2((w ? '🚶 ' : '') + r.name), 'LOCATION:' + esc2(r.address), 'DESCRIPTION:' + esc2((w ? `${w} min walk included. ` : '') + (hhFor(r) ? 'Happy hour: ' + hhFor(r).when + '. ' : '') + appUrl() + '#p=' + encodeURIComponent(r.name)), 'BEGIN:VALARM', 'TRIGGER:-PT10M', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc2('Head to ' + r.name), 'END:VALARM', 'END:VEVENT'].join('\r\n'); });
-  const blob = new Blob(['BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Downtown Eats//EN\r\n' + ev.join('\r\n') + '\r\nEND:VCALENDAR\r\n'], { type: 'text/calendar' });
+  const blob = new Blob(['BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Inner Loop Eats//EN\r\n' + ev.join('\r\n') + '\r\nEND:VCALENDAR\r\n'], { type: 'text/calendar' });
   const u = URL.createObjectURL(blob), aEl = document.createElement('a'); aEl.href = u; aEl.download = file; document.body.appendChild(aEl); aEl.click(); aEl.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); toast('📅 Calendar file ready — open it to add');
 }
 $('#calWeek').onclick = () => { const items = DAYS.map((d, i) => { const e = week.days[d], r = e && DATA.find((x) => x.name === e.name); return r ? { r, start: dayDate(i, week.slot), mins: 60 } : null; }).filter(Boolean); if (!items.length) { toast('Plan your week first'); return; } downloadIcs('downtown-week.ics', items); };
@@ -445,7 +480,7 @@ function askSpend(r) {
 function officeLine() { return `<div class="officerow">🏢 ${OFFICE ? `Walk times start from <b>${esc(OFFICE.name)}</b> when location is off · <button class="linkbtn" id="clearOffice">change</button>` : 'Set your office from any place’s details (“🏢 I work near here”) to get walk times without GPS.'}</div>`; }
 document.addEventListener('click', (e) => {
   if (e.target.id === 'syncOn') { const k = Array.from(crypto.getRandomValues(new Uint8Array(18)), (b) => b.toString(36).padStart(2, '0')).join(''); SYNC = k; store.set('syncKey', k); rpc('de_sync_put', { p_key: k, p_data: syncData() }).then(() => toast('🔄 Sync is on')).catch(() => toast('Couldn’t reach the sync server')); renderWeek(); }
-  if (e.target.id === 'syncLink') shareText('Downtown Eats sync', 'Open this on your other device to sync (keep it private — anyone with it sees your list):', appUrl() + '#sync=' + SYNC);
+  if (e.target.id === 'syncLink') shareText('Inner Loop Eats sync', 'Open this on your other device to sync (keep it private — anyone with it sees your list):', appUrl() + '#sync=' + SYNC);
   if (e.target.id === 'syncOff') { SYNC = null; store.set('syncKey', null); renderWeek(); toast('Sync off on this device'); }
 });
 document.addEventListener('click', (e) => { if (e.target.id === 'clearOffice') { OFFICE = null; store.set('office', null); renderWeek(); toast('Office cleared'); } });
@@ -563,7 +598,7 @@ async function remindHH(r) {
   const n = nextHH(r); if (!n) return; const when = n.at.getTime() - 15 * 60e3, wait = Math.max(5e3, when - Date.now());
   const sub = await pushSub(); if (sub) { try { await rpc('de_remind', { p_sub: sub, p_title: '🍹 Happy hour soon', p_body: `${r.name} starts happy hour at ${fmt(n.m)} — ${hhFor(r).deals.slice(0, 90)}`, p_url: appUrl() + '#p=' + encodeURIComponent(r.name), p_at: new Date(when).toISOString() }); toast(`🔔 Reminder set for ${fmt(n.m - 15)} — it'll arrive even if the app is closed`); return; } catch (e) {} }
   try { if ('Notification' in window && Notification.permission === 'default') await Notification.requestPermission(); } catch (e) {}
-  clearTimeout(REMIND.get(r.name)); REMIND.set(r.name, setTimeout(() => { const msg = `🍹 Happy hour at ${r.name} starts in 15 min`; toast(msg); buzz([10, 60, 10]); try { if (Notification.permission === 'granted') new Notification('Downtown Eats', { body: msg, icon: 'icon-192.png' }); } catch (e) {} }, wait));
+  clearTimeout(REMIND.get(r.name)); REMIND.set(r.name, setTimeout(() => { const msg = `🍹 Happy hour at ${r.name} starts in 15 min`; toast(msg); buzz([10, 60, 10]); try { if (Notification.permission === 'granted') new Notification('Inner Loop Eats', { body: msg, icon: 'icon-192.png' }); } catch (e) {} }, wait));
   toast(`🔔 I'll remind you at ${fmt(n.m - 15)} — keep the app open`);
 }
 function fixHours(r, useSite) {
@@ -654,6 +689,8 @@ function initMap() {
     onMode: (m) => { $('#mapMsg').classList.remove('fade'); clearTimeout(window._mm); window._mm = setTimeout(() => $('#mapMsg').classList.add('fade'), 3500); document.querySelectorAll('#layerSeg button').forEach((b) => b.classList.toggle('on', b.dataset.m === m)); $('#mapMsg').textContent = m === 'tunnel' ? 'Underground: the downtown tunnel food courts' : m === 'both' ? 'Street level on top · tunnels below' : 'Drag to move · pinch or double-tap to zoom'; },
   });
   if (EVENTS.length) city.setEvents(EVENTS);
+  setInterval(renderGameChip, 60000); renderGameChip();
+  setTimeout(() => fetch('homes.json').then((r) => (r.ok ? r.json() : null)).then((j) => j && city?.setHomes(j)).catch(() => {}), 1200);   // the surrounding neighbourhoods, after the map is up
   if (WX) { city.preferTunnel = wxBad(); city.weather = WX; }
   $('#needle').style.transform = `rotate(${city.compass()}rad)`; window._city = city;
   if (USER) city.setUser(USER);
@@ -757,6 +794,7 @@ const CHIPS = [
   { k: 'seafood', l: '🦐 Seafood', re: /seafood|oyster|fish|crab/i },
   { k: 'healthy', l: '🥗 Healthy', re: /salad|healthy|vegan|vegetarian|poke|bowl/i },
   { k: 'park', l: '🅿️ Parking' },
+  ...AREAS.map((a) => ({ k: 'area:' + a.k, l: `${a.e} ${a.l}`, f: (r) => areaOf(r) === a.k, area: a })),
 ];
 let chip = 'all';
 const chipText = (r) => [r.name, r.type, ...(r.cuisines || [])].join(' ');
@@ -766,10 +804,12 @@ function applyChip(quiet) {
   city.showParking = chip === 'park';
   if (chip === 'all' || chip === 'park') { city.setHighlight(null); if (chip === 'park' && !quiet) toast('🅿️ Garages in dark blue, surface lots in light blue'); return; }
   const ids = DATA.filter((r) => (c.f ? c.f(r) : c.re.test(chipText(r))) && city.sceneOk(r)).map((r) => r.id);
-  city.setHighlight(new Set(ids)); if (!quiet) toast(ids.length ? `${c.l}: ${ids.length} spot${ids.length === 1 ? '' : 's'}` : `No ${c.l.replace(/^\S+ /, '').toLowerCase()} spots on this map`);
+  city.setHighlight(new Set(ids));
+  if (c.area && !quiet) fitArea(c.area);
+  if (!quiet) toast(ids.length ? `${c.l}: ${ids.length} spot${ids.length === 1 ? '' : 's'}` : `No ${c.l.replace(/^\S+ /, '').toLowerCase()} spots on this map`);
   mapOpen = false; $('#mapOpen')?.classList.remove('on');
 }
-$('#mapChips').onclick = (e) => { const b = e.target.closest('[data-c]'); if (!b) return; chip = chip === b.dataset.c || b.dataset.c === 'all' ? 'all' : b.dataset.c; renderChips(); applyChip(); };
+$('#mapChips').onclick = (e) => { const b = e.target.closest('[data-c]'); if (!b) return; chip = chip === b.dataset.c || b.dataset.c === 'all' ? 'all' : b.dataset.c; mapArea = chip.startsWith('area:') ? chip.slice(5) : null; renderChips(); applyChip(); if (typeof renderAreaMenu === 'function') renderAreaMenu(); };
 renderChips();
 $('#findMe').onclick = () => findMe();
 function renderFind() {
@@ -835,9 +875,10 @@ let nightF = new Set(), nightSort = 'now';
 function nightScore(r) { return (hhNow(r) ? 4 : 0) + (isOpen(r) === true ? 2 : 0) + (openLate(r) ? 1 : 0) + (r.bar && /bar|lounge|pub|club|saloon|brew/i.test(r.type) ? 0.5 : 0); }
 function renderNight() {
   const bars = DATA.filter((r) => r.night);
-  $('#nClear').hidden = !nightF.size;
+  $('#nClear').hidden = !nightF.size && barea === 'any';
   $('#nightChips').innerHTML = NIGHT_F.map((f) => `<button class="chip ${nightF.has(f.k) ? 'on' : ''}" data-nf="${f.k}">${f.l}</button>`).join('');
-  let list = bars.filter((r) => [...nightF].every((k) => { const f = NIGHT_F.find((x) => x.k === k); return f.f ? f.f(r) : f.re.test(nightText(r)); }));
+  $('#nArea').value = barea; $('#nArea').classList.toggle('on', barea !== 'any');
+  let list = bars.filter((r) => (barea === 'any' || areaOf(r) === barea) && [...nightF].every((k) => { const f = NIGHT_F.find((x) => x.k === k); return f.f ? f.f(r) : f.re.test(nightText(r)); }));
   const by = { now: (a, b) => nightScore(b) - nightScore(a) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
   list.sort(by[nightSort] || by.now);
   const onNow = bars.filter((r) => hhNow(r)), openNow = bars.filter((r) => isOpen(r) === true).length;
@@ -852,12 +893,12 @@ function barCard(r) {
   <button class="fav" data-fav="${r.id}" title="Favorite" aria-label="${favs.has(r.name) ? 'Remove ' + esc(r.name) + ' from favorites' : 'Save ' + esc(r.name) + ' to favorites'}">${favs.has(r.name) ? '♥' : '♡'}</button>
   <div class="chead">${tile(r)}<div><h3>${esc(r.name)}</h3>
   <div class="meta">${esc(r.type)} · ${esc((r.address || '').replace(', Houston, TX', ''))}${r.tunnel ? ' · 🚇 tunnel' : ''}</div></div></div>
-  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
+  <div class="tags">${o.known ? `<span class="tag ${o.open ? 'open' : 'closed'}">${esc(o.label)}</span>` : ''}${openLate(r) ? '<span class="tag">🌃 Late</span>' : ''}${steakTonight(r) ? `<span class="tag open">🥩 Steak night ${esc(steakTonight(r).price || '')}</span>` : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}</div>
   ${h ? `<div class="hhbox ${hn ? 'on' : ''}"><b>🍹 ${hn ? 'Happy hour now' + (hn.closesAt ? ' · till ' + esc(hn.closesAt) : '') : esc(h.when)}</b><span>${esc(h.deals)}</span>${h.confidence === 'verify' ? '<em>Double-check before you go</em>' : ''}</div>`
       : r.hhListed ? `<div class="hhbox"><b>🍹 Listed for happy hour</b><span>Times and prices aren't published yet — check with the bar.</span></div>` : ''}
   <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`;
 }
-$('#nClear').onclick = () => { nightF.clear(); renderNight(); };
+$('#nClear').onclick = () => { nightF.clear(); barea = 'any'; store.set('barea', barea); renderNight(); };
 $('#nightChips').onclick = (e) => { const b = e.target.closest('[data-nf]'); if (!b) return; const k = b.dataset.nf; nightF.has(k) ? nightF.delete(k) : nightF.add(k); renderNight(); };
 $('#nightSort').onchange = (e) => { nightSort = e.target.value; if (nightSort === 'near' && !USER) startLocate(); renderNight(); };
 $('#nightMap').onclick = () => { show('map'); setScene('night'); };
@@ -877,9 +918,10 @@ const COFFEE_F = [
 let coffeeF = new Set(), coffeeSort = 'now';
 function renderCoffee() {
   const all = DATA.filter(isCoffee);
-  $('#cClear').hidden = !coffeeF.size;
+  $('#cClear').hidden = !coffeeF.size && barea === 'any';
   $('#coffeeChips').innerHTML = COFFEE_F.map((f) => `<button class="chip ${coffeeF.has(f.k) ? 'on' : ''}" data-cf="${f.k}">${f.l}</button>`).join('');
-  const list = all.filter((r) => [...coffeeF].every((k) => COFFEE_F.find((x) => x.k === k).f(r)));
+  $('#cArea').value = barea; $('#cArea').classList.toggle('on', barea !== 'any');
+  const list = all.filter((r) => (barea === 'any' || areaOf(r) === barea) && [...coffeeF].every((k) => COFFEE_F.find((x) => x.k === k).f(r)));
   const by = { now: (a, b) => (isOpen(b) === true) - (isOpen(a) === true) || (walkMinsTo(a) ?? 99) - (walkMinsTo(b) ?? 99) || a.name.localeCompare(b.name), near: (a, b) => (walkMinsTo(a) ?? 999) - (walkMinsTo(b) ?? 999), az: (a, b) => a.name.localeCompare(b.name) };
   list.sort(by[coffeeSort] || by.now);
   const open = all.filter((r) => isOpen(r) === true).length;
@@ -893,7 +935,7 @@ function renderCoffee() {
     <div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div></div>`; }).join('') || '<div class="empty">No coffee spots match all of those. Try removing a filter.</div>';
   $('#coffeeCount').textContent = `${list.length} spot${list.length === 1 ? '' : 's'}`;
 }
-$('#cClear').onclick = () => { coffeeF.clear(); renderCoffee(); };
+$('#cClear').onclick = () => { coffeeF.clear(); barea = 'any'; store.set('barea', barea); renderCoffee(); };
 $('#coffeeChips').onclick = (e) => { const b = e.target.closest('[data-cf]'); if (!b) return; const k = b.dataset.cf; coffeeF.has(k) ? coffeeF.delete(k) : coffeeF.add(k); renderCoffee(); };
 $('#coffeeSort').onchange = (e) => { coffeeSort = e.target.value; if (coffeeSort === 'near' && !USER) startLocate(() => renderCoffee()); renderCoffee(); };
 $('#coffeeMap').onclick = () => {
@@ -902,6 +944,45 @@ $('#coffeeMap').onclick = () => {
   bar.classList.add('on'); $('#fX').onclick = () => { bar.classList.remove('on'); city.setHighlight(mapOpen ? new Set(DATA.filter((r) => isOpen(r)).map((r) => r.id)) : null); };
 };
 document.addEventListener('click', (e) => { const o = e.target.closest('#coffeeList .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
+
+// ---------- steak nights (public/steak-nights.json, checked by hand) ----------
+const SDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], SDAY_L = { Sun: 'Sunday', Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday' };
+let STEAK = null, steakDay = 'today';
+const snorm = (s) => String(s || '').toLowerCase().replace(/[’']/g, '').replace(/&/g, 'and').replace(/[^a-z0-9]/g, '');
+const steakSpot = (n) => { const k = snorm(n); return DATA.find((r) => snorm(r.name) === k) || null; };
+const steakToday = () => SDAYS[new Date().getDay()];
+function steakTonight(r) { if (!STEAK) return null; const d = steakToday(), k = snorm(r.name); return STEAK.nights.find((x) => snorm(x.n) === k && x.days.includes(d)) || null; }
+async function loadSteak() { if (STEAK) return STEAK; try { STEAK = await (await fetch('steak-nights.json')).json(); } catch { STEAK = { nights: [] }; } return STEAK; }
+async function renderSteak() {
+  await loadSteak();
+  const today = steakToday(), day = steakDay === 'today' ? today : steakDay;
+  $('#steakDays').innerHTML = [['today', `Tonight (${today})`], ...['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((d) => [d, d]), ['all', 'All week']].map(([k, l]) => `<button class="chip ${steakDay === k ? 'on' : ''}" data-sd="${k}">${l}</button>`).join('');
+  $('#sArea').value = barea; $('#sArea').classList.toggle('on', barea !== 'any');
+  const rows = STEAK.nights.map((x) => ({ ...x, r: steakSpot(x.n) })).filter((x) => barea === 'any' || (x.r && areaOf(x.r) === barea));
+  const order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], days = steakDay === 'all' ? order : [day];
+  const cardOf = (x) => { const r = x.r, w = r ? walkMinsTo(r) : null, at = r ? areaTag(r) : '';
+    return `<div class="card bar">${r ? `<div class="chead">${tile(r)}<div>` : '<div class="chead"><span class="ctile" style="--tc:#a33">🥩</span><div>'}<h3>${esc(r ? r.name : x.n)}</h3>
+    <div class="meta">${esc(x.time || '')}${x.price ? ' · <b>' + esc(x.price) + '</b>' : ''} · ${esc(r ? (r.address || '').replace(', Houston, TX', '') : x.addr || '')}</div></div></div>
+    <div class="meta" style="margin-top:6px">${esc(x.deal)}</div>
+    <div class="tags">${at ? `<span class="tag">${esc(at)}</span>` : ''}${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${x.days.length > 1 ? `<span class="tag">${x.days.join(' · ')}</span>` : ''}${x.hiatus ? '<span class="tag closed">On hiatus</span>' : x.verify ? '<span class="tag closed">Call ahead</span>' : ''}</div>
+    <div class="meta" style="margin-top:6px">Source: <a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.src)}</a>${x.as ? ' · ' + esc(x.as) : ' · older or undated'}</div>
+    ${r ? `<div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div>` : '<div class="meta" style="margin-top:6px">Pin coming with the next map refresh.</div>'}</div>`; };
+  let n = 0;
+  $('#steakList').innerHTML = days.map((d) => { const list = rows.filter((x) => x.days.includes(d)).sort((a, b) => !!a.verify - !!b.verify || (a.r && walkMinsTo(a.r) || 99) - (b.r && walkMinsTo(b.r) || 99)); n += list.length;
+    return `${days.length > 1 || steakDay !== 'today' ? `<h3 style="margin:14px 0 6px">${SDAY_L[d]}${d === today ? ' · tonight' : ''}</h3>` : ''}<div class="grid">${list.map(cardOf).join('') || `<div class="empty">No steak nights on ${SDAY_L[d]}${barea !== 'any' ? ' in this area' : ''}. Try another day.</div>`}</div>`; }).join('');
+  $('#steakSub').textContent = `${STEAK.nights.length} weekly steak nights across the inner loop`;
+  $('#steakCount').textContent = `${n} deal${n === 1 ? '' : 's'}`;
+  $('#steakNote').textContent = `Checked ${STEAK.checked || ''} from CultureMap, DiningOut, venue pages and Instagram/Facebook posts. Deals change and some sell out early — "Call ahead" means the source is older or undated.`;
+}
+$('#steakDays').onclick = (e) => { const b = e.target.closest('[data-sd]'); if (!b) return; steakDay = b.dataset.sd; renderSteak(); };
+document.addEventListener('click', (e) => { const o = e.target.closest('#steakList .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
+$('#steakMap').onclick = async () => {
+  await loadSteak(); const d = steakDay === 'today' ? steakToday() : steakDay;
+  const ids = STEAK.nights.filter((x) => steakDay === 'all' || x.days.includes(d)).map((x) => steakSpot(x.n)).filter(Boolean);
+  show('map'); city?.setHighlight(new Set(ids.map((r) => r.id)));
+  const bar = $('#mapFound'); bar.innerHTML = `<div><b>🥩 Steak nights${steakDay === 'all' ? '' : ' · ' + SDAY_L[d]}</b><div class="meta">${ids.length} spots lit up</div></div><button class="btn ghost" id="fX">Show all</button>`;
+  bar.classList.add('on'); $('#fX').onclick = () => { bar.classList.remove('on'); city.setHighlight(null); };
+};
 
 // ---------- you are here + walking navigation ----------
 let watchId = null, compass = null;
@@ -954,7 +1035,7 @@ function toggleWalk(force) {
 // ---------- compact controls + show/hide ----------
 $('#moreBtn').onclick = () => { const m = $('#hudMore'), open = m.hidden; m.hidden = !open; $('#moreBtn').setAttribute('aria-expanded', open); $('#moreBtn').innerHTML = open ? '✕<span class="lbl"> Close</span>' : '☰<span class="lbl"> More</span>'; };
 function applyLight() {   // live: sun and dark follow the clock; otherwise Day = daylight, Night = night
-  let live = false; try { live = !!VIEW.liveLight; } catch (e) {}
+  let live = true; try { live = VIEW.liveLight ?? true; } catch (e) {}   // on by default: sunrise, sunset and night as outside
   if (city) city.themeNight = live ? null : SCENE === 'night';
   const i = document.querySelector('#liveLight'); if (i) i.checked = live;
 }
@@ -965,7 +1046,7 @@ function applyView() {
   document.querySelectorAll('#hideToggles input').forEach((i) => { i.checked = i.dataset.h ? !VIEW.hide?.[i.dataset.h] : !(i.dataset.ui === 'legend' ? (VIEW.ui?.legend ?? true) : VIEW.ui?.[i.dataset.ui]); });
   try { localStorage.setItem('mapView', JSON.stringify(VIEW)); } catch (e) {}
 }
-$('#liveLight').onchange = (e) => { VIEW.liveLight = e.target.checked; applyLight(); applyView(); toast(VIEW.liveLight ? '🕒 Light now follows the time of day' : SCENE === 'night' ? '🌙 Always night lighting' : '☀️ Always daylight'); };
+$('#liveLight').onchange = (e) => { VIEW.liveLight = e.target.checked; applyLight(); applyView(); toast(VIEW.liveLight ? '🕒 Light follows the time of day' : SCENE === 'night' ? '🌙 Always night lighting' : '☀️ Always daylight'); };
 $('#hideToggles').onchange = (e) => { const i = e.target; if (!i.dataset.h && !i.dataset.ui) return; if (i.dataset.h) (VIEW.hide = VIEW.hide || {})[i.dataset.h] = !i.checked; else (VIEW.ui = VIEW.ui || {})[i.dataset.ui] = !i.checked; applyView(); };
 $('#cleanMap').onclick = () => { const clean = !VIEW.clean; VIEW.clean = clean; VIEW.hide = clean ? { pinNames: true, signs: true, labels: true, people: true, traffic: true, trains: true, sky: true } : {}; VIEW.ui = clean ? { legend: true } : {}; $('#cleanMap').textContent = clean ? '↺ Show everything' : '✨ Clean map'; applyView(); toast(clean ? 'Clean map: just buildings and pins' : 'Showing everything'); };
 // ---------- first-person street view ----------
@@ -1039,12 +1120,12 @@ document.addEventListener('click', (e) => { const b = e.target.closest('.subtabs
 // ---------- tabs ----------
 document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => show(b.dataset.v)));
 function show(v) {
-  const grp = ['browse', 'coffee', 'night'].includes(v) ? 'explore' : null;
+  const grp = ['browse', 'coffee', 'night', 'steak'].includes(v) ? 'explore' : null;
   document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v || (grp && x.dataset.group === grp)));
   document.querySelectorAll('.subtabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v));
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
-  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee();
+  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee(); if (v === 'steak') renderSteak();
   if (v === 'map' && !GEO_READY && !city) { GEO_P.then(() => { if ($('#v-map').classList.contains('on')) show('map'); }); return; }
   if (v === 'map') { initMap(); city.resize(); if (city._bgBuilt) { city._bgBuilt = false; city.anim = null; city.fit(); } }
   if (city) city.paused = v !== 'map';
@@ -1099,7 +1180,7 @@ async function aboutPlace(r) {
     metroStatic = ms;
     META = { refreshed: pj.refreshed }; HH = hj;
     fetch('hours-check.json').then((r) => r.json()).then((j) => { HCHK = j.flags || {}; for (const n of Object.keys(HFIX)) delete HCHK[n]; if ($('#v-browse').classList.contains('on')) renderBrowse(); }).catch(() => {});
-    fetch('events.json').then((r) => r.json()).then((j) => { EVENTS = j.events || []; city?.setEvents(EVENTS); renderPick(); }).catch(() => {});
+    fetch('events.json').then((r) => r.json()).then((j) => { EVENTS = j.events || []; city?.setEvents(EVENTS); renderGameChip(); renderPick(); }).catch(() => {});
     DATA = pj.places.map((p, i) => {
       const o = { ...(p.official || {}) };
       if (o.facebook && /Downtown-Houston|115104521841645|\s/.test(o.facebook)) o.facebook = null;   // directory's own page, not the restaurant's
@@ -1109,6 +1190,7 @@ async function aboutPlace(r) {
       return { ...p, id: i, status: o.status || null, movedTo: o.movedTo || null, bar: !!cats.bar || /\b(bar|pub|lounge|saloon|tavern|brew|nightclub|wine bar)\b/i.test(p.type || ''), hhListed: !!cats.hh, lateListed: !!cats.late, cuisines: p.cuisines || [], meals: p.meals || [], vibes: p.vibes || [], lat: o.lat, lng: o.lng, hours: o.hours, phone: o.phone, website: o.website, instagram: o.instagram, facebook: o.facebook, url: o.url, venue: o.venue && !/^(suite|unit|#|\()/i.test(String(o.venue).trim()) ? String(o.venue).replace(/ Houston$/, '').trim() : null, corrected: o.corrected, aliases: o.aliases || [], extraSource: o.extraSource };
     });
     DATA = DATA.filter((r) => r.status !== 'closed').map((r, i) => ({ ...r, id: i }));
+    loadSteak().then(() => { if ($('#v-night').classList.contains('on')) renderNight(); });
     for (const r of DATA) if (HFIX[r.name]) { r.hours = HFIX[r.name]; r.corrected = 'your fix'; }   // fixes you chose in the hours review   // closed for good: drop, then renumber
     DATA.forEach((r) => {
       const barish = /\b(bar|lounge|pub|nightclub|club|saloon|tavern|nightlife|speakeasy)\b/i.test(r.type || '');
@@ -1122,7 +1204,7 @@ async function aboutPlace(r) {
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open now · ${DATA.filter((r) => r.tunnel).length} in tunnels`;
   renderPick();
-  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee'].includes(h)) show(h);
+  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee', 'steak'].includes(h)) show(h);
   if (h.startsWith('vote=')) openVote(h.slice(5));
   if (h.startsWith('sync=')) { SYNC = h.slice(5); store.set('syncKey', SYNC); syncPull(); toast('🔄 This device is now synced'); show('week'); }
   if (h.startsWith('poll=')) { const opts = decodeURIComponent(h.slice(5)).split('|').map((n) => DATA.find((x) => x.name === n)).filter(Boolean); if (opts.length) { show('pick'); $('#pickOut').innerHTML = `<div class="card poll"><h3>🗳️ Where should we eat?</h3><div class="meta">Tap your vote — it opens your messages so you can send it back.</div>${opts.map((x) => `<button class="pollopt" data-vote="${x.id}">${tile(x)}<span><b>${esc(x.name)}</b><em>${$$(x.price)} · ${esc(x.type)} · ${esc(openLabel(x).label || '')}</em></span></button>`).join('')}</div>`; $('#pickOut').onclick = (e) => { const v = e.target.closest('[data-vote]'); if (v) { const x = DATA[+v.dataset.vote]; shareText('My vote', `I vote ${x.name} 👍`, appUrl() + '#p=' + encodeURIComponent(x.name)); } }; } }
@@ -1143,3 +1225,36 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { if ($('#sheet').classList.contains('on')) closeSheet(); else if ($('#v-map').classList.contains('on')) city?.back(); }
   if ($('#v-map').classList.contains('on') && city) { if (e.key === '+' || e.key === '=') city.zoom(1.3); if (e.key === '-') city.zoom(1 / 1.3); if (e.key === 'q' || e.key === '[') city.rotateBy(-Math.PI / 12); if (e.key === 'e' || e.key === ']') city.rotateBy(Math.PI / 12); if (e.key === 'n') city.spin(0); }
 });
+
+// a home game on now (or later today): a chip on the map that flies to the venue
+function renderGameChip() {
+  const b = document.getElementById('gameChip'); if (!b) return; const now = new Date();
+  const e = EVENTS.find((x) => { const t = Date.parse(x.start); return new Date(t).toDateString() === now.toDateString() && now.getTime() < t + 2.75 * 3600e3; });
+  if (!e) { b.hidden = true; return; }
+  const live = gameLive(e, now), t = new Date(e.start), opp = e.vs ? e.vs.replace(/^.* /, '') : '';
+  b.hidden = false; b.classList.toggle('on', live);
+  b.textContent = live ? `🔴 ${e.emoji} ${e.team} vs ${opp} · on now` : `${e.emoji} ${e.team} vs ${opp} · ${t.toLocaleTimeString('en-US', { hour: 'numeric', minute: t.getMinutes() ? '2-digit' : undefined, timeZone: 'America/Chicago' }).toLowerCase().replace(' ', '')}`;
+  b.onclick = () => { const a = city?.areas?.find((x) => x.n === e.venue); if (a) city.zoomTo((a.r.x0 + a.r.x1) / 2, (a.r.y0 + a.r.y1) / 2, 0.8); toast(`${e.emoji} ${e.team} vs ${e.vs || ''} at ${e.venue}${live ? ' — game on now, expect crowds' : ''}`); };
+}
+
+// ---------- area picker on the map: fly to a neighbourhood and light up its spots ----------
+function fitArea(a) {
+  if (!city) return; const [s0, w0, n0, e0] = a.b, v = city.v;
+  const pts = [[s0, w0], [s0, e0], [n0, w0], [n0, e0]].map(([la, ln]) => v.p(...city.proj(la, ln), 0));
+  const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]), bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
+  const k = Math.min((city.W * 0.92) / bw, (city.H * 0.62) / bh), [cx, cy] = city.proj((s0 + n0) / 2, (w0 + e0) / 2);
+  city.zoomTo(cx, cy, Math.max(0.22, Math.min(1.1, v.s * k)));
+}
+let mapArea = null;
+function renderAreaMenu() {
+  $('#areaList').innerHTML = [`<button class="pill ${!mapArea ? 'on' : ''}" data-ar="">🗺️ Whole map</button>`, ...AREAS.map((a) => `<button class="pill ${mapArea === a.k ? 'on' : ''}" data-ar="${a.k}">${a.e} ${esc(a.l)}</button>`)].join('');
+  $('#areaBtn').innerHTML = mapArea ? `${AREAS.find((a) => a.k === mapArea).e}<span class="lbl"> ${esc(AREAS.find((a) => a.k === mapArea).l)}</span>` : '📍<span class="lbl"> Area</span>';
+  $('#areaBtn').classList.toggle('on', !!mapArea);
+}
+$('#areaBtn').onclick = () => { const m = $('#areaMenu'), open = m.hidden; m.hidden = !open; $('#hudMore').hidden = true; $('#areaBtn').setAttribute('aria-expanded', open); renderAreaMenu(); };
+$('#areaList').onclick = (e) => {
+  const b = e.target.closest('[data-ar]'); if (!b || !city) return; mapArea = b.dataset.ar || null; $('#areaMenu').hidden = true; renderAreaMenu();
+  if (!mapArea) { chip = 'all'; renderChips(); city.setHighlight(null); city.zoomTo(...(() => { const B = city.bounds; return [(B.x0 + B.x1) / 2, (B.y0 + B.y1) / 2]; })(), 0.26); return; }
+  chip = 'area:' + mapArea; renderChips(); applyChip();
+};
+renderAreaMenu();

@@ -1,16 +1,16 @@
 // Adds every restaurant, bar, pub, cafe and food stand that OpenStreetMap knows in the neighbourhoods around
-// downtown (Warehouse District, EaDo, the East End / Second Ward) to public/places.json, so the map isn't limited
+// downtown (Warehouse District, EaDo, the East End / Second Ward, East River, Sawyer Yards) to public/places.json, so the map isn't limited
 // to the Downtown Houston directory. Keeps the last good download in public/osm-pois.json for when Overpass is down.
 // Run after scripts/refresh.mjs: node scripts/osm-pois.mjs   (Node 20+, no dependencies). Data © OpenStreetMap contributors, ODbL.
 import fs from 'fs';
-const AREAS = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115]];
-const Q = `[out:json][timeout:90];(${AREAS.map((b) => `nwr["amenity"~"^(restaurant|bar|pub|cafe|fast_food|biergarten|nightclub|ice_cream|food_court)$"]["name"](${b.join(',')});nwr["craft"~"^(brewery|distillery|winery)$"]["name"](${b.join(',')});`).join('')});out center tags;`;
+const AREAS = [[29.7650, -95.3615, 29.7712, -95.3478], [29.7398, -95.3600, 29.7625, -95.3335], [29.7385, -95.3340, 29.7600, -95.3115], [29.7580, -95.3480, 29.7740, -95.3200], [29.7640, -95.3860, 29.7735, -95.3760], [29.7675, -95.4000, 29.7725, -95.3950], [29.7540, -95.4130, 29.7650, -95.3770], [29.7310, -95.3890, 29.7525, -95.3745], [29.7310, -95.3745, 29.7480, -95.3600], [29.7620, -95.3770, 29.7745, -95.3600], [29.7745, -95.4200, 29.8100, -95.3700], [29.7525, -95.3890, 29.7605, -95.3745], [29.7330, -95.4100, 29.7530, -95.3890], [29.7080, -95.4050, 29.7330, -95.3800], [29.7050, -95.3800, 29.7400, -95.3350], [29.7200, -95.4450, 29.7620, -95.4100], [29.7250, -95.4800, 29.7700, -95.4450], [29.7620, -95.4250, 29.7745, -95.3950]];   // + East River (Fifth Ward), + Sawyer Yards
+const Q = `[out:json][timeout:170];(${AREAS.map((b) => `nwr["amenity"~"^(restaurant|bar|pub|cafe|fast_food|biergarten|nightclub|ice_cream|food_court)$"]["name"](${b.join(',')});nwr["craft"~"^(brewery|distillery|winery)$"]["name"](${b.join(',')});`).join('')});out center tags;`;
 const EP = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
 let pois = null;
 for (let round = 0; round < 3 && !pois; round++) for (const ep of EP) {
   if (pois) break; if (round) await new Promise((r) => setTimeout(r, 15000));
   try {
-    const r = await fetch(ep, { method: 'POST', body: 'data=' + encodeURIComponent(Q), headers: { 'content-type': 'application/x-www-form-urlencoded', 'user-agent': 'downtown-eats (personal dining map)' }, signal: AbortSignal.timeout(80000) });
+    const r = await fetch(ep, { method: 'POST', body: 'data=' + encodeURIComponent(Q), headers: { 'content-type': 'application/x-www-form-urlencoded', 'user-agent': 'downtown-eats (personal dining map)' }, signal: AbortSignal.timeout(170000) });
     if (r.ok) { const j = await r.json(); if (j.elements?.length > 10) pois = j.elements.map((e) => ({ id: e.type[0] + e.id, lat: e.lat ?? e.center?.lat, lng: e.lon ?? e.center?.lon, t: e.tags })); }
   } catch (e) { console.error(ep, e.message); }
 }
@@ -40,7 +40,7 @@ const hours = (oh) => {
 const cap = (s) => s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 let added = 0;
 for (const p of pois) {
-  const t = p.t || {}, name = t.name; if (!name || !p.lat) continue;
+  const t = p.t || {}, name = t.name; if (!name || !p.lat || /^(vacant|closed|empty|for lease)\b/i.test(name) || t['disused:amenity'] || t.disused) continue;   // empty storefronts mapped with a placeholder name
   if (/^(no|closed)$/i.test(t.opening_hours || '') || t['disused:amenity'] || /^(yes)$/.test(t.disused || '')) continue;
   const n = norm(name), num = t['addr:housenumber'];
   if (!n || have.some((h) => h.n && (h.n === n || (n.length > 5 && (h.n.includes(n) || n.includes(h.n))) || (num && h.num === num && h.n.slice(0, 4) === n.slice(0, 4)) || (close(h, p) && h.n.slice(0, 4) === n.slice(0, 4))))) continue;

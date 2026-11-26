@@ -1,6 +1,14 @@
 {
   "note": "Hand-checked corrections applied on top of the Downtown Houston listing data (which the daily refresh rewrites). Key = restaurant name, or 'name|street number' when a name repeats.",
   "spots": {
+    "1111": {
+      "street": "1111 Westheimer Rd",
+      "lat": 29.744588,
+      "lng": -95.392745,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
     "Benihana": {
       "hours": "Sun–Thu 11am–10pm, Fri–Sat 11am–11pm",
       "phone": "(713) 659-8231",
@@ -735,6 +743,1492 @@
       "hours": "Mon–Fri 10am–6:30pm",
       "source": "https://www.ubereats.com/store/bubble-boba-houston/p8iA0qU5VkG6rvA0IP5oMA",
       "checked": "2026-11-23"
+    },
+    "City Cellars HTX": {
+      "street": "2850 Riverby Rd",
+      "lat": 29.762992,
+      "lng": -95.341193,
+      "hours": "Mon–Thu 11am–9pm, Fri 11am–10pm, Sat 10am–10pm, Sun 10am–5pm",
+      "source": "https://www.opentable.com/r/city-cellars-houston-2",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Cocktails Unknown": {
+      "street": "2850 Riverby Rd",
+      "lat": 29.76309,
+      "lng": -95.34106,
+      "source": "https://www.opentable.com/r/cocktails-unknown-houston",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "La Calle East River": {
+      "street": "2920 Riverby Rd",
+      "lat": 29.7636,
+      "lng": -95.3399,
+      "approx": true,
+      "geocode": true,
+      "source": "https://houston.culturemap.com/news/restaurants-bars/la-calle-tacos-east-river/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Birdies Icehouse": {
+      "street": "65 Hirsch Rd",
+      "lat": 29.760696,
+      "lng": -95.328233,
+      "hours": "Mon–Thu 11am–10pm, Fri 10am–11pm, Sat 9am–11pm, Sun 9am–10pm",
+      "source": "https://secrethouston.com/birdies-icehouse-houston/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Tejas Brewery": {
+      "street": "2101 Summer St",
+      "lat": 29.772864,
+      "lng": -95.379305,
+      "hours": "Mon–Thu 11am–10pm, Fri–Sat 11am–12am, Sun 11am–10pm",
+      "source": "https://secrethouston.com/tejas-rooftop-brewery-houston/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Platypus Brewing": {
+      "status": "closed",
+      "source": "https://www.houstoniamag.com/eat-and-drink/houston-restaurant-bar-brewery-closings-june-2026/",
+      "checked": "2026-11-23"
+    },
+    "Loft 18": {
+      "status": "closed",
+      "source": "https://communityimpact.com/heights-river-oaks-montrose/dining/interactive-sports-bar-shuts-down-due-to-increased-crime-rising-market-costs/",
+      "checked": "2026-11-23"
+    },
+    "Maven": {
+      "status": "closed",
+      "source": "https://houston.culturemap.com/news/restaurants-bars/maven-coffee-sawyer-yards-slowpokes/",
+      "checked": "2026-11-23"
+    },
+    "vacant": {
+      "status": "closed",
+      "source": "OSM placeholder for an empty storefront",
+      "checked": "2026-11-23"
+    },
+    "CASE Chocolates": {
+      "street": "3401 Harrisburg Blvd",
+      "geoStreet": "3401 Harrisburg Blvd",
+      "lat": 29.748342,
+      "lng": -95.341269,
+      "hours": "Wed–Sat 6pm–11:30pm",
+      "source": "https://www.opentable.com/r/case-chocolates-houston",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Betelgeuse Betelgeuse": {
+      "hours": "Daily 4pm–2am",
+      "source": "https://www.papercitymag.com/restaurants/betelgeuse-betelgeuse-houston-restaurant-pizza-chris-cusack-washington-avenue/",
+      "checked": "2026-11-23",
+      "notInDirectory": true,
+      "street": "2101 Washington Ave",
+      "lat": 29.767816,
+      "lng": -95.37971
+    },
+    "Eastbound Barbecue": {
+      "street": "1105 Sampson St",
+      "lat": 29.74333,
+      "lng": -95.34484,
+      "hours": "Wed–Thu 11am–9pm, Fri–Sat 11am–10pm, Sun 11am–8pm",
+      "source": "https://www.texasmonthly.com/bbq/eastbound-barbecue-houston/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "D&W Lounge": {
+      "street": "911 Milby St",
+      "lat": 29.743691,
+      "lng": -95.340547,
+      "hours": "Daily 7am–2am",
+      "source": "https://www.houstoniamag.com/bars/d-and-w-lounge",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "The Mood Room Garden and Bar": {
+      "street": "711 Milby St",
+      "lat": 29.745034,
+      "lng": -95.339482,
+      "source": "https://www.atly.com/location/TheMoodRoomGardenAndBar",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Cidercade Houston": {
+      "street": "2320 Canal St",
+      "lat": 29.758243,
+      "lng": -95.347168,
+      "hours": "Daily 10am–12am",
+      "source": "https://cidercade.com/houston",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Kept Secret": {
+      "street": "1109 Providence St",
+      "lat": 29.7686,
+      "lng": -95.35645,
+      "hours": "Mon–Sat 9am–5pm, Sun 11am–5pm",
+      "source": "https://www.sanman.company/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Bald Kitty": {
+      "street": "1113 Providence St",
+      "lat": 29.768595,
+      "lng": -95.35635,
+      "hours": "Tue–Sun 10pm–2am",
+      "source": "https://www.sanman.company/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Slowpokes Sawyer Yards": {
+      "street": "1501 Silver St",
+      "lat": 29.77206,
+      "lng": -95.37796,
+      "source": "https://houston.culturemap.com/news/restaurants-bars/slowpokes-coffee-sawyer-yards-opening/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Bayou Heights Bier Garten": {
+      "street": "3905 Washington Ave",
+      "lat": 29.769741,
+      "lng": -95.399379,
+      "hours": "Daily 8am–2am",
+      "source": "https://www.papercitymag.com/restaurants/bayou-heights-bier-garten-houston-bar-land-opens-washington-avenue-cocktails-craft-beer",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Eden Plant Co": {
+      "street": "1123 Providence St",
+      "hours": "Daily 8am–7pm",
+      "source": "https://www.instagram.com/edenplant.co/",
+      "checked": "2026-11-23"
+    },
+    "Good God, Nadine's": {
+      "status": "closed",
+      "source": "https://whatnow.com/?p=404449",
+      "checked": "2026-11-23"
+    },
+    "Slowpokes EaDo": {
+      "street": "3401 Canal St",
+      "lat": 29.75271,
+      "lng": -95.33752,
+      "source": "https://frankiapp.com/business/slowpokes-774232",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Sol7": {
+      "street": "1717 Allen Pkwy",
+      "hours": "Mon–Thu 6:30am–10pm, Fri–Sat 6:30am–12am, Sun 6:30am–10pm",
+      "source": "https://www.enprimeurclub.com/bars/sol7-restaurant-bar-houston-bar",
+      "lat": 29.761087,
+      "lng": -95.379095,
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Maven Coffee + Cocktails (Thompson)": {
+      "street": "1717 Allen Pkwy",
+      "source": "https://www.papercitymag.com/restaurants/thompson-houston-hotel-restaurants-sol-7-michael-mina-review",
+      "lat": 29.761087,
+      "lng": -95.379095,
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Chardon": {
+      "street": "1711 Allen Pkwy",
+      "lat": 29.761015,
+      "lng": -95.378893,
+      "source": "https://www.houstonmagazine.com/allen-parkway/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Toca Madera": {
+      "street": "1755 Allen Pkwy",
+      "lat": 29.761261,
+      "lng": -95.380427,
+      "source": "https://www.houstonmagazine.com/allen-parkway/",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Flora": {
+      "street": "3422 Allen Pkwy",
+      "lat": 29.7623,
+      "lng": -95.3985,
+      "source": "https://www.hyatt.com/thompson-hotels/en-US/iahth-thompson-houston/events-and-attractions",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Mexican Sugar": {
+      "street": "3505 W Dallas St",
+      "lat": 29.756948,
+      "lng": -95.403367,
+      "hours": "Mon–Thu 11am–10pm, Fri 11am–11pm, Sat 10am–11pm, Sun 10am–10pm",
+      "source": "https://www.restaurantnews.com/?p=211932",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "De Fortune": {
+      "street": "3515 W Dallas St",
+      "lat": 29.75705,
+      "lng": -95.4037,
+      "hours": "Daily 4pm–2am",
+      "source": "https://www.papercitymag.com/restaurants/de-fortune-lounge-bar-houston-regent-square-speakeasy",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "LOV3 Houston": {
+      "street": "2900 Travis St",
+      "lat": 29.743997,
+      "lng": -95.376556,
+      "source": "https://jmgmags.com/lov3-houston-opens-in-midtown-on-march-15",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Provecho": {
+      "street": "3030 Travis St",
+      "lat": 29.743172,
+      "lng": -95.377203,
+      "source": "https://www.atly.com/location/Provecho",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Medellin HTX": {
+      "street": "2303 Smith St",
+      "lat": 29.749251,
+      "lng": -95.376042,
+      "hours": "Tue 4pm–2am, Thu–Fri 4pm–2am, Sat 11am–2am, Sun 11am–2am",
+      "source": "https://maps.apple.com/place?place-id=IA41D6E082A510870",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Vida Garden HTX": {
+      "street": "2300 Louisiana St",
+      "lat": 29.748811,
+      "lng": -95.375279,
+      "source": "https://www.houstonbikebar.com/midtown-tour",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Tumble 22": {
+      "street": "1017 Houston Ave",
+      "lat": 29.767428,
+      "lng": -95.372385,
+      "source": "https://houston.culturemap.com/news/restaurants-bars/tumble-22-hot-chicken-restaurant-downtown-open",
+      "checked": "2026-11-23",
+      "notInDirectory": true
+    },
+    "Reset": {
+      "street": "606 Dennis St",
+      "lat": 29.74614,
+      "lng": -95.37822,
+      "hours": "Wed–Sat 4pm–2am, Sun 3pm–12am",
+      "source": "https://aroundus.com/p/175319626-reset",
+      "checked": "2026-11-24",
+      "notInDirectory": true
+    },
+    "Incanto": {
+      "street": "1426 Yale St",
+      "lat": 29.796725,
+      "lng": -95.399021,
+      "hours": "Tue–Thu 4pm–12am, Fri–Sat 4pm–2am, Sun 12pm–11pm",
+      "source": "https://opentable.com.au/r/incanto-houston",
+      "checked": "2026-11-24",
+      "notInDirectory": true
+    },
+    "Little Woodrow's Midtown": {
+      "street": "2306 Brazos St",
+      "lat": 29.749806,
+      "lng": -95.377015,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Little Woodrow's Heights": {
+      "street": "2631 White Oak Dr",
+      "lat": 29.781589,
+      "lng": -95.386494,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Little Woodrow's Shepherd": {
+      "street": "720 Shepherd Dr",
+      "lat": 29.768445,
+      "lng": -95.409362,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Sneaks Coffee + Lounge": {
+      "street": "3030 Travis St",
+      "lat": 29.743172,
+      "lng": -95.377203,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "STYX + STONE": {
+      "street": "2400 Brazos St",
+      "lat": 29.749138,
+      "lng": -95.377546,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Street To Kitchen": {
+      "street": "3401 Harrisburg Blvd",
+      "lat": 29.748342,
+      "lng": -95.341269,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Truth BBQ": {
+      "street": "110 S Heights Blvd",
+      "lat": 29.770845,
+      "lng": -95.397254,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Refuge": {
+      "street": "1424 Westheimer Road",
+      "lat": 29.743084,
+      "lng": -95.396868,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "On the Kirb": {
+      "street": "2521 Bagby Street",
+      "lat": 29.748686,
+      "lng": -95.378826,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Southern Yankee Crafthouse": {
+      "street": "1312 West Alabama Street",
+      "lat": 29.738962,
+      "lng": -95.395257,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The Toasted Coconut": {
+      "street": "1617 Richmond Avenue",
+      "lat": 29.734102,
+      "lng": -95.400276,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "El Big Bad": {
+      "street": "419 Travis Street",
+      "lat": 29.761305,
+      "lng": -95.36259,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Cecil's Pub": {
+      "street": "600 West Gray Street",
+      "lat": 29.753602,
+      "lng": -95.388351,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The Pastry War": {
+      "street": "310 Main Street",
+      "lat": 29.761954,
+      "lng": -95.36121,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The Rabbit Hole": {
+      "street": "740 West 25th Street",
+      "lat": 29.80861,
+      "lng": -95.411947,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The Ginger Mule": {
+      "street": "449 West 19th Street",
+      "lat": 29.803276,
+      "lng": -95.405533,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Pinkerton's Barbecue": {
+      "street": "1504 Airline Drive",
+      "lat": 29.798672,
+      "lng": -95.381501,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Mellow Mushroom": {
+      "street": "1919 North Shepherd Drive",
+      "lat": 29.803432,
+      "lng": -95.410787,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Ivy House": {
+      "street": "2811 Washington Avenue",
+      "lat": 29.768389,
+      "lng": -95.387939,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Cochinita & Co": {
+      "street": "5420 Lawndale Street",
+      "lat": 29.727267,
+      "lng": -95.320905,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Jethro's Cocktail Lounge": {
+      "street": "95 Tuam St",
+      "lat": 29.748259,
+      "lng": -95.383312,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Warehouse Live Midtown": {
+      "street": "2600 Travis St",
+      "lat": 29.745918,
+      "lng": -95.375038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Louchi Lounge & Bistro": {
+      "street": "2621 Milam St",
+      "lat": 29.746236,
+      "lng": -95.37589,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Pour Behavior": {
+      "street": "2211 Travis St",
+      "lat": 29.74839,
+      "lng": -95.372929,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Two Headed Dog": {
+      "street": "3100 Fannin St",
+      "lat": 29.741698,
+      "lng": -95.375787,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Shoeshine Charley's Big Top Lounge": {
+      "street": "3714 Main St",
+      "lat": 29.738403,
+      "lng": -95.379691,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Unicorn Disco": {
+      "street": "2416 Brazos St",
+      "lat": 29.749062,
+      "lng": -95.377606,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The Alley Kat Bar & Lounge": {
+      "street": "3718 Main St",
+      "lat": 29.738385,
+      "lng": -95.379705,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Wonder Bar": {
+      "street": "2416 Brazos St",
+      "lat": 29.749062,
+      "lng": -95.377606,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "77 Degrees": {
+      "street": "2416 Brazos St",
+      "lat": 29.749062,
+      "lng": -95.377606,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Gloria's Latin Cuisine": {
+      "street": "2616 Louisiana St",
+      "lat": 29.746844,
+      "lng": -95.376833,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Josephine's Gulf Coast Tradition": {
+      "street": "1209 Caroline St",
+      "lat": 29.753758,
+      "lng": -95.363519,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Oporto Fooding House & Wine": {
+      "street": "125 W Gray St",
+      "lat": 29.753219,
+      "lng": -95.379893,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Mai's Restaurant": {
+      "street": "3403 Milam St",
+      "lat": 29.741313,
+      "lng": -95.379793,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Koe Wetzel's Riot Room": {
+      "street": "2416 Brazos St",
+      "lat": 29.749062,
+      "lng": -95.377606,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Private Client": {
+      "street": "2118 Lamar St",
+      "lat": 29.750358,
+      "lng": -95.355922,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "OKRA Charity Saloon": {
+      "street": "924 Congress St",
+      "lat": 29.762593,
+      "lng": -95.361398,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Best Regards": {
+      "street": "222 W 11th St",
+      "lat": 29.790619,
+      "lng": -95.399254,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Moon Rabbit": {
+      "street": "605 W 19th St",
+      "lat": 29.802864,
+      "lng": -95.408171,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Superica": {
+      "street": "719 W 18th St",
+      "lat": 29.801807,
+      "lng": -95.410543,
+      "source": "Closed Feb 15, 2026; Star Rover replaced it at 1801 N Shepherd Dr",
+      "checked": "2026-11-25",
+      "notInDirectory": true,
+      "status": "closed"
+    },
+    "Field & Tides": {
+      "street": "705 E 11th St",
+      "lat": 29.790857,
+      "lng": -95.389808,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Bar 5306": {
+      "street": "5306 Washington Ave",
+      "lat": 29.770557,
+      "lng": -95.414878,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Sugar Room": {
+      "street": "5120 Washington Ave",
+      "lat": 29.770484,
+      "lng": -95.41272,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Lincoln Bar & Kitchen": {
+      "street": "5110 Washington Ave",
+      "lat": 29.770484,
+      "lng": -95.41264,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Plume": {
+      "street": "1100 W 23rd St",
+      "lat": 29.806675,
+      "lng": -95.418175,
+      "hours": "Tue–Wed 4pm–12am, Thu–Sat 4pm–2am, Sun 4pm–12am",
+      "source": "https://whatnow.com/?p=156027",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The Podium": {
+      "street": "4007B Greenbriar Dr",
+      "geoStreet": "4007 Greenbriar Dr",
+      "lat": 29.730366,
+      "lng": -95.412787,
+      "source": "https://partyslate.com/venues/the-podium-at-porsche-river-oaks",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "40 Love": {
+      "street": "3030 Travis St",
+      "lat": 29.743172,
+      "lng": -95.377203,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Dough Zone Dumpling House Midtown": {
+      "street": "2450 Louisiana St",
+      "lat": 29.747853,
+      "lng": -95.376039,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Malai Thai Street Eats": {
+      "street": "2900 Travis St",
+      "lat": 29.743997,
+      "lng": -95.376556,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Bonchon Midtown": {
+      "street": "2100 Travis St",
+      "lat": 29.749245,
+      "lng": -95.372398,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Gotti's": {
+      "street": "811 St Emanuel St",
+      "lat": 29.75261,
+      "lng": -95.354328,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Flight Club Houston": {
+      "street": "3515 W Dallas St",
+      "lat": 29.757147,
+      "lng": -95.403855,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "The James": {
+      "street": "Mid Lane",
+      "lat": 29.743993,
+      "lng": -95.449477,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Donna's": {
+      "street": "2626 White Oak Dr",
+      "lat": 29.781705,
+      "lng": -95.38643,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Bar Angie": {
+      "street": "1002 W 11th St",
+      "lat": 29.790496,
+      "lng": -95.407093,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Heights Hideaway": {
+      "street": "1040 W Cavalcade St",
+      "lat": 29.804012,
+      "lng": -95.385143,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Rainbow Lodge": {
+      "street": "2011 Ella Blvd",
+      "lat": 29.804257,
+      "lng": -95.429318,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Dona Leti's": {
+      "street": "7340 Washington Avenue",
+      "lat": 29.778416,
+      "lng": -95.42985,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Down the Street": {
+      "street": "5746 Larkin Street",
+      "lat": 29.7793,
+      "lng": -95.426088,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Mary'z Mediterranean Cuisine": {
+      "street": "5828 Richmond Avenue",
+      "lat": 29.73113,
+      "lng": -95.482135,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Christian's Tailgate Midtown": {
+      "street": "2000 Bagby St",
+      "lat": 29.752585,
+      "lng": -95.376076,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Starduster Lounge": {
+      "street": "3921 N Main St",
+      "lat": 29.792713,
+      "lng": -95.375622,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Daley Sports Club": {
+      "street": "922 Holman St",
+      "lat": 29.740112,
+      "lng": -95.379221,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Lankford's Grocery & Market": {
+      "street": "88 Dennis St",
+      "lat": 29.74986,
+      "lng": -95.383361,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Traveler's Table": {
+      "street": "520 Westheimer Rd",
+      "lat": 29.744587,
+      "lng": -95.3876,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "House of Louie": {
+      "street": "1931 Fairview St",
+      "lat": 29.744668,
+      "lng": -95.40554,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "Bar Madonna": {
+      "street": "109 Stratford St",
+      "lat": 29.74652,
+      "lng": -95.38184,
+      "source": "US Census geocoder",
+      "checked": "2026-11-25",
+      "notInDirectory": true
+    },
+    "NUA Thai": {
+      "street": "2020 Louisiana St",
+      "lat": 29.750812,
+      "lng": -95.373701,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Umiya": {
+      "street": "510 Gray St",
+      "lat": 29.751219,
+      "lng": -95.375632,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pub Fiction": {
+      "street": "2303 Smith St",
+      "lat": 29.749251,
+      "lng": -95.376042,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Community Bar": {
+      "street": "2703 Smith St",
+      "lat": 29.746678,
+      "lng": -95.378071,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Weights + Measures": {
+      "street": "2808 Caroline St",
+      "lat": 29.742809,
+      "lng": -95.372376,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cafe Ginger": {
+      "street": "2200 Post Oak Boulevard",
+      "lat": 29.743369,
+      "lng": -95.462282,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Doc's Houston": {
+      "street": "1201 Westheimer Rd",
+      "lat": 29.744325,
+      "lng": -95.393849,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Fiora's Bottle Shop": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Sophie Cocktail & Terrace Bar": {
+      "street": "910 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.390837,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Marmo": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Oheya": {
+      "street": "904 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.390687,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Graffiti": {
+      "street": "1001 California St",
+      "lat": 29.745499,
+      "lng": -95.390585,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Októ": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Van Leeuwen Ice Cream Montrose": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Chelsea": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Picnik": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Mi Luna": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Graffiti Raw": {
+      "street": "888 Westheimer Rd",
+      "lat": 29.744731,
+      "lng": -95.39038,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bludorn": {
+      "street": "807 Taft St",
+      "lat": 29.758924,
+      "lng": -95.385693,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "March": {
+      "street": "1624 Westheimer Rd",
+      "lat": 29.742849,
+      "lng": -95.400209,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Rosie Cannonball": {
+      "street": "1620 Westheimer Rd",
+      "lat": 29.742849,
+      "lng": -95.40007,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Candente": {
+      "street": "4306 Yoakum Blvd",
+      "lat": 29.734376,
+      "lng": -95.39257,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "BCN Taste & Tradition": {
+      "street": "4210 Roseland St",
+      "lat": 29.735202,
+      "lng": -95.38989,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cuchara": {
+      "street": "214 Fairview St",
+      "lat": 29.748294,
+      "lng": -95.385001,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Clark's Oyster Bar": {
+      "street": "3807 Montrose Blvd",
+      "lat": 29.73867,
+      "lng": -95.391107,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Nando's Montrose": {
+      "street": "1201 Westheimer Rd",
+      "lat": 29.744325,
+      "lng": -95.393849,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Little's Oyster Bar": {
+      "street": "3001 S Shepherd Dr",
+      "lat": 29.73923,
+      "lng": -95.410629,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "chrôma": {
+      "street": "1512 Sul Ross St",
+      "lat": 29.737854,
+      "lng": -95.397766,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bori": {
+      "street": "501 Lovett Blvd",
+      "lat": 29.743403,
+      "lng": -95.387285,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Alora": {
+      "street": "2502 Dunlavy St",
+      "lat": 29.743689,
+      "lng": -95.402151,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Doris Metropolitan": {
+      "street": "2815 S Shepherd Dr",
+      "lat": 29.740538,
+      "lng": -95.410645,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Avant Garden": {
+      "street": "411 Westheimer Rd",
+      "lat": 29.744509,
+      "lng": -95.386126,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "West Alabama Ice House": {
+      "street": "1919 W Alabama St",
+      "lat": 29.738538,
+      "lng": -95.407276,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Etro Lounge": {
+      "street": "1424 Westheimer Rd",
+      "lat": 29.743006,
+      "lng": -95.396775,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Rudyard's": {
+      "street": "2010 Waugh Dr",
+      "lat": 29.750228,
+      "lng": -95.396617,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Eunice": {
+      "street": "3737 Buffalo Speedway",
+      "lat": 29.733262,
+      "lng": -95.428986,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kiran's": {
+      "street": "2925 Richmond Ave",
+      "lat": 29.733972,
+      "lng": -95.422491,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "State of Grace": {
+      "street": "3258 Westheimer Rd",
+      "lat": 29.74219,
+      "lng": -95.425071,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tony's": {
+      "street": "3755 Richmond Ave",
+      "lat": 29.732654,
+      "lng": -95.436306,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hearsay at Levy Park": {
+      "street": "3801 Eastside St",
+      "lat": 29.732497,
+      "lng": -95.424382,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "a'Bouzy": {
+      "street": "2300 Westheimer Rd",
+      "lat": 29.742506,
+      "lng": -95.415224,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Ruggles Black": {
+      "street": "3963 Kirby Dr",
+      "lat": 29.731418,
+      "lng": -95.418591,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Goode Co. Seafood": {
+      "street": "2621 Westpark Dr",
+      "lat": 29.728532,
+      "lng": -95.419074,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Goode Co. Texas BBQ": {
+      "street": "5109 Kirby Dr",
+      "lat": 29.727084,
+      "lng": -95.418536,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kenny & Ziggy's": {
+      "street": "2327 Post Oak Blvd",
+      "lat": 29.745061,
+      "lng": -95.461009,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "North Italia BLVD": {
+      "street": "1700 Post Oak Blvd",
+      "lat": 29.748844,
+      "lng": -95.461334,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Nobu Houston": {
+      "street": "5115 Westheimer Rd",
+      "lat": 29.740642,
+      "lng": -95.462768,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Musaafer": {
+      "street": "5115 Westheimer Rd",
+      "lat": 29.740642,
+      "lng": -95.462768,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Oceanaire Seafood Room": {
+      "street": "5061 Westheimer Rd",
+      "lat": 29.740678,
+      "lng": -95.461901,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bouchee Patisserie": {
+      "street": "1600 West Loop South",
+      "lat": 29.751552,
+      "lng": -95.457022,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "MF Sushi": {
+      "street": "1401 Binz St",
+      "lat": 29.723734,
+      "lng": -95.386036,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lucille's": {
+      "street": "5512 La Branch St",
+      "lat": 29.723951,
+      "lng": -95.384796,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Aperitivo": {
+      "street": "4110 Loretto Dr",
+      "lat": 29.735942,
+      "lng": -95.397966,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Turkey Leg Hut": {
+      "street": "4830 Almeda Rd",
+      "lat": 29.726124,
+      "lng": -95.37768,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "This Is It Soul Food": {
+      "street": "2712 Blodgett St",
+      "lat": 29.723406,
+      "lng": -95.369817,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "93' Til": {
+      "street": "1601 W Main St",
+      "lat": 29.736031,
+      "lng": -95.399334,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bar No. 3": {
+      "street": "3410 Montrose Blvd",
+      "lat": 29.742216,
+      "lng": -95.391283,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Xolo": {
+      "street": "223 Westheimer Rd",
+      "lat": 29.74459,
+      "lng": -95.383219,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Lymbar": {
+      "street": "4201 Main St",
+      "lat": 29.735213,
+      "lng": -95.382043,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Ducky's Pizza & Tavern": {
+      "street": "1927 Fairview St",
+      "lat": 29.744667,
+      "lng": -95.404686,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "R24 Rooftop Lounge": {
+      "street": "1600 Lamar St",
+      "lat": 29.752688,
+      "lng": -95.360686,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Xiaolong Dumpling": {
+      "street": "1901 Taft St",
+      "lat": 29.751944,
+      "lng": -95.385664,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "The Tipsy Sloth": {
+      "street": "3517 Navigation Blvd",
+      "lat": 29.754919,
+      "lng": -95.334651,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Lustre Pearl": {
+      "street": "2016 Dallas St",
+      "lat": 29.750133,
+      "lng": -95.357366,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cobos": {
+      "street": "2012 Rusk St",
+      "lat": 29.75312,
+      "lng": -95.355028,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Bar Daphne": {
+      "street": "347 W 20th St",
+      "lat": 29.803973,
+      "lng": -95.40247,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Botanic Beer Garden": {
+      "street": "1920 Houston Ave",
+      "lat": 29.774657,
+      "lng": -95.372329,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Jane & The Lion Bakehouse": {
+      "street": "4721 N Main St",
+      "lat": 29.797734,
+      "lng": -95.382412,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Elliot's Table": {
+      "street": "465 T C Jester Blvd",
+      "lat": 29.779481,
+      "lng": -95.418167,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Star Rover": {
+      "street": "1801 N Shepherd Dr",
+      "lat": 29.801813,
+      "lng": -95.410179,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "NettBar": {
+      "street": "4504 Nett St",
+      "lat": 29.772034,
+      "lng": -95.406275,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Urban Social": {
+      "street": "3917 Richmond Ave",
+      "lat": 29.732611,
+      "lng": -95.440235,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "El Segundo Swim Club": {
+      "street": "5180 Avenue L",
+      "lat": 29.750936,
+      "lng": -95.320457,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Tacos La Sultana": {
+      "street": "7011 Capitol St",
+      "lat": 29.734417,
+      "lng": -95.30244,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Xela Coffee Roasters": {
+      "street": "4409 Canal St",
+      "lat": 29.749022,
+      "lng": -95.329961,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Les Givral's": {
+      "street": "2704 Milam St",
+      "lat": 29.745706,
+      "lng": -95.376486,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Pho Saigon Midtown": {
+      "street": "2808 Milam St",
+      "lat": 29.745112,
+      "lng": -95.376955,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Cocody": {
+      "street": "1971 W Gray St",
+      "lat": 29.753019,
+      "lng": -95.407234,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Hudson House River Oaks": {
+      "street": "1966 W Gray St",
+      "lat": 29.753137,
+      "lng": -95.407035,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Zanti Cucina Italiana": {
+      "street": "1958 W Gray St",
+      "lat": 29.753142,
+      "lng": -95.406722,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "MaKiin": {
+      "street": "2651 Kipling St",
+      "lat": 29.740033,
+      "lng": -95.419372,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Leo's River Oaks": {
+      "street": "2009 W Gray St",
+      "lat": 29.752985,
+      "lng": -95.408988,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
