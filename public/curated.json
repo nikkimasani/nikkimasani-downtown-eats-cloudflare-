@@ -22676,5 +22676,88 @@
   "type": "Restaurant",
   "note": "Steakhouse with a DJ, lounge vibe restaurant.",
   "tryit": ""
+ },
+ {
+  "id": 1133,
+  "name": "Underdogs Pub",
+  "address": "4212 Washington Avenue, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Pub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Pub.",
+  "tryit": ""
+ },
+ {
+  "id": 1134,
+  "name": "Front Porch Pub",
+  "address": "217 Gray St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Pub"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Pub",
+  "note": "Pub.",
+  "tryit": ""
+ },
+ {
+  "id": 1135,
+  "name": "Under the Volcano",
+  "address": "2349 Bissonnet St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Tiki & cocktail bar"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Tiki & cocktail bar.",
+  "tryit": ""
+ },
+ {
+  "id": 1136,
+  "name": "Kata Robata",
+  "address": "3600 Kirby Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sushi"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sushi restaurant.",
+  "tryit": ""
  }
 ]

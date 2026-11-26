@@ -1,6 +1,6 @@
 {
  "checked": "2026-11-26",
- "sitesWithHours": 31,
+ "sitesWithHours": 22,
  "flags": {
   "Artistry": {
    "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
@@ -57,40 +57,15 @@
    "url": "https://sohogardenhtx.com/",
    "slots": 84
   },
-  "Velvet Taco": {
-   "site": "Sun 10:30am–11pm · Mon 10:30am–11pm · Tue 10:30am–11pm · Wed 10:30am–11pm · Thu 10:30am–11pm · Fri 10:30am–12am · Sat 10:30am–12am",
-   "url": "https://www.velvettaco.com/location/rice-village/",
-   "slots": 7
-  },
   "Honeychild's": {
    "site": "Sun 12pm–6pm · Mon closed · Tue 12pm–10pm · Wed 12pm–10pm · Thu 12pm–10pm · Fri 12pm–10pm · Sat 12pm–10pm",
    "url": "https://www.honeychildssweetcreams.com/",
    "slots": 20
   },
-  "Japanese Ramen Gachi": {
-   "site": "Sun 12pm–3:30pm, 5pm–8:30pm · Mon 11:30am–2:30pm, 5:30pm–9pm · Tue 11:30am–2:30pm, 5:30pm–9pm · Wed 11:30am–2:30pm, 5:30pm–9pm · Thu 11:30am–2:30pm, 5:30pm–9pm · Fri 11:30am–2:30pm, 5:30pm–9pm · Sat 12pm–3pm, 5:30pm–9pm",
-   "url": "https://www.ramengachi.com/",
-   "slots": 7
-  },
   "Isa Matcha": {
    "site": "Sun 10am–5pm · Mon 10am–5pm · Tue closed · Wed closed · Thu closed · Fri 10am–5pm · Sat 10am–5pm",
    "url": "https://isamatcha.com/",
    "slots": 14
-  },
-  "Brennan's": {
-   "site": "Sun 10am–8pm · Mon 11am–8pm · Tue 11am–9pm · Wed 11am–9pm · Thu 11am–9pm · Fri 11am–10pm · Sat 11am–10pm",
-   "url": "https://www.brennanshouston.com/",
-   "slots": 70
-  },
-  "Ripcord": {
-   "site": "Sun 12pm–2am · Mon 1pm–2am · Tue 1pm–2am · Wed 1pm–2am · Thu 1pm–2am · Fri 1pm–2am · Sat 12pm–2am",
-   "url": "https://theripcord.com/",
-   "slots": 28
-  },
-  "Henderson & Kane": {
-   "site": "Sun 8am–7:30pm · Mon 8am–8:30pm · Tue 8am–8:30pm · Wed 8am–8:30pm · Thu 8am–8:30pm · Fri 8am–8:30pm · Sat 8am–8:30pm",
-   "url": "https://hkgeneralstore.com/",
-   "slots": 11
   },
   "Applebee's": {
    "site": "Sun 11am–2am · Mon 11am–2am · Tue 11am–2am · Wed 11am–2am · Thu 11am–11pm · Fri 11am–2am · Sat 11am–2am",
@@ -101,11 +76,6 @@
    "site": "Sun closed · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–12am · Sat 11am–12am",
    "url": "https://www.mcgonigels.com",
    "slots": 24
-  },
-  "Red Lion Pub": {
-   "site": "Sun 11am–12am · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–2am · Sat 11am–2am",
-   "url": "https://redlionpubhouston.com/",
-   "slots": 38
   },
   "Hobbit Cafe": {
    "site": "Sun 11am–9pm · Mon 11am–9pm · Tue 11am–9pm · Wed 11am–9pm · Thu 11am–9pm · Fri 11am–10pm · Sat 11am–10pm",

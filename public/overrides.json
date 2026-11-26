@@ -7172,6 +7172,38 @@
       "source": "US Census geocoder",
       "checked": "2026-11-26",
       "notInDirectory": true
+    },
+    "Underdogs Pub": {
+      "street": "4212 Washington Avenue",
+      "lat": 29.770521,
+      "lng": -95.40342,
+      "source": "OpenStreetMap Nominatim",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Front Porch Pub": {
+      "street": "217 Gray St",
+      "lat": 29.752796,
+      "lng": -95.378045,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Under the Volcano": {
+      "street": "2349 Bissonnet St",
+      "lat": 29.725477,
+      "lng": -95.413889,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Kata Robata": {
+      "street": "3600 Kirby Dr",
+      "lat": 29.733407,
+      "lng": -95.418737,
+      "source": "US Census geocoder",
+      "checked": "2026-11-26",
+      "notInDirectory": true
     }
   }
 }
