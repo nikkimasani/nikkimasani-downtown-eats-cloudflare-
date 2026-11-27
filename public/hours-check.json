@@ -1,11 +1,16 @@
 {
- "checked": "2026-11-26",
- "sitesWithHours": 22,
+ "checked": "2026-11-27",
+ "sitesWithHours": 23,
  "flags": {
   "Artistry": {
    "site": "Sun closed · Mon closed · Tue 11am–11:59pm · Wed 12am–2:45am, 11am–11:59pm · Thu 12am–2:45am, 11am–11:59pm · Fri 12am–2:45am, 11am–11:59pm · Sat 12am–2:45am",
    "url": "http://artistryhouston.com",
    "slots": 134
+  },
+  "Bayou & Bottle": {
+   "site": "Sun 11am–12am · Mon 7am–12am · Tue 7am–12am · Wed 7am–12am · Thu 7am–12am · Fri 7am–12am · Sat 11am–12am",
+   "url": "http://bayouandbottle.com",
+   "slots": 40
   },
   "Bubble Boba": {
    "site": "Sun closed · Mon 8am–7pm · Tue 8am–7pm · Wed 8am–7pm · Thu 8am–7pm · Fri 8am–7pm · Sat 8am–7pm",
@@ -66,11 +71,6 @@
    "site": "Sun 10am–5pm · Mon 10am–5pm · Tue closed · Wed closed · Thu closed · Fri 10am–5pm · Sat 10am–5pm",
    "url": "https://isamatcha.com/",
    "slots": 14
-  },
-  "Applebee's": {
-   "site": "Sun 11am–2am · Mon 11am–2am · Tue 11am–2am · Wed 11am–2am · Thu 11am–11pm · Fri 11am–2am · Sat 11am–2am",
-   "url": "https://restaurants.applebees.com/en-us/tx/houston/2959-north-loop-west-80023",
-   "slots": 6
   },
   "McGonigel's Mucky Duck": {
    "site": "Sun closed · Mon 11am–12am · Tue 11am–12am · Wed 11am–12am · Thu 11am–12am · Fri 11am–12am · Sat 11am–12am",

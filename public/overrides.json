@@ -8680,90 +8680,10 @@
       "checked": "2026-11-27",
       "notInDirectory": true
     },
-    "PJ's Sports Bar": {
-      "street": "614 W Gray St",
-      "lat": 29.753461,
-      "lng": -95.38819,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Trash Panda Drinking Club": {
-      "street": "4203 Edison St",
-      "lat": 29.798328,
-      "lng": -95.362973,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Cedar Creek": {
-      "street": "1034 W 20th St",
-      "lat": 29.803679,
-      "lng": -95.416759,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Heights Drive Inn": {
-      "street": "6714 N Main St",
-      "lat": 29.81164,
-      "lng": -95.390725,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Better Luck Tomorrow": {
-      "street": "544 Yale St",
-      "lat": 29.78045,
-      "lng": -95.398707,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Henderson & Kane": {
-      "street": "1901 Hogan St",
-      "lat": 29.766003,
-      "lng": -95.379555,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Axelrad Beer Garden": {
-      "street": "1517 Alabama St",
-      "lat": 29.735242,
-      "lng": -95.37545,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Onion Creek": {
-      "street": "3106 White Oak Dr",
-      "lat": 29.781633,
-      "lng": -95.391237,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Glitter Karaoke": {
-      "street": "2621 Milam St",
-      "lat": 29.746236,
-      "lng": -95.37589,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "GEN Korean BBQ House Midtown": {
-      "street": "3201 Louisiana St",
-      "lat": 29.743127,
-      "lng": -95.379621,
-      "source": "US Census geocoder",
-      "checked": "2026-11-27",
-      "notInDirectory": true
-    },
-    "Handam BBQ Heights": {
-      "street": "2805 White Oak Dr",
-      "lat": 29.781552,
-      "lng": -95.388702,
+    "Clutch Bar": {
+      "street": "5334 Washington Ave",
+      "lat": 29.770603,
+      "lng": -95.415663,
       "source": "US Census geocoder",
       "checked": "2026-11-27",
       "notInDirectory": true
