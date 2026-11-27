@@ -687,7 +687,9 @@
       "notInDirectory": true,
       "hours": "Daily 4pm–2am",
       "lat": 29.748342,
-      "lng": -95.341269
+      "lng": -95.341269,
+      "status": "closed",
+      "closedNote": "Became Neighbors Pizza Bar, which has also closed"
     },
     "Champ Burger": {
       "street": "304 Sampson St",
