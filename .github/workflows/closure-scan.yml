@@ -1,0 +1,24 @@
+name: Scan for closed and missing places
+# Report only: writes data/closure-report.json from Texas Comptroller open data. Nothing on the map changes.
+on:
+  workflow_dispatch:
+  push:
+    paths: ['scripts/closure-scan.mjs']
+permissions:
+  contents: write
+concurrency: { group: closure-scan, cancel-in-progress: true }
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/closure-scan.mjs
+      - name: Commit report
+        run: |
+          git config user.name "downtown-eats-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/closure-report.json
+          git diff --cached --quiet || (git commit -m "Closure scan report" && (git push || (git pull --rebase -X theirs && git push)))

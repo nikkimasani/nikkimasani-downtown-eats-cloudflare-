@@ -2209,6 +2209,948 @@
 "k": "bar",
 "c": "Wine & cheese shop and bar",
 "a": "1618 Westheimer Rd"
+},
+{
+"n": "Eataly Houston",
+"k": "rest",
+"c": "Italian marketplace, restaurants & bar",
+"a": "5000 Westheimer Rd"
+},
+{
+"n": "Terry Black's Barbecue",
+"k": "rest",
+"c": "Central Texas barbecue",
+"a": "1329 N Shepherd Dr"
+},
+{
+"n": "Mensho",
+"k": "rest",
+"c": "Tokyo ramen",
+"a": "1515 W Gray St"
+},
+{
+"n": "Sandoitchi",
+"k": "rest",
+"c": "Japanese sandos & matcha",
+"a": "1603 N Durham Dr"
+},
+{
+"n": "Kokee Kitchen",
+"k": "rest",
+"c": "Korean fried chicken",
+"a": "1801 Binz St"
+},
+{
+"n": "No Tsu Oh",
+"k": "bar",
+"c": "Downtown bar, back on Main",
+"a": "316 Main St"
+},
+{
+"n": "Zalat Pizza Montrose",
+"k": "rest",
+"c": "Pizza",
+"a": "510 Gray St"
+},
+{
+"n": "Zalat Pizza Washington",
+"k": "rest",
+"c": "Pizza",
+"a": "4802 Washington Ave"
+},
+{
+"n": "Hot Sammies",
+"k": "rest",
+"c": "Hot sandwiches",
+"a": "518 W 11th St"
+},
+{
+"n": "Diabla",
+"k": "bar",
+"c": "Midtown bar",
+"a": "3030 Travis St"
+},
+{
+"n": "Eclipse Restaurant & Bar",
+"k": "rest",
+"c": "Restaurant & bar",
+"a": "6005 Bissonnet St"
+},
+{
+"n": "Las Tres Gorditas",
+"k": "rest",
+"c": "Mexican",
+"a": "6102 Bissonnet St"
+},
+{
+"n": "Kori",
+"k": "rest",
+"c": "Restaurant",
+"a": "1431 N Shepherd Dr"
+},
+{
+"n": "Lincoln Bar Midtown",
+"k": "bar",
+"c": "Bar",
+"a": "217 Gray St"
+},
+{
+"n": "Meowcha",
+"k": "coffee",
+"c": "Matcha & cat café",
+"a": "3122 Leeland St"
+},
+{
+"n": "Narin's Bombay Brasserie",
+"k": "rest",
+"c": "Indian",
+"a": "3005 West Loop S"
+},
+{
+"n": "Playground",
+"k": "bar",
+"c": "Midtown bar",
+"a": "2415 Main St"
+},
+{
+"n": "Wittness Cafe",
+"k": "coffee",
+"c": "Café",
+"a": "1018 Preston St"
+},
+{
+"n": "The Vue",
+"k": "rest",
+"c": "Downtown restaurant & lounge",
+"a": "413 Travis St"
+},
+{
+"n": "Ductwork",
+"k": "bar",
+"c": "EaDo bar",
+"a": "813 St Emanuel St"
+},
+{
+"n": "New York Subs",
+"k": "rest",
+"c": "Subs",
+"a": "4015 Washington Ave"
+},
+{
+"n": "Mash Dogs",
+"k": "rest",
+"c": "Hot dogs",
+"a": "1420 Sawyer St"
+},
+{
+"n": "Cocinita de Jalisco",
+"k": "rest",
+"c": "Mexican bar & grill",
+"a": "702 E 11th St"
+},
+{
+"n": "Palmetto Superfoods",
+"k": "coffee",
+"c": "Açaí & smoothie bowls",
+"a": "718 W 18th St"
+},
+{
+"n": "Heights Golf Club",
+"k": "bar",
+"c": "Indoor golf & bar",
+"a": "3933 N Main St"
+},
+{
+"n": "Luce Coffee Roasters",
+"k": "coffee",
+"c": "Coffee",
+"a": "3995 Richmond Ave"
+},
+{
+"n": "55 Seventy",
+"k": "bar",
+"c": "Lounge",
+"a": "3015 Richmond Ave"
+},
+{
+"n": "Bussia Cucina Italiana",
+"k": "rest",
+"c": "Italian",
+"a": "2800 Kirby Dr"
+},
+{
+"n": "The Double Deuce on Canal",
+"k": "bar",
+"c": "East End bar",
+"a": "3907 Canal St"
+},
+{
+"n": "Unforgettable Kitchen & Cocktails",
+"k": "rest",
+"c": "Kitchen & cocktails",
+"a": "5922 Washington Ave"
+},
+{
+"n": "Chef Marcela's Kitchen",
+"k": "rest",
+"c": "Restaurant",
+"a": "5220 Buffalo Speedway"
+},
+{
+"n": "The Burger Daddy",
+"k": "rest",
+"c": "Burgers",
+"a": "411 Smith St"
+},
+{
+"n": "Los Tacos Kirby",
+"k": "rest",
+"c": "Tacos",
+"a": "5613 Morningside Dr"
+},
+{
+"n": "Zio Al's Pizza & Pasta Montrose",
+"k": "rest",
+"c": "Pizza & pasta",
+"a": "106 Westheimer Rd"
+},
+{
+"n": "Zio Al's Pizza & Pasta Heights",
+"k": "rest",
+"c": "Pizza & pasta",
+"a": "250 W 19th St"
+},
+{
+"n": "Dan Electro's",
+"k": "bar",
+"c": "Heights music bar",
+"a": "1031 E 24th St"
+},
+{
+"n": "Seddy's Country Kitchen",
+"k": "rest",
+"c": "Country cooking",
+"a": "311 W Gray St"
+},
+{
+"n": "Novice Social",
+"k": "bar",
+"c": "Fifth Ward bar",
+"a": "2103 Lyons Ave"
+},
+{
+"n": "Polk Bar",
+"k": "bar",
+"c": "EaDo bar",
+"a": "4009 Polk St"
+},
+{
+"n": "Apres HTX",
+"k": "rest",
+"c": "Restaurant & bar",
+"a": "4411 San Felipe St"
+},
+{
+"n": "Casa Lucca Cucina",
+"k": "rest",
+"c": "Italian",
+"a": "1834 Westheimer Rd"
+},
+{
+"n": "The Burger Palace",
+"k": "rest",
+"c": "Burgers",
+"a": "5214 Bellaire Blvd"
+},
+{
+"n": "Spicy Girl",
+"k": "rest",
+"c": "Sichuan",
+"a": "917 Winbern St"
+},
+{
+"n": "Omakasyeh",
+"k": "rest",
+"c": "Omakase",
+"a": "4306 Elsbury St"
+},
+{
+"n": "The Park",
+"k": "bar",
+"c": "EaDo bar",
+"a": "1311 Leeland St"
+},
+{
+"n": "The Block on Main",
+"k": "bar",
+"c": "Downtown bar",
+"a": "110 Main St"
+},
+{
+"n": "Armor & Co",
+"k": "bar",
+"c": "Downtown bar",
+"a": "401 Louisiana St"
+},
+{
+"n": "Paris Brest Creperie",
+"k": "rest",
+"c": "French crêpes",
+"a": "5812 Kirby Dr"
+},
+{
+"n": "Domo",
+"k": "rest",
+"c": "Restaurant",
+"a": "1420 N Durham Dr"
+},
+{
+"n": "3Bros Pizza",
+"k": "rest",
+"c": "Pizza",
+"a": "3602 Old Spanish Trl"
+},
+{
+"n": "Handies Douzo EaDo",
+"k": "rest",
+"c": "Hand rolls",
+"a": "1105 Hutchins St"
+},
+{
+"n": "Handies Douzo Uptown",
+"k": "rest",
+"c": "Hand rolls",
+"a": "2000 Post Oak Blvd"
+},
+{
+"n": "Workaround Cafe",
+"k": "coffee",
+"c": "Café",
+"a": "2821 W 11th St"
+},
+{
+"n": "Bread Boat",
+"k": "rest",
+"c": "Bakery café",
+"a": "3835 Richmond Ave"
+},
+{
+"n": "Sam's Cafe",
+"k": "rest",
+"c": "Café",
+"a": "920 Studemont St"
+},
+{
+"n": "Casa Lenca",
+"k": "rest",
+"c": "Honduran",
+"a": "2795 Katy Fwy"
+},
+{
+"n": "Dixie Maid",
+"k": "rest",
+"c": "Fifth Ward diner",
+"a": "6800 Lyons Ave"
+},
+{
+"n": "Thai Thumbz Urban Kitchen",
+"k": "rest",
+"c": "Thai",
+"a": "3151 W Holcombe Blvd"
+},
+{
+"n": "The Mexican Post Oak",
+"k": "rest",
+"c": "Mexican",
+"a": "1390 Post Oak Blvd"
+},
+{
+"n": "Clutch EaDo",
+"k": "bar",
+"c": "EaDo bar",
+"a": "1201 St Emanuel St"
+},
+{
+"n": "Basic Pizza EaDo",
+"k": "rest",
+"c": "Pizza",
+"a": "1201 St Emanuel St"
+},
+{
+"n": "Fibonacci Room",
+"k": "bar",
+"c": "Montrose bar",
+"a": "1417 Westheimer Rd"
+},
+{
+"n": "Slowpokes",
+"k": "coffee",
+"c": "Coffee",
+"a": "3001 W 11th St"
+},
+{
+"n": "Petal & Pint",
+"k": "rest",
+"c": "Restaurant & bar",
+"a": "140 S Heights Blvd"
+},
+{
+"n": "Curb Appeal Cafe & Bar",
+"k": "rest",
+"c": "Café & bar",
+"a": "100 W Cavalcade St"
+},
+{
+"n": "H&H Bagels River Oaks",
+"k": "coffee",
+"c": "NYC bagels",
+"a": "2880 Westheimer Rd"
+},
+{
+"n": "Pythagoras",
+"k": "rest",
+"c": "Vegan",
+"a": "1710 W 18th St"
+},
+{
+"n": "Sip Saigon",
+"k": "coffee",
+"c": "Vietnamese coffee",
+"a": "2609 Dennis St"
+},
+{
+"n": "Cry Baby Cocktails",
+"k": "bar",
+"c": "Cocktails",
+"a": "1120 Naylor St"
+},
+{
+"n": "The Philter",
+"k": "rest",
+"c": "Restaurant",
+"a": "1102 Sampson St"
+},
+{
+"n": "Evvlyn's",
+"k": "bar",
+"c": "Bar",
+"a": "2403 Wentworth St"
+},
+{
+"n": "Seven Sushi & Robata",
+"k": "rest",
+"c": "Sushi & robata",
+"a": "3304 Milam St"
+},
+{
+"n": "Sixten Burgers",
+"k": "rest",
+"c": "Burgers",
+"a": "6362 Martin Luther King Blvd"
+},
+{
+"n": "Mazar Kitchen",
+"k": "rest",
+"c": "Afghan",
+"a": "5922 Richmond Ave"
+},
+{
+"n": "Pour Decisions",
+"k": "bar",
+"c": "Heights bar",
+"a": "555 W 19th St"
+},
+{
+"n": "Meltwich Food Co",
+"k": "rest",
+"c": "Melts",
+"a": "2518 Rice Blvd"
+},
+{
+"n": "Little Bird",
+"k": "rest",
+"c": "Restaurant",
+"a": "1815 N Durham Dr"
+},
+{
+"n": "El Conejo Malo",
+"k": "rest",
+"c": "Mexican",
+"a": "901 Commerce St"
+},
+{
+"n": "Signature Kafe",
+"k": "rest",
+"c": "Café",
+"a": "3722 Main St"
+},
+{
+"n": "The Cloud Coffee & Cocktails",
+"k": "bar",
+"c": "Coffee & cocktails",
+"a": "2120 Emancipation Ave"
+},
+{
+"n": "Park HiFi",
+"k": "rest",
+"c": "Restaurant & listening bar",
+"a": "2901 Emancipation Ave"
+},
+{
+"n": "Creole in the City",
+"k": "rest",
+"c": "Creole",
+"a": "5417 Harrisburg Blvd"
+},
+{
+"n": "Bad Habits HTX",
+"k": "bar",
+"c": "Bar",
+"a": "6134 Richmond Ave"
+},
+{
+"n": "The Phoenix",
+"k": "bar",
+"c": "Soccer pub (new home)",
+"a": "1643 Richmond Ave"
+},
+{
+"n": "Jabchai Thai Cafe",
+"k": "rest",
+"c": "Thai",
+"a": "2523 Quenby St"
+},
+{
+"n": "Wise Street Eats",
+"k": "rest",
+"c": "Street food",
+"a": "209 Heights Blvd"
+},
+{
+"n": "La Rosa",
+"k": "rest",
+"c": "Mexican",
+"a": "724 Telephone Rd"
+},
+{
+"n": "Ceviche Ria",
+"k": "rest",
+"c": "Ceviche",
+"a": "314 Gray St"
+},
+{
+"n": "Play",
+"k": "bar",
+"c": "Midtown bar",
+"a": "2409 Grant St"
+},
+{
+"n": "Cafe New Orleans",
+"k": "rest",
+"c": "Cajun & Creole",
+"a": "411 Smith St"
+},
+{
+"n": "Monroe",
+"k": "rest",
+"c": "Restaurant",
+"a": "2600 Travis St"
+},
+{
+"n": "Koya",
+"k": "rest",
+"c": "Japanese",
+"a": "2600 Travis St"
+},
+{
+"n": "Pick Your Poison",
+"k": "bar",
+"c": "Bar",
+"a": "612 Hadley St"
+},
+{
+"n": "Biscuit Belly",
+"k": "rest",
+"c": "Biscuits & brunch",
+"a": "3601 White Oak Dr"
+},
+{
+"n": "The Dog Bar",
+"k": "bar",
+"c": "Dog-friendly bar",
+"a": "2404 Montrose Blvd"
+},
+{
+"n": "Lila's",
+"k": "rest",
+"c": "Restaurant",
+"a": "1201 Fannin St"
+},
+{
+"n": "Un Caffe",
+"k": "coffee",
+"c": "Coffee bar",
+"a": "1113 Vine St"
+},
+{
+"n": "Lazy Daze",
+"k": "coffee",
+"c": "Café",
+"a": "2103 Lyons Ave"
+},
+{
+"n": "Wingbay",
+"k": "rest",
+"c": "Wings",
+"a": "3520 S Shepherd Dr"
+},
+{
+"n": "Papa Geno's",
+"k": "rest",
+"c": "Restaurant",
+"a": "1801 Ella Blvd"
+},
+{
+"n": "Hardy Yards",
+"k": "bar",
+"c": "Beer garden",
+"a": "5757 Navigation Blvd"
+},
+{
+"n": "Micheaux's in Midtown",
+"k": "rest",
+"c": "Restaurant",
+"a": "1701 Webster St"
+},
+{
+"n": "1-Up Beercade",
+"k": "bar",
+"c": "Arcade bar",
+"a": "5902 Fulton St"
+},
+{
+"n": "Aria Suya Kitchen Montrose",
+"k": "rest",
+"c": "Nigerian suya",
+"a": "106 Westheimer Rd"
+},
+{
+"n": "Bar Dos Mas",
+"k": "bar",
+"c": "Bar",
+"a": "318 Sampson St"
+},
+{
+"n": "Local Cuban",
+"k": "rest",
+"c": "Cuban",
+"a": "1111 Louisiana St"
+},
+{
+"n": "Jokers of Houston",
+"k": "bar",
+"c": "Bar",
+"a": "4801 Almeda Rd"
+},
+{
+"n": "Churchpoint Beverage Co",
+"k": "bar",
+"c": "Bar",
+"a": "3520 Old Spanish Trl"
+},
+{
+"n": "19th Street Cafe",
+"k": "coffee",
+"c": "Café",
+"a": "242 W 19th St"
+},
+{
+"n": "Bash",
+"k": "bar",
+"c": "Bar",
+"a": "6203 Edloe St"
+},
+{
+"n": "E11",
+"k": "rest",
+"c": "Restaurant",
+"a": "1102 Delano St"
+},
+{
+"n": "New Rumor",
+"k": "bar",
+"c": "Third Ward bar",
+"a": "4709 Emancipation Ave"
+},
+{
+"n": "P. King Authentic Chinese",
+"k": "rest",
+"c": "Chinese",
+"a": "515 Westheimer Rd"
+},
+{
+"n": "Fargo Fairgrounds",
+"k": "bar",
+"c": "Bar",
+"a": "215 Fargo St"
+},
+{
+"n": "Silo Houston",
+"k": "bar",
+"c": "Bar",
+"a": "3301 Sherman St"
+},
+{
+"n": "4Play Sports Bar",
+"k": "bar",
+"c": "Sports bar",
+"a": "5110 Washington Ave"
+},
+{
+"n": "Honest Mary's",
+"k": "rest",
+"c": "Bowls & salads",
+"a": "2047 W Gray St"
+},
+{
+"n": "Huynh Upper Kirby",
+"k": "rest",
+"c": "Vietnamese",
+"a": "2720 Richmond Ave"
+},
+{
+"n": "Mikki's Cafe Midtown",
+"k": "rest",
+"c": "Soul food",
+"a": "2712 Blodgett St"
+},
+{
+"n": "787 Coffee Washington",
+"k": "coffee",
+"c": "Puerto Rican coffee",
+"a": "1811 Washington Ave"
+},
+{
+"n": "787 Coffee Fairview",
+"k": "coffee",
+"c": "Puerto Rican coffee",
+"a": "302 Fairview St"
+},
+{
+"n": "Tela",
+"k": "bar",
+"c": "Galleria lounge",
+"a": "5333 Westheimer Rd"
+},
+{
+"n": "Priscila Bar",
+"k": "bar",
+"c": "East End bar",
+"a": "1801 Macario Garcia Dr"
+},
+{
+"n": "Eastwood Station",
+"k": "rest",
+"c": "Restaurant",
+"a": "4109 McKinney St"
+},
+{
+"n": "Moonlight Miso",
+"k": "rest",
+"c": "Japanese",
+"a": "1701 Webster St"
+},
+{
+"n": "Atlantis Coffee Bar",
+"k": "coffee",
+"c": "Coffee",
+"a": "1101 Holman St"
+},
+{
+"n": "Ador Kitchen & Cocktail Almeda",
+"k": "rest",
+"c": "Kitchen & cocktails",
+"a": "4830 Almeda Rd"
+},
+{
+"n": "Ador Kitchen & Cocktail Montrose",
+"k": "rest",
+"c": "Kitchen & cocktails",
+"a": "403 W Gray St"
+},
+{
+"n": "The Zen Lounge",
+"k": "bar",
+"c": "Lounge",
+"a": "5316 Washington Ave"
+},
+{
+"n": "Cattlemen's Country Club",
+"k": "bar",
+"c": "Country bar",
+"a": "1207 W 20th St"
+},
+{
+"n": "Fuego's Hot Chicken",
+"k": "rest",
+"c": "Hot chicken",
+"a": "5600 Richmond Ave"
+},
+{
+"n": "Bad Chx",
+"k": "rest",
+"c": "Hot chicken",
+"a": "223 Main St"
+},
+{
+"n": "Las Perras Cafe",
+"k": "coffee",
+"c": "Café",
+"a": "3401 Harrisburg Blvd"
+},
+{
+"n": "La Crawfish",
+"k": "rest",
+"c": "Cajun seafood",
+"a": "3957 Richmond Ave"
+},
+{
+"n": "Tacos A Go Go Heights",
+"k": "rest",
+"c": "Tacos",
+"a": "2912 White Oak Dr"
+},
+{
+"n": "Shredder's Pizza",
+"k": "rest",
+"c": "Pizza",
+"a": "1777 Airline Dr"
+},
+{
+"n": "Captain K Seafood",
+"k": "rest",
+"c": "Seafood",
+"a": "3331 Telephone Rd"
+},
+{
+"n": "Privilege",
+"k": "bar",
+"c": "Lounge",
+"a": "808 Anita St"
+},
+{
+"n": "Rivas Coffee Cocktails & Kitchen",
+"k": "rest",
+"c": "Coffee, cocktails & kitchen",
+"a": "903 Studewood St"
+},
+{
+"n": "Goodies Soul Kitchen",
+"k": "rest",
+"c": "Soul food",
+"a": "1619 Fannin St"
+},
+{
+"n": "Yama Kitchen",
+"k": "rest",
+"c": "Japanese",
+"a": "2020 Travis St"
+},
+{
+"n": "Parlor Doughnuts",
+"k": "coffee",
+"c": "Doughnuts & coffee",
+"a": "5712 Buffalo Speedway"
+},
+{
+"n": "Magic HTX",
+"k": "bar",
+"c": "Montrose bar",
+"a": "1318 Westheimer Rd"
+},
+{
+"n": "Sando Satori & Poke",
+"k": "rest",
+"c": "Sandos & poke",
+"a": "506 Yale St"
+},
+{
+"n": "Aloha Ono Hawaiian Grill",
+"k": "rest",
+"c": "Hawaiian",
+"a": "1215 N Durham Dr"
+},
+{
+"n": "Bongo's House Bar & Grill",
+"k": "bar",
+"c": "Bar & grill",
+"a": "6253 Bissonnet St"
+},
+{
+"n": "Her Name Was Irene Coffee",
+"k": "coffee",
+"c": "Coffee",
+"a": "2104 Pease St"
+},
+{
+"n": "Sucre",
+"k": "coffee",
+"c": "Desserts",
+"a": "5404 Kirby Dr"
+},
+{
+"n": "Little Taco Shop Heights",
+"k": "rest",
+"c": "Tacos",
+"a": "2323 N Shepherd Dr"
+},
+{
+"n": "Crust Pizza Co Heights",
+"k": "rest",
+"c": "Pizza",
+"a": "1215 N Durham Dr"
+},
+{
+"n": "Wolfsmiths",
+"k": "bar",
+"c": "Bar",
+"a": "201 Woodard St"
+},
+{
+"n": "Kulture Koffee",
+"k": "coffee",
+"c": "Coffee",
+"a": "1942 W Gray St"
+},
+{
+"n": "Carino Coffee",
+"k": "coffee",
+"c": "Coffee",
+"a": "708 Hogan St"
+},
+{
+"n": "Next Door Bar & Lounge",
+"k": "bar",
+"c": "Third Ward bar",
+"a": "4711 Emancipation Ave"
+},
+{
+"n": "Jus Mac + Wings",
+"k": "rest",
+"c": "Mac & cheese, wings",
+"a": "2617 Yale St"
+},
+{
+"n": "Arnold St. Pizza",
+"k": "rest",
+"c": "Pizza",
+"a": "4033 Arnold St"
+},
+{
+"n": "The Greedy Lion",
+"k": "bar",
+"c": "Bar",
+"a": "920 Studemont St"
 }
 ]
 }

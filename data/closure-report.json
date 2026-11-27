@@ -1,0 +1,3709 @@
+{
+ "at": "2026-11-27T19:36:35.150Z",
+ "notes": [],
+ "salesTaxFields": [
+  "tp_number",
+  "tp_name",
+  "tp_address",
+  "tp_city",
+  "tp_state",
+  "tp_zip",
+  "tp_zip4",
+  "tp_county",
+  "org_type",
+  "loc_number",
+  "loc_name",
+  "address_number",
+  "address_text",
+  "permit_date",
+  "juris_city",
+  "loc_city",
+  "loc_state",
+  "loc_zip",
+  "loc_zip4",
+  "loc_county",
+  "naics",
+  "loc_juris",
+  "city_taid",
+  "mass_transit_auth1_taid",
+  "mass_transit_auth2_taid",
+  "county_taid",
+  "special_purp_dist1_taid",
+  "special_purp_dist2_taid",
+  "special_purp_dist3_taid",
+  "special_purp_dist4_taid",
+  "unique_taid",
+  "first_sale_date",
+  "out_of_business_date"
+ ],
+ "salesTaxPicked": {
+  "zipF": "loc_zip",
+  "nameF": "loc_name",
+  "oobF": "out_of_business_date",
+  "naicsF": "naics"
+ },
+ "st_77002": 871,
+ "st_77003": 225,
+ "st_77004": 411,
+ "st_77005": 215,
+ "st_77006": 499,
+ "st_77007": 586,
+ "st_77008": 415,
+ "st_77009": 308,
+ "st_77010": 58,
+ "st_77011": 130,
+ "st_77012": 91,
+ "st_77019": 223,
+ "st_77020": 159,
+ "st_77021": 146,
+ "st_77023": 168,
+ "st_77025": 179,
+ "st_77026": 84,
+ "st_77027": 251,
+ "st_77030": 182,
+ "st_77046": 35,
+ "st_77054": 239,
+ "st_77056": 460,
+ "st_77057": 581,
+ "st_77081": 282,
+ "st_77087": 228,
+ "st_77096": 173,
+ "st_77098": 292,
+ "st_77401": 118,
+ "salesTaxAddresses": 4079,
+ "liquorRows": 71686,
+ "liquorLatestMonth": "2026-11-30T00:00:00.000",
+ "places": 1362,
+ "closedSalesTax": [],
+ "liquorStopped": [
+  {
+   "name": "Saint Arnold",
+   "addr": "2000 Lyons St, Houston, TX",
+   "lastFiling": "2025-02-28",
+   "permit": "SAINT ARNOLD BREWING COMPANY"
+  }
+ ],
+ "confirmedOpen": 1053,
+ "unknown": 308,
+ "activeFields": [
+  "taxpayer_number",
+  "taxpayer_name",
+  "taxpayer_address",
+  "taxpayer_city",
+  "taxpayer_state",
+  "taxpayer_zip_code",
+  "taxpayer_county_code",
+  "taxpayer_organization_type",
+  "outlet_number",
+  "outlet_name",
+  "outlet_address",
+  "outlet_city",
+  "outlet_state",
+  "outlet_zip_code",
+  "outlet_county_code",
+  "outlet_naics_code",
+  "outlet_inside_outside_city_limits_indicator",
+  "outlet_permit_issue_date",
+  "outlet_first_sales_date"
+ ],
+ "act_77002": 523,
+ "act_77003": 122,
+ "act_77004": 181,
+ "act_77005": 155,
+ "act_77006": 303,
+ "act_77007": 331,
+ "act_77008": 263,
+ "act_77009": 186,
+ "act_77010": 47,
+ "act_77011": 81,
+ "act_77012": 48,
+ "act_77019": 145,
+ "act_77020": 81,
+ "act_77021": 70,
+ "act_77023": 96,
+ "act_77025": 115,
+ "act_77026": 48,
+ "act_77027": 170,
+ "act_77030": 120,
+ "act_77046": 20,
+ "act_77054": 142,
+ "act_77056": 276,
+ "act_77057": 331,
+ "act_77081": 167,
+ "act_77087": 128,
+ "act_77096": 108,
+ "act_77098": 195,
+ "act_77401": 76,
+ "newCandidates": [
+  {
+   "name": "UN CAFFE HIFI",
+   "addr": "2327 COMMERCE ST STE 110",
+   "zip": "77002",
+   "naics": "722515",
+   "first": "2027-02-01"
+  },
+  {
+   "name": "JOE & THE JUICE NEW YORK LLC",
+   "addr": "1101 UPTOWN PARK BLVD STE 10",
+   "zip": "77056",
+   "naics": "722515",
+   "first": "2027-01-26"
+  },
+  {
+   "name": "CHIPOTLE MEXICAN GRILL #6181",
+   "addr": "2337 W HOLCOMBE BLVD",
+   "zip": "77030",
+   "naics": "722511",
+   "first": "2027-01-21"
+  },
+  {
+   "name": "VASSO GRILL",
+   "addr": "6400 FANNIN ST STE 218",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2027-01-20"
+  },
+  {
+   "name": "THE DEUCE ON CANAL",
+   "addr": "3907 1/2 CANAL ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2027-01-07"
+  },
+  {
+   "name": "KANNON",
+   "addr": "845 TEXAS ST STE 175",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2027-01-02"
+  },
+  {
+   "name": "SUSHI REV MIDTOWN LLC",
+   "addr": "3201 LOUISIANA ST STE 108",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2027-01-02"
+  },
+  {
+   "name": "CSS 14 LLC",
+   "addr": "3506 TRAVIS ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2027-01-01"
+  },
+  {
+   "name": "ELC WHISPERING WOODS ENTERPRISES LLC",
+   "addr": "2055 WESTHEIMER RD STE 100",
+   "zip": "77098",
+   "naics": "722513",
+   "first": "2026-12-25"
+  },
+  {
+   "name": "P.TERRY'S BURGER STAND",
+   "addr": "4815 KATY FWY",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-12-15"
+  },
+  {
+   "name": "NEYDA SERRANO",
+   "addr": "2509 NAVIGATION BLVD",
+   "zip": "77003",
+   "naics": "722513",
+   "first": "2026-12-11"
+  },
+  {
+   "name": "ROSE NOIR",
+   "addr": "3611 GULF FWY STE C",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2026-12-01"
+  },
+  {
+   "name": "SOCIAL JUNKIE",
+   "addr": "2412 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-12-01"
+  },
+  {
+   "name": "HDR HOLDINGS LLC",
+   "addr": "506 W 19TH ST",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-12-01"
+  },
+  {
+   "name": "TFC-FIGTREE",
+   "addr": "6410 FANNIN ST",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2026-12-01"
+  },
+  {
+   "name": "MAZAJJ CAFE LLC",
+   "addr": "5549 RICHMOND AVE",
+   "zip": "77056",
+   "naics": "722515",
+   "first": "2026-12-01"
+  },
+  {
+   "name": "WINGBAY",
+   "addr": "2717 CHIMNEY ROCK RD",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2026-12-01"
+  },
+  {
+   "name": "HOT SAMMIES",
+   "addr": "518 W 11TH ST STE 300",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-11-27"
+  },
+  {
+   "name": "KPOT KOREAN BBQ HOT POT SUSHI",
+   "addr": "8845 WEST LOOP S BLDG F",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2026-11-24"
+  },
+  {
+   "name": "DIABLA HOUSTON",
+   "addr": "3030 TRAVIS ST STE A",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2026-11-20"
+  },
+  {
+   "name": "ECLIPSE RESTAURANT BAR",
+   "addr": "6005 BISSONNET ST",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-11-19"
+  },
+  {
+   "name": "LEHOOKUPTX LLC",
+   "addr": "3801 EMANCIPATION AVE",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2026-11-17"
+  },
+  {
+   "name": "EMPIRE PIZZA",
+   "addr": "3410 CHIMNEY ROCK RD STE A",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2026-11-16"
+  },
+  {
+   "name": "LAS TRES GORDITAS",
+   "addr": "6102 BISSONNET ST",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-11-14"
+  },
+  {
+   "name": "KORI",
+   "addr": "1431 N SHEPHERD DR",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2026-11-13"
+  },
+  {
+   "name": "LINCOLN BAR MIDTOWN",
+   "addr": "217 GRAY ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-11-10"
+  },
+  {
+   "name": "LOVE ME TENDER LLC",
+   "addr": "1249 NORTH LOOP W STE 225",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-11-09"
+  },
+  {
+   "name": "MEOWCHA",
+   "addr": "3122 LEELAND ST",
+   "zip": "77003",
+   "naics": "722515",
+   "first": "2026-11-08"
+  },
+  {
+   "name": "NARIN'S BOMBAY BRASSERIE",
+   "addr": "3005 WEST LOOP S",
+   "zip": "77027",
+   "naics": "722511",
+   "first": "2026-11-03"
+  },
+  {
+   "name": "PLAYGROUND",
+   "addr": "2415 MAIN ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-11-02"
+  },
+  {
+   "name": "WITTNESS CAFE",
+   "addr": "1018 PRESTON ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-11-02"
+  },
+  {
+   "name": "THE VUE",
+   "addr": "413 TRAVIS ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "CONTEMPORARY GOLF CLUB",
+   "addr": "235 N SAMPSON ST UNIT 2",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "DUCTWORK HOUSTON",
+   "addr": "813 ST EMANUEL ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "ESCALANTE'S COMIDA FINA, LLC",
+   "addr": "621 WAVERLY ST",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "NEW YORK SUBS",
+   "addr": "4015 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "MASH DOGS",
+   "addr": "1420 SAWYER ST",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "COCINITA DE JALISCO BAR AND GRILL INC",
+   "addr": "702 E 11TH ST",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "PALMETTO SUPERFOODS",
+   "addr": "718 W 18TH ST STE F",
+   "zip": "77008",
+   "naics": "722515",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "HEIGHTS GOLF CLUB",
+   "addr": "3933 N MAIN ST",
+   "zip": "77009",
+   "naics": "722410",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "TACO BELL 42008",
+   "addr": "201 PATTON ST",
+   "zip": "77009",
+   "naics": "722513",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "DH ICE HOUSE",
+   "addr": "7529 ABILENE ST",
+   "zip": "77020",
+   "naics": "722410",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "MAGNOLIA BAR & LOUNGE",
+   "addr": "5056 GRIGGS RD",
+   "zip": "77021",
+   "naics": "722410",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "LUCE COFFEE ROASTERS",
+   "addr": "3995 RICHMOND AVE STE A",
+   "zip": "77027",
+   "naics": "722515",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT TEXAS MEDICAL CENTER OCV",
+   "addr": "6550 BERTNER AVE STE 101",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "EATALY",
+   "addr": "5000 WESTHEIMER RD STE 100",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "OOINK",
+   "addr": "5901 WESTHEIMER RD STE H",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "ROCCO'S TEXAS 6509 LLC",
+   "addr": "6810 GULF FWY",
+   "zip": "77087",
+   "naics": "722513",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "DUTCH BROS COFFEE TX5302",
+   "addr": "9937 S POST OAK RD",
+   "zip": "77096",
+   "naics": "722515",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "55 SEVENTY HOUSTON",
+   "addr": "3015 RICHMOND AVE STE 100 & 200",
+   "zip": "77098",
+   "naics": "722410",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "GRUBBOS",
+   "addr": "2608 S SHEPHERD DR",
+   "zip": "77098",
+   "naics": "722515",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "BUSSIA CUCINA ITALIANA",
+   "addr": "2800 KIRBY DR STE B105B110",
+   "zip": "77098",
+   "naics": "722511",
+   "first": "2026-11-01"
+  },
+  {
+   "name": "THE DOUBLE DEUCE ON CANAL",
+   "addr": "3907 CANAL ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-10-30"
+  },
+  {
+   "name": "LODGEUR MIDTOWN",
+   "addr": "917 WINBERN ST STE A",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-10-27"
+  },
+  {
+   "name": "CHARLEYS CHEESESTEAKS AND WINGS #2478",
+   "addr": "9540 MAIN ST STE 160",
+   "zip": "77025",
+   "naics": "722513",
+   "first": "2026-10-19"
+  },
+  {
+   "name": "UNFORGETTABLE KITCHEN AND COCKTAILS",
+   "addr": "5922 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-10-15"
+  },
+  {
+   "name": "CHEF MARCELA'S KITCHEN",
+   "addr": "5220 BUFFALO SPEEDWAY",
+   "zip": "77005",
+   "naics": "722511",
+   "first": "2026-10-12"
+  },
+  {
+   "name": "THE BURGER DADDY",
+   "addr": "411 SMITH ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-10-06"
+  },
+  {
+   "name": "GREEN & BEANS",
+   "addr": "801 LOUISIANA ST # T100",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "LOS TACOS KIRBY",
+   "addr": "5613 MORNINGSIDE DR",
+   "zip": "77005",
+   "naics": "722513",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "ZIO AL'S PIZZA & PASTA",
+   "addr": "106 WESTHEIMER RD STE B",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "THIRSTY'S DEERBROOK",
+   "addr": "2013 NORTH LOOP W STE 2382",
+   "zip": "77008",
+   "naics": "722515",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "DAN ELECTRO'S",
+   "addr": "1031 E 24TH ST",
+   "zip": "77009",
+   "naics": "722410",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "TAQUERIA LOS ALACRANCILLOS",
+   "addr": "6620 CANAL ST",
+   "zip": "77011",
+   "naics": "722513",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "GRAPPINO HTX/EXILIO",
+   "addr": "2817 W DALLAS ST BLDG C",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "SEDDYS' COUNTRY KITCHEN, LLC",
+   "addr": "311 W GRAY ST",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "WALLISVILLE ICEHOUSE",
+   "addr": "6416 WALLISVILLE RD",
+   "zip": "77020",
+   "naics": "722410",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "NOVICE SOCIAL",
+   "addr": "2103 LYONS AVE STE 4120 BLDG 4",
+   "zip": "77020",
+   "naics": "722410",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "AMERICAN WINGS & MORE 2 LLC",
+   "addr": "6104 SCOTT ST STE 100",
+   "zip": "77021",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "POLK BAR",
+   "addr": "4009 POLK ST STE E",
+   "zip": "77023",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "APRES HTX",
+   "addr": "4411 SAN FELIPE ST STE 101",
+   "zip": "77027",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "AUNTIE ANNE'S PRETZELS",
+   "addr": "5135 W ALABAMA ST UNIT K-130A",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "HEAVEN RESTAURANT & LOUNGE",
+   "addr": "5888 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "CASA LUCCA CUCINA LLC",
+   "addr": "1834 WESTHEIMER RD",
+   "zip": "77098",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "THE BURGER PALACE",
+   "addr": "5214 BELLAIRE BLVD",
+   "zip": "77401",
+   "naics": "722511",
+   "first": "2026-10-01"
+  },
+  {
+   "name": "BOOST + BALANCE JUICE BAR LLC",
+   "addr": "3100 CANAL ST # 100-B",
+   "zip": "77003",
+   "naics": "722515",
+   "first": "2026-09-29"
+  },
+  {
+   "name": "CHARLEYS CHEESESTEAKS AND WINGS #2249",
+   "addr": "111 YALE ST",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-09-29"
+  },
+  {
+   "name": "GOLCONDA HOSPITALITY LLC",
+   "addr": "2850 FANNIN ST UNIT 100",
+   "zip": "77002",
+   "naics": "722515",
+   "first": "2026-09-25"
+  },
+  {
+   "name": "HEY NEIGHBOR! HTX LLC",
+   "addr": "2520 AIRLINE DR",
+   "zip": "77009",
+   "naics": "722515",
+   "first": "2026-09-21"
+  },
+  {
+   "name": "SPICY GIRL",
+   "addr": "917 WINBERN ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-09-20"
+  },
+  {
+   "name": "OMAKASYEH",
+   "addr": "4306 ELSBURY ST",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-09-20"
+  },
+  {
+   "name": "ZOE GREEK FROZEN YOGURT LLC",
+   "addr": "1001 W DREW ST",
+   "zip": "77006",
+   "naics": "722515",
+   "first": "2026-09-19"
+  },
+  {
+   "name": "THE PARK",
+   "addr": "1311 LEELAND ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-09-16"
+  },
+  {
+   "name": "JAPONUTS LLC",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2026-09-15"
+  },
+  {
+   "name": "ASADOS EL TORITO",
+   "addr": "6909 ASHCROFT DR STE 312",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-09-15"
+  },
+  {
+   "name": "MATCHA NIOR",
+   "addr": "3530 HARRISBURG BLVD UNIT 4408",
+   "zip": "77003",
+   "naics": "722515",
+   "first": "2026-09-10"
+  },
+  {
+   "name": "CHEF SUNNY HOLDINGS LLC",
+   "addr": "2616 BLODGETT ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2026-09-06"
+  },
+  {
+   "name": "HERBAN ELIXIRS HTX",
+   "addr": "4112 OLD SPANISH TRL STE 22",
+   "zip": "77021",
+   "naics": "722515",
+   "first": "2026-09-03"
+  },
+  {
+   "name": "THE BLOCK ON MAIN",
+   "addr": "110 MAIN ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "ARMOR & CO",
+   "addr": "401 LOUISIANA ST UNIT 102",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "RADO MARKET & CAFE",
+   "addr": "2310 ELGIN ST",
+   "zip": "77004",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "PARIS BREST RESTAURANT CREPERIE, LLC",
+   "addr": "5812 KIRBY DR",
+   "zip": "77005",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "ZIO AL'S PIZZA & PASTA",
+   "addr": "250 W 19TH ST STE E",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "DOMO",
+   "addr": "1420 N DURHAM DR",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "3BROS PIZZA LLC",
+   "addr": "3602 OLD SPANISH TRL",
+   "zip": "77021",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "HANDIES DOUZO",
+   "addr": "3908 BELLAIRE BLVD",
+   "zip": "77025",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "PICO'S RESTAURANT",
+   "addr": "3736 WESTHEIMER RD",
+   "zip": "77027",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "SRPH LLC",
+   "addr": "8536 S DAVID ST",
+   "zip": "77054",
+   "naics": "722515",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "SUMTINGZGOOD HOSPITALITY LLC",
+   "addr": "5015 WESTHEIMER RD STE 1295",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "TEPPAY HOSPITALITY GROUP",
+   "addr": "6516 WESTHEIMER RD STE A2",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "EL POLLO CON TAJADAS RESTAURANTE CORP",
+   "addr": "5920 BELLAIRE BLVD STE K",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "MICHELLE RESTAURANT LLC",
+   "addr": "6991 SOUTH LOOP E # TEXAS6",
+   "zip": "77087",
+   "naics": "722511",
+   "first": "2026-09-01"
+  },
+  {
+   "name": "WORKAROUND CAFE",
+   "addr": "2821 W 11TH ST STE A",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-08-31"
+  },
+  {
+   "name": "JUJU CAFE & BAR",
+   "addr": "2610 BRIAR RIDGE DR",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-08-24"
+  },
+  {
+   "name": "BREAD BOAT",
+   "addr": "3835 RICHMOND AVE",
+   "zip": "77027",
+   "naics": "722513",
+   "first": "2026-08-20"
+  },
+  {
+   "name": "LA TELERA #2, LLC",
+   "addr": "6001 HILLCREST ST",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-08-20"
+  },
+  {
+   "name": "SOCIETY 713 LLC",
+   "addr": "6015 HILLCROFT AVE STE 2100",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-08-20"
+  },
+  {
+   "name": "CHOP HAUS LLC",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-08-18"
+  },
+  {
+   "name": "ASTRO KITCHEN",
+   "addr": "2520 AIRLINE DR BLDG A",
+   "zip": "77009",
+   "naics": "722513",
+   "first": "2026-08-17"
+  },
+  {
+   "name": "TERRY BLACK'S BARBECUE HOUSTON",
+   "addr": "1329 N SHEPHERD DR",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-08-15"
+  },
+  {
+   "name": "TAPESTRY",
+   "addr": "2323 ALLEN PKWY",
+   "zip": "77019",
+   "naics": "722513",
+   "first": "2026-08-13"
+  },
+  {
+   "name": "MAYAMI LLC",
+   "addr": "5636 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722410",
+   "first": "2026-08-12"
+  },
+  {
+   "name": "LEEMOO HEALTH BAR HEIGHTS LLC",
+   "addr": "621 WAVERLY ST",
+   "zip": "77007",
+   "naics": "722515",
+   "first": "2026-08-06"
+  },
+  {
+   "name": "SABA'S GRILL & WOK",
+   "addr": "5427 S BRAESWOOD BLVD",
+   "zip": "77096",
+   "naics": "722513",
+   "first": "2026-08-05"
+  },
+  {
+   "name": "STARSHIP HOSPITALITY GROUP LLC",
+   "addr": "2616 BLODGETT ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2026-08-03"
+  },
+  {
+   "name": "YAY LUNCH",
+   "addr": "906 NORTH LOOP E",
+   "zip": "77009",
+   "naics": "722514",
+   "first": "2026-08-03"
+  },
+  {
+   "name": "LOUSIANA FAMOUS FRIED CHICKEN",
+   "addr": "2001 FANNIN ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "SPICELAND",
+   "addr": "600 TRAVIS ST STE B1006",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "CLUTCH-SUGAR ROOM",
+   "addr": "1201 ST EMANUEL ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "BASIC PIZZA EADO, LLC",
+   "addr": "1201 ST EMANUEL ST STE B",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "CLUTCH EADO, LLC",
+   "addr": "1201 ST EMANUEL ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "SUGAR ROOM EADO, LLC",
+   "addr": "1201 ST EMANUEL ST STE A",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "FIBONACCI ROOM",
+   "addr": "1417 WESTHEIMER RD STE A",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "HDR HOLDINGS LLC",
+   "addr": "606 DENNIS ST",
+   "zip": "77006",
+   "naics": "722513",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "SAM'S CAFE",
+   "addr": "920 STUDEMONT ST # 438",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "CASA LENCA",
+   "addr": "2795 KATY FWY STE 150",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "JK HEIGHTS YOYO, LLC",
+   "addr": "4620 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722515",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "HDR HOLDINGS LLC",
+   "addr": "107 YALE ST",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "DIXIE MAID",
+   "addr": "6800 LYONS AVE",
+   "zip": "77020",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "THAI THUMBZ URBAN KITCHEN",
+   "addr": "3151 W HOLCOMBE BLVD",
+   "zip": "77025",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "THE MEXICAN POST OAK",
+   "addr": "1390 POST OAK BLVD",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "SAL E BRASA",
+   "addr": "6006 WESTHEIMER RD",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "MARTINEZ BLS AHA & NOTARY",
+   "addr": "6607 CHERRYDALE DR",
+   "zip": "77087",
+   "naics": "722515",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "YAY LUNCH INC.",
+   "addr": "4900 JACKWOOD ST",
+   "zip": "77096",
+   "naics": "722514",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "OASIS TROPICAL",
+   "addr": "11137 ALBURY DR",
+   "zip": "77096",
+   "naics": "722515",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "SABA'S KOSHER RESTAURANT",
+   "addr": "5413 S BRAESWOOD BLVD",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "THAI STREET FOOD",
+   "addr": "8402 HILLCROFT AVE",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2026-08-01"
+  },
+  {
+   "name": "SLOWPOKES",
+   "addr": "3001 W 11TH ST STE 101",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-07-22"
+  },
+  {
+   "name": "FUEGO HALAL KITCHEN",
+   "addr": "2833 GULF CREEK DR STE A-1",
+   "zip": "77012",
+   "naics": "722511",
+   "first": "2026-07-22"
+  },
+  {
+   "name": "CHICK-FIL-A AT CHEVRON ADP",
+   "addr": "1400 SMITH ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-07-20"
+  },
+  {
+   "name": "HAPPY HOLDINGS GROUP LLC",
+   "addr": "2616 BLODGETT ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2026-07-15"
+  },
+  {
+   "name": "PETAL & PINT",
+   "addr": "140 S HEIGHTS BLVD",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-07-15"
+  },
+  {
+   "name": "DAIQUIRIS & CLOUDZ",
+   "addr": "6010 SOUTHWEST FWY",
+   "zip": "77057",
+   "naics": "722410",
+   "first": "2026-07-15"
+  },
+  {
+   "name": "GREEK CORNER",
+   "addr": "5535 MEMORIAL DR STE D",
+   "zip": "77007",
+   "naics": "722515",
+   "first": "2026-07-13"
+  },
+  {
+   "name": "CURB APPEAL CAFE & BAR LLC",
+   "addr": "100 W CAVALCADE ST",
+   "zip": "77009",
+   "naics": "722511",
+   "first": "2026-07-11"
+  },
+  {
+   "name": "MERIT COFFEE, LLC - WEST UNIVERSITY",
+   "addr": "5115 BUFFALO SPEEDWAY STE 100",
+   "zip": "77005",
+   "naics": "722515",
+   "first": "2026-07-09"
+  },
+  {
+   "name": "H&H BAGELS - RIVER OAKS",
+   "addr": "2880 WESTHEIMER RD",
+   "zip": "77098",
+   "naics": "722513",
+   "first": "2026-07-07"
+  },
+  {
+   "name": "PYTHAGORAS CONSCIOUS FOOD PHILOSOPHY",
+   "addr": "1710 W 18TH ST",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2026-07-06"
+  },
+  {
+   "name": "SIP SAIGON",
+   "addr": "2609 DENNIS ST",
+   "zip": "77004",
+   "naics": "722515",
+   "first": "2026-07-04"
+  },
+  {
+   "name": "TEMPO POWERED BY BUTTERFUNK",
+   "addr": "6213 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-07-04"
+  },
+  {
+   "name": "TRILL RODEO, LLC",
+   "addr": "3 RELIANT PARK",
+   "zip": "77054",
+   "naics": "722511",
+   "first": "2026-07-02"
+  },
+  {
+   "name": "THE FUNNEL CAKE HOUSE LLC",
+   "addr": "401 FRANKLIN ST # E13",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "CRY BABY COCKTAILS",
+   "addr": "1120 NAYLOR ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "THE PHILTER",
+   "addr": "1102 SAMPSON ST",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "EVVLYN'S LLC",
+   "addr": "2403 WENTWORTH ST",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "SEVEN SUSHI AND ROBATA",
+   "addr": "3304 MILAM ST",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "ANTOJITOS NICA-MEX LLC",
+   "addr": "3803 IRVINGTON BLVD STE A",
+   "zip": "77009",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "LEVY PREMIUM FOODSERVICE, L.L.C.",
+   "addr": "1001 AVENIDA DE LAS AMERICAS",
+   "zip": "77010",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "SIXTEN BURGERS",
+   "addr": "6362 MARTIN LUTHER KING BLVD STE A",
+   "zip": "77021",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "SCHLOTZSKYS MAIN",
+   "addr": "8200 MAIN ST STE 100",
+   "zip": "77025",
+   "naics": "722513",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "DIP CHOCO & SMOOTHIE LLC",
+   "addr": "5805 WESTHEIMER RD STE 4850",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "HIMARI 2 LLC",
+   "addr": "6414 SAN FELIPE ST STE A",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "MAZAR KITCHEN",
+   "addr": "5922 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "BISCUITS & BUTTER",
+   "addr": "2711 FOUNTAIN VIEW DR STE A",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "TACOS Y POLLOS LEON GUANAJUATO LLC",
+   "addr": "6006 BELLAIRE BLVD",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "TAQUERIA EL SOL DE MEXICO",
+   "addr": "6475 HILLCROFT AVE STE C",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-07-01"
+  },
+  {
+   "name": "CROSSROADS AT SAGE PLAZA",
+   "addr": "5151 SAN FELIPE ST",
+   "zip": "77056",
+   "naics": "722514",
+   "first": "2026-06-26"
+  },
+  {
+   "name": "MOOKA PHILLY GRILL & CAFE",
+   "addr": "5819 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-06-24"
+  },
+  {
+   "name": "GEM MOON FOODS, INC. (JUICI PATTIES)",
+   "addr": "6134 WESTHEIMER RD STE B1",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-06-21"
+  },
+  {
+   "name": "POUR DECISIONS",
+   "addr": "555 W 19TH ST STE 100A",
+   "zip": "77008",
+   "naics": "722410",
+   "first": "2026-06-20"
+  },
+  {
+   "name": "XRAY LOUNGE",
+   "addr": "2655 WINROCK BLVD",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-06-20"
+  },
+  {
+   "name": "CLUB SPIRE AT DOME",
+   "addr": "1720 MAIN ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-06-19"
+  },
+  {
+   "name": "ENSO HTX LLC",
+   "addr": "718 W 18TH ST STE D",
+   "zip": "77008",
+   "naics": "722515",
+   "first": "2026-06-19"
+  },
+  {
+   "name": "JERSEY MIKES #65162",
+   "addr": "1907 W GRAY ST",
+   "zip": "77019",
+   "naics": "722513",
+   "first": "2026-06-16"
+  },
+  {
+   "name": "RIZWAN BIRYANI & CATERING LLC",
+   "addr": "6678 SOUTH LOOP E # TEXAS6",
+   "zip": "77087",
+   "naics": "722511",
+   "first": "2026-06-16"
+  },
+  {
+   "name": "MELTWICH FOOD CO",
+   "addr": "2518 RICE BLVD",
+   "zip": "77005",
+   "naics": "722513",
+   "first": "2026-06-15"
+  },
+  {
+   "name": "ALBRAIKAT LLC",
+   "addr": "2600 S LOOP W STE 475D",
+   "zip": "77054",
+   "naics": "722513",
+   "first": "2026-06-15"
+  },
+  {
+   "name": "TAHASPREADS, LLC",
+   "addr": "2621 S SHEPHERD DR STE 140",
+   "zip": "77098",
+   "naics": "722513",
+   "first": "2026-06-15"
+  },
+  {
+   "name": "CANDIKISSEZ LEMONLAB",
+   "addr": "6327 GOFORTH ST",
+   "zip": "77021",
+   "naics": "722515",
+   "first": "2026-06-13"
+  },
+  {
+   "name": "SEAFOOD MAN",
+   "addr": "6109 HIRSCH RD",
+   "zip": "77026",
+   "naics": "722511",
+   "first": "2026-06-12"
+  },
+  {
+   "name": "HAPPY FOX HOSPITALITY LLC",
+   "addr": "1609 WESTHEIMER RD",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2026-06-04"
+  },
+  {
+   "name": "LITTLE BIRD",
+   "addr": "1815 N DURHAM DR",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2026-06-04"
+  },
+  {
+   "name": "CREAM & BLOOM CO.",
+   "addr": "6374 CREEKBEND DR",
+   "zip": "77096",
+   "naics": "722515",
+   "first": "2026-06-04"
+  },
+  {
+   "name": "MARIA'S RESTAURANT",
+   "addr": "500 DALLAS ST STE T20B",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "EL CONEJO MALO",
+   "addr": "901 COMMERCE ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "SIGNATURE KAFE",
+   "addr": "3722 MAIN ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "HANDIES DOUZO 4 LLC",
+   "addr": "1105 HUTCHINS ST",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "THE CLOUD COFFEE & COCKTAILS",
+   "addr": "2120 EMANCIPATION AVE",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "PARK HIFI",
+   "addr": "2901 EMANCIPATION AVE",
+   "zip": "77004",
+   "naics": "722511",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "FK WINGBAY HOLDINGS LLC",
+   "addr": "2505 BAGBY ST",
+   "zip": "77006",
+   "naics": "722513",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "BACKSTREET",
+   "addr": "1201 S SHEPHERD DR",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "JUICE IT UP WEST U MARKETPLACE",
+   "addr": "4028 BELLAIRE BLVD",
+   "zip": "77025",
+   "naics": "722515",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "STITCH N THREAD SHOPPE",
+   "addr": "4009 BELLAIRE BLVD STE FF",
+   "zip": "77025",
+   "naics": "722515",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "ANDY FROZEN CUSTARD #850",
+   "addr": "2348 W HOLCOMBE BLVD",
+   "zip": "77030",
+   "naics": "722515",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "HANDIES DOUZO 5 LLC",
+   "addr": "2000 POST OAK BLVD STE 130",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "MEDITERRA CAFE",
+   "addr": "6218 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722410",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "SMOOTHIELICIOUS, LLC",
+   "addr": "2524 S VOSS RD",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "JEFF'S BAGEL RUN",
+   "addr": "6401 WOODWAY DR STE 131",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "DOUGH AND MORE INC",
+   "addr": "6437 WESTHEIMER RD",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2026-06-01"
+  },
+  {
+   "name": "DOLCE MONDO SWEETS",
+   "addr": "5731 DWINNELL ST",
+   "zip": "77023",
+   "naics": "722515",
+   "first": "2026-05-27"
+  },
+  {
+   "name": "CRAVERS TREATS AND LEMONADE",
+   "addr": "1316 BAYOU ST",
+   "zip": "77020",
+   "naics": "722515",
+   "first": "2026-05-24"
+  },
+  {
+   "name": "TACO BELL #43386",
+   "addr": "3720 OLD SPANISH TRL",
+   "zip": "77021",
+   "naics": "722513",
+   "first": "2026-05-20"
+  },
+  {
+   "name": "TACO BELL #43384",
+   "addr": "2245 W HOLCOMBE BLVD",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2026-05-20"
+  },
+  {
+   "name": "TACO BELL #43405",
+   "addr": "3155 S LOOP W",
+   "zip": "77054",
+   "naics": "722513",
+   "first": "2026-05-20"
+  },
+  {
+   "name": "LEEMOO HEALTH BAR WEST U LLC",
+   "addr": "2720 BISSONNET ST STE B",
+   "zip": "77005",
+   "naics": "722515",
+   "first": "2026-05-15"
+  },
+  {
+   "name": "CRAVE & POUR LLC",
+   "addr": "6700 S RICE AVE",
+   "zip": "77401",
+   "naics": "722511",
+   "first": "2026-05-15"
+  },
+  {
+   "name": "DELEITE BAKERY & CAKES LLC",
+   "addr": "7138 LAWNDALE ST",
+   "zip": "77023",
+   "naics": "722515",
+   "first": "2026-05-13"
+  },
+  {
+   "name": "FORTUNE 8 FOOD LLC",
+   "addr": "5555 WASHINGTON AVE STE V",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-05-10"
+  },
+  {
+   "name": "LAO DELI PANDA FEST",
+   "addr": "1058 SABINE ST",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-05-08"
+  },
+  {
+   "name": "PANERA BREAD",
+   "addr": "8845 WEST LOOP S",
+   "zip": "77096",
+   "naics": "722513",
+   "first": "2026-05-06"
+  },
+  {
+   "name": "SUPER HEALTHY PACKZ PLUS",
+   "addr": "2411 EMANCIPATION AVE",
+   "zip": "77004",
+   "naics": "722515",
+   "first": "2026-05-04"
+  },
+  {
+   "name": "CREOLE IN THE CITY LLC",
+   "addr": "5417 HARRISBURG BLVD",
+   "zip": "77011",
+   "naics": "722513",
+   "first": "2026-05-02"
+  },
+  {
+   "name": "ESPIRITU HOSPITALITY LLC",
+   "addr": "800 CAPITOL ST STE T301",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "KORE WA OISHIDESU",
+   "addr": "401 FRANKLIN ST STE 1360",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "DRIP DRINK CO.",
+   "addr": "4001 FANNIN ST APT 4408",
+   "zip": "77004",
+   "naics": "722515",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "VIC3 HOUSTON, LLC",
+   "addr": "3315 MILAM ST",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "LINS GROUP LLC",
+   "addr": "2808 MILAM ST STE F",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "LUCE AVENUE COFFEE CORP",
+   "addr": "2520 WASHINGTON AVE APT 1102",
+   "zip": "77007",
+   "naics": "722515",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "PARIS BAGUETTE",
+   "addr": "1835 N SHEPHERD DR STE B",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "REFRESQUERIA DELICIAS DEL BARRIO",
+   "addr": "711 TELEPHONE RD",
+   "zip": "77023",
+   "naics": "722515",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "THE ULTIMATE KITCHEN",
+   "addr": "8001 MAIN ST STE 101",
+   "zip": "77025",
+   "naics": "722511",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT ESSEX ADP",
+   "addr": "3900 ESSEX LN",
+   "zip": "77027",
+   "naics": "722513",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT YORKTOWN ADP",
+   "addr": "1776 YORKTOWN ST",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "BAD HABITS HTX LLC",
+   "addr": "6134 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "LOS LAZOS PUPUSERIA Y RESTAURANTE",
+   "addr": "6124 GULFTON ST",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-05-01"
+  },
+  {
+   "name": "LCF DOWNTOWN SERIES",
+   "addr": "609 MAIN ST STE 175",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-04-25"
+  },
+  {
+   "name": "ALMARA COLLECTIVE",
+   "addr": "3610 FLORINDA ST",
+   "zip": "77021",
+   "naics": "722515",
+   "first": "2026-04-25"
+  },
+  {
+   "name": "TLC SQUEEZE BAR",
+   "addr": "8506 HEMPSTEAD RD APT 3205",
+   "zip": "77008",
+   "naics": "722515",
+   "first": "2026-04-22"
+  },
+  {
+   "name": "MOCA PARTNERS LLC",
+   "addr": "6619 LAREDO ST APT A",
+   "zip": "77020",
+   "naics": "722515",
+   "first": "2026-04-17"
+  },
+  {
+   "name": "THE PHOENIX BREWPUB",
+   "addr": "1643 RICHMOND AVE",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2026-04-15"
+  },
+  {
+   "name": "COLDRANK",
+   "addr": "3131 WEST LOOP S APT 539",
+   "zip": "77027",
+   "naics": "722515",
+   "first": "2026-04-13"
+  },
+  {
+   "name": "CORN STEAMER",
+   "addr": "6116 WINDSWEPT LN",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2026-04-11"
+  },
+  {
+   "name": "LICUAFRUTAS Y CHURRERIA LA GUADALUPANA, LLC.",
+   "addr": "6116 WINDSWEPT LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-04-06"
+  },
+  {
+   "name": "NO TSU OH",
+   "addr": "316 MAIN ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "207 GRAY ST",
+   "addr": "207 GRAY ST STE A",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "NEIGHBORHOOD PIZZA LLC",
+   "addr": "3024 OAKDALE ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "PUR3, LLC",
+   "addr": "4715 EMANCIPATION AVE",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "JABCHAI THAI CAFE & EATERY",
+   "addr": "2523 QUENBY ST",
+   "zip": "77005",
+   "naics": "722511",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "WISE STREET EATS",
+   "addr": "209 HEIGHTS BLVD",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "AIRLINE EXPRESS",
+   "addr": "1836 AIRLINE DR",
+   "zip": "77009",
+   "naics": "722513",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "SWEET TOOTH",
+   "addr": "8130 KIRBY DR",
+   "zip": "77054",
+   "naics": "722515",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "BISMILLAH EXPRESS",
+   "addr": "1740 OLD SPANISH TRL",
+   "zip": "77054",
+   "naics": "722514",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "HIGH TOWER DELI & CAFE #16",
+   "addr": "2 RIVERWAY STE 150",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "THE COFFEE BAR",
+   "addr": "2 RIVERWAY STE 199",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "HIGH TOWER COFFEE BAR @ 5555 SAN FELIPE",
+   "addr": "5555 SAN FELIPE ST STE 250",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "CHIMNEY ROCK",
+   "addr": "3026 CHIMNEY ROCK RD",
+   "zip": "77056",
+   "naics": "722410",
+   "first": "2026-04-01"
+  },
+  {
+   "name": "LA ROSA",
+   "addr": "724 TELEPHONE RD",
+   "zip": "77023",
+   "naics": "722511",
+   "first": "2026-03-31"
+  },
+  {
+   "name": "ACAI HEIGHTS LLC",
+   "addr": "211 HEIGHTS BLVD STE 211",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-03-23"
+  },
+  {
+   "name": "BOWL'D MASALA",
+   "addr": "401 FRANKLIN ST # E01",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-03-20"
+  },
+  {
+   "name": "GYRO HUT",
+   "addr": "6609 MAIN ST",
+   "zip": "77030",
+   "naics": "722511",
+   "first": "2026-03-18"
+  },
+  {
+   "name": "GYRO HUT",
+   "addr": "3821 FARNHAM ST",
+   "zip": "77098",
+   "naics": "722511",
+   "first": "2026-03-18"
+  },
+  {
+   "name": "CEVICHE RIA",
+   "addr": "314 GRAY ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-03-17"
+  },
+  {
+   "name": "KAISEN SUSHI TEXAS LLC",
+   "addr": "2616 BLODGETT ST # K38",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2026-03-17"
+  },
+  {
+   "name": "PLAY",
+   "addr": "2409 GRANT ST STE A",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2026-03-16"
+  },
+  {
+   "name": "KING STAR SEAFOOD BUFFET",
+   "addr": "6223 BELLAIRE BLVD STE A",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-03-16"
+  },
+  {
+   "name": "GRANNY'S LEMONADE",
+   "addr": "3805 W ALABAMA ST APT 8107",
+   "zip": "77027",
+   "naics": "722515",
+   "first": "2026-03-10"
+  },
+  {
+   "name": "CAFE NEW ORLEANS LLC",
+   "addr": "411 SMITH ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-03-09"
+  },
+  {
+   "name": "MONROE",
+   "addr": "2600 TRAVIS ST STE 4",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-03-06"
+  },
+  {
+   "name": "BECKOVA LLC",
+   "addr": "401 FRANKLIN ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "PICK YOUR POISON",
+   "addr": "612 HADLEY ST",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "BISCUIT BELLY",
+   "addr": "3601 WHITE OAK DR",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "WHISK MATCHA BAR",
+   "addr": "4001 BELLAIRE BLVD STE G",
+   "zip": "77025",
+   "naics": "722515",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "SAPS CREOLE CUISINE",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "EL RANCHERITO TAQUERIA AND RESTAURANT INC",
+   "addr": "6818 CHETWOOD DR",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "FRISKY WINGZ",
+   "addr": "5414 BIRDWOOD RD",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "CICCO BELLAIRE LLC",
+   "addr": "5400 BISSONNET ST",
+   "zip": "77401",
+   "naics": "722515",
+   "first": "2026-03-01"
+  },
+  {
+   "name": "MICHELADITAS BAR AND GRILL LLC",
+   "addr": "7046 LAWNDALE ST",
+   "zip": "77023",
+   "naics": "722511",
+   "first": "2026-02-27"
+  },
+  {
+   "name": "PARADISE GLASS GALLERY",
+   "addr": "507 W PATTON ST STE C",
+   "zip": "77009",
+   "naics": "722410",
+   "first": "2026-02-26"
+  },
+  {
+   "name": "SAVORY HALL",
+   "addr": "606 DENNIS ST",
+   "zip": "77006",
+   "naics": "722513",
+   "first": "2026-02-25"
+  },
+  {
+   "name": "KOYA",
+   "addr": "2600 TRAVIS ST STE 100",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-02-24"
+  },
+  {
+   "name": "THE DOG BAR",
+   "addr": "2404 MONTROSE BLVD APT 1",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2026-02-21"
+  },
+  {
+   "name": "HOT TATER DINER",
+   "addr": "401 FRANKLIN ST # W11",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-02-17"
+  },
+  {
+   "name": "LILA'S",
+   "addr": "1201 FANNIN ST STE 137",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-02-12"
+  },
+  {
+   "name": "UN CAFFE COFFEE BAR",
+   "addr": "1113 VINE ST STE 125",
+   "zip": "77002",
+   "naics": "722515",
+   "first": "2026-02-12"
+  },
+  {
+   "name": "LAZY DAZE HOUSTON",
+   "addr": "2103 LYONS AVE STE 1100",
+   "zip": "77020",
+   "naics": "722515",
+   "first": "2026-02-10"
+  },
+  {
+   "name": "DESI ADDA CATERING LLC",
+   "addr": "2114 HOLLY HALL ST",
+   "zip": "77054",
+   "naics": "722511",
+   "first": "2026-02-09"
+  },
+  {
+   "name": "FRENCHY'S CHICKEN",
+   "addr": "5605 TELEPHONE RD",
+   "zip": "77087",
+   "naics": "722513",
+   "first": "2026-02-09"
+  },
+  {
+   "name": "WINGBAY",
+   "addr": "3520 S SHEPHERD DR",
+   "zip": "77098",
+   "naics": "722511",
+   "first": "2026-02-05"
+  },
+  {
+   "name": "STARBUCKS 89994",
+   "addr": "6550 BERTNER AVE STE 105",
+   "zip": "77030",
+   "naics": "722515",
+   "first": "2026-02-02"
+  },
+  {
+   "name": "NICOLEG HOLDINGS LLC",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-02-02"
+  },
+  {
+   "name": "UNIVERSITY OF HOUSTON DOWNTOWN 69688001",
+   "addr": "1 MAIN ST FL 3",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "MARCOS PIZZA 5340",
+   "addr": "2929 NAVIGATION BLVD STE 150",
+   "zip": "77003",
+   "naics": "722513",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "PAPA GENO'S, LLC",
+   "addr": "1801 ELLA BLVD",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "HARDY YARDS, LLC",
+   "addr": "5757 NAVIGATION BLVD STE 100",
+   "zip": "77011",
+   "naics": "722511",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "ACAPULCO BAR",
+   "addr": "8602 LA PORTE RD",
+   "zip": "77012",
+   "naics": "722410",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "GOLDEN CHICK",
+   "addr": "2008 S WAYSIDE DR",
+   "zip": "77023",
+   "naics": "722513",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "BOBA HOUSE LLC",
+   "addr": "5353 W ALABAMA ST STE 100",
+   "zip": "77056",
+   "naics": "722515",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "BRASSICA SANDWICHES AND SALADS",
+   "addr": "1413 S VOSS RD STE A",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-02-01"
+  },
+  {
+   "name": "MICHEAUXS IN MIDTOWN, LLC",
+   "addr": "1701 WEBSTER ST STE E2",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2026-01-31"
+  },
+  {
+   "name": "IIM",
+   "addr": "718 W 18TH ST STE H",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2026-01-31"
+  },
+  {
+   "name": "1-UP BEERCADE",
+   "addr": "5902 FULTON ST STE A",
+   "zip": "77009",
+   "naics": "722410",
+   "first": "2026-01-30"
+  },
+  {
+   "name": "CRANKY CARROT JUICE CO.",
+   "addr": "1231 W 11TH ST",
+   "zip": "77008",
+   "naics": "722515",
+   "first": "2026-01-29"
+  },
+  {
+   "name": "NEW VIBES - SAWYER HEIGHTS",
+   "addr": "1911 TAYLOR ST STE A",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2026-01-26"
+  },
+  {
+   "name": "NEW VIBES - MEDICAL CENTER",
+   "addr": "6622 FANNIN ST",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2026-01-26"
+  },
+  {
+   "name": "NEW VIBES - RICHMOND & SAGE",
+   "addr": "5174 RICHMOND AVE",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2026-01-26"
+  },
+  {
+   "name": "NEW VIBES - WEST GALLERIA",
+   "addr": "5777 SAN FELIPE ST",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-01-26"
+  },
+  {
+   "name": "NEW VIBES - GULFGATE",
+   "addr": "920 GULFGATE CENTER MALL",
+   "zip": "77087",
+   "naics": "722513",
+   "first": "2026-01-26"
+  },
+  {
+   "name": "MOD PIZZA",
+   "addr": "5103 BELLAIRE BLVD STE 130",
+   "zip": "77401",
+   "naics": "722513",
+   "first": "2026-01-26"
+  },
+  {
+   "name": "REYVOLUTION LLC",
+   "addr": "2327 MUNGER ST",
+   "zip": "77023",
+   "naics": "722410",
+   "first": "2026-01-16"
+  },
+  {
+   "name": "BOBO FAMILY LLC",
+   "addr": "5353 W ALABAMA ST STE 107C",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2026-01-15"
+  },
+  {
+   "name": "ARIA SUYA KITCHEN-MONTROSE",
+   "addr": "106 WESTHEIMER RD STE D & E",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2026-01-14"
+  },
+  {
+   "name": "BAR DOS MAS",
+   "addr": "318 SAMPSON ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2026-01-09"
+  },
+  {
+   "name": "LOCAL CUBAN",
+   "addr": "1111 LOUISIANA ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2026-01-05"
+  },
+  {
+   "name": "PYHK LLC",
+   "addr": "4955 BEECHNUT ST",
+   "zip": "77096",
+   "naics": "722515",
+   "first": "2026-01-05"
+  },
+  {
+   "name": "PIZARO'S PIZZA 2GO",
+   "addr": "9150 CHIMNEY ROCK RD",
+   "zip": "77096",
+   "naics": "722513",
+   "first": "2026-01-05"
+  },
+  {
+   "name": "LARA'S PIZZERIA",
+   "addr": "5800 BELLAIRE BLVD STE 6",
+   "zip": "77081",
+   "naics": "722513",
+   "first": "2026-01-02"
+  },
+  {
+   "name": "JOKERS OF HOUSTON",
+   "addr": "4801 ALMEDA RD",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "BARRIO SANTAFE LLC",
+   "addr": "2303 SMITH ST",
+   "zip": "77006",
+   "naics": "722515",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "19TH STREET CAFE, LLC",
+   "addr": "242 W 19TH ST",
+   "zip": "77008",
+   "naics": "722515",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "HONEY ART CAFE",
+   "addr": "1306 NORTH LOOP",
+   "zip": "77009",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "CHURCHPOINT BEVERAGE COMPANY",
+   "addr": "3520 OLD SPANISH TRL",
+   "zip": "77021",
+   "naics": "722410",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "CWF FOODS LLC",
+   "addr": "3619 OLD SPANISH TRL",
+   "zip": "77021",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "DD-427",
+   "addr": "7100 LAWNDALE ST",
+   "zip": "77023",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "AWF FOODS LLC",
+   "addr": "9510 MAIN ST",
+   "zip": "77025",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "FISH RITE LLC",
+   "addr": "5814 JENSEN DR",
+   "zip": "77026",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "LPR FOODS LLC",
+   "addr": "4317 LOCKWOOD DR",
+   "zip": "77026",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "WHATABURGER #1629",
+   "addr": "3929 SOUTHWEST FWY",
+   "zip": "77027",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "1932 CATTLEMAN'S CLUB",
+   "addr": "3 NRG PARK",
+   "zip": "77054",
+   "naics": "722410",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "J & A LE JULICA DONUTS",
+   "addr": "2803 OLD SPANISH TRL",
+   "zip": "77054",
+   "naics": "722515",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "FRUTERIA TROPICAL Y MAS",
+   "addr": "6116 SOUTHWEST FWY # 105-205",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "CWF FOODS LLC",
+   "addr": "6420 WESTHEIMER RD",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "GARSON RESTAURANT",
+   "addr": "2926 HILLCROFT AVE",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "KAMP HOUSTON",
+   "addr": "6025 WESTHEIMER RD",
+   "zip": "77057",
+   "naics": "722410",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "BWF FOODS LLC",
+   "addr": "6050 HILLCROFT AVE",
+   "zip": "77081",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "TAHINI PLUS",
+   "addr": "6802 SOUTH LOOP E # TEXAS6",
+   "zip": "77087",
+   "naics": "722514",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "LISAK LLC",
+   "addr": "4534 BEECHNUT ST",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "SHAKE SHACK TEXAS BEVERAGE COMPANY LLC",
+   "addr": "8815 WEST LOOP S",
+   "zip": "77096",
+   "naics": "722513",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "OLD HICKORY INN",
+   "addr": "9601 HILLCROFT AVE",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2026-01-01"
+  },
+  {
+   "name": "CASS FROZEN YOGURT",
+   "addr": "7200 CAMBRIDGE ST",
+   "zip": "77030",
+   "naics": "722515",
+   "first": "2025-12-28"
+  },
+  {
+   "name": "CHICK-FIL-A AT GUIC POST OAK CENTER, LTD ADP",
+   "addr": "2801 POST OAK BLVD",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-12-26"
+  },
+  {
+   "name": "OLATEE AFRICAN CAFE LIMITED LIABILITY COMPANY",
+   "addr": "2616 BLODGETT ST STE K22",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2025-12-25"
+  },
+  {
+   "name": "CHURCH'S CHICKEN #1059",
+   "addr": "1533 N WAYSIDE DR",
+   "zip": "77020",
+   "naics": "722513",
+   "first": "2025-12-24"
+  },
+  {
+   "name": "TINY'S MILK AND COOKIES WHITE OAK",
+   "addr": "3423 WHITE OAK DR",
+   "zip": "77007",
+   "naics": "722515",
+   "first": "2025-12-22"
+  },
+  {
+   "name": "CHICK-FIL-A AT JP MCGOVERN TX MED CTR COMMONS ADP",
+   "addr": "6550 BERTNER AVE",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2025-12-22"
+  },
+  {
+   "name": "RAMEN TATSU-YA",
+   "addr": "4672 BEECHNUT ST",
+   "zip": "77096",
+   "naics": "722513",
+   "first": "2025-12-18"
+  },
+  {
+   "name": "MIDNIGHT CRAVINGZ LLC",
+   "addr": "5887 WESTHEIMER RD",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2025-12-16"
+  },
+  {
+   "name": "VMS FOOD ENTERPRISES # 2 LLC",
+   "addr": "712 MAIN ST STE 106",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-12-15"
+  },
+  {
+   "name": "BASH",
+   "addr": "6203 EDLOE ST STE A",
+   "zip": "77005",
+   "naics": "722410",
+   "first": "2025-12-15"
+  },
+  {
+   "name": "I WOK",
+   "addr": "2328 W HOLCOMBE BLVD",
+   "zip": "77030",
+   "naics": "722511",
+   "first": "2025-12-15"
+  },
+  {
+   "name": "SHARETEA",
+   "addr": "713 MEYERLAND PLAZA MALL",
+   "zip": "77096",
+   "naics": "722515",
+   "first": "2025-12-15"
+  },
+  {
+   "name": "E11",
+   "addr": "1102 DELANO ST STE G",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2025-12-04"
+  },
+  {
+   "name": "ALBY'S CAFE",
+   "addr": "515 POST OAK BLVD STE 160",
+   "zip": "77027",
+   "naics": "722513",
+   "first": "2025-12-03"
+  },
+  {
+   "name": "SOL & SIP",
+   "addr": "914 MAIN ST STE 115",
+   "zip": "77002",
+   "naics": "722515",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "TIKKANA HOUSTON LLC",
+   "addr": "811 LOUISIANA ST STE M245",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "NEW RUMOR",
+   "addr": "4709 EMANCIPATION AVE # B",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "P. KING AUTHENTIC CHINESE FOOD",
+   "addr": "515 WESTHEIMER RD STE B",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "FARGO FAIRGROUNDS",
+   "addr": "215 FARGO ST",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "CULTURE KITCHEN CO. BY FUNKY CHICKEN'S SOUL FOOD",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "OLD WANG OF TEXAS",
+   "addr": "5828 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "ALEJANDRAS BAR & GRILL",
+   "addr": "6909 ASHCROFT DR STE 312",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-12-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT STREAM REALTY PARTNERS ADP",
+   "addr": "5555 SAN FELIPE ST",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-11-28"
+  },
+  {
+   "name": "BOUDREAUX'S CAJUN KITCHEN",
+   "addr": "2903 WOODRIDGE DR STE 100",
+   "zip": "77087",
+   "naics": "722511",
+   "first": "2025-11-27"
+  },
+  {
+   "name": "FREEBIRDS #20770",
+   "addr": "2036 WESTHEIMER RD",
+   "zip": "77098",
+   "naics": "722513",
+   "first": "2025-11-18"
+  },
+  {
+   "name": "HN MANA, LLC",
+   "addr": "3120 SOUTHWEST FWY STE 101 # 927154",
+   "zip": "77098",
+   "naics": "722513",
+   "first": "2025-11-18"
+  },
+  {
+   "name": "PHO 7 SPICES",
+   "addr": "6015 HILLCROFT AVE STE 3700",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-11-17"
+  },
+  {
+   "name": "EDEN PLANT COMPANY",
+   "addr": "1123 PROVIDENCE ST",
+   "zip": "77002",
+   "naics": "722515",
+   "first": "2025-11-15"
+  },
+  {
+   "name": "CHICK-FIL-A AT FRANKLIN POST OAK, LTD ADP",
+   "addr": "5444 WESTHEIMER RD",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-11-14"
+  },
+  {
+   "name": "TAQUERIA DONA VICKY M",
+   "addr": "1330 NORTH LOOP STE H103",
+   "zip": "77009",
+   "naics": "722515",
+   "first": "2025-11-13"
+  },
+  {
+   "name": "PIE IN THE SKY PIE CO.",
+   "addr": "1 NRG PARK",
+   "zip": "77054",
+   "naics": "722511",
+   "first": "2025-11-12"
+  },
+  {
+   "name": "ONYX",
+   "addr": "3113 BERING DR",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-11-10"
+  },
+  {
+   "name": "RESTAURANT LAS 3 CHAPINAS",
+   "addr": "6711 RAMPART ST",
+   "zip": "77081",
+   "naics": "722513",
+   "first": "2025-11-10"
+  },
+  {
+   "name": "LALALAND X LULULEMON",
+   "addr": "4007 WESTHEIMER RD STE 100",
+   "zip": "77027",
+   "naics": "722513",
+   "first": "2025-11-07"
+  },
+  {
+   "name": "ORION VIDEO CUISINE",
+   "addr": "6720 CHIMNEY ROCK RD STE Y",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-11-07"
+  },
+  {
+   "name": "HOUSTON GRAND HOTEL-RIVER OAKS",
+   "addr": "1919 BRIAR OAKS LN",
+   "zip": "77027",
+   "naics": "722511",
+   "first": "2025-11-04"
+  },
+  {
+   "name": "SILO HOUSTON",
+   "addr": "3301 SHERMAN ST",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "MATCHA MIA LLC",
+   "addr": "607 RICHMOND AVE",
+   "zip": "77006",
+   "naics": "722513",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT WASHINGTON & YALE DTO",
+   "addr": "3800 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "4PLAY SPORTS BAR",
+   "addr": "5110 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722410",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "J5 HOSPITALITY LLC",
+   "addr": "701 W 6TH ST",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "HONEST MARY'S",
+   "addr": "2047 W GRAY ST STE A",
+   "zip": "77019",
+   "naics": "722513",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "SHIPLEY DO-NUTS",
+   "addr": "1901 S SHEPHERD DR",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "CATERHALL",
+   "addr": "7900 FANNIN ST STE 1100",
+   "zip": "77054",
+   "naics": "722513",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "DUBAI CHOCOLATE",
+   "addr": "5085 WESTHEIMER RD STE TT243",
+   "zip": "77056",
+   "naics": "722515",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT 675 BERING DRIVE ADP",
+   "addr": "675 BERING DR",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "FASTRICK FOOD INC.",
+   "addr": "5712 BELLAIRE BLVD",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "TAQUERIA EL JALISCO",
+   "addr": "6615 CHIMNEY ROCK RD",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "HUYNH RESTAURANT UPPER KIRBY",
+   "addr": "2720 RICHMOND AVE",
+   "zip": "77098",
+   "naics": "722511",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "JERSEY MIKES #65134",
+   "addr": "5107 BELLAIRE BLVD STE 115",
+   "zip": "77401",
+   "naics": "722513",
+   "first": "2025-11-01"
+  },
+  {
+   "name": "DTVENDING",
+   "addr": "5010 DINCANS ST",
+   "zip": "77005",
+   "naics": "722515",
+   "first": "2025-10-29"
+  },
+  {
+   "name": "MIKKI'S CAFE MIDTOWN",
+   "addr": "2712 BLODGETT ST",
+   "zip": "77004",
+   "naics": "722511",
+   "first": "2025-10-26"
+  },
+  {
+   "name": "DESI JUNCTION EXPRESS",
+   "addr": "914 MAIN ST STE A",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-10-20"
+  },
+  {
+   "name": "URBAN BIRD HOT CHICKEN 030",
+   "addr": "515 WESTHEIMER RD STE F",
+   "zip": "77006",
+   "naics": "722513",
+   "first": "2025-10-20"
+  },
+  {
+   "name": "MENSHO",
+   "addr": "1515 W GRAY ST",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2025-10-20"
+  },
+  {
+   "name": "787 COFFEE",
+   "addr": "1811 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722515",
+   "first": "2025-10-17"
+  },
+  {
+   "name": "TELA",
+   "addr": "5333 WESTHEIMER RD STE 150",
+   "zip": "77056",
+   "naics": "722410",
+   "first": "2025-10-17"
+  },
+  {
+   "name": "2106 N. DALLAS STREET LLC",
+   "addr": "2106 DALLAS ST STE 100",
+   "zip": "77003",
+   "naics": "722410",
+   "first": "2025-10-15"
+  },
+  {
+   "name": "PRISCILA BAR",
+   "addr": "1801 SSGT MACARIO GARCIA DR",
+   "zip": "77011",
+   "naics": "722410",
+   "first": "2025-10-15"
+  },
+  {
+   "name": "EASTWOOD STATION",
+   "addr": "4109 MCKINNEY ST BLDG B",
+   "zip": "77023",
+   "naics": "722513",
+   "first": "2025-10-15"
+  },
+  {
+   "name": "MOONLIGHT MISO LLC",
+   "addr": "1701 WEBSTER ST STE D",
+   "zip": "77003",
+   "naics": "722513",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "ATLANTIS COFFEE BAR",
+   "addr": "1101 HOLMAN ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "ADOR KITCHEN COCKTAIL ALMEDA",
+   "addr": "4830 ALMEDA RD STE A",
+   "zip": "77004",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "NGUYEN FORTUNE PROPERTIES",
+   "addr": "2416 RICE BLVD",
+   "zip": "77005",
+   "naics": "722515",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "SUBWAY 21386",
+   "addr": "4930 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "THE ZEN LOUNGE",
+   "addr": "5316 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "CATTLEMEN'S COUNTRY CLUB",
+   "addr": "1207 W 20TH ST",
+   "zip": "77008",
+   "naics": "722410",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "TAQUERIA TACONAZO VERACRUZ",
+   "addr": "4001 FULTON ST",
+   "zip": "77009",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "ADOR KITCHEN & COCKTAIL",
+   "addr": "403 W GRAY ST",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "IMARA HOUSTON INC",
+   "addr": "2323 ALLEN PKWY",
+   "zip": "77019",
+   "naics": "722515",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "EVERGREEN MATCHA LLC",
+   "addr": "5731 DWINNELL ST",
+   "zip": "77023",
+   "naics": "722515",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "NOPALITOS DONA MARIA, INC - EADO",
+   "addr": "7170 LAWNDALE ST",
+   "zip": "77023",
+   "naics": "722513",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "MURPHY'S DELI - SMITH TOWER",
+   "addr": "6550 FANNIN ST STE 203",
+   "zip": "77030",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "BASTION EVENTS LLC",
+   "addr": "1800 POST OAK BLVD STE 6110",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "HOMEWOOD SUITES HOUSTON GALLERIA",
+   "addr": "2950 SAGE RD",
+   "zip": "77056",
+   "naics": "722410",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "FUEGO'S HOT CHICKEN",
+   "addr": "5600 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "A LA GRAN FRUTA",
+   "addr": "5600 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "LA CHONA COCINA LLC",
+   "addr": "7301 LONG DR",
+   "zip": "77087",
+   "naics": "722511",
+   "first": "2025-10-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT METHODIST HOSPITAL ADP",
+   "addr": "6565 FANNIN ST",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2025-09-30"
+  },
+  {
+   "name": "DREAM DINNERS",
+   "addr": "5107 BELLAIRE BLVD STE 110",
+   "zip": "77401",
+   "naics": "722513",
+   "first": "2025-09-25"
+  },
+  {
+   "name": "BAD CHX",
+   "addr": "223 MAIN ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-09-24"
+  },
+  {
+   "name": "NIKUBOL",
+   "addr": "401 FRANKLIN ST STE 1290",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-09-18"
+  },
+  {
+   "name": "LAS PERRAS CAFE",
+   "addr": "3401 HARRISBURG BLVD STE J",
+   "zip": "77003",
+   "naics": "722515",
+   "first": "2025-09-15"
+  },
+  {
+   "name": "SNOGRILL",
+   "addr": "5909 SCOTT ST STE K",
+   "zip": "77021",
+   "naics": "722511",
+   "first": "2025-09-15"
+  },
+  {
+   "name": "KOKEE KITCHEN",
+   "addr": "1801 BINZ ST STE 120",
+   "zip": "77004",
+   "naics": "722511",
+   "first": "2025-09-10"
+  },
+  {
+   "name": "787 COFFEE",
+   "addr": "302 FAIRVIEW AVE",
+   "zip": "77006",
+   "naics": "722515",
+   "first": "2025-09-10"
+  },
+  {
+   "name": "3503 RESTAURANT GROUP / GEORGIA JAMES",
+   "addr": "3503 W DALLAS ST",
+   "zip": "77019",
+   "naics": "722511",
+   "first": "2025-09-10"
+  },
+  {
+   "name": "EINSTEIN BROS. BAGELS #5041",
+   "addr": "5706 SAN FELIPE ST",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-09-08"
+  },
+  {
+   "name": "LA CRAWFISH",
+   "addr": "3957 RICHMOND AVE",
+   "zip": "77027",
+   "naics": "722511",
+   "first": "2025-09-06"
+  },
+  {
+   "name": "MOHARANI COFFEE HOUSE",
+   "addr": "6363 SAN FELIPE ST",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-09-05"
+  },
+  {
+   "name": "TRILL VENTURES LLC",
+   "addr": "714 KNOX ST",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "TACOS A GO GO HEIGHTS",
+   "addr": "2912 WHITE OAK DR",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "SHREDDER'S PIZZA",
+   "addr": "1777 AIRLINE DR",
+   "zip": "77009",
+   "naics": "722513",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "PITA EXPRESS",
+   "addr": "1200 MCKINNEY ST STE 347",
+   "zip": "77010",
+   "naics": "722511",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "CLEVELAND LFC LLC",
+   "addr": "2001 HOLCOMBE BLVD UNIT 201",
+   "zip": "77030",
+   "naics": "722515",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "SUNRISE BREAKFAST HOUSE",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "KHIZER & ASSOCIATES LLC",
+   "addr": "6423 RICHMOND AVE STE C",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "MIA'S TABLE BELLAIRE",
+   "addr": "5413 BELLAIRE BLVD",
+   "zip": "77401",
+   "naics": "722513",
+   "first": "2025-09-01"
+  },
+  {
+   "name": "ROOSTER 8 LLC",
+   "addr": "5757 WESTHEIMER RD STE 105",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-08-25"
+  },
+  {
+   "name": "COMBO SALVADORENO Y MEXICANO RESTAURANT",
+   "addr": "5727 RAMPART ST UNIT A3",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-08-21"
+  },
+  {
+   "name": "CAPTAIN K SEAFOOD",
+   "addr": "3331 TELEPHONE RD STE C",
+   "zip": "77023",
+   "naics": "722511",
+   "first": "2025-08-20"
+  },
+  {
+   "name": "PRIVILEGE",
+   "addr": "808 ANITA ST STE A",
+   "zip": "77006",
+   "naics": "722511",
+   "first": "2025-08-19"
+  },
+  {
+   "name": "RIVAS COFFEE COCKTAILS & KITCHEN",
+   "addr": "903 STUDEWOOD ST",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2025-08-15"
+  },
+  {
+   "name": "SANDOITCHI",
+   "addr": "1603 N DURHAM DR",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2025-08-15"
+  },
+  {
+   "name": "HALAL THAI TABLE",
+   "addr": "3220 S PEMBERTON CIRCLE DR",
+   "zip": "77025",
+   "naics": "722511",
+   "first": "2025-08-15"
+  },
+  {
+   "name": "R-HAAN BANGKOK",
+   "addr": "5832 FAIRDALE LN",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-08-15"
+  },
+  {
+   "name": "AU BON PAIN",
+   "addr": "5832 FAIRDALE LN STE 11",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-08-15"
+  },
+  {
+   "name": "OMG BURGER GALLERIA",
+   "addr": "5333 WESTHEIMER RD STE 101",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2025-08-10"
+  },
+  {
+   "name": "MEXICANO",
+   "addr": "9804 HILLCROFT AVE",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2025-08-10"
+  },
+  {
+   "name": "GOODIES SOUL KITCHEN",
+   "addr": "1619 FANNIN ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2025-08-08"
+  },
+  {
+   "name": "YAMA KITCHEN",
+   "addr": "2020 TRAVIS ST",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "HOOKAHS AND ASH",
+   "addr": "4715 MAIN ST STE C",
+   "zip": "77002",
+   "naics": "722410",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "PARLOR DOUGHNUTS",
+   "addr": "5712 BUFFALO SPEEDWAY STE B",
+   "zip": "77005",
+   "naics": "722513",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "MAGIC HTX",
+   "addr": "1318 WESTHEIMER RD",
+   "zip": "77006",
+   "naics": "722410",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "SANDO SATORI AND POKE, LLC",
+   "addr": "506 YALE ST UNIT D",
+   "zip": "77007",
+   "naics": "722513",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "SLOW MOTION ENTERPRISES, LLC",
+   "addr": "2307 ELLA BLVD",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "ALOHA ONO HAWAIIAN GRILL",
+   "addr": "1215 N DURHAM DR # 100",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "CHANG'S CHINESE RESTAURANT",
+   "addr": "7001 HARRISBURG BLVD",
+   "zip": "77011",
+   "naics": "722511",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "ACAI BRASIL",
+   "addr": "5901 WESTHEIMER RD",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2025-08-01"
+  },
+  {
+   "name": "AXELRAD BEER GARDEN",
+   "addr": "1511 ALABAMA ST",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2025-07-28"
+  },
+  {
+   "name": "AXELRAD BEER GARDEN",
+   "addr": "3709 LA BRANCH ST",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2025-07-28"
+  },
+  {
+   "name": "KPS KITCHEN & MARKET",
+   "addr": "2000 BERING DR STE 1",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-07-21"
+  },
+  {
+   "name": "OM OHANA HOU BLODGETT LLC",
+   "addr": "2616 BLODGETT ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2025-07-16"
+  },
+  {
+   "name": "BEAMING",
+   "addr": "3201 LOUISIANNA ST",
+   "zip": "77006",
+   "naics": "722515",
+   "first": "2025-07-15"
+  },
+  {
+   "name": "PHO CORNER",
+   "addr": "401 FRANKLIN ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-07-04"
+  },
+  {
+   "name": "BONGO'S HOUSE BAR & GRILL",
+   "addr": "6253 BISSONNET ST",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-07-02"
+  },
+  {
+   "name": "ZALAT HOUSTON LLC",
+   "addr": "510 GRAY ST STE B2",
+   "zip": "77002",
+   "naics": "722511",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "HOT TATER",
+   "addr": "401 FRANKLIN ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "HER NAME WAS IRENE COFFEE AND INTERNET CAFE",
+   "addr": "2104 PEASE ST",
+   "zip": "77003",
+   "naics": "722515",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "STIRFRY BOWL RESTAURANT LLC",
+   "addr": "2616 BLODGETT ST # K25",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "GOOD CHOPS",
+   "addr": "2616 BLODGETT ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "SUCRE",
+   "addr": "5404 KIRBY DR",
+   "zip": "77005",
+   "naics": "722515",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "ZALAT HOUSTON LLC",
+   "addr": "4802 WASHINGTON AVE",
+   "zip": "77007",
+   "naics": "722511",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "LITTLE TACO SHOP HEIGHTS",
+   "addr": "2323 N SHEPHERD DR",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "CRUST PIZZA CO.",
+   "addr": "1215 N DURHAM DR STE B-200",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "WOLFSMITHS LLC",
+   "addr": "201 WOODARD ST",
+   "zip": "77009",
+   "naics": "722410",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "KULTURE KOFFEE",
+   "addr": "1942 W GRAY ST STE 99",
+   "zip": "77019",
+   "naics": "722515",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "ZALAT HOUSTON LLC",
+   "addr": "2303 W HOLCOMBE BLVD STE B",
+   "zip": "77030",
+   "naics": "722511",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "MAD DOGS GALLERIA",
+   "addr": "5353 W ALABAMA ST STE 100-7",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "ZALAT HOUSTON LLC",
+   "addr": "5750 WOODWAY DR STE 118",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "CHAMAN BAR & GRILL .0, LLC",
+   "addr": "7818 HILLCROFT AVE",
+   "zip": "77081",
+   "naics": "722410",
+   "first": "2025-07-01"
+  },
+  {
+   "name": "TAQUERIA MONCHY'S",
+   "addr": "3200 TELEPHONE RD # A1",
+   "zip": "77023",
+   "naics": "722511",
+   "first": "2025-06-30"
+  },
+  {
+   "name": "HEYTEA",
+   "addr": "5015 WESTHEIMER RD # A1305",
+   "zip": "77056",
+   "naics": "722515",
+   "first": "2025-06-27"
+  },
+  {
+   "name": "CARINO COFFEE",
+   "addr": "708 HOGAN ST",
+   "zip": "77009",
+   "naics": "722515",
+   "first": "2025-06-18"
+  },
+  {
+   "name": "LOVE SHOWTIME LLC",
+   "addr": "3608 CRANE ST",
+   "zip": "77026",
+   "naics": "722410",
+   "first": "2025-06-13"
+  },
+  {
+   "name": "TACOS A GO GO/TACOS A GO GO VOSS",
+   "addr": "2231 S VOSS RD",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-06-13"
+  },
+  {
+   "name": "FRUTERIA LA BENDICION",
+   "addr": "2406 S VOSS RD APT D104",
+   "zip": "77057",
+   "naics": "722513",
+   "first": "2025-06-12"
+  },
+  {
+   "name": "OOH...SHISHA LLC",
+   "addr": "2303 WEBSTER ST",
+   "zip": "77003",
+   "naics": "722511",
+   "first": "2025-06-08"
+  },
+  {
+   "name": "POTBELLY SANDWICH WORKS, LLC",
+   "addr": "7255 HELIX PARK AVE",
+   "zip": "77030",
+   "naics": "722513",
+   "first": "2025-06-03"
+  },
+  {
+   "name": "KUMORNING INC",
+   "addr": "801 LOUISIANA ST # T100",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "OMO DADA LLC",
+   "addr": "4640 SCOTT ST",
+   "zip": "77004",
+   "naics": "722513",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "NEXT DOOR BAR & LOUNGE",
+   "addr": "4711 EMANCIPATION AVE",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "CLUTCH CITY KITCHEN",
+   "addr": "2520 AIRLINE DR STE 100",
+   "zip": "77009",
+   "naics": "722513",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "CHICK-FIL-A AT WILLIAMS TOWERS & INVESCO ADP",
+   "addr": "2800 POST OAK BLVD",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "TAJ A SWEET CAFE",
+   "addr": "5640 WESTHEIMER RD",
+   "zip": "77056",
+   "naics": "722511",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "ATITHI HOSPITALITY - FAIRDALE LANE HOUSTON LLC",
+   "addr": "5832 FAIRDALE LN # 38",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-06-01"
+  },
+  {
+   "name": "ARNOLD ST. PIZZA",
+   "addr": "4033 ARNOLD ST",
+   "zip": "77005",
+   "naics": "722513",
+   "first": "2025-05-30"
+  },
+  {
+   "name": "LA CASITA DELI",
+   "addr": "2500 E T C JESTER BLVD STE 199",
+   "zip": "77008",
+   "naics": "722514",
+   "first": "2025-05-19"
+  },
+  {
+   "name": "MY REFRESQUERIA, LLC",
+   "addr": "3511 FOUNTAIN VIEW DR STE B",
+   "zip": "77057",
+   "naics": "722515",
+   "first": "2025-05-16"
+  },
+  {
+   "name": "BEST BAGEL SHOP & CAFE",
+   "addr": "3833 RICHMOND AVE",
+   "zip": "77027",
+   "naics": "722514",
+   "first": "2025-05-15"
+  },
+  {
+   "name": "CATEGORY 3",
+   "addr": "2403 WENTWORTH ST",
+   "zip": "77004",
+   "naics": "722410",
+   "first": "2025-05-09"
+  },
+  {
+   "name": "ROSEWOOD SUSHI",
+   "addr": "1431 N SHEPHERD DR",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2025-05-07"
+  },
+  {
+   "name": "JUS MAC + WINGS",
+   "addr": "2617 YALE ST",
+   "zip": "77008",
+   "naics": "722513",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "EL SOLO VINO BILLARES SPORT BAR",
+   "addr": "7717 HARRISBURG BLVD",
+   "zip": "77012",
+   "naics": "722410",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "VILLA ARCOS TACOS EXPRESS - OST",
+   "addr": "4300 OLD SPANISH TRL",
+   "zip": "77021",
+   "naics": "722513",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "TACOS FOREVER LLC",
+   "addr": "3507 PENWOOD WAY",
+   "zip": "77023",
+   "naics": "722513",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "JACK IN THE BOX #3690",
+   "addr": "4550 SAN FELIPE ST",
+   "zip": "77027",
+   "naics": "722513",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "MRS FIELDS TCBY",
+   "addr": "5085 WESTHEIMER RD STE KI22",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "FU'S GARDEN",
+   "addr": "5866 SAN FELIPE ST",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "KRUA LLC",
+   "addr": "6324 RICHMOND AVE",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "JACK IN THE BOX #3644",
+   "addr": "6006 HILLCROFT AVE",
+   "zip": "77081",
+   "naics": "722513",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "YAYA RICE BOX LLC",
+   "addr": "5300 N BRAESWOOD BLVD # 28",
+   "zip": "77096",
+   "naics": "722511",
+   "first": "2025-05-01"
+  },
+  {
+   "name": "QUEEN BEE'S TEA ROOM, LLC",
+   "addr": "201 W 15TH ST",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2025-04-30"
+  },
+  {
+   "name": "FOREIGN GRILL LLC",
+   "addr": "401 FRANKLIN ST",
+   "zip": "77002",
+   "naics": "722513",
+   "first": "2025-04-28"
+  },
+  {
+   "name": "TAQERIA ARANDAS NO.25",
+   "addr": "5560 GULFTON ST",
+   "zip": "77081",
+   "naics": "722511",
+   "first": "2025-04-28"
+  },
+  {
+   "name": "THE VAULT HOUSTON",
+   "addr": "2618 WINROCK BLVD",
+   "zip": "77057",
+   "naics": "722410",
+   "first": "2025-04-22"
+  },
+  {
+   "name": "HIBACHI KING",
+   "addr": "5427 BISSONNET ST STE 200",
+   "zip": "77081",
+   "naics": "722513",
+   "first": "2025-04-22"
+  },
+  {
+   "name": "THIRD PLACE",
+   "addr": "420 E 20TH ST STE A",
+   "zip": "77008",
+   "naics": "722511",
+   "first": "2025-04-18"
+  },
+  {
+   "name": "MAFI VENTURES",
+   "addr": "5085 WESTHEIMER RD STE K122",
+   "zip": "77056",
+   "naics": "722513",
+   "first": "2025-04-15"
+  },
+  {
+   "name": "THE GREEDY LION",
+   "addr": "920 STUDEMONT ST STE 150",
+   "zip": "77007",
+   "naics": "722410",
+   "first": "2025-04-11"
+  },
+  {
+   "name": "THE BUTCHER'S GRILLE",
+   "addr": "5740 SAN FELIPE ST STE 100",
+   "zip": "77057",
+   "naics": "722511",
+   "first": "2025-04-11"
+  },
+  {
+   "name": "MURPHY'S DELI - ALABAMA",
+   "addr": "3355 W ALABAMA ST STE 120",
+   "zip": "77098",
+   "naics": "722511",
+   "first": "2025-04-07"
+  }
+ ]
+}
