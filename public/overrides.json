@@ -1143,7 +1143,9 @@
       "lng": -95.36259,
       "source": "OpenStreetMap Nominatim",
       "checked": "2026-11-25",
-      "notInDirectory": true
+      "notInDirectory": true,
+      "status": "closed",
+      "closedNote": "Closed (confirmed by user; liquor filings stopped late 2024)"
     },
     "Cecil's Pub": {
       "street": "600 West Gray Street",
