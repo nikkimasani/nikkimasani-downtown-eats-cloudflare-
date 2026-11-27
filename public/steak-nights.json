@@ -1,6 +1,6 @@
 {
  "note": "Weekly steak nights in and around downtown, checked by hand. 'as' is the date of the source; anything marked verify is from an older or undated source, so call or check their Instagram first. Deals change often.",
- "checked": "2026-11-25",
+ "checked": "2026-11-27",
  "nights": [
   {
    "n": "EZ's Liquor Lounge",
@@ -32,7 +32,7 @@
     "Mon"
    ],
    "time": "5pm till sold out",
-   "deal": "12-oz ribeye with two sides (all Christian's locations)",
+   "deal": "12-oz ribeye with two sides (Christian's locations — the Kirby Dr one has closed)",
    "price": "$20",
    "src": "DiningOut",
    "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
@@ -64,17 +64,6 @@
    "as": "2026-08"
   },
   {
-   "n": "El Big Bad",
-   "days": [
-    "Mon"
-   ],
-   "time": "evening",
-   "deal": "Premium and wagyu cuts with greens and potatoes",
-   "src": "Central Houston",
-   "url": "https://centralhouston.org/post/its-whats-dinner",
-   "verify": true
-  },
-  {
    "n": "Moon Rabbit",
    "days": [
     "Tue"
@@ -97,20 +86,6 @@
    "src": "Eventbrite (Plume)",
    "url": "https://www.eventbrite.com/e/steak-night-and-surf-turf-tuesdays-6pm-to-11pm-tickets-1487348221569",
    "verify": true
-  },
-  {
-   "n": "Front Porch Pub",
-   "addr": "217 Gray St",
-   "days": [
-    "Tue",
-    "Thu"
-   ],
-   "time": "6–10pm",
-   "deal": "16-oz ribeye and baked potato, grilled on the deck",
-   "price": "$15",
-   "src": "The Buzz Magazines",
-   "url": "https://thebuzzmagazines.com/node/8736",
-   "as": "2026-01"
   },
   {
    "n": "Pimlico",
@@ -182,29 +157,6 @@
    "deal": "Wood-grilled ribeye with mole and two sides",
    "src": "Central Houston",
    "url": "https://centralhouston.org/post/its-whats-dinner",
-   "verify": true
-  },
-  {
-   "n": "Daley Sports Club",
-   "addr": "922 Holman St",
-   "days": [
-    "Wed"
-   ],
-   "time": "evening",
-   "deal": "Steak night at this Midtown sports bar",
-   "src": "Wanderlog reviews",
-   "url": "https://wanderlog.com/place/details/12113146/daley-sports-club",
-   "verify": true
-  },
-  {
-   "n": "Lincoln Bar & Kitchen",
-   "days": [
-    "Wed"
-   ],
-   "time": "evening",
-   "deal": "Ribeye from Crooked Road Catering",
-   "src": "Houston Press",
-   "url": "https://www.houstonpress.com/restaurants/nine-steak-nights-not-to-miss-in-houston-8996385",
    "verify": true
   },
   {
@@ -306,6 +258,19 @@
    "src": "Houston Press",
    "url": "https://www.houstonpress.com/?p=277019",
    "verify": true
+  },
+  {
+   "n": "PJ's Sports Bar",
+   "addr": "614 W Gray St",
+   "days": [
+    "Wed"
+   ],
+   "time": "6–10pm",
+   "deal": "Two 16-oz chef's-choice cuts (ribeye, T-bone or NY strip), two baked potatoes, two salads and a pitcher of beer",
+   "price": "$31",
+   "src": "The Buzz Magazines",
+   "url": "https://thebuzzmagazines.com/node/8736",
+   "as": "2026-01"
   }
  ]
 }
