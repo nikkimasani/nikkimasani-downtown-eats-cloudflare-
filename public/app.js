@@ -995,6 +995,30 @@ async function renderSteak() {
   $('#steakNote').textContent = `Checked ${STEAK.checked || ''} from CultureMap, DiningOut, venue pages and Instagram/Facebook posts. Deals change and some sell out early — "Call ahead" means the source is older or undated.`;
 }
 $('#steakDays').onclick = (e) => { const b = e.target.closest('[data-sd]'); if (!b) return; steakDay = b.dataset.sd; renderSteak(); };
+
+// ---------- all you can eat (sushi + Korean BBQ) ----------
+let AYCE = null, ayceKind = 'loop';
+async function renderAyce() {
+  if (!AYCE) { try { AYCE = await (await fetch('ayce.json')).json(); } catch { AYCE = { spots: [] }; } }
+  const K = [['loop', '📍 Houston'], ['sushi', '🍣 Sushi'], ['kbbq', '🥓 Korean BBQ'], ['all', 'Everywhere']];
+  $('#ayceKinds').innerHTML = K.map(([k, l]) => `<button class="chip ${ayceKind === k ? 'on' : ''}" data-ak="${k}">${l}</button>`).join('');
+  const rows = AYCE.spots.map((x) => ({ ...x, r: x.m ? steakSpot(x.m) : steakSpot(x.n) }))
+    .filter((x) => ayceKind === 'all' || (ayceKind === 'loop' ? !x.out : x.kind === ayceKind))
+    .sort((a, b) => !!a.out - !!b.out || !a.r - !b.r || (a.r && walkMinsTo(a.r) || 99) - (b.r && walkMinsTo(b.r) || 99));
+  const card = (x) => { const r = x.r, w = r ? walkMinsTo(r) : null;
+    return `<div class="card bar"><div class="chead">${r ? tile(r) : `<span class="ctile" style="--tc:${x.kind === 'sushi' ? '#1f6f8b' : '#a3401f'}">${x.kind === 'sushi' ? '🍣' : '🥓'}</span>`}<div><h3>${esc(x.n)}</h3>
+    <div class="meta">${x.kind === 'sushi' ? 'AYCE sushi' : 'AYCE Korean BBQ'} · ${esc(x.region)}${x.addr ? ' · ' + esc(x.addr) : ''}</div></div></div>
+    <div class="meta" style="margin-top:6px"><b>${esc(x.prices)}</b></div>${x.note ? `<div class="meta" style="margin-top:4px">${esc(x.note)}</div>` : ''}
+    <div class="tags">${w != null ? `<span class="tag">🚶 ${w} min</span>` : ''}${x.out ? '<span class="tag">Outside the Loop</span>' : ''}</div>
+    <div class="meta" style="margin-top:6px">Source: <a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.src)}</a></div>
+    ${r ? `<div class="row bar-actions"><button class="btn ghost sm" data-open="${r.id}">Details</button><button class="btn sm" data-walk="${r.id}">🧭 Walk there</button></div>` : `<div class="row bar-actions"><a class="btn ghost sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/${encodeURIComponent(x.n + ' ' + (x.addr || x.region) + ' Houston')}">🗺️ Maps</a></div>`}</div>`; };
+  $('#ayceList').innerHTML = `<div class="grid">${rows.map(card).join('') || '<div class="empty">Nothing here yet.</div>'}</div>`;
+  const inLoop = AYCE.spots.filter((x) => !x.out).length;
+  $('#ayceSub').textContent = `${AYCE.spots.length} all-you-can-eat sushi and Korean BBQ spots — ${inLoop} in Houston proper`;
+  $('#ayceNote').textContent = `Checked ${AYCE.checked || ''}. ${AYCE.note || ''}`;
+}
+$('#ayceKinds').onclick = (e) => { const b = e.target.closest('[data-ak]'); if (!b) return; ayceKind = b.dataset.ak; renderAyce(); };
+document.addEventListener('click', (e) => { const o = e.target.closest('#ayceList .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
 document.addEventListener('click', (e) => { const o = e.target.closest('#steakList .bar-actions [data-open]'); if (o) openSheet(+o.dataset.open); });
 $('#steakMap').onclick = async () => {
   await loadSteak(); const d = steakDay === 'today' ? steakToday() : steakDay;
@@ -1140,12 +1164,12 @@ document.addEventListener('click', (e) => { const b = e.target.closest('.subtabs
 // ---------- tabs ----------
 document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => show(b.dataset.v)));
 function show(v) {
-  const grp = ['browse', 'coffee', 'night', 'steak'].includes(v) ? 'explore' : null;
+  const grp = ['browse', 'coffee', 'night', 'steak', 'ayce'].includes(v) ? 'explore' : null;
   document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v || (grp && x.dataset.group === grp)));
   document.querySelectorAll('.subtabs button').forEach((x) => x.classList.toggle('on', x.dataset.v === v));
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
-  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee(); if (v === 'steak') renderSteak();
+  if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee(); if (v === 'steak') renderSteak(); if (v === 'ayce') renderAyce();
   if (v === 'map' && !GEO_READY && !city) { loadGeo().then(() => { if ($('#v-map').classList.contains('on')) show('map'); }); return; }
   if (v === 'map') { initMap(); city.resize(); if (city._bgBuilt) { city._bgBuilt = false; city.anim = null; city.fit(); } }
   if (city) city.paused = v !== 'map' || !$('#areaView').hidden;
@@ -1227,7 +1251,7 @@ function loadGeo() { if (GEO_P) return GEO_P; const get = (f) => fetch(f).then((
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').innerHTML = `<span class="st open"><b>${openNow}</b>open now</span><span class="st"><b>${FOOD.length}</b>places</span><span class="st"><b>${DATA.filter((r) => r.night).length}</b>bars</span><span class="st"><b>${DATA.filter((r) => r.tunnel).length}</b>in tunnels</span>`;
   renderPick();
-  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee', 'steak'].includes(h)) show(h);
+  const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee', 'steak', 'ayce'].includes(h)) show(h);
   if (h.startsWith('vote=')) openVote(h.slice(5));
   if (h.startsWith('sync=')) { SYNC = h.slice(5); store.set('syncKey', SYNC); syncPull(); toast('🔄 This device is now synced'); show('week'); }
   if (h.startsWith('poll=')) { const opts = decodeURIComponent(h.slice(5)).split('|').map((n) => DATA.find((x) => x.name === n)).filter(Boolean); if (opts.length) { show('pick'); $('#pickOut').innerHTML = `<div class="card poll"><h3>🗳️ Where should we eat?</h3><div class="meta">Tap your vote — it opens your messages so you can send it back.</div>${opts.map((x) => `<button class="pollopt" data-vote="${x.id}">${tile(x)}<span><b>${esc(x.name)}</b><em>${$$(x.price)} · ${esc(x.type)} · ${esc(openLabel(x).label || '')}</em></span></button>`).join('')}</div>`; $('#pickOut').onclick = (e) => { const v = e.target.closest('[data-vote]'); if (v) { const x = DATA[+v.dataset.vote]; shareText('My vote', `I vote ${x.name} 👍`, appUrl() + '#p=' + encodeURIComponent(x.name)); } }; } }

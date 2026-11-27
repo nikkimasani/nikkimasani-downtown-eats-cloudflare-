@@ -8751,6 +8751,22 @@
       "source": "US Census geocoder",
       "checked": "2026-11-27",
       "notInDirectory": true
+    },
+    "GEN Korean BBQ House Midtown": {
+      "street": "3201 Louisiana St",
+      "lat": 29.743127,
+      "lng": -95.379621,
+      "source": "US Census geocoder",
+      "checked": "2026-11-27",
+      "notInDirectory": true
+    },
+    "Handam BBQ Heights": {
+      "street": "2805 White Oak Dr",
+      "lat": 29.781552,
+      "lng": -95.388702,
+      "source": "US Census geocoder",
+      "checked": "2026-11-27",
+      "notInDirectory": true
     }
   }
 }

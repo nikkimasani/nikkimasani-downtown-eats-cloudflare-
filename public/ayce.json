@@ -1,0 +1,400 @@
+{
+ "checked": "2026-11-27",
+ "note": "Prices per adult before tax and tip; lunch rules vary — confirm before you go.",
+ "spots": [
+  {
+   "n": "Umiya",
+   "kind": "sushi",
+   "region": "Midtown",
+   "prices": "Lunch $20.95 · Dinner $32.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "m": "Umiya",
+   "note": "Also in Memorial and Katy"
+  },
+  {
+   "n": "Seven Sushi & Robata",
+   "kind": "sushi",
+   "region": "Midtown & Chinatown",
+   "prices": "Lunch $22 · Dinner $37 · Premium $57",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "m": "Seven Sushi & Robata"
+  },
+  {
+   "n": "Nara Sushi",
+   "kind": "sushi",
+   "region": "Upper Kirby",
+   "prices": "Lunch $25 (limited menu) · Dinner $37",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Kimoto Premium Sushi",
+   "kind": "sushi",
+   "region": "Galleria",
+   "prices": "AYCE $37.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "m": "Kimoto"
+  },
+  {
+   "n": "Machi Sushi",
+   "kind": "sushi",
+   "region": "Washington Ave",
+   "prices": "Lunch $25.95 · Dinner $35.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "m": "Machi Sushi"
+  },
+  {
+   "n": "Taizzi Sushi",
+   "kind": "sushi",
+   "region": "Northwest & Memorial (also Katy Mills)",
+   "prices": "Lunch $19.99 · Dinner $29.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Blue Claw",
+   "kind": "sushi",
+   "region": "Houston",
+   "prices": "Lunch $20.95 · Dinner $32.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "True Sushi",
+   "kind": "sushi",
+   "region": "Houston",
+   "prices": "$19.95 lunch, dinner and weekends",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Sushi Masa",
+   "kind": "sushi",
+   "region": "Westheimer (also Sugar Land)",
+   "prices": "Lunch $21.95 · Dinner $33.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Cowboy Japanese BBQ & Sushi",
+   "kind": "sushi",
+   "region": "West Houston",
+   "prices": "Lunch $24.99 · Ultimate dinner $36.99 · Supreme $48.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Mikoto",
+   "kind": "sushi",
+   "region": "Houston",
+   "prices": "Classic $21.99 · Premium $25.99 · Deluxe $31.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Kanau",
+   "kind": "sushi",
+   "region": "Houston",
+   "prices": "Lunch $28.95 · Dinner $38.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic"
+  },
+  {
+   "n": "Sushi 9",
+   "kind": "sushi",
+   "region": "Katy",
+   "prices": "Weekday lunch $19.99 · Weekend lunch $24.99 · Dinner $33.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Twenty Five Teishoku House",
+   "kind": "sushi",
+   "region": "Katy",
+   "prices": "AYCE $48",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Little Sanaka",
+   "kind": "sushi",
+   "region": "Katy",
+   "prices": "Lunch $26.99 · Dinner $35.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Atami Sushi",
+   "kind": "sushi",
+   "region": "Katy",
+   "prices": "Lunch $16.99 · Dinner $23.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Ohayo Sushi",
+   "kind": "sushi",
+   "region": "Clear Lake & Webster",
+   "prices": "Lunch $21.95 · Dinner TBC",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Sushi Haya",
+   "kind": "sushi",
+   "region": "Missouri City / Sugar Land",
+   "prices": "Lunch $20.95 · Dinner $30.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Oma Sushi",
+   "kind": "sushi",
+   "region": "Missouri City / Sugar Land",
+   "prices": "Lunch $23.95 · Dinner $35.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Miyagi Sushi & Hibachi",
+   "kind": "sushi",
+   "region": "Missouri City / Sugar Land",
+   "prices": "Lunch $24.95 · Dinner $34.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Sapporo Hibachi and Sushi",
+   "kind": "sushi",
+   "region": "Missouri City / Sugar Land",
+   "prices": "Lunch $22.95 · Dinner $35.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Edo Japan",
+   "kind": "sushi",
+   "region": "Pearland",
+   "prices": "Lunch $16.99 · All day from $23.99 · Deluxe $31.99",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Sumo",
+   "kind": "sushi",
+   "region": "Cypress",
+   "prices": "Lunch $21.95 · Dinner $33.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Yaki Sushi",
+   "kind": "sushi",
+   "region": "Fulshear",
+   "prices": "Lunch $21.95 · Dinner $32.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Sushi Moshi",
+   "kind": "sushi",
+   "region": "League City",
+   "prices": "$30.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Yamamori",
+   "kind": "sushi",
+   "region": "League City",
+   "prices": "Lunch $19.95 · Dinner $31.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Kumo Sushi",
+   "kind": "sushi",
+   "region": "Willowbrook",
+   "prices": "Lunch $21.95 · Dinner $31.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "Mosa Asian Bistro",
+   "kind": "sushi",
+   "region": "Willowbrook",
+   "prices": "Lunch $19.95 · Dinner & weekends $29.95",
+   "src": "Houston AYCE sushi guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1-7S6DN8Sd7dCsDjC6UHesy04OfxQc2bk9S0_d8HcRT8/mobilebasic",
+   "out": true
+  },
+  {
+   "n": "GEN Korean BBQ House Midtown",
+   "kind": "kbbq",
+   "region": "Midtown",
+   "prices": "Lunch $21.95 · Dinner $32.95 · Premium +$20",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "3201 Louisiana St",
+   "m": "GEN Korean BBQ House Midtown",
+   "note": "Also at 12230 Westheimer"
+  },
+  {
+   "n": "Handam BBQ Heights",
+   "kind": "kbbq",
+   "region": "Heights",
+   "prices": "Lunch $25 · Dinner $35",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "2805 White Oak Dr",
+   "m": "Handam BBQ Heights",
+   "note": "Also in Chinatown (6609 W Sam Houston Pkwy S)"
+  },
+  {
+   "n": "KPOT Korean BBQ & Hot Pot",
+   "kind": "kbbq",
+   "region": "Bellaire / West Loop",
+   "prices": "Weekday lunch $21.99 · Dinner & weekends $33.99 · Hot pot +$5",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "8845 West Loop S"
+  },
+  {
+   "n": "Kure",
+   "kind": "kbbq",
+   "region": "Houston",
+   "prices": "Weekday lunch $19.99 (Mon–Fri 11am–3pm) · Dinner $28.99 · Halal menu $32.99–34.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic"
+  },
+  {
+   "n": "Hongdae 33",
+   "kind": "kbbq",
+   "region": "Chinatown",
+   "prices": "Weekday lunch $25 · All-day deluxe $36",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "",
+   "note": "",
+   "out": true
+  },
+  {
+   "n": "Bon KBBQ",
+   "kind": "kbbq",
+   "region": "Chinatown",
+   "prices": "Lunch $22.99 · Dinner $34.99 · Prime $44.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "8338 W Sam Houston Pkwy S",
+   "note": "",
+   "out": true
+  },
+  {
+   "n": "Garosu Korean BBQ & Sushi",
+   "kind": "kbbq",
+   "region": "Chinatown",
+   "prices": "AYCE $36.99 · Reserve $46.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "11700 Bellaire Blvd",
+   "note": "Korean BBQ and sushi",
+   "out": true
+  },
+  {
+   "n": "Korea House",
+   "kind": "kbbq",
+   "region": "Spring Branch",
+   "prices": "Menu S $42.95 · A $37.95 · B $32.95 (kids $25.95–34.95)",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "10078 Long Point Rd",
+   "note": "Only spot with kids' prices",
+   "out": true
+  },
+  {
+   "n": "Honey Pig Korean BBQ",
+   "kind": "kbbq",
+   "region": "Chinatown (also Katy)",
+   "prices": "Prime $29.99 weekdays / $32.99 weekends · Signature $39.99 / $42.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "",
+   "note": "",
+   "out": true
+  },
+  {
+   "n": "Fusion Pot & Grill",
+   "kind": "kbbq",
+   "region": "North Houston",
+   "prices": "Weekday lunch $23.99 · Dinner & weekends $36.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "3645 FM 1960 Rd W",
+   "note": "Korean BBQ, hot pot and sushi",
+   "out": true
+  },
+  {
+   "n": "88 Korean BBQ & Sushi",
+   "kind": "kbbq",
+   "region": "Cypress",
+   "prices": "Lunch $21.99 · Dinner $32.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "25414 Northwest Fwy",
+   "note": "",
+   "out": true
+  },
+  {
+   "n": "Jeju Island Korean BBQ & Sushi",
+   "kind": "kbbq",
+   "region": "Pearland",
+   "prices": "Weekday lunch $22.99 · Dinner & weekends $33.99 · Sushi +$6",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "9415 Broadway St",
+   "note": "",
+   "out": true
+  },
+  {
+   "n": "Yama Kitchen (Humble)",
+   "kind": "kbbq",
+   "region": "Humble",
+   "prices": "Weekday lunch $20.99 · Dinner $32.99 · BBQ + hot pot +$5",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "224 FM 1960 Bypass Rd E",
+   "note": "",
+   "out": true
+  },
+  {
+   "n": "Volcano Hot Pot & Korean BBQ",
+   "kind": "kbbq",
+   "region": "Sugar Land",
+   "prices": "BBQ $31.99 · BBQ + hot pot $35.99",
+   "src": "Houston AYCE Korean BBQ guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/113B65I1TutpRFvDoXUSMULDc87EsGt9kR8A2iaUWqZM/mobilebasic",
+   "addr": "3434 Hwy 6",
+   "note": "",
+   "out": true
+  }
+ ]
+}

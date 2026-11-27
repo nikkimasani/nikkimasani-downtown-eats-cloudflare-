@@ -26112,5 +26112,45 @@
   "type": "Bar",
   "note": "Midtown karaoke bar with steak-night pop-ups.",
   "tryit": ""
+ },
+ {
+  "id": 1301,
+  "name": "GEN Korean BBQ House Midtown",
+  "address": "3201 Louisiana St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "AYCE Korean BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "AYCE Korean BBQ restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 1302,
+  "name": "Handam BBQ Heights",
+  "address": "2805 White Oak Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "AYCE Korean BBQ"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "AYCE Korean BBQ restaurant.",
+  "tryit": ""
  }
 ]
