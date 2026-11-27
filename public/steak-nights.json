@@ -34,9 +34,9 @@
    "time": "5pm till sold out",
    "deal": "12-oz ribeye with two sides (Christian's locations — the Kirby Dr one has closed)",
    "price": "$20",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Christian's Tailgate Midtown",
@@ -56,12 +56,12 @@
    "days": [
     "Mon"
    ],
-   "time": "5–9pm, dine-in",
-   "deal": "44 Farms sirloin, strip or ribeye with spinach, garlic mash · featured wines 20% off",
+   "time": "5–9pm",
+   "deal": "44 Farms steak with mashed potatoes, spinach and toast",
    "price": "$20–38",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Moon Rabbit",
@@ -69,11 +69,11 @@
     "Tue"
    ],
    "time": "5pm till sold out",
-   "deal": "NY strip or ribeye with two rotating sides",
-   "price": "$31 / $35",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "deal": "NY strip ($31) or ribeye ($35) with two sides",
+   "price": "$31–35",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Plume",
@@ -95,11 +95,11 @@
     "Thu"
    ],
    "time": "6:30–11pm",
-   "deal": "Prime 12-oz ribeye, rack of lamb or pork chops · cash only, one-drink minimum",
+   "deal": "Meat Mojo steak nights — market pricing, cash for food, one-drink minimum",
    "price": "Market",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Better Luck Tomorrow",
@@ -107,23 +107,23 @@
     "Wed"
    ],
    "time": "dinner",
-   "deal": "Bistro steak, potato purée, onion rings, truffle gravy",
+   "deal": "Bistro steak with potato purée, onion rings and truffle gravy",
    "price": "$28",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
-   "n": "Dan Electro's Guitar Bar",
+   "n": "Dan Electro's",
    "days": [
     "Wed"
    ],
    "time": "~7pm",
-   "deal": "Steak, mashed potatoes, green beans with Whiskey Wednesday · cash only",
+   "deal": "Houston Prime steak pop-up: steak, mashed potatoes, green beans",
    "price": "~$30",
    "src": "DiningOut",
    "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "as": "2026-10"
   },
   {
    "n": "On the Kirb",
@@ -131,11 +131,11 @@
     "Wed"
    ],
    "time": "dinner",
-   "deal": "Grass-fed filet, mashed potatoes, seasonal veg · $5 house wine",
+   "deal": "Grass-fed filet with potatoes and vegetables, plus $5 glasses of house wine",
    "price": "$30",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Axelrad Beer Garden",
@@ -176,12 +176,12 @@
    "days": [
     "Thu"
    ],
-   "time": "dinner",
-   "deal": "16-oz NY strip, potatoes, green beans, J1 sauce",
-   "price": "$30–35",
-   "src": "CultureMap",
-   "url": "https://houston.culturemap.com/news/restaurants-bars/12-houston-steak-nights-2026/",
-   "as": "2026-08"
+   "time": "all day, dine-in only",
+   "deal": "14-oz NY strip with potatoes and green beans",
+   "price": "$36",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Starduster Lounge",
@@ -214,12 +214,12 @@
    "days": [
     "Fri"
    ],
-   "time": "evening",
-   "deal": "Amexicun pop-up: sirloin up to a shareable tomahawk",
-   "price": "$30–125",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-08"
+   "time": "6–10pm",
+   "deal": "Amexicun steak night pop-up",
+   "price": "~$30",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
   },
   {
    "n": "Around the Corner",
@@ -249,14 +249,15 @@
    "n": "The Hideaway on Dunvale",
    "addr": "3122 Dunvale Rd (outside the loop)",
    "days": [
-    "Tue",
     "Sat"
    ],
-   "time": "evening",
-   "deal": "Classic bar steak night, long-time Houston Press winner",
-   "src": "Houston Press",
-   "url": "https://www.houstonpress.com/?p=277019",
-   "verify": true
+   "time": "all day",
+   "deal": "16-oz ribeye with two sides",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "verify": true,
+   "price": "$22",
+   "as": "2026-10"
   },
   {
    "n": "PJ's Sports Bar",
@@ -270,6 +271,402 @@
    "src": "The Buzz Magazines",
    "url": "https://thebuzzmagazines.com/node/8736",
    "as": "2026-01"
+  },
+  {
+   "n": "Under the Volcano",
+   "days": [
+    "Mon"
+   ],
+   "time": "5–10pm",
+   "deal": "16-oz ribeye or NY strip with mashed potatoes, salad and chimichurri (drink purchase required)",
+   "price": "$31",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Urban Smoke",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Steak with mashed potatoes and asparagus",
+   "price": "$25",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Prime 131",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Choice of meat, grilled sourdough, salad and a dessert",
+   "price": "$48",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Griff's Shenanigans Cafe",
+   "days": [
+    "Tue"
+   ],
+   "time": "evening",
+   "deal": "Steak dinner with a baked potato, fixings and a draft beer",
+   "price": "$24",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Turner's",
+   "days": [
+    "Tue"
+   ],
+   "time": "evening",
+   "deal": "\"Prime Affairs\": $76 NY strip, $88 wagyu filet or $123 ribeye, with sides",
+   "price": "$76–123",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "The Blind Goat",
+   "days": [
+    "Wed"
+   ],
+   "time": "evening",
+   "deal": "Steak frites",
+   "price": "$27",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Jonathan's The Rub Campbell Place",
+   "days": [
+    "Thu"
+   ],
+   "time": "all day",
+   "deal": "16-oz NY strip with asparagus and potatoes",
+   "price": "$40",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Perry's Steakhouse & Grille",
+   "days": [
+    "Thu"
+   ],
+   "time": "from 4pm",
+   "deal": "16-oz caramelized prime rib (Perry's locations — River Oaks has closed)",
+   "price": "$59",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Johnny Ritas Cocina y Cantina",
+   "days": [
+    "Thu"
+   ],
+   "time": "5–9pm",
+   "deal": "12-oz carne asada with salad and elote",
+   "price": "$27",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Georgia James",
+   "days": [
+    "Fri"
+   ],
+   "time": "11am–6pm",
+   "deal": "Butcher's cut with sides or chicken-fried steak",
+   "price": "$18",
+   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10"
+  },
+  {
+   "n": "Monkey's Tail",
+   "days": [
+    "Mon",
+    "Thu"
+   ],
+   "time": "5–10pm or sold out",
+   "deal": "Steak night (the most-mentioned one in the comments)",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Yuma",
+   "days": [
+    "Wed"
+   ],
+   "time": "from 4pm",
+   "deal": "Smoked picanha cut like prime rib, with yuca frita, sautéed mustard greens and chimichurri",
+   "price": "$25",
+   "src": "Yuma (@yumahtx) on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/yumahtx/",
+   "as": "2026-10"
+  },
+  {
+   "n": "By The Wayside",
+   "days": [
+    "Tue"
+   ],
+   "time": "evening",
+   "deal": "Bourbon Butter Steaks pop-up",
+   "price": "$25",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Trash Panda Drinking Club",
+   "addr": "4203 Edison St",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak with mashed potatoes and roasted Brussels sprouts with vinaigrette",
+   "price": "$25",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Lee's Den",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak au poivre with duck-fat fries",
+   "price": "$25",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Tikila's",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Hot and Buttered HTX steak pop-up",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Heights Drive Inn",
+   "addr": "6714 N Main St",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Max's Wine Dive",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak night with T-Rex butter melting on top",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Eight Row Flint EaDo",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "The Savoy",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "\"Meet Meat\" steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "East End Hardware",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Bungalow Heights",
+   "days": [
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Cedar Creek",
+   "addr": "1034 W 20th St",
+   "days": [
+    "Mon",
+    "Thu"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Wicklow Heights",
+   "days": [
+    "Wed"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Moonshine Deck",
+   "days": [
+    "Wed"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "The Kennedy Houston",
+   "days": [
+    "Tue"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Velvet Oak Tavern",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Birdies Den",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Toga",
+   "days": [
+    "Tue"
+   ],
+   "time": "evening",
+   "deal": "Steak night",
+   "price": "$31",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Canyon Creek Cafe",
+   "days": [
+    "Mon",
+    "Wed"
+   ],
+   "time": "evening",
+   "deal": "On-the-grill steak nights",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "BPD",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Steak with two sides (West U & Memorial)",
+   "price": "$20",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "LT City Centre",
+   "days": [
+    "Wed"
+   ],
+   "time": "6–8pm",
+   "deal": "12-oz steak with two sides (City Centre, outside the Loop)",
+   "price": "$20",
+   "src": "Tip from a comment on the @foodiesinhouston guide",
+   "url": "https://www.instagram.com/foodiesinhouston/",
+   "as": "2026-10",
+   "verify": true
   }
  ]
 }

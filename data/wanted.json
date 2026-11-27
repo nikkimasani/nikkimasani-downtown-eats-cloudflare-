@@ -3157,6 +3157,42 @@
 "k": "bar",
 "c": "Sports bar with Wednesday steak night",
 "a": "614 W Gray St"
+},
+{
+"n": "Trash Panda Drinking Club",
+"k": "bar",
+"c": "Near Northside cocktail bar — Thursday steak night",
+"a": "4203 Edison St"
+},
+{
+"n": "Cedar Creek",
+"k": "bar",
+"c": "Heights bar & grill — Mon & Thu steak nights",
+"a": "1034 W 20th St"
+},
+{
+"n": "Heights Drive Inn",
+"k": "bar",
+"c": "Neighborhood bar — Thursday steak night",
+"a": "6714 N Main St"
+},
+{
+"n": "Better Luck Tomorrow",
+"k": "bar",
+"c": "Heights bar from Justin Yu & Bobby Heugel — Wednesday steak",
+"a": "544 Yale St"
+},
+{
+"n": "Henderson & Kane",
+"k": "rest",
+"c": "Sixth Ward grocery & barbecue — Monday steak night",
+"a": "1901 Hogan St"
+},
+{
+"n": "Axelrad Beer Garden",
+"k": "bar",
+"c": "Midtown beer garden",
+"a": "1517 Alabama St"
 }
 ]
 }

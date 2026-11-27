@@ -25945,5 +25945,130 @@
   "type": "Sports Bar",
   "note": "Sports bar with Wednesday steak night.",
   "tryit": ""
+ },
+ {
+  "id": 1293,
+  "name": "Trash Panda Drinking Club",
+  "address": "4203 Edison St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Near Northside cocktail bar — Thursday steak night"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Cocktail Bar",
+  "note": "Near Northside cocktail bar — Thursday steak night.",
+  "tryit": ""
+ },
+ {
+  "id": 1294,
+  "name": "Cedar Creek",
+  "address": "1034 W 20th St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Heights bar & grill — Mon & Thu steak nights"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Heights bar & grill — Mon & Thu steak nights.",
+  "tryit": ""
+ },
+ {
+  "id": 1295,
+  "name": "Heights Drive Inn",
+  "address": "6714 N Main St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Neighborhood bar — Thursday steak night"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Neighborhood bar — Thursday steak night.",
+  "tryit": ""
+ },
+ {
+  "id": 1296,
+  "name": "Better Luck Tomorrow",
+  "address": "544 Yale St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Heights bar from Justin Yu & Bobby Heugel — Wednesday steak"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Heights bar from Justin Yu & Bobby Heugel — Wednesday steak.",
+  "tryit": ""
+ },
+ {
+  "id": 1297,
+  "name": "Henderson & Kane",
+  "address": "1901 Hogan St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sixth Ward grocery & barbecue — Monday steak night"
+  ],
+  "meals": [
+   "Lunch",
+   "Dinner"
+  ],
+  "price": 2,
+  "vibes": [
+   "casual"
+  ],
+  "type": "Restaurant",
+  "note": "Sixth Ward grocery & barbecue — Monday steak night restaurant.",
+  "tryit": ""
+ },
+ {
+  "id": 1298,
+  "name": "Axelrad Beer Garden",
+  "address": "1517 Alabama St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Midtown beer garden"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Beer Garden",
+  "note": "Midtown beer garden.",
+  "tryit": ""
  }
 ]
