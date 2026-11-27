@@ -8680,6 +8680,14 @@
       "checked": "2026-11-27",
       "notInDirectory": true
     },
+    "PJ's Sports Bar": {
+      "street": "614 W Gray St",
+      "lat": 29.753461,
+      "lng": -95.38819,
+      "source": "US Census geocoder",
+      "checked": "2026-11-27",
+      "notInDirectory": true
+    },
     "Clutch Bar": {
       "street": "5334 Washington Ave",
       "lat": 29.770603,

@@ -1262,7 +1262,10 @@ function loadGeo() { if (GEO_P) return GEO_P; const get = (f) => fetch(f).then((
   if (h.startsWith('plan=')) { const [slot, ...names] = decodeURIComponent(h.slice(5)).split('|'); week.slot = slot || week.slot; DAYS.forEach((d, i) => { const r = DATA.find((x) => x.name === names[i]); if (r) week.days[d] = { name: r.name, address: r.address, lock: true }; }); save(); show('week'); toast('Plan loaded — 🔒 days are from the link'); }
   loadWeather(); syncPull();
   setupAsk();
-  if ('serviceWorker' in navigator && location.protocol === 'https:' && !/claude|claudeusercontent/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && !/claude|claudeusercontent/.test(location.hostname)) { navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then((g) => g.update()).catch(() => {});
+    // if a newer version takes over in the first seconds after opening, switch to it right away instead of on the next open
+    const t0 = Date.now(), had = !!navigator.serviceWorker.controller; let done = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !done && Date.now() - t0 < 10000) { done = true; location.reload(); } }); }
   // build the street model quietly so Explore cards can show where each place is
   const bg = () => { if (!city) { initMap(); if (!$('#v-map').classList.contains('on')) { city.paused = true; city._bgBuilt = true; } SPOTOF = null; if ($('#v-browse').classList.contains('on')) renderBrowse(); } };
   loadGeo().then(() => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 }));

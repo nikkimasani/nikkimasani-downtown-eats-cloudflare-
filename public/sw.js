@@ -1,6 +1,6 @@
 // Offline support: the app shell and libraries come from the cache instantly; data files try the network first
 // (so hours and happy hours stay fresh) and fall back to the last copy when there's no signal.
-const V = 'de-v14';
+const V = 'de-v15';
 const SHELL = ['./', 'index.html', 'style.css', 'app.js', 'map.js', 'pov.js', 'hours.js', 'manifest.json', 'icon.svg', 'icon-192.png', 'vendor/three.module.min.js'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(V).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== V).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -14,7 +14,13 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((m) => { const net = fetch(e.request).then((r) => put(e.request, r)); if (m) { e.waitUntil(net.catch(() => {})); return m; } return net; }));
     return;
   }
-  const fresh = /\.(json|js|css|html)$/.test(u.pathname) || u.pathname.endsWith('/');
+  // the page and its code always come from the network when there's any signal, so you never get an old version;
+  // the saved copy is used only when the phone is offline
+  if (e.request.mode === 'navigate' || /\.(js|css|html)$/.test(u.pathname) || u.pathname.endsWith('/')) {
+    e.respondWith(fetch(e.request, { cache: 'no-cache' }).then((r) => put(e.request, r)).catch(() => caches.match(e.request, { ignoreSearch: true }).then((m) => m || caches.match('index.html'))));
+    return;
+  }
+  const fresh = /\.json$/.test(u.pathname);
   if (fresh) e.respondWith(new Promise((done) => {
     let settled = false; const net = fetch(e.request).then((r) => put(e.request, r));
     const fallback = () => caches.match(e.request, { ignoreSearch: true }).then((m) => { if (m && !settled) { settled = true; done(m); } return m; });

@@ -25931,6 +25931,27 @@
   "address": "5334 Washington Ave, Houston, TX",
   "tunnel": null,
   "cuisines": [
+   "Sports bar with Wednesday steak night"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Sports bar with Wednesday steak night.",
+  "tryit": ""
+ },
+ {
+  "id": 1293,
+  "name": "Clutch Bar",
+  "address": "5334 Washington Ave, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
    "Bar"
   ],
   "meals": [
