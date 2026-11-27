@@ -5826,7 +5826,9 @@
       "lng": -95.402385,
       "source": "Texas Comptroller mixed-beverage permits + US Census geocoder",
       "checked": "2026-11-26",
-      "notInDirectory": true
+      "notInDirectory": true,
+      "status": "closed",
+      "closedNote": "Closed Feb 5, 2026"
     },
     "Edison & Patton": {
       "street": "515 Patton St",
@@ -7203,6 +7205,14 @@
       "lng": -95.418737,
       "source": "US Census geocoder",
       "checked": "2026-11-26",
+      "notInDirectory": true
+    },
+    "Montrose Cheese & Wine": {
+      "street": "1618 Westheimer Rd",
+      "lat": 29.74285,
+      "lng": -95.400001,
+      "source": "US Census geocoder",
+      "checked": "2026-11-27",
       "notInDirectory": true
     }
   }
