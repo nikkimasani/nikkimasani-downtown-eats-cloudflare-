@@ -662,3 +662,23 @@ body.navving #v-map .mapchips,body.navving #v-map .backpill,body.navving #v-map 
 #listBtn.on{background:var(--accent);color:#fff}
 
 .tag.soon{background:#fff3d6;color:#8a5a00;border-color:#f0d08a}
+
+/* ---- brand header (logo matches the toolbox card) ---- */
+header#top.brandbar{padding:2px 0 4px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:52px;height:52px;border-radius:14px;flex:none;box-shadow:0 1px 0 rgba(0,0,0,.06),0 6px 16px rgba(217,72,30,.18);transform:rotate(-3deg)}
+.brand-txt{flex:1;min-width:0;line-height:1.05}
+header#top.brandbar h1{font-family:Fraunces,serif;font-weight:800;font-size:27px !important;letter-spacing:-.025em;margin:0 !important;padding:0 !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-tag{display:block;margin-top:4px;font:600 11.5px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.brand-btns{display:flex;gap:6px;flex:none}
+.hbtn{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:800 15px Fraunces,serif;display:grid;place-items:center;padding:0;box-shadow:var(--shadow)}
+.hstats{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 2px !important;color:var(--muted)}
+.hstats .st{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--chip);font:600 12.5px Inter,system-ui,sans-serif;color:var(--ink)}
+.hstats .st b{font-weight:800}
+.hstats .st.open{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green)}
+.hstats .st .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 25%,transparent)}
+@media (max-width:360px){header#top.brandbar h1{font-size:23px !important}.brand-logo{width:44px;height:44px}}
+.gamechip[hidden],.gamechip:empty{display:none !important}
+.hstats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px !important;padding-right:16px}
+.hstats::-webkit-scrollbar{display:none}
+.hstats .st{flex:none;white-space:nowrap}

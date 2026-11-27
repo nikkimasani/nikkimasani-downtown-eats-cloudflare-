@@ -519,6 +519,7 @@ $('#copyWeek').onclick = async () => {
 
 // ---------- detail sheet ----------
 let sheetFrom = null;
+const hostOf = (u) => { try { return new URL(u).hostname; } catch { return u; } };
 function openSheet(id, from = null) {
   if (!metroLast && !openSheet._m) { openSheet._m = true; fetch('api/metro', { cache: 'no-store' }).then((x) => x.json()).then(async (j) => { metroLast = j; if (!metroStatic) metroStatic = await fetch('metro-static.json').then((y) => y.json()).catch(() => null); if ($('#sheet').classList.contains('on')) openSheet(id, from); }).catch(() => {}); }
   sheetFrom = from;
@@ -572,7 +573,7 @@ function openSheet(id, from = null) {
     ${ext(L.reviews, 'Reviews', '⭐')}
     ${r.url ? ext(r.url, 'Downtown Houston listing', '🏙️') : ''}
   </details>
-  <p class="disclaim">${r.extraSource ? `Not in the Downtown Houston directory — added from <a href="${esc(r.extraSource)}" target="_blank" rel="noopener">${esc(new URL(r.extraSource).hostname)}</a>. ` : ''}Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's.</p>`;
+  <p class="disclaim">${r.extraSource ? (/^https?:\/\//.test(r.extraSource) ? `Not in the Downtown Houston directory — added from <a href="${esc(r.extraSource)}" target="_blank" rel="noopener">${esc(hostOf(r.extraSource))}</a>. ` : `Not in the Downtown Houston directory — added from ${esc(r.extraSource)}. `) : ''}Hours, phone and website come from the Downtown Houston directory (refreshed daily${META.refreshed ? ', last ' + new Date(META.refreshed).toLocaleDateString() : ''}). Descriptions are Claude's.</p>`;
   $('#sheet').classList.add('on');
   $('#cls').onclick = closeSheet;
   $('#sBack').onclick = () => (from ? listSheet(from.places, from.title, from.walk) : closeSheet());
@@ -1224,7 +1225,7 @@ function loadGeo() { if (GEO_P) return GEO_P; const get = (f) => fetch(f).then((
     { const seen = new Set(); DATA = DATA.filter((r) => { const k = r.name.toLowerCase() + '|' + (r.address || '').match(/^\d*/)[0]; if (seen.has(k)) return false; seen.add(k); return true; }); DATA.forEach((r, i) => (r.id = i)); FOOD = DATA.filter((r) => r.day); window._DATA = DATA; window._walkTo = (r) => walkTo(r); window._openSheet = (id) => openSheet(id); window._B = () => BUILDINGS; }
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
-  $('#hdr').textContent = `${FOOD.length} places to eat · ${DATA.filter((r) => r.night).length} bars · ${openNow} open now · ${DATA.filter((r) => r.tunnel).length} in tunnels`;
+  $('#hdr').innerHTML = `<span class="st open"><i class="dot"></i><b>${openNow}</b> open now</span><span class="st">🍽️ <b>${FOOD.length}</b> places</span><span class="st">🍸 <b>${DATA.filter((r) => r.night).length}</b> bars</span><span class="st">🚇 <b>${DATA.filter((r) => r.tunnel).length}</b> tunnels</span>`;
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee', 'steak'].includes(h)) show(h);
   if (h.startsWith('vote=')) openVote(h.slice(5));
