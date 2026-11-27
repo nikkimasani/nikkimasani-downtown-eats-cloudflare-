@@ -1221,6 +1221,7 @@ const unpackGeo = (j) => { const sc = j && j.pk; if (!sc) return j; const walk =
 function loadGeo() { if (GEO_P) return GEO_P; const get = (f) => fetch(f).then((r) => (r.ok ? r.json() : null)).then(unpackGeo).catch(() => null); GEO_P = Promise.all([get('buildings.json'), get('streets.json')]).then(([bj, sj]) => { BUILDINGS = bj; STREETS = sj; GEO_READY = true; }); return GEO_P; }
 // ---------- boot ----------
 (async () => {
+  try { $('#moods').innerHTML = MOODS.map((m) => `<button data-m="${m.k}" class="${st.moods.has(m.k) ? 'on' : ''}"><b>${m.e}</b>${m.l}</button>`).join(''); } catch (_) {}
   try {
     // the big map files (~900 KB) load alongside, but the lists don't wait for them
     const [pj, hj, oj, ms] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
@@ -1250,6 +1251,7 @@ function loadGeo() { if (GEO_P) return GEO_P; const get = (f) => fetch(f).then((
   } catch (e) { $('#hdr').textContent = 'Could not load restaurant data.'; return; }
   const openNow = DATA.filter((r) => isOpen(r)).length;
   $('#hdr').innerHTML = `<span class="st open"><b>${openNow}</b>open now</span><span class="st"><b>${FOOD.length}</b>places</span><span class="st"><b>${DATA.filter((r) => r.night).length}</b>bars</span><span class="st"><b>${DATA.filter((r) => r.tunnel).length}</b>in tunnels</span>`;
+  try { localStorage.setItem('de_hdr', $('#hdr').innerHTML.replace(/<b>\d+<\/b>/, '<b>·</b>')); } catch (_) {}
   renderPick();
   const h = location.hash.slice(1); if (['ask', 'week', 'browse', 'map', 'night', 'coffee', 'steak', 'ayce'].includes(h)) show(h);
   if (h.startsWith('vote=')) openVote(h.slice(5));
