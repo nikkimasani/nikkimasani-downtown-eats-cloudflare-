@@ -682,3 +682,10 @@ header#top.brandbar h1{font-family:Fraunces,serif;font-weight:800;font-size:27px
 .hstats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px !important;padding-right:16px}
 .hstats::-webkit-scrollbar{display:none}
 .hstats .st{flex:none;white-space:nowrap}
+/* stats: four equal tiles that always fit, no sideways scroll */
+.hstats{display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;overflow:visible;margin:12px 0 2px !important;padding:0}
+.hstats .st{flex-direction:column;justify-content:center;gap:1px;padding:7px 4px;border-radius:12px;text-align:center;font:600 11px Inter,system-ui,sans-serif;color:var(--muted);white-space:nowrap;min-width:0}
+.hstats .st b{display:block;font:800 17px Inter,system-ui,sans-serif;color:var(--ink);line-height:1.1}
+.hstats .st.open b{color:var(--green)}
+.hstats .st.open{color:var(--green)}
+.hstats .st .dot{display:none}
