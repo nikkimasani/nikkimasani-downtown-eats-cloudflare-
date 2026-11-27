@@ -25924,5 +25924,26 @@
   "type": "Bar",
   "note": "Bar.",
   "tryit": ""
+ },
+ {
+  "id": 1292,
+  "name": "PJ's Sports Bar",
+  "address": "614 W Gray St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Sports bar with Wednesday steak night"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Sports Bar",
+  "note": "Sports bar with Wednesday steak night.",
+  "tryit": ""
  }
 ]
