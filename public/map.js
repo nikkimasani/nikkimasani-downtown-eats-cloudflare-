@@ -2331,9 +2331,10 @@ export class CityMap {
     for (const s of vis) {
       const [i, j] = this.cellIdx(s.x, s.y), key = Math.floor(i / k) + ':' + Math.floor(j / k);
       const c = m.get(key) || { n: 0, x: 0, y: 0, open: 0 };
+      if (!c.ar) c.ar = {}; for (const p of s.places) { const an = this.opts?.areaName?.(p); if (an) c.ar[an] = (c.ar[an] || 0) + 1; }
       c.n += s.places.length; c.x += s.x * s.places.length; c.y += s.y * s.places.length; c.open += s.places.filter((p) => this.openC(p)).length; m.set(key, c);
     }
-    const out = [...m.values()].map((c) => ({ ...c, x: c.x / c.n, y: c.y / c.n, z: under && this.mode !== 'street' ? this.tunnelZ() : 0 }));
+    const out = [...m.values()].map((c) => ({ ...c, label: Object.entries(c.ar || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || '', x: c.x / c.n, y: c.y / c.n, z: under && this.mode !== 'street' ? this.tunnelZ() : 0 }));
     this._clC[under ? 1 : 0] = { key: key0, vis: vis.length, out }; return out;
   }
   layers() { return this.mode === 'tunnel' ? [true] : this.mode === 'both' ? [true, false] : [false]; }
@@ -3049,6 +3050,15 @@ export class CityMap {
         ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, cy + r); ctx.stroke();
         circle(ctx, x, cy, r + 2, '#fff'); circle(ctx, x, cy, r, c.open ? accent : '#868e96');
         ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.round(r * 0.95)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(c.n), x, cy + 0.5);
+      }
+      // name the biggest bubbles by neighbourhood (one name per area, no overlaps) so you know which one to tap
+      const used = new Set(), boxes = []; ctx.font = '600 11px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (const c of [...this.clusters(under)].sort((a, b) => b.n - a.n)) {
+        if (!c.label || c.n < 3 || used.has(c.label)) continue; const [x, y] = v.p(c.x, c.y, z); if (x < 0 || x > this.W || y < 0 || y > this.H) continue;
+        const w = ctx.measureText(c.label).width + 12, bx = x - w / 2, by = y + 3, bh = 17; if (boxes.some((q) => bx < q[2] && bx + w > q[0] && by < q[3] && by + bh > q[1])) continue;
+        boxes.push([bx, by, bx + w, by + bh]); used.add(c.label);
+        ctx.fillStyle = 'rgba(255,255,255,.94)'; ctx.beginPath(); ctx.roundRect(bx, by, w, bh, 8); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.15)'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = '#212529'; ctx.fillText(c.label, x, by + bh / 2 + 0.5);
       }
       return;
     }

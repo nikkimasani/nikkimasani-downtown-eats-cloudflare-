@@ -19,7 +19,7 @@ document.addEventListener('click', (e) => { if (e.target.id !== 'textBtn') retur
 const buzz = (p = 10) => { try { navigator.vibrate?.(p); } catch (e) {} };   // a light tap on phones that support it
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._); t._ = setTimeout(() => t.classList.remove('on'), 2200); };
 
-let HFIX = store.get('hoursFix', {}), GEO_P = Promise.resolve(), GEO_READY = false;
+let HFIX = store.get('hoursFix', {}), GEO_P = null, GEO_READY = false;
 let DATA = [], FOOD = [], HH = { spots: {} }, META = {}, HCHK = {}, EVENTS = [];
 const MOODS = [
   { k: 'quick', e: '⚡', l: 'Quick bite' }, { k: 'healthy', e: '🥗', l: 'Light & healthy' }, { k: 'comfort', e: '🍔', l: 'Comfort food' },
@@ -41,7 +41,7 @@ const AREAS = [
   { k: 'fourthward', l: 'Fourth Ward', e: '🕊️', b: [29.7545, -95.3890, 29.7605, -95.3745] },
   { k: 'allen', l: 'Allen Pkwy & Regent Square', e: '🌳', b: [29.7530, -95.4140, 29.7650, -95.3745] },
   { k: 'midtown', l: 'Midtown', e: '🍸', b: [29.7300, -95.3900, 29.7525, -95.3610] },
-  { k: 'heights', l: 'The Heights', e: '🏡', b: [29.7745, -95.4200, 29.8100, -95.3700] },
+  { k: 'heights', l: 'The Heights', e: '🏡', b: [29.7745, -95.4330, 29.8100, -95.3700] },
   { k: 'montrose', l: 'Montrose', e: '🎭', b: [29.7330, -95.4100, 29.7530, -95.3890] },
   { k: 'museum', l: 'Museum District & Hermann Park', e: '🏛️', b: [29.7080, -95.4050, 29.7330, -95.3800] },
   { k: 'thirdward', l: 'Third Ward & Almeda', e: '🎓', b: [29.7050, -95.3800, 29.7400, -95.3350] },
@@ -57,7 +57,7 @@ const AREAS = [
   { k: 'gulfgate', l: 'Gulfgate & Pecan Park', e: '🌮', b: [29.6900, -95.3350, 29.7370, -95.3080] },
   { k: 'macgregor', l: 'MacGregor & Riverside Terrace', e: '🌳', b: [29.6800, -95.3800, 29.7050, -95.3350] },
   { k: 'memorial', l: 'Memorial Park & Rice Military', e: '🏃', b: [29.7620, -95.4570, 29.7900, -95.4250] },
-  { k: 'timbergrove', l: 'Timbergrove & Lazybrook', e: '🌲', b: [29.7900, -95.4570, 29.8100, -95.4200] },
+  { k: 'timbergrove', l: 'Timbergrove & Lazybrook', e: '🌲', b: [29.7900, -95.4570, 29.8100, -95.4330] },
 ];
 const inGrid = (r) => { let c = null; try { c = city; } catch (e) { return null; } if (!c?.avenues) return null; const [x, y] = city.proj(r.lat, r.lng), A = city.avenues.map((a) => a.x), C = city.cross.map((c) => c.y); return x >= Math.min(...A) && x <= Math.max(...A) && y >= Math.min(...C) && y <= Math.max(...C); };
 const areaOf = (r) => { if (r.lat == null) return null; if (r._area !== undefined && r._areaK === r.lat + r.lng) return r._area; const g = inGrid(r); const v = g ? 'downtown' : areaBox(r, g === null); if (g !== null) { r._area = v; r._areaK = r.lat + r.lng; } return v; };
@@ -680,6 +680,7 @@ let city = null, mapMatch = false, mapOpen = false;
 function initMap() {
   if (city) return;
   city = new CityMap($('#city'), DATA, {
+    areaName: (r) => areaTag(r),
     stops: metroStatic && metroStatic.stops,
     buildings: BUILDINGS,   // real footprints and heights from OpenStreetMap
     streets: STREETS,       // real street centrelines, parks, water, rail and trees
@@ -1144,7 +1145,7 @@ function show(v) {
   document.querySelectorAll('.view').forEach((x) => x.classList.toggle('on', x.id === 'v-' + v));
   $('#top').style.display = v === 'map' ? 'none' : '';
   if (v === 'browse') renderBrowse(); if (v === 'week') renderWeek(); if (v === 'night') renderNight(); if (v === 'coffee') renderCoffee(); if (v === 'steak') renderSteak();
-  if (v === 'map' && !GEO_READY && !city) { GEO_P.then(() => { if ($('#v-map').classList.contains('on')) show('map'); }); return; }
+  if (v === 'map' && !GEO_READY && !city) { loadGeo().then(() => { if ($('#v-map').classList.contains('on')) show('map'); }); return; }
   if (v === 'map') { initMap(); city.resize(); if (city._bgBuilt) { city._bgBuilt = false; city.anim = null; city.fit(); } }
   if (city) city.paused = v !== 'map' || !$('#areaView').hidden;
   if (v !== 'map') window.scrollTo(0, 0);
@@ -1189,11 +1190,14 @@ async function aboutPlace(r) {
   } catch (e) { box.textContent = 'Couldn\'t reach Claude right now.'; }
 }
 
+// the map files are packed (scripts/pack-geo.mjs): each {z:[...]} is a run of whole-number steps between points
+const unpackGeo = (j) => { const sc = j && j.pk; if (!sc) return j; const walk = (v) => { if (Array.isArray(v)) { for (let i = 0; i < v.length; i++) v[i] = walk(v[i]); return v; } if (v && typeof v === 'object') { if (v.z && Object.keys(v).length === 1) { const z = v.z, out = new Array(z.length / 2); let a = 0, b = 0; for (let i = 0; i < z.length; i += 2) { a += z[i]; b += z[i + 1]; out[i / 2] = [a / sc, b / sc]; } return out; } for (const k of Object.keys(v)) v[k] = walk(v[k]); } return v; }; walk(j); delete j.pk; return j; };
+// the big map files start downloading once the lists are up (or the moment the map is opened), so they don't slow the first screen
+function loadGeo() { if (GEO_P) return GEO_P; const get = (f) => fetch(f).then((r) => (r.ok ? r.json() : null)).then(unpackGeo).catch(() => null); GEO_P = Promise.all([get('buildings.json'), get('streets.json')]).then(([bj, sj]) => { BUILDINGS = bj; STREETS = sj; GEO_READY = true; }); return GEO_P; }
 // ---------- boot ----------
 (async () => {
   try {
     // the big map files (~900 KB) load alongside, but the lists don't wait for them
-    GEO_P = Promise.all([fetch('buildings.json').then((r) => (r.ok ? r.json() : null)).catch(() => null), fetch('streets.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]).then(([bj, sj]) => { BUILDINGS = bj; STREETS = sj; GEO_READY = true; });
     const [pj, hj, oj, ms] = await Promise.all([fetch('places.json').then((r) => r.json()), fetch('happyhour.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('overrides.json').then((r) => r.json()).catch(() => ({ spots: {} })), fetch('metro-static.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)]);
     metroStatic = ms;
     META = { refreshed: pj.refreshed }; HH = hj;
@@ -1234,7 +1238,7 @@ async function aboutPlace(r) {
   if ('serviceWorker' in navigator && location.protocol === 'https:' && !/claude|claudeusercontent/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(() => {});
   // build the street model quietly so Explore cards can show where each place is
   const bg = () => { if (!city) { initMap(); if (!$('#v-map').classList.contains('on')) { city.paused = true; city._bgBuilt = true; } SPOTOF = null; if ($('#v-browse').classList.contains('on')) renderBrowse(); } };
-  GEO_P.then(() => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 }));
+  loadGeo().then(() => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(bg, { timeout: 2500 }));
 })();
 
 // keyboard: Esc closes a sheet, or steps the map back; +/- zoom the map
