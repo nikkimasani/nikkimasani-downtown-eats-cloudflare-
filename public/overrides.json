@@ -8735,6 +8735,22 @@
       "source": "US Census geocoder",
       "checked": "2026-11-27",
       "notInDirectory": true
+    },
+    "Onion Creek": {
+      "street": "3106 White Oak Dr",
+      "lat": 29.781633,
+      "lng": -95.391237,
+      "source": "US Census geocoder",
+      "checked": "2026-11-27",
+      "notInDirectory": true
+    },
+    "Glitter Karaoke": {
+      "street": "2621 Milam St",
+      "lat": 29.746236,
+      "lng": -95.37589,
+      "source": "US Census geocoder",
+      "checked": "2026-11-27",
+      "notInDirectory": true
     }
   }
 }

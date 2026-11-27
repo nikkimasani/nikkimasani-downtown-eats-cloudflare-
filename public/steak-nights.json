@@ -7,12 +7,12 @@
    "days": [
     "Mon"
    ],
-   "time": "6pm",
-   "deal": "12-oz strip, salad, mashed potatoes",
+   "time": "from 6pm",
+   "deal": "12-oz NY strip with salad and mashed potatoes",
    "price": "$32",
-   "src": "CultureMap",
-   "url": "https://houston.culturemap.com/news/restaurants-bars/12-houston-steak-nights-2026/",
-   "as": "2026-08"
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "Jethro's Cocktail Lounge",
@@ -81,11 +81,13 @@
    "days": [
     "Tue"
    ],
-   "time": "6–11pm",
-   "deal": "Steak and surf & turf with chef Jason \"Big Sexy\" Hill",
-   "src": "Eventbrite (Plume)",
-   "url": "https://www.eventbrite.com/e/steak-night-and-surf-turf-tuesdays-6pm-to-11pm-tickets-1487348221569",
-   "verify": true
+   "time": "6–10pm",
+   "deal": "Amexicun steak pop-up: sirloin $30, NY strip $38 or ribeye $45 (rotation — check @amexicun for this week)",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "verify": true,
+   "as": "2026-11",
+   "price": "$30–45"
   },
   {
    "n": "Pimlico",
@@ -119,11 +121,11 @@
     "Wed"
    ],
    "time": "~7pm",
-   "deal": "Houston Prime steak pop-up: steak, mashed potatoes, green beans",
-   "price": "~$30",
-   "src": "DiningOut",
-   "url": "https://diningout.com/houston/houstons-best-steak-nights-from-monday-through-friday/",
-   "as": "2026-10"
+   "deal": "Steak $18, pork chops $13 or lamb chops $20 — cash only",
+   "price": "$13–20",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "On the Kirb",
@@ -143,10 +145,12 @@
     "Wed"
    ],
    "time": "6–10pm",
-   "deal": "Amexicun steak pop-up",
-   "src": "Amexicun (Facebook)",
-   "url": "https://www.facebook.com/Amexicun/",
-   "verify": true
+   "deal": "Amexicun steak pop-up: sirloin $30, NY strip $38 or ribeye $45 (rotation — check @amexicun for this week)",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "verify": true,
+   "as": "2026-11",
+   "price": "$30–45"
   },
   {
    "n": "Xochi",
@@ -177,11 +181,11 @@
     "Thu"
    ],
    "time": "all day, dine-in only",
-   "deal": "14-oz NY strip with potatoes and green beans",
+   "deal": "14-oz NY strip with green beans, smashed Yukon Golds and J1 sauce",
    "price": "$36",
-   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10"
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "Starduster Lounge",
@@ -189,12 +193,13 @@
    "days": [
     "Thu"
    ],
-   "time": "evening",
-   "deal": "Steak, butter-poached potatoes, veg with cowboy butter · +$5 margarita",
+   "time": "6pm till sold out",
+   "deal": "NY strip with potatoes and vegetables; add a margarita for $5",
    "price": "$30",
-   "src": "CultureMap",
-   "url": "https://houston.culturemap.com/news/restaurants-bars/12-houston-steak-nights-2026/",
-   "as": "2026-08"
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
   },
   {
    "n": "Lankford's Grocery & Market",
@@ -215,11 +220,12 @@
     "Fri"
    ],
    "time": "6–10pm",
-   "deal": "Amexicun steak night pop-up",
-   "price": "~$30",
-   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10"
+   "deal": "Amexicun steak pop-up: sirloin $30, NY strip $38 or ribeye $45 (rotation — check @amexicun for this week)",
+   "price": "$30–45",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
   },
   {
    "n": "Around the Corner",
@@ -227,11 +233,11 @@
     "Thu"
    ],
    "time": "evening, till sold out",
-   "deal": "Big ribeye with potatoes and salad on the EaDo patio · happy hour before 7",
+   "deal": "Steak special with salad and mac and cheese",
    "price": "$25",
-   "src": "Corner (diner posts)",
-   "url": "https://www.corner.inc/place/p4G1dNZ9K2sA",
-   "as": "2026-06"
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "Moon Tower Inn",
@@ -315,10 +321,10 @@
    ],
    "time": "evening",
    "deal": "Steak dinner with a baked potato, fixings and a draft beer",
-   "price": "$24",
-   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10"
+   "price": "$24.99",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "Turner's",
@@ -361,12 +367,12 @@
    "days": [
     "Thu"
    ],
-   "time": "from 4pm",
+   "time": "4pm till close",
    "deal": "16-oz caramelized prime rib (Perry's locations — River Oaks has closed)",
    "price": "$59",
-   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10"
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "Johnny Ritas Cocina y Cantina",
@@ -386,11 +392,11 @@
     "Fri"
    ],
    "time": "11am–6pm",
-   "deal": "Butcher's cut with sides or chicken-fried steak",
+   "deal": "Butcher's cut with green peppercorn sauce, roasted onion and potato dauphine — or chicken-fried steak with mashed potatoes and gravy",
    "price": "$18",
-   "src": "@foodiesinhouston Houston Steak Night Guide (Instagram)",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10"
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
   },
   {
    "n": "Monkey's Tail",
@@ -399,11 +405,12 @@
     "Thu"
    ],
    "time": "5–10pm or sold out",
-   "deal": "Steak night (the most-mentioned one in the comments)",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "Steak dinner on the patio",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$25"
   },
   {
    "n": "Yuma",
@@ -463,24 +470,27 @@
     "Thu"
    ],
    "time": "evening",
-   "deal": "Hot and Buttered HTX steak pop-up",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "\"Hot and Buttered\" steak night — filet with two sides",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$25"
   },
   {
    "n": "Heights Drive Inn",
    "addr": "6714 N Main St",
    "days": [
+    "Tue",
     "Thu"
    ],
    "time": "evening",
-   "deal": "Steak night",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "12-oz ribeye $30, 10-oz NY strip $30, 8-oz filet $35, rack of lamb $30 or pork chop $20",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$20–35"
   },
   {
    "n": "Max's Wine Dive",
@@ -488,11 +498,12 @@
     "Thu"
    ],
    "time": "evening",
-   "deal": "Steak night with T-Rex butter melting on top",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "Ribeye with broccoli (and T-Rex butter on top)",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$35"
   },
   {
    "n": "Eight Row Flint EaDo",
@@ -500,11 +511,12 @@
     "Thu"
    ],
    "time": "evening",
-   "deal": "Steak night",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "Steak night (salad and fries extra)",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$20"
   },
   {
    "n": "The Savoy",
@@ -512,11 +524,12 @@
     "Thu"
    ],
    "time": "evening",
-   "deal": "\"Meet Meat\" steak night",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "\"Meet Meat\" prime ribeye plate",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$25"
   },
   {
    "n": "East End Hardware",
@@ -524,11 +537,12 @@
     "Thu"
    ],
    "time": "evening",
-   "deal": "Steak night",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "14–16-oz ribeye with two sides",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$29.95"
   },
   {
    "n": "Bungalow Heights",
@@ -598,23 +612,25 @@
     "Mon"
    ],
    "time": "evening",
-   "deal": "Steak night",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "deal": "16-oz ribeye with loaded baked potato and side salad",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$25"
   },
   {
    "n": "Birdies Den",
    "days": [
     "Mon"
    ],
-   "time": "evening",
-   "deal": "Steak night",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
+   "time": "6–11pm",
+   "deal": "Steak ($28), steak & chicken ($35) or steak bowl ($18)",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$18–35"
   },
   {
    "n": "Toga",
@@ -624,32 +640,6 @@
    "time": "evening",
    "deal": "Steak night",
    "price": "$31",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
-  },
-  {
-   "n": "Canyon Creek Cafe",
-   "days": [
-    "Mon",
-    "Wed"
-   ],
-   "time": "evening",
-   "deal": "On-the-grill steak nights",
-   "src": "Tip from a comment on the @foodiesinhouston guide",
-   "url": "https://www.instagram.com/foodiesinhouston/",
-   "as": "2026-10",
-   "verify": true
-  },
-  {
-   "n": "BPD",
-   "days": [
-    "Mon"
-   ],
-   "time": "evening",
-   "deal": "Steak with two sides (West U & Memorial)",
-   "price": "$20",
    "src": "Tip from a comment on the @foodiesinhouston guide",
    "url": "https://www.instagram.com/foodiesinhouston/",
    "as": "2026-10",
@@ -666,6 +656,393 @@
    "src": "Tip from a comment on the @foodiesinhouston guide",
    "url": "https://www.instagram.com/foodiesinhouston/",
    "as": "2026-10",
+   "verify": true
+  },
+  {
+   "n": "Canyon Creek",
+   "days": [
+    "Mon",
+    "Wed"
+   ],
+   "time": "6pm till sold out",
+   "deal": "Ribeye with loaded baked potato and salad",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "price": "$28"
+  },
+  {
+   "n": "BPD Memorial",
+   "days": [
+    "Mon"
+   ],
+   "time": "evening",
+   "deal": "Steak with two sides",
+   "price": "$20",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Nettbar Shady Acres",
+   "days": [
+    "Thu"
+   ],
+   "deal": "8-oz filet ($25) or 12-oz ribeye ($28)",
+   "price": "$25–28",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Capone's Oven & Bar",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Filet with loaded baked potato and mushrooms",
+   "price": "$25",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "White Oak Social",
+   "days": [
+    "Mon"
+   ],
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "deal": "Amexicun steak pop-up: sirloin $30, NY strip $38 or ribeye $45 (rotation — check @amexicun for this week)",
+   "time": "6–10pm",
+   "price": "$30–45"
+  },
+  {
+   "n": "Bobcat Teddy's Icehouse",
+   "days": [
+    "Thu"
+   ],
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true,
+   "deal": "Amexicun steak pop-up: sirloin $30, NY strip $38 or ribeye $45 (rotation — check @amexicun for this week)",
+   "time": "6–10pm",
+   "price": "$30–45"
+  },
+  {
+   "n": "Onion Creek",
+   "addr": "3106 White Oak Dr",
+   "days": [
+    "Mon",
+    "Wed"
+   ],
+   "time": "from 6pm",
+   "deal": "Ribeye with loaded baked potato and salad",
+   "price": "$25",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Down the Street",
+   "days": [
+    "Mon"
+   ],
+   "deal": "Ribeye with potatoes and salad",
+   "price": "$26",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "The Post Beer & Wine Garden",
+   "days": [
+    "Tue"
+   ],
+   "deal": "20-oz boneless ribeye or 14-oz NY strip with one side",
+   "price": "$35",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Maison Pucha Bistro",
+   "days": [
+    "Tue",
+    "Thu"
+   ],
+   "deal": "14-oz C.A.B. NY strip or 8-oz hanger steak",
+   "price": "$29.95",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Caffvino",
+   "days": [
+    "Tue"
+   ],
+   "deal": "Grilled ribeye",
+   "price": "$29",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Mcintyre's",
+   "days": [
+    "Tue"
+   ],
+   "deal": "Elements HTX pop-up: ribeye, NY strip, filet or double-bone pork chop",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Lady Birds Bar",
+   "days": [
+    "Tue"
+   ],
+   "deal": "Steak night special",
+   "price": "$25",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Hey Darlin Saloon",
+   "days": [
+    "Wed"
+   ],
+   "deal": "Country-fried steak ($20) or ribeye ($25), each with two sides",
+   "price": "$20–25",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "William Price Distilling",
+   "days": [
+    "Wed",
+    "Fri"
+   ],
+   "deal": "Steak night when available",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Kirby Ice House",
+   "days": [
+    "Wed"
+   ],
+   "deal": "Steak night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Glitter Karaoke",
+   "days": [
+    "Wed"
+   ],
+   "deal": "Ribeye or filet ($20), tomahawk ($35) in older listings",
+   "price": "$20–35",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Cobos",
+   "days": [
+    "Wed"
+   ],
+   "time": "4pm till sold out",
+   "deal": "Ribeye with mashed potatoes and asparagus",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Little Woodrow's Midtown",
+   "addr": "2306 Brazos St",
+   "days": [
+    "Wed"
+   ],
+   "deal": "Steak night special",
+   "price": "$28",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Pearl Bar",
+   "days": [
+    "Thu"
+   ],
+   "time": "from 6pm",
+   "deal": "Steak night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Gagootz",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Steak night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Peachez HTX/Urban Taco",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Steak night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "On the Rocks",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Ribeye with loaded potatoes",
+   "price": "$20",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "HiFi at The Finn",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Steak night pop-up (downtown)",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Wolfsmiths",
+   "days": [
+    "Thu"
+   ],
+   "deal": "\"Steak and whisky\" night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Prospect Park Midtown",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Steak with loaded potatoes",
+   "price": "$19.99",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Pour Behavior",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Filet or ribeye with two sides",
+   "price": "$25",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Duke's Kitchen",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Steak night specials",
+   "price": "$18–30",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
+   "verify": true
+  },
+  {
+   "n": "Myst Lounge and Kitchen",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Steak with mashed potatoes and salad, plus R&B night",
+   "price": "$25",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "George",
+   "days": [
+    "Thu"
+   ],
+   "deal": "Free Grillin: ribeye $28, filet $27 or NY strip $20",
+   "price": "$20–28",
+   "src": "Free Grillin (Chef Michele Free)",
+   "url": "https://ma.to/venue/chefmichelefree",
+   "as": "2026-11"
+  },
+  {
+   "n": "Baileson Brewing",
+   "days": [
+    "Fri"
+   ],
+   "time": "1st & 3rd Fridays",
+   "deal": "Free Grillin: ribeye $30, filet $28 or NY strip $20",
+   "price": "$20–30",
+   "src": "Free Grillin (Chef Michele Free)",
+   "url": "https://ma.to/venue/chefmichelefree",
+   "as": "2026-11"
+  },
+  {
+   "n": "Eureka Heights Brew Co",
+   "days": [
+    "Fri"
+   ],
+   "time": "2nd Fridays",
+   "deal": "Free Grillin steak night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11"
+  },
+  {
+   "n": "Jacks for Cocktails",
+   "days": [
+    "Fri"
+   ],
+   "deal": "Steak night",
+   "src": "Houston Steak Night Guide (Google Doc)",
+   "url": "https://docs.google.com/document/d/1bi57RnvD316MW6X-Da0GVGvC0TjXZ541U2oFeDZhwvk/mobilebasic",
+   "as": "2026-11",
    "verify": true
   }
  ]

@@ -26070,5 +26070,47 @@
   "type": "Beer Garden",
   "note": "Midtown beer garden.",
   "tryit": ""
+ },
+ {
+  "id": 1299,
+  "name": "Onion Creek",
+  "address": "3106 White Oak Dr, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Heights coffee house & bar — Mon & Wed steak nights"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Heights coffee house & bar — Mon & Wed steak nights.",
+  "tryit": ""
+ },
+ {
+  "id": 1300,
+  "name": "Glitter Karaoke",
+  "address": "2621 Milam St, Houston, TX",
+  "tunnel": null,
+  "cuisines": [
+   "Midtown karaoke bar with steak-night pop-ups"
+  ],
+  "meals": [
+   "Happy Hour",
+   "Late Night"
+  ],
+  "price": 2,
+  "vibes": [
+   "drinks",
+   "nightlife"
+  ],
+  "type": "Bar",
+  "note": "Midtown karaoke bar with steak-night pop-ups.",
+  "tryit": ""
  }
 ]
